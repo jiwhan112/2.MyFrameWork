@@ -10,49 +10,121 @@
     <Filter Include="00.MainApp">
       <UniqueIdentifier>{632dbc02-654c-40c3-a975-ede6ee063c01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="10.Imgui">
+      <UniqueIdentifier>{7691948a-d310-4e84-a12e-701fc662bb19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Default\00.main">
+      <UniqueIdentifier>{6892b902-4b47-4f2b-a3af-603ba97685cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Default\01.Resource">
+      <UniqueIdentifier>{7713ebef-d74f-457f-974d-5497e86ea016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Default\02.stdafx">
+      <UniqueIdentifier>{6d7d6086-b6bd-4263-b64d-077d94e7ef7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\01.Mgr">
+      <UniqueIdentifier>{652cb1b7-82a6-427a-8bb1-695ce1d0b8b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.lib">
+      <UniqueIdentifier>{5d3dcb41-c8b6-4ca9-8706-1437af281d0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h">
-      <Filter>98.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>98.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>98.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>98.Default</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\MainApp.h">
       <Filter>00.MainApp</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>98.Default\00.main</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default\01.Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98.Default\02.stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Default\01.Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imconfig.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui_impl_win32.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui_internal.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imstb_rectpack.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imstb_textedit.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imstb_truetype.h">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImguiMgr.h">
+      <Filter>10.Imgui\01.Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Includes.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp">
-      <Filter>98.Default</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>98.Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>98.Default\00.main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98.Default\02.stdafx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui.cpp">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_demo.cpp">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_draw.cpp">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_impl_dx11.cpp">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_impl_win32.cpp">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_tables.cpp">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_widgets.cpp">
+      <Filter>10.Imgui\02.lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ImguiMgr.cpp">
+      <Filter>10.Imgui\01.Mgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
-      <Filter>98.Default</Filter>
+      <Filter>98.Default\01.Resource</Filter>
     </Image>
     <Image Include="small.ico">
-      <Filter>98.Default</Filter>
+      <Filter>98.Default\01.Resource</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
-      <Filter>98.Default</Filter>
+      <Filter>98.Default\01.Resource</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -153,6 +153,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\Client_Includes.h" />
+    <ClInclude Include="..\Public\ImguiMgr.h" />
+    <ClInclude Include="..\Public\Imgui\imconfig.h" />
+    <ClInclude Include="..\Public\Imgui\imgui.h" />
+    <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\Public\Imgui\imgui_impl_win32.h" />
+    <ClInclude Include="..\Public\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\Public\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Public\Imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Public\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -160,7 +170,15 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\ImguiMgr.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\Public\Imgui\imgui.cpp" />
+    <ClCompile Include="..\Public\Imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Public\Imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Public\Imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\Public\Imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\Public\Imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\Public\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

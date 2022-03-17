@@ -66,7 +66,7 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
 
-	/* 백버퍼를 초기화하낟.  */
+	/* 백버퍼를 초기화.  */
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, (_float*)&vClearColor);
 
 	return S_OK;
