@@ -1,0 +1,69 @@
+## OSX artifacts
+.DS_Store
+
+## 폴더 제외는 이렇게
+## Floder이하의 파일 전부 무시 리소스는 이렇게 관리.
+## TeamPortfolio/Folder/**/*.*
+
+## 빌드 잔파일 무시
+## TeamPortfolio/Client/bin/**/*.* 
+TeamPortfolio/Client/Default/x64/**/*.*
+TeamPortfolio/Client/Default/x86/**/*.*
+
+## TeamPortfolio/Engine/bin/**/*.* 
+TeamPortfolio/Engine/Default/x64/**/*.*
+TeamPortfolio/Engine/Default/x86/**/*.*
+
+TeamPortfolio/Tool/x64/**/*.*
+TeamPortfolio/Tool/x86/**/*.*
+
+## Resource ignore
+TeamPortfolio/Client/bin/Resources/**/*.*
+TeamPortfolio/Tool/bin/Resources/**/*.*
+
+\Engine
+
+## Dear ImGui artifacts
+imgui.ini
+
+## General build artifacts
+*.o
+*.obj
+*.exe
+
+## Visual Studio artifacts
+.vs
+ipch
+*.opensdf
+*.log
+*.pdb
+*.ilk
+*.user
+*.sdf
+*.suo
+*.VC.db
+*.VC.VC.opendb
+*.tlog
+*.pch
+*.orig
+
+
+## Xcode artifacts
+project.xcworkspace
+xcuserdata
+
+
+## Emscripten artifacts
+examples/*.o.tmp
+examples/*.out.js
+examples/*.out.wasm
+examples/example_emscripten_opengl3/web/*
+examples/example_emscripten_wgpu/web/*
+
+## JetBrains IDE artifacts
+.idea
+cmake-build-*
+
+## Unix executables from our example Makefiles
+
+TeamPortfolio/ipch/**.*
