@@ -36,11 +36,11 @@ HRESULT CMainApp::Render()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-
+	// 백버퍼 / 깊이버퍼 클리어
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.0f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
-
+	// 스왑체인
 	m_pGameInstance->Present();
 
 	return S_OK;
@@ -64,5 +64,6 @@ void CMainApp::Free()
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pGameInstance);
 
+	
 	CGameInstance::Release_Engine();
 }

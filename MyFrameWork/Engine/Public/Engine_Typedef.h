@@ -20,8 +20,8 @@ namespace Engine
 	typedef bool						_bool;
 
 	typedef wchar_t						_tchar;
-
-
+	   
+	// DX9의 벡터타입을 쓸수 없음
 	typedef XMFLOAT2					_float2;
 	typedef XMFLOAT3					_float3;
 	typedef XMFLOAT4					_float4;

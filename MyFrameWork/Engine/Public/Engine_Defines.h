@@ -1,6 +1,7 @@
 #pragma once
 
 #pragma warning (disable : 4251)
+#pragma warning(disable : 4010)
 
 // d3d11.h만 추가하면 된다.
 // d3d11.lib;
@@ -18,6 +19,9 @@ using namespace DirectX;
 
 #include <process.h>
 
+//#include <string>
+//#include <fstream>
+//#include <tchar.h>
 #include <vector>
 #include <list>
 #include <map>
@@ -44,5 +48,6 @@ using namespace std;
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 #include "Engine_Struct.h"
+#include "Engine_Easing.h"
 
 using namespace Engine;

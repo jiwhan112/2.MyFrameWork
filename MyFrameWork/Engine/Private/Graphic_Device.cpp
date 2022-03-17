@@ -200,6 +200,9 @@ void CGraphic_Device::Free()
 #if defined(DEBUG) || defined(_DEBUG)
 	ID3D11Debug* d3dDebug;
 	HRESULT hr = m_pDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
+
+	// #Script Com 객체 메모리릭 체크 
+	// 올바르게 삭제가되면 화면이 출력된다.
 	if (SUCCEEDED(hr))
 	{
 		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r\n");

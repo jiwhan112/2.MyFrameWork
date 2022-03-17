@@ -7,9 +7,6 @@
     <Filter Include="00.System\Graphic">
       <UniqueIdentifier>{f3858e72-5d56-4669-9f2b-559b502978d8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.System\Input">
-      <UniqueIdentifier>{9a12242e-f1be-40e4-aa17-0af69ff890ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Defines">
       <UniqueIdentifier>{655daa61-7031-45e8-9a3c-c3b52a9379f4}</UniqueIdentifier>
     </Filter>
@@ -19,19 +16,31 @@
     <Filter Include="01.Utility\00.GameInstance">
       <UniqueIdentifier>{210e3a42-2b2d-4783-b3f9-d7193bd8e6b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\01.Mgr">
+      <UniqueIdentifier>{34ec57d3-2164-46f4-9b81-d17a46cf43b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\01.Mgr\01.Easing">
+      <UniqueIdentifier>{6fb8e174-9730-4bea-905a-56e006f43b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\01.Mgr\02.InputMgr">
+      <UniqueIdentifier>{9a12242e-f1be-40e4-aa17-0af69ff890ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
       <Filter>00.System\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Input_Device.cpp">
-      <Filter>00.System\Input</Filter>
+      <Filter>01.Utility\01.Mgr\02.InputMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Base.cpp">
       <Filter>01.Utility</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameInstance.cpp">
       <Filter>01.Utility\00.GameInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EasingMgr.cpp">
+      <Filter>01.Utility\01.Mgr\01.Easing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,7 +51,7 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Input_Device.h">
-      <Filter>00.System\Input</Filter>
+      <Filter>01.Utility\01.Mgr\02.InputMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Function.h">
       <Filter>99.Defines</Filter>
@@ -61,6 +70,12 @@
     </ClInclude>
     <ClInclude Include="..\public\GameInstance.h">
       <Filter>01.Utility\00.GameInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Easing.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EasingMgr.h">
+      <Filter>01.Utility\01.Mgr\01.Easing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

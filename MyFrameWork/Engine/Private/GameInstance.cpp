@@ -45,7 +45,11 @@ HRESULT CGameInstance::Present()
 
 void CGameInstance::Release_Engine()
 {
-	CGraphic_Device::GetInstance()->DestroyInstance();
+	if (0 != GetSingle(CGameInstance)->DestroyInstance())
+		MSGBOX("Failed to Release Com GameInstance");
+
+	if (0 != GetSingle(CGraphic_Device)->DestroyInstance())
+		MSGBOX("Failed to Release Com CGraphic_Device");
 }
 
 void CGameInstance::Free()
