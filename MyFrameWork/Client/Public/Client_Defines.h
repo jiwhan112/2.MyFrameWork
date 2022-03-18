@@ -15,6 +15,8 @@ struct ID3D11DeviceContext;
 extern ID3D11Device*		g_D3D11Device;
 extern ID3D11DeviceContext* g_D3D11DeviceContext;
 
+// extern float				g_Timer;
+
 namespace Client {}
 
 using namespace Client;

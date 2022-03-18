@@ -8,7 +8,6 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <typeinfo>
-
 using namespace DirectX;
 
 

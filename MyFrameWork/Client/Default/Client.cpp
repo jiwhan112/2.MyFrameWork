@@ -7,10 +7,6 @@
 
 #include "GameInstance.h"
 
-#include "../Public/Imgui/imgui.h"
-#include "../Public/Imgui/imgui_impl_win32.h"
-#include "../Public/Imgui/imgui_impl_dx11.h"
-
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -165,7 +161,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 
 	case WM_SIZE:
-
 		break;
 
     case WM_DESTROY:

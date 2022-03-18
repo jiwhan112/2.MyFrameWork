@@ -18,6 +18,7 @@ HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, WINMODE WinMode, _uint 
 #ifdef _DEBUG
 	iFlag = D3D11_CREATE_DEVICE_DEBUG;
 #endif
+
 	D3D_FEATURE_LEVEL			FeatureLV;
 
 	/* 그래픽 장치를 초기화한다. */

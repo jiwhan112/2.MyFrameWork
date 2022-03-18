@@ -34,11 +34,10 @@ HRESULT CMainApp::NativeConstruct()
 	g_D3D11Device = m_pDevice;
 	g_D3D11DeviceContext = m_pDeviceContext;
 
+
+	// IMGUI INIT
 	GetSingle(CImguiMgr)->InitImGUI(GraphicDesc.hWnd,m_pDevice, m_pDeviceContext);
 	
-
-
-
 	return S_OK;
 }
 
@@ -62,12 +61,13 @@ HRESULT CMainApp::Render()
 		return E_FAIL;
 
 	// 백버퍼 / 깊이버퍼 클리어
-	ImGui::Render();
 
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.0f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
+
 	// IMGUITEST
+	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	// 스왑체인
