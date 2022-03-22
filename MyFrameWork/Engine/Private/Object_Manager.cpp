@@ -6,7 +6,6 @@ IMPLEMENT_SINGLETON(CObject_Manager)
 
 CObject_Manager::CObject_Manager()
 {
-
 }
 
 CComponent * CObject_Manager::Get_Component(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pComponentTag, _uint iIndex)
@@ -89,13 +88,13 @@ HRESULT CObject_Manager::Clear_LevelObject(_uint iLevelIndex)
 	return S_OK;
 }
 
-_int CObject_Manager::Tick(_float fTimeDelta)
+_int CObject_Manager::Tick(_double TimeDelta)
 {
 	for (_uint i = 0; i < m_iNumLevels; ++i)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			if (0 > Pair.second->Tick(fTimeDelta))
+			if (0 > Pair.second->Tick(TimeDelta))
 				return -1;
 		}
 	}
@@ -103,13 +102,13 @@ _int CObject_Manager::Tick(_float fTimeDelta)
 	return _int();
 }
 
-_int CObject_Manager::LateTick(_float fTimeDelta)
+_int CObject_Manager::LateTick(_double TimeDelta)
 {
 	for (_uint i = 0; i < m_iNumLevels; ++i)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			if (0 > Pair.second->LateTick(fTimeDelta))
+			if (0 > Pair.second->LateTick(TimeDelta))
 				return -1;
 		}
 	}
@@ -129,8 +128,6 @@ CGameObject * CObject_Manager::Find_Prototype(const _tchar * pPrototypeTag)
 
 CLayer * CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
-
-
 	auto	iter = find_if(m_pLayers[iLevelIndex].begin(), m_pLayers[iLevelIndex].end(), CTagFinder(pLayerTag));
 
 	if (iter == m_pLayers[iLevelIndex].end())

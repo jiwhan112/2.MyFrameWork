@@ -27,8 +27,7 @@ HRESULT CMainApp::NativeConstruct()
 	GraphicDesc.iWinCY = g_iWinCY;
 
 
-
-	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
+	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
 		return E_FAIL;	
 
 	g_D3D11Device = m_pDevice;
@@ -43,12 +42,15 @@ HRESULT CMainApp::NativeConstruct()
 
 _int CMainApp::Tick(_double TimeDelta)
 {
+
+#pragma region IMGUI_TICK
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
 	bool btrue = true;
 	ImGui::ShowDemoWindow(&btrue);
+#pragma endregion
 
 
 	return _int();
@@ -66,9 +68,10 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_DepthStencil_View();
 
 
-	// IMGUITEST
+#pragma region IMGUI_RENDER
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#pragma endregion
 
 	// 스왑체인
 	m_pGameInstance->Present();

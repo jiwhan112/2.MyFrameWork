@@ -16,14 +16,47 @@
     <Filter Include="01.Utility\00.GameInstance">
       <UniqueIdentifier>{210e3a42-2b2d-4783-b3f9-d7193bd8e6b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\01.Mgr">
-      <UniqueIdentifier>{34ec57d3-2164-46f4-9b81-d17a46cf43b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\01.Mgr\01.Easing">
+    <Filter Include="01.Utility\01.EasingMgr">
       <UniqueIdentifier>{6fb8e174-9730-4bea-905a-56e006f43b59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\01.Mgr\02.InputMgr">
+    <Filter Include="01.Utility\02.InputMgr">
       <UniqueIdentifier>{9a12242e-f1be-40e4-aa17-0af69ff890ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.TimerMgr">
+      <UniqueIdentifier>{76d63527-4bf7-48ee-beda-ffe976caf65f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.LevelMgr">
+      <UniqueIdentifier>{a9213012-b530-4c9a-b785-d643eeaca3de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr">
+      <UniqueIdentifier>{31771e9d-ca24-4fcb-94e5-cc1135ff3350}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.GameObjectMgr">
+      <UniqueIdentifier>{a9428caa-7247-4bb1-a61c-b305774961bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.TimerMgr\Mgr">
+      <UniqueIdentifier>{4db6cc64-fe41-4559-9c47-d289e67b3b85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.GameObjectMgr\Mgr">
+      <UniqueIdentifier>{336d2526-b277-4e51-a3b0-f05a424be95e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.LevelMgr\Mgr">
+      <UniqueIdentifier>{10cf7b00-0911-45b9-8037-f5eb2cbb8a04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.GameObjectMgr\Layer">
+      <UniqueIdentifier>{0d4582c5-6ddd-43cd-8efb-652f497e4165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers">
+      <UniqueIdentifier>{c4eafae3-d44d-4d6b-a628-1372416d91e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\01.Renderer">
+      <UniqueIdentifier>{c70c9e27-cf0f-43a5-8221-ffc7be21ecae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\00.Mgr">
+      <UniqueIdentifier>{9f93e9a2-9d8e-47b6-9761-084fcba5ad98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Rect">
+      <UniqueIdentifier>{fd4af3e2-e635-403c-8d0b-e0bf2f6a4a61}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,7 +64,7 @@
       <Filter>00.System\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Input_Device.cpp">
-      <Filter>01.Utility\01.Mgr\02.InputMgr</Filter>
+      <Filter>01.Utility\02.InputMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Base.cpp">
       <Filter>01.Utility</Filter>
@@ -40,7 +73,43 @@
       <Filter>01.Utility\00.GameInstance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EasingMgr.cpp">
-      <Filter>01.Utility\01.Mgr\01.Easing</Filter>
+      <Filter>01.Utility\01.EasingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Timer_Manager.cpp">
+      <Filter>01.Utility\03.TimerMgr\Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Timer.cpp">
+      <Filter>01.Utility\03.TimerMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level.cpp">
+      <Filter>01.Utility\04.LevelMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Manager.cpp">
+      <Filter>01.Utility\04.LevelMgr\Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component.cpp">
+      <Filter>01.Utility\06.ComponentMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component_Manager.cpp">
+      <Filter>01.Utility\06.ComponentMgr\00.Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Renderer.cpp">
+      <Filter>01.Utility\06.ComponentMgr\01.Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp">
+      <Filter>01.Utility\05.GameObjectMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Manager.cpp">
+      <Filter>01.Utility\05.GameObjectMgr\Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>01.Utility\05.GameObjectMgr\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,7 +120,7 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Input_Device.h">
-      <Filter>01.Utility\01.Mgr\02.InputMgr</Filter>
+      <Filter>01.Utility\02.InputMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Function.h">
       <Filter>99.Defines</Filter>
@@ -75,7 +144,43 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EasingMgr.h">
-      <Filter>01.Utility\01.Mgr\01.Easing</Filter>
+      <Filter>01.Utility\01.EasingMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Timer_Manager.h">
+      <Filter>01.Utility\03.TimerMgr\Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Timer.h">
+      <Filter>01.Utility\03.TimerMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level.h">
+      <Filter>01.Utility\04.LevelMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Manager.h">
+      <Filter>01.Utility\04.LevelMgr\Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component.h">
+      <Filter>01.Utility\06.ComponentMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component_Manager.h">
+      <Filter>01.Utility\06.ComponentMgr\00.Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Renderer.h">
+      <Filter>01.Utility\06.ComponentMgr\01.Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h">
+      <Filter>01.Utility\05.GameObjectMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Manager.h">
+      <Filter>01.Utility\05.GameObjectMgr\Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>01.Utility\05.GameObjectMgr\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

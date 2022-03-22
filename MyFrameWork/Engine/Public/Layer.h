@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CLayer final : public CBase
+class ENGINE_DLL CLayer final : public CBase
 {
 public:
 	CLayer();
@@ -14,8 +14,8 @@ public:
 
 public:
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
-	_int Tick(_float fTimeDelta);
-	_int LateTick(_float fTimeDelta);
+	_int Tick(_double TimeDelta);
+	_int LateTick(_double TimeDelta);
 
 private:
 	list<class CGameObject*>			m_Objects;

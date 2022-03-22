@@ -13,12 +13,12 @@ HRESULT CLevel::NativeConstruct()
 	return S_OK;
 }
 
-_int CLevel::Tick(_float fTimeDelta)
+_int CLevel::Tick(_double TimeDelta)
 {
 	return _int();
 }
 
-_int CLevel::LateTick(_float fTimeDelta)
+_int CLevel::LateTick(_double TimeDelta)
 {
 	return _int();
 }

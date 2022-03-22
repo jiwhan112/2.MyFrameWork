@@ -13,8 +13,8 @@ public:
 	virtual ~CLevel() = default;
 public:
 	virtual HRESULT NativeConstruct();
-	virtual _int Tick(_float fTimeDelta);
-	virtual _int LateTick(_float fTimeDelta);
+	virtual _int Tick(_double TimeDelta);
+	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
 protected:

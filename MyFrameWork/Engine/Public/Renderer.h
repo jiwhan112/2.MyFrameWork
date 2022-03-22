@@ -12,7 +12,7 @@ class ENGINE_DLL CRenderer final : public CComponent
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONALPHA, RENDER_ALPHA, RENDER_UI, RENDER_END };
 public:
-	explicit CRenderer(LPDIRECT3DDEVICE9 pGraphic_Device);
+	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~CRenderer() = default;
 
 public:
@@ -34,7 +34,7 @@ private:
 	HRESULT Render_UI();
 
 public:
-	static CRenderer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free();
 };

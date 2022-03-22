@@ -21,8 +21,8 @@ public:
 	HRESULT Add_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg); /* 사본(게임내에 출현해야할 객체) 객체를 추가한다. */
 	HRESULT Clear_LevelObject(_uint iLevelIndex);
 public:
-	_int Tick(_float fTimeDelta);
-	_int LateTick(_float fTimeDelta);
+	_int Tick(_double TimeDelta);
+	_int LateTick(_double TimeDelta);
 private:
 	map<const _tchar*, class CGameObject*>			m_Prototypes;
 	typedef map<const _tchar*, class CGameObject*>	PROTOTYPES;

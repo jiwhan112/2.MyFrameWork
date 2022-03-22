@@ -13,7 +13,7 @@ HRESULT CLevel_Manager::OpenLevel(_uint iLevelIndex, CLevel * pNextLevel)
 	if (nullptr == pNextLevel)
 		return E_FAIL;
 
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 	
 	if(nullptr != m_pCurrentLevel)
 	{
@@ -27,25 +27,23 @@ HRESULT CLevel_Manager::OpenLevel(_uint iLevelIndex, CLevel * pNextLevel)
 
 	m_iCurrentLevelIndex = iLevelIndex;
 
-	RELEASE_INSTANCE(CGameInstance);
-
 	return S_OK;
 }
 
-_int CLevel_Manager::Tick(_float fTimeDelta)
+_int CLevel_Manager::Tick(_double TimeDelta)
 {
 	if (nullptr == m_pCurrentLevel)
 		return -1;
 
-	return m_pCurrentLevel->Tick(fTimeDelta);
+	return m_pCurrentLevel->Tick(TimeDelta);
 }
 
-_int CLevel_Manager::LateTick(_float fTimeDelta)
+_int CLevel_Manager::LateTick(_double TimeDelta)
 {
 	if (nullptr == m_pCurrentLevel)
 		return -1;
 
-	return m_pCurrentLevel->LateTick(fTimeDelta);
+	return m_pCurrentLevel->LateTick(TimeDelta);
 }
 
 HRESULT CLevel_Manager::Render()

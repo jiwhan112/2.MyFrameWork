@@ -3,10 +3,9 @@
 #include "GameObject.h"
 
 
-CRenderer::CRenderer(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CComponent(pGraphic_Device)
+CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+	: CComponent(pDevice, pDeviceContext)
 {
-	
 }
 
 HRESULT CRenderer::NativeConstruct_Prototype()
@@ -34,7 +33,6 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pRend
 
 HRESULT CRenderer::Render()
 {
-
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
 
@@ -46,6 +44,7 @@ HRESULT CRenderer::Render()
 
 	if (FAILED(Render_UI()))
 		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -85,10 +84,10 @@ HRESULT CRenderer::Render_NonAlpha()
 
 HRESULT CRenderer::Render_Alpha()
 {
-	m_RenderObjects[RENDER_ALPHA].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	/*m_RenderObjects[RENDER_ALPHA].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 	{
 		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
-	});
+	});*/
 
 	for (auto& pRenderObject : m_RenderObjects[RENDER_ALPHA])
 	{
@@ -106,11 +105,9 @@ HRESULT CRenderer::Render_Alpha()
 
 HRESULT CRenderer::Render_UI()
 {
-	if (nullptr == m_pGraphic_Device)
+	if (nullptr == m_pDevice ||
+		nullptr == m_pDeviceContext)
 		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, FALSE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	for (auto& pRenderObject : m_RenderObjects[RENDER_UI])
 	{
@@ -121,17 +118,14 @@ HRESULT CRenderer::Render_UI()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_UI].clear();
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	m_RenderObjects[RENDER_UI].clear();	
 
 	return S_OK;
 }
 
-CRenderer * CRenderer::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
-	CRenderer*	pInstance = new CRenderer(pGraphic_Device);
+	CRenderer*	pInstance = new CRenderer(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -144,7 +138,6 @@ CRenderer * CRenderer::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 CComponent * CRenderer::Clone(void * pArg)
 {
-	
 	AddRef();
 
 	return this;	

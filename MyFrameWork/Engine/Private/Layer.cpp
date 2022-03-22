@@ -3,7 +3,6 @@
 
 CLayer::CLayer()
 {
-
 }
 
 CComponent * CLayer::Get_Component(const _tchar * pComponentTag, _uint iIndex)
@@ -26,21 +25,21 @@ HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 	return S_OK;
 }
 
-_int CLayer::Tick(_float fTimeDelta)
+_int CLayer::Tick(_double TimeDelta)
 {
 	for (auto& pGameObject : m_Objects)
 	{
-		if (0 > pGameObject->Tick(fTimeDelta))
+		if (0 > pGameObject->Tick(TimeDelta))
 			return -1;
 	}
 	return 0;
 }
 
-_int CLayer::LateTick(_float fTimeDelta)
+_int CLayer::LateTick(_double TimeDelta)
 {
 	for (auto& pGameObject : m_Objects)
 	{
-		if (0 > pGameObject->LateTick(fTimeDelta))
+		if (0 > pGameObject->LateTick(TimeDelta))
 			return -1;
 	}
 

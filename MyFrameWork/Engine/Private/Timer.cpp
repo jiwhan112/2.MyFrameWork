@@ -1,7 +1,7 @@
 #include "Timer.h"
 
 CTimer::CTimer()
-	: m_fTimeDelta(0.f)
+	: m_dTimeDelta(0.f)
 
 {	
 	QueryPerformanceCounter(&m_CurrentTime);		// 1000
@@ -10,7 +10,7 @@ CTimer::CTimer()
 	QueryPerformanceFrequency(&m_CpuTick);			// 1600000
 }
 
-_float CTimer::Get_TimeDelta(void)
+_double CTimer::Get_TimeDelta(void)
 {
 	QueryPerformanceCounter(&m_CurrentTime);	// 2000	//	3000 // 4000 // 5000
 
@@ -20,12 +20,11 @@ _float CTimer::Get_TimeDelta(void)
 		m_OriginTime = m_CurrentTime;
 	}
 
-	m_fTimeDelta = float(m_CurrentTime.QuadPart - m_OldTime.QuadPart) / m_CpuTick.QuadPart;
+	m_dTimeDelta = _double(m_CurrentTime.QuadPart - m_OldTime.QuadPart) / m_CpuTick.QuadPart;
 
 	m_OldTime = m_CurrentTime;
 
-	return m_fTimeDelta;
-	
+	return m_dTimeDelta;
 }
 
 CTimer * CTimer::Create()
