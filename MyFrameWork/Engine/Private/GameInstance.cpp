@@ -24,17 +24,12 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 		nullptr == m_pObject_Manager)
 		return E_FAIL;
 
-	if (FAILED(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinCX, GraphicDesc.iWinCY, ppDeviceOut, ppDeviceContextOut)))
-		return E_FAIL;
 
-	if (FAILED(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd)))
-		return E_FAIL;
 
-	if (FAILED(m_pObject_Manager->Reserve_Container(iNumLevels)))
-		return E_FAIL;
-
-	if (FAILED(m_pComponent_Manager->Reserve_Container(iNumLevels)))
-		return E_FAIL;
+	FAILED_CHECK(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinCX, GraphicDesc.iWinCY, ppDeviceOut, ppDeviceContextOut));
+	FAILED_CHECK(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd));
+	FAILED_CHECK(m_pObject_Manager->Reserve_Container(iNumLevels));
+	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 
 	return S_OK;
 }
@@ -44,23 +39,17 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pObject_Manager)
 		return -1;
+	FAILED_CHECK(m_pInput_Device->SetUp_InputDeviceState());
 
-	if (FAILED(m_pInput_Device->SetUp_InputDeviceState()))
-		return -1;
+	// Tick
+	FAILED_CHECK(m_pLevel_Manager->Tick(TimeDelta));
+	FAILED_CHECK(m_pObject_Manager->Tick(TimeDelta));
 
-	if (0 > m_pObject_Manager->Tick(TimeDelta))
-		return -1;
+	// LateTick
+	FAILED_CHECK(m_pLevel_Manager->LateTick(TimeDelta));
+	FAILED_CHECK(m_pObject_Manager->LateTick(TimeDelta));
 
-	if (0 > m_pLevel_Manager->Tick(TimeDelta))
-		return -1;
-
-	if (0 > m_pObject_Manager->LateTick(TimeDelta))
-		return -1;
-
-	if (0 > m_pLevel_Manager->LateTick(TimeDelta))
-		return -1;
-
-	return _int();
+	return 0;
 }
 
 HRESULT CGameInstance::Clear_LevelResource(_uint iLevelIndex)

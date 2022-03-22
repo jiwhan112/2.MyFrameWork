@@ -19,6 +19,7 @@ public:
 	HRESULT Render();
 
 protected:
+	// DX11
 	ID3D11Buffer*				m_pVB = nullptr;
 	D3D11_BUFFER_DESC			m_VBDesc;
 	D3D11_SUBRESOURCE_DATA		m_VBSubResourceData;

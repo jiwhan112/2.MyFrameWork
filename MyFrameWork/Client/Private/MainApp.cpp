@@ -4,9 +4,8 @@
 
 #include "ImguiMgr.h"
 
-
-ID3D11Device*			g_D3D11Device;
-ID3D11DeviceContext*	g_D3D11DeviceContext;
+#include "Level_Logo.h"
+#include "Level_Loader.h"
 
 
 CMainApp::CMainApp()
@@ -30,29 +29,20 @@ HRESULT CMainApp::NativeConstruct()
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
 		return E_FAIL;	
 
-	g_D3D11Device = m_pDevice;
-	g_D3D11DeviceContext = m_pDeviceContext;
-
-
 	// IMGUI INIT
 	GetSingle(CImguiMgr)->InitImGUI(GraphicDesc.hWnd,m_pDevice, m_pDeviceContext);
 	
+
+	
+	FAILED_CHECK(Ready_Prototype_Components());
+	FAILED_CHECK(Open_Level(LEVEL_LOGO));
+
 	return S_OK;
 }
 
 _int CMainApp::Tick(_double TimeDelta)
 {
-
-#pragma region IMGUI_TICK
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	bool btrue = true;
-	ImGui::ShowDemoWindow(&btrue);
-#pragma endregion
-
-
+	m_pGameInstance->Tick_Engine(TimeDelta);
 	return _int();
 }
 
@@ -67,15 +57,40 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.0f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
-
-#pragma region IMGUI_RENDER
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-#pragma endregion
+	m_pGameInstance->Render_Level();
 
 	// 스왑체인
 	m_pGameInstance->Present();
 
+	return S_OK;
+}
+
+HRESULT CMainApp::Open_Level(E_LEVEL eLevelIndex)
+{
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
+
+	HRESULT		hr = 0;
+
+	switch (eLevelIndex)
+	{
+	case LEVEL_LOGO:
+		hr = m_pGameInstance->OpenLevel(eLevelIndex, CLevel_Logo::Create(m_pDevice, m_pDeviceContext));
+		break;
+	default:
+		hr = m_pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, eLevelIndex));
+		break;
+	}
+
+	if (FAILED(hr))
+		return E_FAIL;
+
+	return S_OK;
+
+}
+
+HRESULT CMainApp::Ready_Prototype_Components()
+{
 	return S_OK;
 }
 

@@ -58,6 +58,12 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Rect">
       <UniqueIdentifier>{fd4af3e2-e635-403c-8d0b-e0bf2f6a4a61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.ThirdParty">
+      <UniqueIdentifier>{dcfb316d-1afc-40af-9481-fe24060f4d35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.ThirdParty\FX11">
+      <UniqueIdentifier>{c97fa1e5-2aec-413b-9669-b318da90ccc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -181,6 +187,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Rect.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\d3dx11effect.h">
+      <Filter>02.ThirdParty\FX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\d3dxGlobal.h">
+      <Filter>02.ThirdParty\FX11</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

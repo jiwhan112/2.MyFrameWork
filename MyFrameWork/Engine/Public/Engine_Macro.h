@@ -139,3 +139,4 @@ return _return;}
 
 
 
+#define FAILED_UPDATE(_func) if(0>_func) {__debugbreak(); return -1;}

@@ -42,9 +42,6 @@ HRESULT CVIBuffer::Render()
 		0, 
 	};
 
-//	ID3D11InputLayout*			pInputLayout;
-//	ID3DX11EffectPass*			pPass;
-
 
 //	m_pDevice->CreateInputLayout(내가 셰이더에 전달하고자하는 정점의 구성정보, 갯수, 셰이더에서 받고자하는 정점의 구성정보, 길이);
 

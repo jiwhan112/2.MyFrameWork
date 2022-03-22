@@ -5,8 +5,6 @@
 #include "Client.h"
 #include "MainApp.h"
 
-#include "GameInstance.h"
-
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -29,9 +27,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: 여기에 코드를 입력합니다.
-	CMainApp*			pMainApp = nullptr;
-
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
@@ -47,10 +42,27 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
+	// TODO: 여기에 코드를 입력합니다.
+	CMainApp*			pMainApp = nullptr;
 	pMainApp = CMainApp::Create();
 	if (nullptr == pMainApp)
 		return FALSE;
 
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+	if (nullptr == pGameInstance)
+		return FALSE;
+
+	/* For.Timer_Default */
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Default"))))
+		return FALSE;
+
+	/* For.Timer_60 */
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_60"))))
+		return FALSE;
+
+	_double dTimeAcc = 0.f;
+
+	const double dFrameTime = 1 / 60;
     // 기본 메시지 루프입니다.
 	while (true)
 	{
@@ -64,15 +76,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				DispatchMessage(&msg);
 			}
 		}
-		else
+
+		dTimeAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
+
+		if (dTimeAcc > dFrameTime)
 		{
-			pMainApp->Tick(0.0);
-			pMainApp->Render();			
-		}
+			dTimeAcc = 0.f;
+
+			pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+			pMainApp->Render();
+		}	
 	}
 	
-	Safe_Release(pMainApp);
- 
+	if (0 != Safe_Release(pMainApp))
+		MSGBOX("Failed to Release CMainApp"); 
 
     return (int) msg.wParam;
 }

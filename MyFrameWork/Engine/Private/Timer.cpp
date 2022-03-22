@@ -21,7 +21,15 @@ _double CTimer::Get_TimeDelta(void)
 	}
 
 	m_dTimeDelta = _double(m_CurrentTime.QuadPart - m_OldTime.QuadPart) / m_CpuTick.QuadPart;
+	
+#ifdef  _DEBUG
+	// 브레이크 포인터시 시간 X
+	if (m_dTimeDelta >= 1)
+		m_dTimeDelta = 0;
 
+#endif //  DEBUG
+
+	
 	m_OldTime = m_CurrentTime;
 
 	return m_dTimeDelta;

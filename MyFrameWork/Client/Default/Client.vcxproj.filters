@@ -28,6 +28,30 @@
     <Filter Include="10.Imgui\02.lib">
       <UniqueIdentifier>{5d3dcb41-c8b6-4ca9-8706-1437af281d0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level">
+      <UniqueIdentifier>{e0ac6f03-be32-44f3-80ec-1a4383b706f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject">
+      <UniqueIdentifier>{50b70050-4637-419c-8679-0b6c3f007a82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\01.Logo">
+      <UniqueIdentifier>{b4aa105d-68d7-4d04-81f7-1685264b2803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\05.Tool">
+      <UniqueIdentifier>{6e1457d3-629f-4757-8325-e75a80657b8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\01.GamePlay">
+      <UniqueIdentifier>{259c8bc0-9f21-472e-b50c-69acbaf0fe78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\00.Loader">
+      <UniqueIdentifier>{4b0fbd7b-703e-42c1-99d2-287ab5d4b683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\00.Loader\Loader">
+      <UniqueIdentifier>{89db6d63-2b5b-40ca-9cb3-2a05895aaeac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Shaders">
+      <UniqueIdentifier>{8d4bad26-419a-4f30-9d72-694e1b7224ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -41,9 +65,6 @@
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>98.Default\01.Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>98.Default\02.stdafx</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>98.Default\01.Resource</Filter>
@@ -78,6 +99,27 @@
     <ClInclude Include="..\Public\Client_Includes.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="Client_Enum.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loader.h">
+      <Filter>01.Level\00.Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Logo.h">
+      <Filter>01.Level\01.Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Level\01.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Tool.h">
+      <Filter>01.Level\05.Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\stdafx.h">
+      <Filter>98.Default\02.stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01.Level\00.Loader\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -85,9 +127,6 @@
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>98.Default\00.main</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>98.Default\02.stdafx</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui.cpp">
       <Filter>10.Imgui\02.lib</Filter>
@@ -113,6 +152,24 @@
     <ClCompile Include="..\Private\ImguiMgr.cpp">
       <Filter>10.Imgui\01.Mgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Level_Loader.cpp">
+      <Filter>01.Level\00.Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Logo.cpp">
+      <Filter>01.Level\01.Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>01.Level\01.GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Tool.cpp">
+      <Filter>01.Level\05.Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\stdafx.cpp">
+      <Filter>98.Default\02.stdafx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01.Level\00.Loader\Loader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -126,5 +183,10 @@
     <ResourceCompile Include="Client.rc">
       <Filter>98.Default\01.Resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -8,6 +8,11 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <typeinfo>
+
+// 셰이더 관련 Include
+#include <d3dcompiler.h>
+#include <d3dx11effect.h>
+
 using namespace DirectX;
 
 
@@ -15,7 +20,6 @@ using namespace DirectX;
 // Dinput에 필요한 라이브러리
 // dinput8.lib;dxguid.lib;
 #include <dinput.h>
-
 #include <process.h>
 
 //#include <string>
