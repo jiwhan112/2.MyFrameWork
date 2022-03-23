@@ -56,6 +56,7 @@ HRESULT CVIBuffer::Render()
 	m_pDeviceContext->DrawIndexed(m_iNumIndicesPerPrimitive * m_iNumPrimitive, 0, 0);
 
 	return S_OK;
+
 }
 
 

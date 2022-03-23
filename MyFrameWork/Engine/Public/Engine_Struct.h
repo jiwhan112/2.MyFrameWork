@@ -12,11 +12,29 @@ namespace Engine
 		XMFLOAT2			vTexUV;
 	}VTXTEX;
 
+	// 정점의 타입을 여기서 정의하지 않고 struct.cpp 파일에서 정의해준다.
+	typedef struct ENGINE_DLL tagVertex_Texture_Declaration
+	{
+		static const unsigned int iNumElements = 2;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXTEX_DECLARATION;
+
+
+
 	typedef struct tagVertex_CubeTexture
 	{
 		XMFLOAT3			vPosition;
 		XMFLOAT3			vTexUV;
 	}VTXCUBETEX;
+
+	typedef struct ENGINE_DLL tagVertex_Cube_Texture_Declaration
+	{
+		static const unsigned int iNumElements = 2;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXCUBETEX_DECLARATION;
+
+
+
 
 	typedef struct tagVertex_Normal_Texture
 	{
@@ -24,20 +42,12 @@ namespace Engine
 		XMFLOAT3			vNormal;
 		XMFLOAT2			vTexUV;
 	}VTXNORTEX;
-	
 
-	typedef struct tagVertex_Texture_Declaration
+	typedef struct ENGINE_DLL tagVertex_Normal_Texture_Declaration
 	{
-		static const unsigned int iNumElements = 2;
-
-		D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements] =
-		{
-			Elements[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			Elements[1] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
-
-	}VTXTEX_DECLARATION;
-
+		static const unsigned int iNumElements = 3;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXNORTEX_DECLARATION;
 
 
 
