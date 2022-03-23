@@ -7,6 +7,7 @@
 #include "Level_Logo.h"
 #include "Level_Loader.h"
 
+#include "GameObject_BackGround.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -17,24 +18,9 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::NativeConstruct()
 {
-	CGraphic_Device::GRAPHICDESC GraphicDesc;
-	ZeroMemory(&GraphicDesc, sizeof(CGraphic_Device::GRAPHICDESC));
-
-	GraphicDesc.hWnd = g_hWnd;
-	GraphicDesc.eWinMode = CGraphic_Device::MODE_WIN;
-	GraphicDesc.iWinCX = g_iWinCX;
-	GraphicDesc.iWinCY = g_iWinCY;
-
-
-	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
-		return E_FAIL;	
-
-	// IMGUI INIT
-	GetSingle(CImguiMgr)->InitImGUI(GraphicDesc.hWnd,m_pDevice, m_pDeviceContext);
-	
-
-	
+	FAILED_CHECK(Ready_Initialize());
 	FAILED_CHECK(Ready_Prototype_Components());
+	FAILED_CHECK(Ready_Prototype_GameObject());	
 	FAILED_CHECK(Open_Level(LEVEL_LOGO));
 
 	return S_OK;
@@ -58,6 +44,7 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_DepthStencil_View();
 
 	m_pGameInstance->Render_Level();
+	m_pRenderer->Render();
 
 	// 스왑체인
 	m_pGameInstance->Present();
@@ -89,10 +76,58 @@ HRESULT CMainApp::Open_Level(E_LEVEL eLevelIndex)
 
 }
 
-HRESULT CMainApp::Ready_Prototype_Components()
+HRESULT CMainApp::Ready_Initialize()
 {
+	CGraphic_Device::GRAPHICDESC GraphicDesc;
+	ZeroMemory(&GraphicDesc, sizeof(CGraphic_Device::GRAPHICDESC));
+
+	GraphicDesc.hWnd = g_hWnd;
+	GraphicDesc.eWinMode = CGraphic_Device::MODE_WIN;
+	GraphicDesc.iWinCX = g_iWinCX;
+	GraphicDesc.iWinCY = g_iWinCY;
+
+
+	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
+		return E_FAIL;
+
+	// IMGUI INIT
+	GetSingle(CImguiMgr)->InitImGUI(GraphicDesc.hWnd, m_pDevice, m_pDeviceContext);
+
 	return S_OK;
 }
+
+HRESULT CMainApp::Ready_Prototype_Components()
+{
+	// #Tag 컴포넌트 원형 초기화
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER),
+		m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext)));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),
+		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
+
+	// 해당 셰이더 파일로 세팅한다.
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), 
+			VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements)));
+
+	Safe_AddRef(m_pRenderer);
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_GameObject()
+{
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+
+	/* For.Prototype_GameObject_BackGround */
+	if (FAILED(pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
+		CGameObject_BackGround::Create(m_pDevice, m_pDeviceContext))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+
 
 CMainApp * CMainApp::Create()
 {
@@ -108,6 +143,7 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	Safe_Release(m_pRenderer);
 	Safe_Release(m_pDeviceContext);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pGameInstance);

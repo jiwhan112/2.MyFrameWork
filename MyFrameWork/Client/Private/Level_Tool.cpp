@@ -4,6 +4,7 @@
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice,pDeviceContext)
 {
+	mLevelIndex = LEVEL_TOOL;
 
 }
 

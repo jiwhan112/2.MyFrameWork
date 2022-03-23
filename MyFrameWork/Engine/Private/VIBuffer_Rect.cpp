@@ -44,9 +44,9 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype()
 	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
 	pVertices[3].vTexUV = _float2(0.f, 1.f);
 
-	// 메모리에 세팅되는 방식이 조금 DX9과 다르다.
-	// 버퍼리소스 subSource데이터 텍스처 인덱스 정수등의 버퍼들은 리소스내에 실제 데이터들이다.
-	// pVertices들의 버퍼를 서브 리소스의 포인터에 넣어주고 CreateData에서 버퍼의 타입과 실제 데이터로 버텍스 버퍼를 생성한다.
+	// 버퍼리소스 D3D11_SUBRESOURCE_DATA 데이터 텍스처 인덱스 정수등의 버퍼들은 리소스내에 실제 데이터들이다.
+	// pVertices들의 버퍼를 서브 리소스의 포인터에 넣어주고 CreateData에서 
+	// 버퍼의 타입과 실제 데이터로 버텍스 버퍼를 생성한다.
 	ZeroMemory(&m_VBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_VBSubResourceData.pSysMem = pVertices;
 

@@ -5,7 +5,7 @@
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice,pDeviceContext)
 {
-
+	mLevelIndex = LEVEL_LOGO;
 }
 
 
@@ -58,9 +58,6 @@ HRESULT CLevel_Logo::Render()
 	SetWindowText(g_hWnd, TEXT("LOGO Level"));
 
 #endif //  _DEBUG
-
-
-
 	return S_OK;
 }
 
@@ -77,6 +74,8 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
+	
+	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
 	return S_OK;
 }
 

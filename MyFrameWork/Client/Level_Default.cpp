@@ -39,21 +39,6 @@ HRESULT CLevel_Logo::Render()
 	return S_OK;
 }
 
-HRESULT CLevel_Logo::Ready_Prototype_GameObject()
-{
-
-	return S_OK;
-}
-
-HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
-{
-	return S_OK;
-}
-
-HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
-{
-	return S_OK;
-}
 
 CLevel_Logo * CLevel_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

@@ -20,7 +20,9 @@ public:
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
-	
+
+	_uint					mLevelIndex = -1;
+
 public:
 	virtual void Free() override;
 };

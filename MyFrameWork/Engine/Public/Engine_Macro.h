@@ -75,6 +75,9 @@
 			return dwRefCnt;									\
 		}
 
+#define  UPDATENONE		0
+#define  UPDATEERROR	-1
+
 // 디버그 체크 메크로
 // {__asm { int 3; }; 코드 레벨에서 Break 포인트 걸기 86비트 전용
 // __debugbreak(); 코드 레벨에서 Break 포인트 걸기 64비트 전용

@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CGameInstance;
+class CRenderer;
 END
 
 BEGIN(Client)
@@ -14,6 +15,7 @@ class CMainApp final : public CBase
 private:
 	CMainApp();
 	virtual ~CMainApp() = default;
+
 public:
 	HRESULT NativeConstruct();
 	_int Tick(_double TimeDelta);
@@ -24,9 +26,11 @@ public:
 
 private:
 	CGameInstance*			m_pGameInstance = nullptr;
+	CRenderer*				m_pRenderer = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
+	
 
 #ifdef _DEBUG
 private:
@@ -34,8 +38,9 @@ private:
 	_ulong				m_dwNumRender = 0;
 	_double				m_dTimerAcc = 0.0f;
 #endif // _DEBUG
-
+	HRESULT Ready_Initialize();
 	HRESULT Ready_Prototype_Components();
+	HRESULT Ready_Prototype_GameObject();
 
 public:
 	static CMainApp* Create();

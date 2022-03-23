@@ -4,7 +4,7 @@
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice,pDeviceContext)
 {
-
+	mLevelIndex = LEVEL_GAMEPLAY;
 }
 
 
@@ -20,12 +20,13 @@ _int CLevel_GamePlay::Tick(_double TimeDelta)
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 
-	return _int();
+	return UPDATENONE;
 }
 
 _int CLevel_GamePlay::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	return UPDATENONE;
 }
 
 HRESULT CLevel_GamePlay::Render()

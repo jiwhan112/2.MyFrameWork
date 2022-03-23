@@ -16,7 +16,7 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);
 
 public:
-	HRESULT Render();
+	HRESULT Render(class CShader* shader, _uint passindex);
 
 protected:
 	// DX11용 VB 생성
@@ -26,7 +26,6 @@ protected:
 	_uint						m_iNumVertices = 0;		// 버텍스 개수
 	_uint						m_iNumVertexBuffers = 0;// 바인딩할 모델 개수
 
-protected:
 	// DX11용 IB 생성
 	ID3D11Buffer*				m_pIB = nullptr;				// 
 	D3D11_BUFFER_DESC			m_IBDesc;						// DESC

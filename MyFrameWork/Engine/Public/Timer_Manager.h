@@ -14,7 +14,7 @@ private:
 	virtual ~CTimer_Manager() = default;
 
 public:
-	_float	Get_TimeDelta(const _tchar* pTimerTag);
+	_double	Get_TimeDelta(const _tchar* pTimerTag);
 
 public:
 	HRESULT Add_Timer(const _tchar* pTimerTag);

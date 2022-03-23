@@ -8,7 +8,7 @@ CTimer_Manager::CTimer_Manager()
 
 }
 
-_float CTimer_Manager::Get_TimeDelta(const _tchar * pTimerTag)
+_double CTimer_Manager::Get_TimeDelta(const _tchar * pTimerTag)
 {
 	CTimer*	pTimer = Find_Timer(pTimerTag);
 

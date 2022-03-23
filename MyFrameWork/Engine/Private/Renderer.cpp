@@ -66,7 +66,7 @@ HRESULT CRenderer::Render_Priority()
 
 HRESULT CRenderer::Render_NonAlpha()
 {
-	for (auto& pRenderObject : m_RenderObjects[RENDER_NONALPHA])
+	for (auto& pRenderObject : m_RenderObjects[RENDER_NONBLEND])
 	{
 		if (nullptr != pRenderObject)
 		{
@@ -75,7 +75,7 @@ HRESULT CRenderer::Render_NonAlpha()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_NONALPHA].clear();
+	m_RenderObjects[RENDER_NONBLEND].clear();
 
 	return S_OK;
 }
@@ -89,7 +89,7 @@ HRESULT CRenderer::Render_Alpha()
 		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
 	});*/
 
-	for (auto& pRenderObject : m_RenderObjects[RENDER_ALPHA])
+	for (auto& pRenderObject : m_RenderObjects[RENDER_BLEND])
 	{
 		if (nullptr != pRenderObject)
 		{
@@ -98,7 +98,7 @@ HRESULT CRenderer::Render_Alpha()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_ALPHA].clear();
+	m_RenderObjects[RENDER_BLEND].clear();
 
 	return S_OK;
 }

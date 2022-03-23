@@ -20,10 +20,6 @@ private:
 	ID3D11Device*			mpDevice;
 	ID3D11DeviceContext*	mpDeviceContext;
 
-private:
-	HRESULT Ready_Prototype_GameObject();
-	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

@@ -52,6 +52,9 @@
     <Filter Include="97.Shaders">
       <UniqueIdentifier>{8d4bad26-419a-4f30-9d72-694e1b7224ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.BackGround">
+      <UniqueIdentifier>{f3e6f898-9cb3-4b56-a2f4-43df4f56ed11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01.Level\00.Loader\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject_BackGround.h">
+      <Filter>02.GameObject\01.BackGround</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -169,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01.Level\00.Loader\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject_BackGround.cpp">
+      <Filter>02.GameObject\01.BackGround</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
