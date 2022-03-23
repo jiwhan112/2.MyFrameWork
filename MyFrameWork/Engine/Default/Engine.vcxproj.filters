@@ -64,6 +64,9 @@
     <Filter Include="02.ThirdParty\FX11">
       <UniqueIdentifier>{c97fa1e5-2aec-413b-9669-b318da90ccc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\03.Shader">
+      <UniqueIdentifier>{87372f41-f3e4-41a8-b88d-571bce57fd1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -116,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shader.cpp">
+      <Filter>01.Utility\06.ComponentMgr\03.Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\d3dxGlobal.h">
       <Filter>02.ThirdParty\FX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Shader.h">
+      <Filter>01.Utility\06.ComponentMgr\03.Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
