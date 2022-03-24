@@ -32,20 +32,20 @@ _int CLevel_Logo::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	if (GetKeyState(VK_RETURN) & 0x8000)
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+
+
+	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & 0x8000)
 	{
-		CGameInstance*	pGameInstance = GetSingle(CGameInstance);
 
 		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
 	}
 
-	if (GetKeyState(VK_SPACE) & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x8000)
 	{
-		CGameInstance*	pGameInstance = GetSingle(CGameInstance);
 
 		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_TOOL)));
 	}
-
 
 	return 0;
 }
@@ -73,8 +73,7 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 }
 
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
-{
-	
+{	
 	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
 	return S_OK;
 }

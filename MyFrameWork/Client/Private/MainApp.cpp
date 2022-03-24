@@ -117,12 +117,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 HRESULT CMainApp::Ready_Prototype_GameObject()
 {
-	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+	// #Tag 오브젝트 원형 초기화
 
 	/* For.Prototype_GameObject_BackGround */
-	if (FAILED(pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
-		CGameObject_BackGround::Create(m_pDevice, m_pDeviceContext))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
+		CGameObject_BackGround::Create(m_pDevice, m_pDeviceContext)));
 
 	return S_OK;
 }
