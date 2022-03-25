@@ -13,6 +13,13 @@
 #include <d3dcompiler.h>
 #include <d3dx11effect.h>
 
+// 텍스처 로드 관련 Include
+// DDS 및 이외의 텍스처 로드 단 tga는 지원 안함
+// DDS가 가장 빠르다.
+#include <Direct_TK/DDSTextureLoader.h>
+#include <Direct_TK/WICTextureLoader.h>
+
+
 using namespace DirectX;
 
 
