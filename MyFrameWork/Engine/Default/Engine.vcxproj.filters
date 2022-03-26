@@ -67,6 +67,15 @@
     <Filter Include="01.Utility\06.ComponentMgr\03.Shader">
       <UniqueIdentifier>{87372f41-f3e4-41a8-b88d-571bce57fd1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\04.Texture">
+      <UniqueIdentifier>{a4535905-e444-4861-a59b-25d2f078f54c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Cube">
+      <UniqueIdentifier>{665b2c5d-6ea8-43ad-84ff-a14bb11971b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\05.Transform">
+      <UniqueIdentifier>{26697cf6-ef53-424b-8cb3-89299c897472}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -125,6 +134,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Engine_Struct.cpp">
       <Filter>99.Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transform.cpp">
+      <Filter>01.Utility\06.ComponentMgr\05.Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Texture.cpp">
+      <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +223,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Shader.h">
       <Filter>01.Utility\06.ComponentMgr\03.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Transform.h">
+      <Filter>01.Utility\06.ComponentMgr\05.Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Texture.h">
+      <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

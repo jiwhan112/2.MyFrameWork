@@ -9,6 +9,7 @@
 ## MyFrameWork/Client/bin/**/*.* 
 MyFrameWork/Client/Default/x64/**/*.*
 MyFrameWork/Client/Default/x86/**/*.*
+MyFrameWork/Client/Bin/Resources/**/*.*
 
 ## MyFrameWork/Engine/bin/**/*.* 
 MyFrameWork/Engine/Default/x64/**/*.*

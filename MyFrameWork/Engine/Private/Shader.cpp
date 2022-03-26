@@ -119,15 +119,17 @@ HRESULT CShader::Set_RawValue(const char * pValueName, void * pData, _uint iLeng
 
 HRESULT CShader::Set_Texture(const char * pValueName, ID3D11ShaderResourceView * pShaderResourceView)
 {
+	// 해당 값이 유효한지 확인
 	ID3DX11EffectVariable*		pValue = m_pEffect->GetVariableByName(pValueName);
 	if (nullptr == pValue)
 		return E_FAIL;
-	
+
+	// 해당 리소스가 텍스처를 받는 리소스가 맞는지 확인
 	ID3DX11EffectShaderResourceVariable* pValueTex = pValue->AsShaderResource();
 	if (nullptr == pValueTex)
 		return E_FAIL;
 
-	// 한번 변환된 값을 ID3D11ShaderResourceView 형으로 바꿔야한다. 텍스처 매핑할때 다시
+	// 텍스처 ID3D11ShaderResourceView 타입으로 세팅
 	return pValueTex->SetResource(pShaderResourceView);
 }
 

@@ -5,6 +5,8 @@ BEGIN(Engine)
 class CShader;
 class CRenderer;
 class CVIBuffer_Rect;
+class CTexture;
+class CTransform;
 END
 
 BEGIN(Client)
@@ -27,10 +29,13 @@ public:
 
 public:
 	HRESULT Set_Component();
+
 private:
-	CShader*		mComShader = nullptr;
-	CRenderer*		mComRenderer = nullptr;
-	CVIBuffer_Rect*	mComVIBuffer = nullptr;
+	CShader*			mComShader = nullptr;
+	CRenderer*			mComRenderer = nullptr;
+	CVIBuffer_Rect*		mComVIBuffer = nullptr;
+	CTexture*			mComTexture = nullptr;
+//	CTransform*			mComTransform = nullptr;
 
 public:
 	static CGameObject_BackGround* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

@@ -17,10 +17,6 @@ public:
 	virtual HRESULT Render();
 
 private:
-	ID3D11Device*			mpDevice;
-	ID3D11DeviceContext*	mpDeviceContext;
-
-private:
 	HRESULT Ready_Prototype_GameObject();
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);

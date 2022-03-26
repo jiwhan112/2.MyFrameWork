@@ -17,9 +17,6 @@ public:
 	virtual HRESULT Render();
 
 private:
-	ID3D11Device*			mpDevice;
-	ID3D11DeviceContext*	mpDeviceContext;
-
 	bool bImguiInit; 
 	bool bImguiDemo; 
 

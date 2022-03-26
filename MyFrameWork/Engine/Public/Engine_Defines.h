@@ -36,7 +36,10 @@ using namespace DirectX;
 #include <list>
 #include <map>
 #include <algorithm>
+#include <time.h>
+
 using namespace std;
+
 
 #ifdef _DEBUG
 
@@ -44,14 +47,12 @@ using namespace std;
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#ifndef DBG_NEW 
+#define DBG_NEW new ( _NORMAL_BLOCK, __FILE__,__LINE__ ) 
 
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
-#define new DBG_NEW 
+#else 
+#define DBG_NEW new
 
 #endif
-
-#endif // _DEBUG
 
 
 #include "Engine_Macro.h"

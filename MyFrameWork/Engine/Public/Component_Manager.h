@@ -1,10 +1,12 @@
 #pragma once
 
-// 엔진에서 선언된 컴포넌트들 정의
+// #Components 컴포넌트 선언
 #include "Renderer.h"
 #include "Shader.h"
-#include "VIBuffer.h"
+#include "Texture.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Cube.h"
+#include "Transform.h"
 
 
 /* 컴포넌트 원형들을 모아놓는다. */

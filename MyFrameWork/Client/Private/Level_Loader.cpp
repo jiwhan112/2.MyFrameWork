@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Level_Loader.h"
+#include "Level_Logo.h"
 #include "Level_GamePlay.h"
 #include "Level_Tool.h"
 
@@ -44,7 +45,8 @@ _int CLevel_Loader::LateTick(_double TimeDelta)
 		switch (mNextLevel)
 		{
 		case LEVEL_GAMEPLAY:
-			pLevel = CLevel_GamePlay::Create(m_pDevice, m_pDeviceContext);
+			pLevel = CLevel_Logo::Create(m_pDevice, m_pDeviceContext);
+		//	pLevel = CLevel_GamePlay::Create(m_pDevice, m_pDeviceContext);
 			break;
 		case LEVEL_TOOL:
 			pLevel = CLevel_Tool::Create(m_pDevice,m_pDeviceContext);

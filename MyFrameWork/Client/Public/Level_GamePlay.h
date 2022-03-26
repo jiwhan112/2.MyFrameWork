@@ -16,10 +16,6 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
-private:
-	ID3D11Device*			mpDevice;
-	ID3D11DeviceContext*	mpDeviceContext;
-
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
