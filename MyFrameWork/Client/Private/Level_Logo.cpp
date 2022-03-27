@@ -74,13 +74,13 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {	
-//	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
+	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
 	return S_OK;
 }
 
 CLevel_Logo * CLevel_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CLevel_Logo*	pInstance = new CLevel_Logo(pDevice, pDeviceContext);
+	CLevel_Logo*	pInstance = DBG_NEW CLevel_Logo(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{

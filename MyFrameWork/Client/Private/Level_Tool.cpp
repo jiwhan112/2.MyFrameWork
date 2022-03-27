@@ -63,7 +63,7 @@ HRESULT CLevel_Tool::Render()
 
 CLevel_Tool * CLevel_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CLevel_Tool*	pInstance = new CLevel_Tool(pDevice, pDeviceContext);
+	CLevel_Tool*	pInstance = DBG_NEW CLevel_Tool(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{

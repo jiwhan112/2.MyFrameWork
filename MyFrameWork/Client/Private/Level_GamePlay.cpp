@@ -42,7 +42,7 @@ HRESULT CLevel_GamePlay::Render()
 
 CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CLevel_GamePlay*	pInstance = new CLevel_GamePlay(pDevice, pDeviceContext);
+	CLevel_GamePlay*	pInstance = DBG_NEW CLevel_GamePlay(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{

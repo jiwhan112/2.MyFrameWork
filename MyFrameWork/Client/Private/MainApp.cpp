@@ -110,14 +110,16 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTransform::Create(m_pDevice, m_pDeviceContext)));
 
 	// 텍스처 컴포넌트 
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT),
-	//	CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Default%d.dds"),2)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Default%d.dds"),2)));
 
-	//// 셰이더 컴포넌트
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX),
-	//	CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), 
-	//		VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements)));
-
+	// 셰이더 컴포넌트
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), 
+			VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEXCUBE),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexCube.hlsl"),
+			VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements)));
 	
 	
 	Safe_AddRef(m_pRenderer);
@@ -129,8 +131,8 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	// #Tag 오브젝트 원형 초기화
 
 	/* For.Prototype_GameObject_BackGround */
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
-	//	CGameObject_BackGround::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
+		CGameObject_BackGround::Create(m_pDevice, m_pDeviceContext)));
 
 	return S_OK;
 }
@@ -139,7 +141,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 
 CMainApp * CMainApp::Create()
 {
-	CMainApp*	pInstance = new CMainApp();
+	CMainApp*	pInstance = DBG_NEW CMainApp();
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{

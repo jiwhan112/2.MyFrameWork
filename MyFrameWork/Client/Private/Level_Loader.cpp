@@ -45,8 +45,8 @@ _int CLevel_Loader::LateTick(_double TimeDelta)
 		switch (mNextLevel)
 		{
 		case LEVEL_GAMEPLAY:
-			pLevel = CLevel_Logo::Create(m_pDevice, m_pDeviceContext);
-		//	pLevel = CLevel_GamePlay::Create(m_pDevice, m_pDeviceContext);
+		//	pLevel = CLevel_Logo::Create(m_pDevice, m_pDeviceContext);
+			pLevel = CLevel_GamePlay::Create(m_pDevice, m_pDeviceContext);
 			break;
 		case LEVEL_TOOL:
 			pLevel = CLevel_Tool::Create(m_pDevice,m_pDeviceContext);
@@ -76,7 +76,7 @@ HRESULT CLevel_Loader::Render()
 
 CLevel_Loader * CLevel_Loader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_LEVEL nextLevel)
 {
-	CLevel_Loader*	pInstance = new CLevel_Loader(pDevice, pDeviceContext);
+	CLevel_Loader*	pInstance = DBG_NEW CLevel_Loader(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct(nextLevel)))
 	{
@@ -89,6 +89,8 @@ CLevel_Loader * CLevel_Loader::Create(ID3D11Device * pDevice, ID3D11DeviceContex
 
 void CLevel_Loader::Free()
 {
+	Safe_Release(mpLoader);
+
 	__super::Free();
 	
 }

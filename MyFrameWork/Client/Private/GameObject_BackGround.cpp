@@ -90,7 +90,7 @@ HRESULT CGameObject_BackGround::Set_Component()
 
 CGameObject_BackGround * CGameObject_BackGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CGameObject_BackGround*	pInstance = new CGameObject_BackGround(pDevice, pDeviceContext);
+	CGameObject_BackGround*	pInstance = DBG_NEW CGameObject_BackGround(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -103,7 +103,7 @@ CGameObject_BackGround * CGameObject_BackGround::Create(ID3D11Device * pDevice, 
 
 CGameObject_BackGround* CGameObject_BackGround::Clone(void* pArg)
 {
-	CGameObject_BackGround*	pInstance = new CGameObject_BackGround(*this);
+	CGameObject_BackGround*	pInstance = DBG_NEW CGameObject_BackGround(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

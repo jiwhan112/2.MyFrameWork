@@ -30,8 +30,6 @@ private:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
-	
-
 #ifdef _DEBUG
 private:
 	_tchar				m_szFPS[MAX_PATH] = TEXT("");

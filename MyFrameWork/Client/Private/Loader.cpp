@@ -123,7 +123,7 @@ HRESULT CLoader::Loading_ForTool()
 
 CLoader * CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, E_LEVEL eLevel)
 {
-	CLoader*	pInstance = new CLoader(pDevice, pDeviceContext);
+	CLoader*	pInstance = DBG_NEW CLoader(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct(eLevel)))
 	{
