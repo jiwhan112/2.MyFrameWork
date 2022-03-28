@@ -76,6 +76,9 @@
     <Filter Include="01.Utility\06.ComponentMgr\05.Transform">
       <UniqueIdentifier>{26697cf6-ef53-424b-8cb3-89299c897472}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.ThirdParty\DTK">
+      <UniqueIdentifier>{5f5b230c-5273-4ec0-bdda-93a1aad17090}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -232,6 +235,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Texture.h">
       <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Direct_TK\DDSTextureLoader.h">
+      <Filter>02.ThirdParty\DTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Direct_TK\WICTextureLoader.h">
+      <Filter>02.ThirdParty\DTK</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

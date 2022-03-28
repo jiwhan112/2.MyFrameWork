@@ -35,7 +35,7 @@ private:
 	CRenderer*			mComRenderer = nullptr;
 	CVIBuffer_Rect*		mComVIBuffer = nullptr;
 	CTexture*			mComTexture = nullptr;
-//	CTransform*			mComTransform = nullptr;
+	CTransform*			mComTransform = nullptr;
 
 public:
 	static CGameObject_BackGround* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

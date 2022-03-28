@@ -161,6 +161,8 @@
     <ClInclude Include="..\Public\Component_Manager.h" />
     <ClInclude Include="..\Public\d3dx11effect.h" />
     <ClInclude Include="..\Public\d3dxGlobal.h" />
+    <ClInclude Include="..\Public\Direct_TK\DDSTextureLoader.h" />
+    <ClInclude Include="..\Public\Direct_TK\WICTextureLoader.h" />
     <ClInclude Include="..\Public\EasingMgr.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Easing.h" />
