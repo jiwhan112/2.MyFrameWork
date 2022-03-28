@@ -1,4 +1,5 @@
 #include "..\Public\Transform.h"
+#include "Shader.h"
 
 CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -9,6 +10,21 @@ CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceCont
 CTransform::CTransform(const CTransform & rhs)
 	: CComponent(rhs)
 {
+}
+
+_vector CTransform::GetState(E_STATE state) const
+{
+	return XMLoadFloat4((_float4*)&mWorldMatrix.m[state][0]);
+}
+
+_vector CTransform::GetScale(E_STATE state) const
+{
+	return XMVector3Length(XMLoadFloat3((_float3*)&mWorldMatrix.m[state][0]));
+}
+
+void CTransform::SetState(E_STATE state, _fvector vec)
+{
+	XMStoreFloat4((_float4*)&mWorldMatrix.m[state][0], vec);
 }
 
 HRESULT CTransform::NativeConstruct_Prototype()
@@ -24,8 +40,28 @@ HRESULT CTransform::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
+HRESULT CTransform::Bind_OnShader(CShader * pShader, const char * pValueName)
+{
+	// 셰이더로 넘기기위해 전치 행렬을 만든다.
+	// 만드는 과정은 연산을 하기 때문에 SIMD 전용 연산으로 바꿔준다.
+	
+	_float4x4		WorldMatrix;
+
+	// SIMD 연산용 자료형을 다시 일반 자료형으로 변환해서 대입
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&mWorldMatrix)));
+
+	return pShader->Set_RawValue(pValueName, &WorldMatrix, sizeof(_float4x4));
+}
+
 HRESULT CTransform::GO_Straight(_double deltatime)
 {
+	
+	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector		vLook = GetState(CTransform::STATE_LOOK);
+
+	vPosition += XMVector3Normalize(vLook) * mDesc.SpeedPersec * (_float)deltatime;
+
+	SetState(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
@@ -41,6 +77,26 @@ HRESULT CTransform::GO_Right(_double deltatime)
 
 HRESULT CTransform::GO_Backward(_double deltatime)
 {
+	return S_OK;
+}
+
+HRESULT CTransform::Turn(_fvector vAxis, _double time)
+{
+	_vector		vRight = GetState(CTransform::STATE_RIGHT);
+	_vector		vUp = GetState(CTransform::STATE_UP);
+	_vector		vLook = GetState(CTransform::STATE_LOOK);
+
+	// vRight = XMVectorSetW(vRight, 0.f);
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, mDesc.RotPersec * (_float)time);
+
+	vRight = XMVector4Transform(vRight, RotationMatrix);
+	vUp = XMVector4Transform(vUp, RotationMatrix);
+	vLook = XMVector4Transform(vLook, RotationMatrix);
+
+	SetState(CTransform::STATE_RIGHT, vRight);
+	SetState(CTransform::STATE_UP, vUp);
+	SetState(CTransform::STATE_LOOK, vLook);
 	return S_OK;
 }
 
