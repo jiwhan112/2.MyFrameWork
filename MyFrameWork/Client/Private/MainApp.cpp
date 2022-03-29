@@ -40,7 +40,7 @@ HRESULT CMainApp::Render()
 
 	// 백버퍼 / 깊이버퍼 클리어
 
-	m_pGameInstance->Clear_BackBuffer_View(_float4(0.0f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_float4(_float3(0,0,1), 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
 	m_pGameInstance->Render_Level();

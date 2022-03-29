@@ -79,6 +79,9 @@
     <Filter Include="02.ThirdParty\DTK">
       <UniqueIdentifier>{5f5b230c-5273-4ec0-bdda-93a1aad17090}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\07.PipeLine">
+      <UniqueIdentifier>{9d5fe0ec-6a28-4bfc-b08c-8f77eac62bd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Texture.cpp">
       <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PipeLine.cpp">
+      <Filter>01.Utility\07.PipeLine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Direct_TK\WICTextureLoader.h">
       <Filter>02.ThirdParty\DTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PipeLine.h">
+      <Filter>01.Utility\07.PipeLine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

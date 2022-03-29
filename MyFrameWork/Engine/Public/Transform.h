@@ -44,6 +44,7 @@ public:
 public:
 	// ¹ÙÀÎµù
 	HRESULT Bind_OnShader(class CShader* pShader, const char* pValueName);
+	void SetTransformDesc(const TRANSFORMDESC& desc);
 
 public:
 
@@ -55,13 +56,14 @@ public:
 
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);
-	//HRESULT Rotation();
-	HRESULT Chase();
-	HRESULT LookAt();
+	HRESULT Rotation(_fvector vAxis,_float fRadian);
+
+	HRESULT Chase(_fvector TargetPos, _double time);
+	HRESULT LookAt(_fvector TargetPos, _double time);
 
 	// Scale
-	//HRESULT Scaled();
-	//HRESULT Scaling();
+//	HRESULT Scaling(_fvector scale);
+	HRESULT Scaled(_fvector scale);
 
 
 private:

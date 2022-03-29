@@ -13,13 +13,11 @@ CGameObject_BackGround::CGameObject_BackGround(const CGameObject_BackGround& rhs
 	, mComRenderer(rhs.mComRenderer)
 	, mComVIBuffer(rhs.mComVIBuffer)
 	, mComTexture(rhs.mComTexture)
-	, mComTransform(rhs.mComTransform)
 {
 	Safe_AddRef(mComShader);
 	Safe_AddRef(mComRenderer);
 	Safe_AddRef(mComVIBuffer);
 	Safe_AddRef(mComTexture);
-	Safe_AddRef(mComTransform);
 
 }
 
@@ -38,6 +36,11 @@ HRESULT CGameObject_BackGround::NativeConstruct(void* pArg)
 
 	FAILED_CHECK(Set_Component());
 
+	mSize = { (float)g_iWinCX,(float)g_iWinCY };
+	mPos = { g_iWinCX*0.5f,g_iWinCY *0.5f };
+
+	XMStoreFloat4x4(&mProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH(g_iWinCX, g_iWinCY, 0.f, 1.f)));
+
 	return S_OK;
 }
 
@@ -53,6 +56,9 @@ _int CGameObject_BackGround::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
+	mComTransform->Scaled(XMVectorSet(mSize.x, mSize.y, 1.f, 0.0f));
+	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mPos.x - (g_iWinCX * 0.5f), -mPos.y + (g_iWinCY * 0.5f), 0.f, 1.f));
+
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return _int();
 
@@ -62,17 +68,17 @@ HRESULT CGameObject_BackGround::Render()
 {
 	if (nullptr == mComVIBuffer)
 		return E_FAIL;
+	mComTransform->Bind_OnShader(mComShader, "g_WorldMatrix");
+	//mComShader->Set_RawValue("g_WorldMatrix", &XMMatrixIdentity(), sizeof(_float4x4));
 
-	mComShader->Set_RawValue("g_WorldMatrix", &XMMatrixIdentity(), sizeof(_float4x4));
 	mComShader->Set_RawValue("g_ViewMatrix", &XMMatrixIdentity(), sizeof(_float4x4));
-	mComShader->Set_RawValue("g_ProjMatrix", &XMMatrixIdentity(), sizeof(_float4x4));
+	mComShader->Set_RawValue("g_ProjMatrix", &mProjMatrix, sizeof(_float4x4));
 
 	// 텍스처 넘기기
-	mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture",0);
+	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture", 0));
+
 
 	FAILED_CHECK(mComVIBuffer->Render(mComShader, 0));
-
-
 	return S_OK;
 }
 
@@ -82,8 +88,6 @@ HRESULT CGameObject_BackGround::Set_Component()
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT), TEXT("Com_Texture"), (CComponent**)&mComTexture));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TRANSFORM), TEXT("Com_Trnasform"), (CComponent**)&mComTransform));
-
 	return S_OK;
 }
 
@@ -121,6 +125,5 @@ void CGameObject_BackGround::Free()
 	Safe_Release(mComRenderer);
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
-	Safe_Release(mComTransform);
 	
 }

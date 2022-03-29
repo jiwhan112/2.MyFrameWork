@@ -159,6 +159,7 @@
     <ClInclude Include="..\Public\Base.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Manager.h" />
+    <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\d3dx11effect.h" />
     <ClInclude Include="..\Public\d3dxGlobal.h" />
     <ClInclude Include="..\Public\Direct_TK\DDSTextureLoader.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="..\Private\Base.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Manager.cpp" />
+    <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\EasingMgr.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />

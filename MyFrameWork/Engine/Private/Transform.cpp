@@ -9,6 +9,7 @@ CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceCont
 
 CTransform::CTransform(const CTransform & rhs)
 	: CComponent(rhs)
+	, mWorldMatrix(rhs.mWorldMatrix)
 {
 }
 
@@ -29,6 +30,7 @@ void CTransform::SetState(E_STATE state, _fvector vec)
 
 HRESULT CTransform::NativeConstruct_Prototype()
 {
+	XMStoreFloat4x4(&mWorldMatrix, XMMatrixIdentity());
 	return S_OK;
 }
 
@@ -53,6 +55,11 @@ HRESULT CTransform::Bind_OnShader(CShader * pShader, const char * pValueName)
 	return pShader->Set_RawValue(pValueName, &WorldMatrix, sizeof(_float4x4));
 }
 
+void CTransform::SetTransformDesc(const TRANSFORMDESC& desc)
+{
+	mDesc = desc;
+}
+
 HRESULT CTransform::GO_Straight(_double deltatime)
 {
 	
@@ -65,19 +72,39 @@ HRESULT CTransform::GO_Straight(_double deltatime)
 	return S_OK;
 }
 
-HRESULT CTransform::GO_Left(_double deltatime)
+HRESULT CTransform::GO_Backward(_double deltatime)
 {
+
+	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector		vLook = GetState(CTransform::STATE_LOOK);
+
+	vPosition -= XMVector3Normalize(vLook) * mDesc.SpeedPersec * (_float)deltatime;
+
+	SetState(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
 HRESULT CTransform::GO_Right(_double deltatime)
 {
+	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector		vRight = GetState(CTransform::STATE_RIGHT);
+
+	vPosition += XMVector3Normalize(vRight) * mDesc.SpeedPersec * (_float)deltatime;
+
+	SetState(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
-HRESULT CTransform::GO_Backward(_double deltatime)
+HRESULT CTransform::GO_Left(_double deltatime)
 {
+	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector		vLeft = GetState(CTransform::STATE_RIGHT);
+
+	vPosition -= XMVector3Normalize(vLeft) * mDesc.SpeedPersec * (_float)deltatime;
+
+	SetState(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
+
 }
 
 HRESULT CTransform::Turn(_fvector vAxis, _double time)
@@ -97,6 +124,53 @@ HRESULT CTransform::Turn(_fvector vAxis, _double time)
 	SetState(CTransform::STATE_RIGHT, vRight);
 	SetState(CTransform::STATE_UP, vUp);
 	SetState(CTransform::STATE_LOOK, vLook);
+	return S_OK;
+}
+
+HRESULT CTransform::Rotation(_fvector vAxis, _float fRadian)
+{
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(GetState(CTransform::STATE_RIGHT)));
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(GetState(CTransform::STATE_UP)));
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVectorGetX(XMVector3Length(GetState(CTransform::STATE_LOOK)));
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
+
+	vRight = XMVector4Transform(vRight, RotationMatrix);
+	vUp = XMVector4Transform(vUp, RotationMatrix);
+	vLook = XMVector4Transform(vLook, RotationMatrix);
+
+	SetState(CTransform::STATE_RIGHT, vRight);
+	SetState(CTransform::STATE_UP, vUp);
+	SetState(CTransform::STATE_LOOK, vLook);
+
+	return S_OK;
+}
+
+HRESULT CTransform::Chase(_fvector TargetPos, _double time)
+{
+
+	return S_OK;
+}
+
+HRESULT CTransform::LookAt(_fvector TargetPos, _double time)
+{
+	return S_OK;
+}
+
+HRESULT CTransform::Scaled(_fvector scale)
+{
+	_vector vRight = GetState(STATE_RIGHT);
+	_vector vUp = GetState(STATE_UP);
+	_vector vLook = GetState(STATE_LOOK);
+
+	// 크기 재설정
+	vRight = XMVector3Normalize(vRight)* XMVectorGetX(scale);
+	vUp = XMVector3Normalize(vUp)* XMVectorGetY(scale);
+	vLook = XMVector3Normalize(vLook)* XMVectorGetZ(scale);
+
+	SetState(STATE_RIGHT, vRight);
+	SetState(STATE_UP, vUp);
+	SetState(STATE_LOOK, vLook);
 	return S_OK;
 }
 

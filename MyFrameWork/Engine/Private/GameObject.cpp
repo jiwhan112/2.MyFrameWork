@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Component.h"
 
+const _tchar* CGameObject::mComTag_Transform = TEXT("Com_Tranform");
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: m_pDevice(pDevice)
 	, m_pDeviceContext(pDeviceContext)
@@ -13,6 +14,8 @@ CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 CGameObject::CGameObject(const CGameObject & rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pDeviceContext(rhs.m_pDeviceContext)
+	, mIsLife(rhs.mIsLife)
+	, mIsRenderer(rhs.mIsRenderer)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
@@ -25,11 +28,27 @@ CComponent * CGameObject::Get_Component(const _tchar * pComponentTag)
 
 HRESULT CGameObject::NativeConstruct_Prototype()
 {
-	return S_OK;
+
+	return S_OK;	
 }
 
 HRESULT CGameObject::NativeConstruct(void * pArg)
 {
+	// Transform 컴포넌트는 장동 추가
+	mComTransform = CTransform::Create(m_pDevice, m_pDeviceContext);
+	if (nullptr == mComTransform)
+		return E_FAIL;
+
+	if (nullptr != pArg)
+		mComTransform->SetTransformDesc(*(CTransform::TRANSFORMDESC*)pArg);
+
+	if (nullptr != Find_Component(mComTag_Transform))
+		return E_FAIL;
+
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+	m_Components.emplace(mComTag_Transform, mComTransform);
+
+
 	return S_OK;
 }
 
