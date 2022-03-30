@@ -55,6 +55,18 @@
     <Filter Include="02.GameObject\01.BackGround">
       <UniqueIdentifier>{f3e6f898-9cb3-4b56-a2f4-43df4f56ed11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.Camera">
+      <UniqueIdentifier>{bc388d12-b47d-405c-817c-c4e00817d90f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.BackGround\0.BaseObject">
+      <UniqueIdentifier>{14ac5b3b-8fde-4a60-b332-c31b71923ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.BackGround\1.UI">
+      <UniqueIdentifier>{5d327b76-64a1-4aca-a783-fc6559dc4e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.BackGround\2.Sky">
+      <UniqueIdentifier>{d5f97766-fe7b-4871-bd7c-3088f95304b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -126,6 +138,15 @@
     <ClInclude Include="..\Public\GameObject_BackGround.h">
       <Filter>02.GameObject\01.BackGround</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera_Client.h">
+      <Filter>02.GameObject\02.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject_Skybox.h">
+      <Filter>02.GameObject\01.BackGround\2.Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp">
+      <Filter>97.Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -178,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_BackGround.cpp">
       <Filter>02.GameObject\01.BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Client.cpp">
+      <Filter>02.GameObject\02.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject_Skybox.cpp">
+      <Filter>02.GameObject\01.BackGround\2.Sky</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -34,8 +34,6 @@ HRESULT CGameObject_BackGround::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	FAILED_CHECK(Set_Component());
-
 	mSize = { (float)g_iWinCX,(float)g_iWinCY };
 	mPos = { g_iWinCX*0.5f,g_iWinCY *0.5f };
 

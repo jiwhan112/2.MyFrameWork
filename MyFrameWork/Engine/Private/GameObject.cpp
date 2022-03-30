@@ -34,7 +34,7 @@ HRESULT CGameObject::NativeConstruct_Prototype()
 
 HRESULT CGameObject::NativeConstruct(void * pArg)
 {
-	// Transform 컴포넌트는 장동 추가
+	// Transform 컴포넌트는 자동 추가
 	mComTransform = CTransform::Create(m_pDevice, m_pDeviceContext);
 	if (nullptr == mComTransform)
 		return E_FAIL;
@@ -48,6 +48,7 @@ HRESULT CGameObject::NativeConstruct(void * pArg)
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 	m_Components.emplace(mComTag_Transform, mComTransform);
 
+	FAILED_CHECK(Set_Component());
 
 	return S_OK;
 }

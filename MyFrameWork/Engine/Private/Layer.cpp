@@ -48,7 +48,7 @@ _int CLayer::LateTick(_double TimeDelta)
 
 CLayer * CLayer::Create()
 {
-	CLayer* pLayer = new CLayer();
+	CLayer* pLayer = DBG_NEW CLayer();
 
 	return pLayer;	
 }

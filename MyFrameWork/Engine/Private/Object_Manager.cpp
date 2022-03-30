@@ -24,7 +24,7 @@ HRESULT CObject_Manager::Reserve_Container(_uint iNumLevels)
 {
 	m_iNumLevels = iNumLevels;
 
-	m_pLayers = new LAYERS[m_iNumLevels];
+	m_pLayers = DBG_NEW LAYERS[m_iNumLevels];
 
 	return S_OK;
 }

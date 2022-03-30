@@ -80,7 +80,7 @@ HRESULT CTexture::NativeConstruct(void * pArg)
 
 CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar* pTexturePath, _uint iNumTextures)
 {
-	CTexture*	pInstance = new CTexture(pDevice, pDeviceContext);
+	CTexture*	pInstance = DBG_NEW CTexture(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(pTexturePath,iNumTextures)))
 	{
@@ -92,7 +92,7 @@ CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevic
 
 CComponent * CTexture::Clone(void * pArg)
 {
-	CTexture*	pInstance = new CTexture(*this);
+	CTexture*	pInstance = DBG_NEW CTexture(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

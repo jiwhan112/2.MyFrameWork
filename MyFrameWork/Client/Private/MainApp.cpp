@@ -8,6 +8,9 @@
 #include "Level_Loader.h"
 
 #include "GameObject_BackGround.h"
+#include "Camera_Client.h"
+#include "GameObject_Skybox.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -102,24 +105,30 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER),
 		m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext)));
-
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),
-		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
-
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TRANSFORM),
 		CTransform::Create(m_pDevice, m_pDeviceContext)));
+
+	// ¹öÆÛ ÄÄÆ÷³ÍÆ®
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),
+		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
+		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
+	
+
 
 	// ÅØ½ºÃ³ ÄÄÆ÷³ÍÆ® 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Default%d.dds"),2)));
-
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_SKY),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/SkyBox/burger%d.dds"), 4)));
+	
 	// ¼ÎÀÌ´õ ÄÄÆ÷³ÍÆ®
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), 
 			VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEXCUBE),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexCube.hlsl"),
-			VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements)));
+			VTXCUBETEX_DECLARATION::Elements, VTXCUBETEX_DECLARATION::iNumElements)));
 	
 	
 	Safe_AddRef(m_pRenderer);
@@ -133,6 +142,12 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	/* For.Prototype_GameObject_BackGround */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
 		CGameObject_BackGround::Create(m_pDevice, m_pDeviceContext)));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA),
+		CCamera_Client::Create(m_pDevice, m_pDeviceContext)));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_SKY),
+		CGameObject_Skybox::Create(m_pDevice, m_pDeviceContext)));
 
 	return S_OK;
 }

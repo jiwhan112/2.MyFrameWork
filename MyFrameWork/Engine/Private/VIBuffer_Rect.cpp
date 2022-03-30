@@ -29,7 +29,7 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype()
 	m_VBDesc.StructureByteStride = sizeof(VTXTEX);
 
 	// 이제 정점 세팅을 LOCK UNLOCK을 하지 않고 해준다.
-	VTXTEX*		pVertices = new VTXTEX[m_iNumVertices];
+	VTXTEX*		pVertices = DBG_NEW VTXTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXTEX) * m_iNumVertices);
 
 	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
@@ -72,7 +72,7 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype()
 	m_IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 	// 직접 Indices에 세팅
-	FACEINDICES16*	pIndices = new FACEINDICES16[m_iNumPrimitive];
+	FACEINDICES16*	pIndices = DBG_NEW FACEINDICES16[m_iNumPrimitive];
 	ZeroMemory(pIndices, sizeof(FACEINDICES16) * m_iNumPrimitive);
 
 	pIndices[0]._0 = 0;
@@ -104,7 +104,7 @@ HRESULT CVIBuffer_Rect::NativeConstruct(void * pArg)
 
 CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(pDevice, pDeviceContext);
+	CVIBuffer_Rect*	pInstance = DBG_NEW CVIBuffer_Rect(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -116,7 +116,7 @@ CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 
 CComponent * CVIBuffer_Rect::Clone(void * pArg)
 {
-	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(*this);
+	CVIBuffer_Rect*	pInstance = DBG_NEW CVIBuffer_Rect(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

@@ -37,7 +37,7 @@ _double CTimer::Get_TimeDelta(void)
 
 CTimer * CTimer::Create()
 {
-	CTimer*	pInstance = new CTimer();
+	CTimer*	pInstance = DBG_NEW CTimer();
 	
 	return pInstance;
 }

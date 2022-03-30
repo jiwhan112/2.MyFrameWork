@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Level_GamePlay.h"
+#include "Camera.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice,pDeviceContext)
@@ -11,6 +12,9 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDe
 HRESULT CLevel_GamePlay::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
+
+	Ready_Layer_Camera(TAGLAY(LAY_CAMERA));
+	Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND));
 
 	return S_OK;
 }
@@ -37,6 +41,41 @@ HRESULT CLevel_GamePlay::Render()
 	SetWindowText(g_hWnd, TEXT("Game Level"));
 
 #endif //  _DEBUG
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Prototype_GameObject()
+{
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
+{
+
+	CCamera::CAMERADESC		CameraDesc;
+	ZeroMemory(&CameraDesc, sizeof(CameraDesc));
+
+	CameraDesc.vEye = _float3(0.f, 10.f, -5.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
+
+	CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
+	CameraDesc.fNear = 0.2f;
+	CameraDesc.fFar = 300.f;
+
+	CameraDesc.TransformDesc.SpeedPersec = 10.f;
+	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
+
+	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA),&CameraDesc));
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
+{
+//	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
+	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
+
 	return S_OK;
 }
 

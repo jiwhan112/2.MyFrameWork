@@ -6,6 +6,7 @@
 #include "Component_Manager.h"
 #include "Level_Manager.h"
 #include "Object_Manager.h"
+#include "PipeLine.h"
 
 BEGIN(Engine)
 
@@ -48,6 +49,15 @@ public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg = nullptr);
 
+public: /* For. PipeLine Single*/
+	HRESULT SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);
+	_matrix GetTransformMatrix(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
+	_float4x4 GetTransformFloat4x4(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
+	_float4x4 GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
+	_float4 GetCameraPosition_float() const; 
+	_vector GetCameraPosition_vec() const;
+
+
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;
 	CTimer_Manager*				m_pTimer_Manager = nullptr;
@@ -55,7 +65,7 @@ private:
 	CObject_Manager*			m_pObject_Manager = nullptr;
 	CComponent_Manager*			m_pComponent_Manager = nullptr;
 	CInput_Device*				m_pInput_Device = nullptr;
-
+	CPipeLine*					m_pPipeLine = nullptr;
 public:
 	static void Release_Engine();
 	virtual void Free() override;

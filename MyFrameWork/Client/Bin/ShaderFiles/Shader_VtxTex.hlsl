@@ -1,21 +1,8 @@
 
-cbuffer	RenderingPipeLine
-{
-	matrix			g_WorldMatrix;
-	matrix			g_ViewMatrix;
-	matrix			g_ProjMatrix;
-};
+#include "Shader_Defines.hpp"
 
 texture2D			g_DiffuseTexture;
 texture2D			g_SourTexture;
-
-sampler DefaultSampler = sampler_state
-{
-	// D3D11_SAMPLER_DESC
-	filter = min_mag_mip_linear;
-	AddressU = wrap;
-	AddressV = wrap;
-};
 
 struct VS_IN
 {
@@ -60,15 +47,27 @@ PS_OUT PS_MAIN_RECT(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
-		// vector(1.f, 0.f, 0.f, 1.f);
 
 	return Out;
 }
+
+//BOOL BlendEnable;
+//D3D11_BLEND SrcBlend;
+//D3D11_BLEND DestBlend;
+//D3D11_BLEND_OP BlendOp;
+//D3D11_BLEND SrcBlendAlpha;
+//D3D11_BLEND DestBlendAlpha;
+//D3D11_BLEND_OP BlendOpAlpha;
+//UINT8 RenderTargetWriteMask;
 
 technique11		DefaultTechnique
 {
 	pass Rect
 	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(ZTestAndWriteState, 0);
+		SetRasterizerState(CullMode_ccw);
+
 		VertexShader = compile vs_5_0 VS_MAIN_RECT();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_RECT();

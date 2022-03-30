@@ -8,6 +8,21 @@
 #define ENGINE_DLL _declspec(dllimport)
 #endif
 
+
+#ifdef _DEBUG
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#define DBG_NEW new ( _NORMAL_BLOCK, __FILE__,__LINE__ ) 
+
+#else 
+#define DBG_NEW new
+
+#endif
+
+
 //#define GET_INSTANCE(CLASSNAME)	[](){											\
 //	CLASSNAME*	pInstance = CLASSNAME::GetInstance();							\
 //	if(nullptr == pInstance) {													\
@@ -61,7 +76,7 @@
 		CLASSNAME*	CLASSNAME::m_pInstance = NULL;				\
 		CLASSNAME*	CLASSNAME::GetInstance( void )	{			\
 			if(nullptr == m_pInstance) {						\
-				m_pInstance = new CLASSNAME;					\
+				m_pInstance = DBG_NEW CLASSNAME;					\
 			}													\
 			return m_pInstance;									\
 		}														\
@@ -85,7 +100,8 @@
 // NULL 체크1 / 기본 
 #define NULL_CHECK( _ptr) \
 if( _ptr == 0){__debugbreak(); return;}
-
+#define NULL_CHECK_HR( _ptr) \
+if( _ptr == 0){__debugbreak(); return E_FAIL;}
 
 // NULL 체크2 / 노 리턴 
 #define NULL_CHECK_BREAK( _ptr) \

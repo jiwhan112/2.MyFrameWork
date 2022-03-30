@@ -34,8 +34,6 @@ namespace Engine
 	}VTXCUBETEX_DECLARATION;
 
 
-
-
 	typedef struct tagVertex_Normal_Texture
 	{
 		XMFLOAT3			vPosition;

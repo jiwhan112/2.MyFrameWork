@@ -125,7 +125,7 @@ HRESULT CRenderer::Render_UI()
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
-	CRenderer*	pInstance = new CRenderer(pDevice, pDeviceContext);
+	CRenderer*	pInstance = DBG_NEW CRenderer(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{

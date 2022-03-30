@@ -16,6 +16,10 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
+private:
+	HRESULT Ready_Prototype_GameObject();
+	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

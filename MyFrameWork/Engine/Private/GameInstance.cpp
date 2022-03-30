@@ -9,6 +9,7 @@ CGameInstance::CGameInstance()
 	, m_pComponent_Manager(CComponent_Manager::GetInstance())
 	, m_pLevel_Manager(CLevel_Manager::GetInstance())
 	, m_pObject_Manager(CObject_Manager::GetInstance())
+	, m_pPipeLine(CPipeLine::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -16,6 +17,8 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pLevel_Manager);
 	Safe_AddRef(m_pObject_Manager);
+	Safe_AddRef(m_pPipeLine);
+	
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -39,11 +42,16 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pObject_Manager)
 		return -1;
+
+	// INPUT
 	FAILED_CHECK(m_pInput_Device->SetUp_InputDeviceState());
 
 	// Tick
 	FAILED_CHECK(m_pLevel_Manager->Tick(TimeDelta));
 	FAILED_CHECK(m_pObject_Manager->Tick(TimeDelta));
+
+	// PipeLine
+	FAILED_CHECK(m_pPipeLine->Tick());
 
 	// LateTick
 	FAILED_CHECK(m_pLevel_Manager->LateTick(TimeDelta));
@@ -125,66 +133,89 @@ _double CGameInstance::Get_TimeDelta(const _tchar * pTimerTag)
 
 HRESULT CGameInstance::Add_Timer(const _tchar * pTimerTag)
 {
-	if (nullptr == m_pTimer_Manager)
-		return E_FAIL;
+	NULL_CHECK_HR(m_pTimer_Manager);
 
 	return m_pTimer_Manager->Add_Timer(pTimerTag);
 }
 
 HRESULT CGameInstance::OpenLevel(_uint iLevelIndex, CLevel * pNextLevel)
 {
-	if (nullptr == m_pLevel_Manager)
-		return E_FAIL;
-
+	NULL_CHECK_HR(m_pLevel_Manager);
 	return m_pLevel_Manager->OpenLevel(iLevelIndex, pNextLevel);
 }
 
 HRESULT CGameInstance::Render_Level()
 {
-	if (nullptr == m_pLevel_Manager)
-		return E_FAIL;
-
+	NULL_CHECK_HR(m_pLevel_Manager);
 	return m_pLevel_Manager->Render();
 }
 
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
 {
-	if (nullptr == m_pComponent_Manager)
-		return E_FAIL;
-
+	NULL_CHECK_HR(m_pComponent_Manager);
 	return m_pComponent_Manager->Add_Prototype(iLevelIndex, pPrototypeTag, pPrototype);
 }
 
 CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, void * pArg)
 {
-	if (nullptr == m_pComponent_Manager)
-		return nullptr;
-
+	NULL_CHECK_RETURN(m_pComponent_Manager,nullptr);
 	return m_pComponent_Manager->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
 }
 
 CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pComponentTag, _uint iIndex)
 {
-	if (nullptr == m_pObject_Manager)
-		return nullptr;
-
+	NULL_CHECK_RETURN(m_pObject_Manager, nullptr);
 	return m_pObject_Manager->Get_Component(iLevelIndex, pLayerTag, pComponentTag, iIndex);
 }
 
 HRESULT CGameInstance::Add_Prototype(const _tchar * pPrototypeTag, CGameObject * pPrototype)
 {
-	if (nullptr == m_pObject_Manager)
-		return E_FAIL;
-
+	NULL_CHECK_HR(m_pObject_Manager);
 	return m_pObject_Manager->Add_Prototype(pPrototypeTag, pPrototype);
 }
 
 HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pPrototypeTag, void * pArg)
 {
-	if (nullptr == m_pObject_Manager)
-		return E_FAIL;
+	NULL_CHECK_HR(m_pObject_Manager);
 
 	return m_pObject_Manager->Add_GameObject(iLevelIndex, pLayerTag, pPrototypeTag, pArg);
+}
+
+HRESULT CGameInstance::SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix)
+{
+	NULL_CHECK_HR(m_pPipeLine);
+	return m_pPipeLine->SetTransform(eStateType, TransformMatrix);
+}
+
+_matrix CGameInstance::GetTransformMatrix(CPipeLine::E_TRANSFORMSTATETYPE eStateType)
+{
+
+	NULL_CHECK_BREAK(m_pPipeLine);
+	return m_pPipeLine->GetTransformMatrix(eStateType);
+}
+
+_float4x4 CGameInstance::GetTransformFloat4x4(CPipeLine::E_TRANSFORMSTATETYPE eStateType)
+{
+	NULL_CHECK_BREAK(m_pPipeLine);
+	return m_pPipeLine->GetTransformFloat4x4(eStateType);
+}
+
+_float4x4 CGameInstance::GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE eStateType)
+{
+	NULL_CHECK_BREAK(m_pPipeLine);
+	return m_pPipeLine->GetTransformFloat4x4_TP(eStateType);
+}
+
+_float4 CGameInstance::GetCameraPosition_float() const
+{
+	NULL_CHECK_BREAK(m_pPipeLine);
+	return m_pPipeLine->GetCameraPosition_float();
+}
+
+_vector CGameInstance::GetCameraPosition_vec() const
+{
+	NULL_CHECK_BREAK(m_pPipeLine);
+	return m_pPipeLine->GetCameraPosition_vec();
 }
 
 void CGameInstance::Release_Engine()
@@ -204,6 +235,9 @@ void CGameInstance::Release_Engine()
 	if (0 != CLevel_Manager::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CLevel_Manager");
 
+	if (0 != CPipeLine::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CPipeLine")
+
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
 
@@ -219,4 +253,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pInput_Device);
+	Safe_Release(m_pPipeLine);
+
 }

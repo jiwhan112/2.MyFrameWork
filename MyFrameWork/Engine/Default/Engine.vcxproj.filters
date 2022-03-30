@@ -37,14 +37,8 @@
     <Filter Include="01.Utility\03.TimerMgr\Mgr">
       <UniqueIdentifier>{4db6cc64-fe41-4559-9c47-d289e67b3b85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\05.GameObjectMgr\Mgr">
-      <UniqueIdentifier>{336d2526-b277-4e51-a3b0-f05a424be95e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\04.LevelMgr\Mgr">
       <UniqueIdentifier>{10cf7b00-0911-45b9-8037-f5eb2cbb8a04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\05.GameObjectMgr\Layer">
-      <UniqueIdentifier>{0d4582c5-6ddd-43cd-8efb-652f497e4165}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers">
       <UniqueIdentifier>{c4eafae3-d44d-4d6b-a628-1372416d91e9}</UniqueIdentifier>
@@ -81,6 +75,15 @@
     </Filter>
     <Filter Include="01.Utility\07.PipeLine">
       <UniqueIdentifier>{9d5fe0ec-6a28-4bfc-b08c-8f77eac62bd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.GameObjectMgr\0.Mgr">
+      <UniqueIdentifier>{336d2526-b277-4e51-a3b0-f05a424be95e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.GameObjectMgr\0.Mgr\Layer">
+      <UniqueIdentifier>{0d4582c5-6ddd-43cd-8efb-652f497e4165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.GameObjectMgr\1.Camera">
+      <UniqueIdentifier>{2dbe6707-26e1-49af-b567-df85750046bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,10 +127,10 @@
       <Filter>01.Utility\05.GameObjectMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Object_Manager.cpp">
-      <Filter>01.Utility\05.GameObjectMgr\Mgr</Filter>
+      <Filter>01.Utility\05.GameObjectMgr\0.Mgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Layer.cpp">
-      <Filter>01.Utility\05.GameObjectMgr\Layer</Filter>
+      <Filter>01.Utility\05.GameObjectMgr\0.Mgr\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers</Filter>
@@ -152,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PipeLine.cpp">
       <Filter>01.Utility\07.PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera.cpp">
+      <Filter>01.Utility\05.GameObjectMgr\1.Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -213,10 +219,10 @@
       <Filter>01.Utility\05.GameObjectMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Object_Manager.h">
-      <Filter>01.Utility\05.GameObjectMgr\Mgr</Filter>
+      <Filter>01.Utility\05.GameObjectMgr\0.Mgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Layer.h">
-      <Filter>01.Utility\05.GameObjectMgr\Layer</Filter>
+      <Filter>01.Utility\05.GameObjectMgr\0.Mgr\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers</Filter>
@@ -250,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\PipeLine.h">
       <Filter>01.Utility\07.PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera.h">
+      <Filter>01.Utility\05.GameObjectMgr\1.Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

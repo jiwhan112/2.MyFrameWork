@@ -2,24 +2,34 @@
 #include "GameObject_Default.h"
 
 CGameObject_Default::CGameObject_Default(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CLevel(pDevice,pDeviceContext)
+	: CGameObject(pDevice, pDeviceContext)
 {
 
 }
 
-
-HRESULT CGameObject_Default::NativeConstruct()
+CGameObject_Default::CGameObject_Default(const CGameObject_Default& rhs)
+	: CGameObject(rhs)
 {
-	FAILED_CHECK(__super::NativeConstruct());
-	   
+
+}
+
+HRESULT CGameObject_Default::NativeConstruct_Prototype()
+{
+	FAILED_CHECK(__super::NativeConstruct_Prototype());
+
+	return S_OK;
+}
+
+HRESULT CGameObject_Default::NativeConstruct(void* pArg)
+{
+	FAILED_CHECK(__super::NativeConstruct(pArg));
+
 	return S_OK;
 }
 
 _int CGameObject_Default::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
-
 	return _int();
 }
 
@@ -39,7 +49,7 @@ CGameObject_Default * CGameObject_Default::Create(ID3D11Device * pDevice, ID3D11
 {
 	CGameObject_Default*	pInstance = new CGameObject_Default(pDevice, pDeviceContext);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
 		MSGBOX("Failed to Creating CGameObject_Default");
 		Safe_Release(pInstance);
@@ -47,7 +57,7 @@ CGameObject_Default * CGameObject_Default::Create(ID3D11Device * pDevice, ID3D11
 
 	return pInstance;
 }
-virtual CGameObject_Default* Clone(void* pArg)
+CGameObject_Default* CGameObject_Default::Clone(void* pArg)
 {
 	CGameObject_Default*	pInstance = new CGameObject_Default(*this);
 
@@ -63,5 +73,5 @@ virtual CGameObject_Default* Clone(void* pArg)
 void CGameObject_Default::Free()
 {
 	__super::Free();
-	
+
 }

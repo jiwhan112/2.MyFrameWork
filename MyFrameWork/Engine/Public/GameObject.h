@@ -25,8 +25,16 @@ public:
 	bool GetIsLife() const { return mIsLife; }
 	bool GetIsRenderer() const { return mIsRenderer; }
 	void SetDead() { mIsLife = false; }
+
+protected:
+	virtual HRESULT Set_Component()PURE;
+
 public:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	
+private:
+	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+
 
 protected:
 	ID3D11Device*			m_pDevice = nullptr;

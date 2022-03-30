@@ -12,7 +12,7 @@ HRESULT CComponent_Manager::Reserve_Container(_uint iNumLevels)
 {
 	m_iNumLevels = iNumLevels;
 
-	m_pPrototypes = new PROTOTYPES[m_iNumLevels];
+	m_pPrototypes = DBG_NEW PROTOTYPES[m_iNumLevels];
 
 	return S_OK;	
 }

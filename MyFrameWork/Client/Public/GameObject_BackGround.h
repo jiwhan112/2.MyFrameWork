@@ -26,7 +26,7 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
-public:
+protected:
 	HRESULT Set_Component();
 
 private:
