@@ -85,6 +85,9 @@
     <Filter Include="01.Utility\05.GameObjectMgr\1.Camera">
       <UniqueIdentifier>{2dbe6707-26e1-49af-b567-df85750046bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Terrain">
+      <UniqueIdentifier>{a6b11ac3-0c5b-46cb-9ff0-bcb58ba95029}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -158,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera.cpp">
       <Filter>01.Utility\05.GameObjectMgr\1.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Camera.h">
       <Filter>01.Utility\05.GameObjectMgr\1.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Terrain.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

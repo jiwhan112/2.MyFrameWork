@@ -53,14 +53,15 @@ _int CCamera_Client::Tick(_double TimeDelta)
 
 	_long		MouseMove = 0;
 
+	const _float MouseSpeed = 1.0f * 0.1f;
 	if (MouseMove = pGameInstance->Get_DIMouseMoveState(CInput_Device::MMS_X))
 	{
-		mComTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta * MouseMove );
+		mComTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta * MouseMove * MouseSpeed);
 	}
 
 	if (MouseMove = pGameInstance->Get_DIMouseMoveState(CInput_Device::MMS_Y))
 	{
-		mComTransform->Turn(mComTransform->GetState(CTransform::STATE_RIGHT), TimeDelta * MouseMove );
+		mComTransform->Turn(mComTransform->GetState(CTransform::STATE_RIGHT), TimeDelta * MouseMove *MouseSpeed);
 	}
 
 	return __super::Tick(TimeDelta);

@@ -1,5 +1,6 @@
-// Shader 변수 모음
 
+
+// Shader 변수 모음
 cbuffer	RenderingPipeLine
 {
 	matrix			g_WorldMatrix;
@@ -15,6 +16,27 @@ sampler DefaultSampler = sampler_state
 	AddressU = wrap;
 	AddressV = wrap;
 };
+
+/*
+typedef struct D3D11_RENDER_TARGET_BLEND_DESC
+	{
+	BOOL BlendEnable;
+	D3D11_BLEND SrcBlend;
+	D3D11_BLEND DestBlend;
+	D3D11_BLEND_OP BlendOp;
+	D3D11_BLEND SrcBlendAlpha;
+	D3D11_BLEND DestBlendAlpha;
+	D3D11_BLEND_OP BlendOpAlpha;
+	UINT8 RenderTargetWriteMask;
+	} 	D3D11_RENDER_TARGET_BLEND_DESC;
+
+typedef struct D3D11_BLEND_DESC
+	{
+	BOOL AlphaToCoverageEnable;
+	BOOL IndependentBlendEnable;
+	D3D11_RENDER_TARGET_BLEND_DESC RenderTarget[ 8 ];
+	} 	D3D11_BLEND_DESC;
+*/
 
 BlendState	AlphaBlending
 {

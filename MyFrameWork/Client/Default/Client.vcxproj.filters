@@ -67,6 +67,9 @@
     <Filter Include="02.GameObject\01.BackGround\2.Sky">
       <UniqueIdentifier>{d5f97766-fe7b-4871-bd7c-3088f95304b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.BackGround\3.Terrain">
+      <UniqueIdentifier>{d3a94238-5c58-40ca-811a-a4e8d5705229}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -147,6 +150,9 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp">
       <Filter>97.Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject_Terrain.h">
+      <Filter>02.GameObject\01.BackGround\3.Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -206,6 +212,9 @@
     <ClCompile Include="..\Private\GameObject_Skybox.cpp">
       <Filter>02.GameObject\01.BackGround\2.Sky</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\GameObject_Terrain.cpp">
+      <Filter>02.GameObject\01.BackGround\3.Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -225,6 +234,9 @@
       <Filter>97.Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexCube.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
   </ItemGroup>

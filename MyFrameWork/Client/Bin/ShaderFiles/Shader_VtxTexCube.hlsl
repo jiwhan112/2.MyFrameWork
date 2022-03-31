@@ -43,9 +43,7 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
-
 	Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
-
 	Out.vColor.a = 0.5f;
 
 	return Out;

@@ -4,6 +4,7 @@
 texture2D			g_DiffuseTexture;
 texture2D			g_SourTexture;
 
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -16,7 +17,7 @@ struct VS_OUT
 	float2		vTexUV : TEXCOORD0;
 };
 
-VS_OUT VS_MAIN_RECT(VS_IN In)
+VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
 
@@ -42,7 +43,7 @@ struct PS_OUT
 	vector		vColor : SV_TARGET0;
 };
 
-PS_OUT PS_MAIN_RECT(PS_IN In)
+PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
@@ -51,14 +52,6 @@ PS_OUT PS_MAIN_RECT(PS_IN In)
 	return Out;
 }
 
-//BOOL BlendEnable;
-//D3D11_BLEND SrcBlend;
-//D3D11_BLEND DestBlend;
-//D3D11_BLEND_OP BlendOp;
-//D3D11_BLEND SrcBlendAlpha;
-//D3D11_BLEND DestBlendAlpha;
-//D3D11_BLEND_OP BlendOpAlpha;
-//UINT8 RenderTargetWriteMask;
 
 technique11		DefaultTechnique
 {
@@ -68,8 +61,8 @@ technique11		DefaultTechnique
 		SetDepthStencilState(ZTestAndWriteState, 0);
 		SetRasterizerState(CullMode_ccw);
 
-		VertexShader = compile vs_5_0 VS_MAIN_RECT();
+		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_RECT();
+		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 }

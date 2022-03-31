@@ -168,6 +168,7 @@
     <ClInclude Include="..\Public\Camera_Client.h" />
     <ClInclude Include="..\Public\GameObject_BackGround.h" />
     <ClInclude Include="..\Public\GameObject_Skybox.h" />
+    <ClInclude Include="..\Public\GameObject_Terrain.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loader.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="..\Private\Camera_Client.cpp" />
     <ClCompile Include="..\Private\GameObject_BackGround.cpp" />
     <ClCompile Include="..\Private\GameObject_Skybox.cpp" />
+    <ClCompile Include="..\Private\GameObject_Terrain.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loader.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
@@ -223,6 +225,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexCube.hlsl" />
   </ItemGroup>

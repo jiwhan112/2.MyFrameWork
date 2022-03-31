@@ -2,11 +2,12 @@
 
 // #Components 컴포넌트 선언
 #include "Renderer.h"
-#include "Shader.h"
+#include "Transform.h"
 #include "Texture.h"
+#include "Shader.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
-#include "Transform.h"
+#include "VIBuffer_Terrain.h"
 
 
 /* 컴포넌트 원형들을 모아놓는다. */
