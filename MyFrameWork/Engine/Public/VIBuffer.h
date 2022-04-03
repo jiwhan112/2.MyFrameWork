@@ -35,6 +35,7 @@ protected:
 	DXGI_FORMAT					m_eIndexFormat;					// 인덱스 포맷
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;					// 
 
+	_float3*		mpVertexPos = nullptr;
 
 protected:
 	HRESULT Create_VertexBuffer();

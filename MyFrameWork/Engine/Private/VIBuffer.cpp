@@ -21,6 +21,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_iNumIndicesPerPrimitive(rhs.m_iNumIndicesPerPrimitive)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
+	, mpVertexPos(rhs.mpVertexPos)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
@@ -94,6 +95,8 @@ void CVIBuffer::Free()
 {
 	__super::Free();
 
+	if (m_isCloned == false)
+		Safe_Delete_Array(mpVertexPos);
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
 }

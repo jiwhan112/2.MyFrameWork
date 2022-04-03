@@ -14,6 +14,8 @@ enum E_TAYLAY
 	LAY_CAMERA,
 	LAY_PLAYER,
 	LAY_OBJECT,
+	LAY_EFFECT,
+	LAY_UI,
 	LAY_END
 };
 
@@ -34,6 +36,10 @@ static const wchar_t* STR_TAYLAY(E_TAYLAY lay)
 		return L"LAY_PLAYER";
 	case LAY_OBJECT:
 		return L"LAY_OBJECT";
+	case LAY_EFFECT:
+		return L"LAY_EFFECT";
+	case LAY_UI:
+		return L"LAY_UI";
 	case LAY_END:
 		return L"LAY_END";
 	default:

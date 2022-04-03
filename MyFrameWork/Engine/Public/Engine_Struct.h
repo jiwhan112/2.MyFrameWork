@@ -2,6 +2,19 @@
 
 namespace Engine
 {
+	// 조명
+	typedef struct tagLightDesc
+	{
+		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+
+		TYPE		eLightType = TYPE_END;
+		XMFLOAT4	vDiffuse;
+		XMFLOAT4	vAmbient;
+		XMFLOAT4	vSpecular;
+		XMFLOAT4	vDirection;
+		XMFLOAT4	vPosition;
+	}LIGHTDESC;
+
 
 	// 정점 타입별로 셰이더를 만들 것이다.
 	// 따라서 정점 타입별로 정의하자.

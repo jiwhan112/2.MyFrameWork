@@ -20,7 +20,7 @@ private:
 	_uint			miNumX = 0;
 	_uint			miNumZ = 0;
 
-	_float3*		mpVertexPos = nullptr;
+
 
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _tchar* HeightMap);

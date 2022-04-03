@@ -62,7 +62,7 @@ HRESULT CGameObject_Terrain::Render()
 		return E_FAIL;
 
 	FAILED_CHECK(Set_ConstantTable());
-	FAILED_CHECK(mComVIBuffer->Render(mComShader, 1));
+	FAILED_CHECK(mComVIBuffer->Render(mComShader, 0));
 	return S_OK;
 }
 
@@ -85,14 +85,26 @@ HRESULT CGameObject_Terrain::Set_ConstantTable()
 	FAILED_CHECK(mComShader->Set_RawValue("g_ViewMatrix", &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_VIEW), sizeof(_float4x4)));
 	FAILED_CHECK(mComShader->Set_RawValue("g_ProjMatrix", &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_PROJ), sizeof(_float4x4)));
 
-	FAILED_CHECK(mComShader->Set_RawValue("g_CameraPosition", &pGameInstance->GetCameraPosition_float(),sizeof(_float3)));
-
-	
 	// 텍스처 넘기기
 	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture"));
+
+	
+	// 카메라 빛 세팅
+	const LIGHTDESC* pLightDesc = pGameInstance->Get_LightDesc(0);
+	if (pLightDesc == nullptr)
+		return E_FAIL;
+	
+//	FAILED_CHECK(mComShader->Set_RawValue("g_vLightPos", &pLightDesc->vDiffuse, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4)));	
+	FAILED_CHECK(mComShader->Set_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4)));
+
+	FAILED_CHECK(mComShader->Set_RawValue("g_CameraPosition", &pGameInstance->GetCameraPosition_vec(), sizeof(_float4)));
+
+	
 	return S_OK;
 }
-
 
 CGameObject_Terrain * CGameObject_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

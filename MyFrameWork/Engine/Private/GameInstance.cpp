@@ -10,6 +10,7 @@ CGameInstance::CGameInstance()
 	, m_pLevel_Manager(CLevel_Manager::GetInstance())
 	, m_pObject_Manager(CObject_Manager::GetInstance())
 	, m_pPipeLine(CPipeLine::GetInstance())
+	, m_pLightMgr(CLightMgr::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -18,6 +19,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pLevel_Manager);
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pPipeLine);
+	Safe_AddRef(m_pLightMgr);
 	
 }
 
@@ -218,6 +220,20 @@ _vector CGameInstance::GetCameraPosition_vec() const
 	return m_pPipeLine->GetCameraPosition_vec();
 }
 
+const LIGHTDESC * CGameInstance::Get_LightDesc(_uint iIndex) const
+{
+	NULL_CHECK_BREAK(m_pLightMgr);
+
+	return m_pLightMgr->Get_LightDesc(iIndex);
+}
+
+HRESULT CGameInstance::Add_Light(ID3D11Device * device, ID3D11DeviceContext * context, const LIGHTDESC & desc)
+{
+	NULL_CHECK_BREAK(m_pLightMgr);
+
+	return m_pLightMgr->Add_Light(device,context,desc);
+}
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -234,6 +250,9 @@ void CGameInstance::Release_Engine()
 
 	if (0 != CLevel_Manager::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CLevel_Manager");
+
+	if (0 != CLightMgr::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CLightMgr");
 
 	if (0 != CPipeLine::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CPipeLine")
@@ -253,6 +272,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pInput_Device);
-	Safe_Release(m_pPipeLine);
-
+	Safe_Release(m_pPipeLine); 
+	Safe_Release(m_pLightMgr);
 }

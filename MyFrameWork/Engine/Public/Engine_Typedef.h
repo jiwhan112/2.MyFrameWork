@@ -30,7 +30,7 @@ namespace Engine
 	// 벡터3를 4로 생성하는 것 재정의
 	typedef struct tagFloat4_Derived final : public XMFLOAT4
 	{
-	//	tagFloat4_Derived(float _x, float _y, float _z, float _w) :XMFLOAT4(_x,_y, _z,_w) {}
+		tagFloat4_Derived(float _x, float _y, float _z, float _w) :XMFLOAT4(_x,_y, _z,_w) {}
 		tagFloat4_Derived() = default;
 		tagFloat4_Derived(_float3 vFloat3, _float fW) :
 			XMFLOAT4(vFloat3.x, vFloat3.y, vFloat3.z, fW)	{}

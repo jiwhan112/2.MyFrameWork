@@ -88,6 +88,12 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Terrain">
       <UniqueIdentifier>{a6b11ac3-0c5b-46cb-9ff0-bcb58ba95029}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\08.Light">
+      <UniqueIdentifier>{89f76ca7-4969-46db-bb7a-17ad0b1b5c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\08.Light\Mgr">
+      <UniqueIdentifier>{7cb979f7-4b98-43da-8582-bbb89358ad76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -164,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01.Utility\08.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LightMgr.cpp">
+      <Filter>01.Utility\08.Light\Mgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Terrain.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01.Utility\08.Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LightMgr.h">
+      <Filter>01.Utility\08.Light\Mgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

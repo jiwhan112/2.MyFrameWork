@@ -7,6 +7,7 @@
 #include "Level_Manager.h"
 #include "Object_Manager.h"
 #include "PipeLine.h"
+#include "LightMgr.h"
 
 BEGIN(Engine)
 
@@ -57,6 +58,10 @@ public: /* For. PipeLine Single*/
 	_float4 GetCameraPosition_float() const; 
 	_vector GetCameraPosition_vec() const;
 
+public:
+	const LIGHTDESC* Get_LightDesc(_uint iIndex) const;
+	HRESULT Add_Light(ID3D11Device* device, ID3D11DeviceContext* context, const LIGHTDESC& desc);
+
 
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;
@@ -66,6 +71,8 @@ private:
 	CComponent_Manager*			m_pComponent_Manager = nullptr;
 	CInput_Device*				m_pInput_Device = nullptr;
 	CPipeLine*					m_pPipeLine = nullptr;
+	CLightMgr*					m_pLightMgr = nullptr;
+
 public:
 	static void Release_Engine();
 	virtual void Free() override;

@@ -106,7 +106,7 @@ HRESULT CShader::Set_InputLayout(_uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CShader::Set_RawValue(const char * pValueName, void * pData, _uint iLength)
+HRESULT CShader::Set_RawValue(const char * pValueName, const void * pData, _uint iLength)
 {
 	// 셰이더의 변수 이름을 ID3DX11EffectVariable* 형으로 받는다. 
 	ID3DX11EffectVariable*		pValue = m_pEffect->GetVariableByName(pValueName);
@@ -114,7 +114,8 @@ HRESULT CShader::Set_RawValue(const char * pValueName, void * pData, _uint iLeng
 		return E_FAIL;
 
 	// 유효한 값이면 세팅
-	return pValue->SetRawValue(pData, 0, iLength);
+	pValue->SetRawValue(pData, 0, iLength);
+	return S_OK;
 }
 
 HRESULT CShader::Set_Texture(const char * pValueName, ID3D11ShaderResourceView * pShaderResourceView)

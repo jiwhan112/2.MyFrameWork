@@ -1,6 +1,7 @@
 
+// 셰이더 전역 변수 모음
 
-// Shader 변수 모음
+// Matrix
 cbuffer	RenderingPipeLine
 {
 	matrix			g_WorldMatrix;
@@ -9,6 +10,7 @@ cbuffer	RenderingPipeLine
 };
 
 
+// Texture Type
 sampler DefaultSampler = sampler_state
 {
 	// D3D11_SAMPLER_DESC
@@ -17,6 +19,34 @@ sampler DefaultSampler = sampler_state
 	AddressV = wrap;
 };
 
+// Light
+// 빛은 3가지 색으로 정의되고 일반적으로 Diffuse가 기본 색이다.
+cbuffer LightDesc
+{
+	float4		g_vLightDir;
+	float4		g_vLightPos;
+	float4		g_vLightDiffuse;
+	float4		g_vLightAmbient = (float4)1.f;
+	float4		g_vLightSpecular = (float4)1.f;
+};
+
+// Matrial
+// 물체가 가지는 색이고 텍스처 diffuse맵이 기본 색이다.
+cbuffer MtrlDesc
+{
+	float4		g_vMtrlAmbient = float4(0.4f, 0.4f, 0.4f, 1.f);
+	float4		g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
+};
+
+
+// Camera
+cbuffer CameraDesc
+{
+	float4 g_CameraPosition;
+
+};
+
+// Blends
 /*
 typedef struct D3D11_RENDER_TARGET_BLEND_DESC
 	{

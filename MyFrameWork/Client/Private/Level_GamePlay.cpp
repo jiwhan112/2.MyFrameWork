@@ -13,8 +13,10 @@ HRESULT CLevel_GamePlay::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
 
-	Ready_Layer_Camera(TAGLAY(LAY_CAMERA));
-	Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND));
+	FAILED_CHECK(Ready_Light());
+
+	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
+	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 
 	return S_OK;
 }
@@ -49,6 +51,39 @@ HRESULT CLevel_GamePlay::Ready_Prototype_GameObject()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Light()
+{
+	// ºû ¼¼ÆÃ
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+
+	LIGHTDESC		LightDesc;
+	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+
+	LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+
+	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDeviceContext, LightDesc)))
+		return E_FAIL;
+
+
+	/*ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+
+	LightDesc.eLightType = LIGHTDESC::TYPE_POINT;
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vPosition = _float4(5.f, 3.f, 5.f, 1.f);
+
+	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDeviceContext, LightDesc)))
+		return E_FAIL;*/
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
 
@@ -77,6 +112,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
 	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_TERRAIN)));
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
+{
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
+{
 	return S_OK;
 }
 

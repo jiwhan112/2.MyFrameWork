@@ -26,7 +26,7 @@ public:
 
 	HRESULT Apply(_uint iPassIndex);
 	HRESULT Set_InputLayout(_uint iPassIndex);
-	HRESULT Set_RawValue(const char* pValueName, void* pData, _uint iLength);
+	HRESULT Set_RawValue(const char* pValueName, const void* pData, _uint iLength);
 	HRESULT Set_Texture(const char* pValueName, ID3D11ShaderResourceView* pShaderResourceView);
 
 

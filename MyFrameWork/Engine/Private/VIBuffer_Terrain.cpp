@@ -62,16 +62,12 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 		{
 			_uint iIndex = z * miNumX + x;
 
-			mpVertexPos[iIndex] = _float3(x, (pPixel[iIndex] & 0x000000ff) / 10.f, z);
-
+			pVertices[iIndex].vPosition = mpVertexPos[iIndex] = _float3(x, (pPixel[iIndex] & 0x000000ff) / 10.f, z);
 			pVertices[iIndex].vNormal = _float3(0.0f, 0.0f, 0.0f); // 노말 구해 주기
 			pVertices[iIndex].vTexUV = _float2(x / (miNumX - 1.f), z / (miNumZ - 1.f));
 		}
 	}
 
-	// 버퍼리소스 D3D11_SUBRESOURCE_DATA 데이터 텍스처 인덱스 정수등의 버퍼들은 리소스내에 실제 데이터들이다.
-	// pVertices들의 버퍼를 서브 리소스의 포인터에 넣어주고 CreateData에서 
-	// 버퍼의 타입과 실제 데이터로 버텍스 버퍼를 생성한다.
 	ZeroMemory(&m_VBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_VBSubResourceData.pSysMem = pVertices;
 
@@ -112,26 +108,45 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 				iIndex + 1,
 				iIndex
 			};
-			
-			// 노말 채우기
+			_vector P[2], vNormal;
+
 			pIndices[iNumFace]._0 = iIndices[0];
 			pIndices[iNumFace]._1 = iIndices[1];
 			pIndices[iNumFace]._2 = iIndices[2];
 
-			//_vector P[2] = { XMLoadFloat4(mpVertexPos[iIndices[0]]),XMLoadFloat4(mpVertexPos[iIndices[1]]) };
-			//_vector Normal = XMVector3Normalize(XMVector3Cross(P[0], P[1]));
-			//pVertices[iIndices[0]]->vNormal =  XMStoreFloat3(XMVector3Normalize(pVertices[pIndices[0]]->vNormal + Normal));
+			// 노말 채우기
+			// 폴리곤의 두 벡터를 외적해서 노말벡터를 구한다.
+			P[0] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._0]);
+			P[1] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._2]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]);
+			vNormal = XMVector3Normalize(XMVector3Cross(P[0], P[1]));
 
-			//mpVertexPos[1];
+			// 구한 노말을 노말라이즈해서 더해주고 다시 노말을 해준다.
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._0].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._0].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._1].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._1].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._2].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._2].vNormal) + vNormal));
 
 			++iNumFace;
-
-
 
 
 			pIndices[iNumFace]._0 = iIndices[0];
 			pIndices[iNumFace]._1 = iIndices[2];
 			pIndices[iNumFace]._2 = iIndices[3];
+
+			// 노말 채우기
+			P[0] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._0]);
+			P[1] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._2]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]);
+			vNormal = XMVector3Normalize(XMVector3Cross(P[0], P[1]));
+
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._0].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._0].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._1].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._1].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._2].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._2].vNormal) + vNormal));
+
 			++iNumFace;
 		}
 	}
@@ -190,5 +205,4 @@ CComponent * CVIBuffer_Terrain::Clone(void * pArg)
 void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
-
 }
