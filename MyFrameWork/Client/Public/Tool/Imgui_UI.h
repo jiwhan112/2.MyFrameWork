@@ -17,7 +17,11 @@ public:
 	// CImgui_Base을(를) 통해 상속됨
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT Update(_double time) override;
-	virtual HRESULT Render() override;
+public:
+	void DemoTest();
+	void UISaver();
+	void TextureSaver();
+
 
 private:
 	bool bDemo;

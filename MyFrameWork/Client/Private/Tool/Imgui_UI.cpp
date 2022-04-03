@@ -16,19 +16,7 @@ HRESULT CImgui_UI::NativeConstruct()
 
 HRESULT CImgui_UI::Update(_double time)
 {
-
-
-	ImGui::NewFrame();
-
-	if (bDemo)
-	{
-
-
-		ImGui::ShowDemoWindow(&bDemo);
-
-
-
-	}
+	DemoTest();
 
 	ImGui::Begin("Hello, world!");
 	ImGui::Text("aaa");
@@ -36,17 +24,27 @@ HRESULT CImgui_UI::Update(_double time)
 	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 	ImGui::End();
 
-	ImGui::EndFrame();
-
-
 
 
 	return S_OK;
 }
 
-HRESULT CImgui_UI::Render()
+
+void CImgui_UI::DemoTest()
 {
-	return S_OK;
+	if (bDemo)
+	{
+		ImGui::ShowDemoWindow(&bDemo);
+
+	}
+}
+
+void CImgui_UI::UISaver()
+{
+}
+
+void CImgui_UI::TextureSaver()
+{
 }
 
 

@@ -118,12 +118,15 @@ HRESULT CImguiMgr::Update(_double time)
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
-
+	ImGui::NewFrame();
 	
 	if (mIMGUI == nullptr)
 		mIMGUI = CImgui_UI::Create(nullptr, nullptr);
 	if (mIMGUI)
 		mIMGUI->Update(time);
+
+
+	ImGui::EndFrame();
 	return S_OK;
 
 }

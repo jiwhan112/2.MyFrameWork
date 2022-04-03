@@ -16,7 +16,6 @@ protected:
 public:
 	virtual HRESULT NativeConstruct()PURE;
 	virtual HRESULT Update(_double time)PURE;
-	virtual HRESULT Render()PURE;
 
 protected:
 	ID3D11Device*			mDevice = nullptr;
