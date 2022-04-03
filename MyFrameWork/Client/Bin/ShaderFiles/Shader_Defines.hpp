@@ -17,6 +17,15 @@ sampler DefaultSampler = sampler_state
 	AddressV = wrap;
 };
 
+sampler PointSampler = sampler_state
+{
+	// D3D11_SAMPLER_DESC
+	filter = min_mag_mip_point;
+	AddressU = wrap;
+	AddressV = wrap;
+};
+
+
 // Light
 // 빛은 3가지 색으로 정의되고 일반적으로 Diffuse가 기본 색이다.
 cbuffer LightDesc

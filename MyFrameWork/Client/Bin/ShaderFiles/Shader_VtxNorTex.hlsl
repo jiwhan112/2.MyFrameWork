@@ -2,10 +2,17 @@
 
 texture2D		g_DiffuseTexture;
 
-//texture2D		g_SourDiffuseTexture;
-//texture2D		g_DestDiffuseTexture;
-//texture2D		g_FilterTexture;
-//texture2D		g_BrushTexture;
+texture2D		g_SourDiffuseTexture;
+texture2D		g_DestDiffuseTexture;
+texture2D		g_FilterTexture;
+texture2D		g_BrushTexture;
+
+cbuffer BrushDesc
+{
+	float4		g_vBrushPos = float4(10.0f, 0.0f, 10.f, 1.f);
+	float		g_fRadius = 3.f;
+};
+
 
 // VS
 struct VS_IN
@@ -85,15 +92,40 @@ PS_OUT PS_MAIN_TERRAIN2(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	// Diffuse
-	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV * 30);
+	// 스플라인 기법으로 텍스처 함치기
+
+	// 3개의 텍스처 로드
+	vector	vSourMtrlDiffuse = g_SourDiffuseTexture.Sample(DefaultSampler, In.vTexUV * 30.f);
+	vector	vDestMtrlDiffuse = g_DestDiffuseTexture.Sample(DefaultSampler, In.vTexUV * 30.f);
+	vector	vFilterColor = g_FilterTexture.Sample(PointSampler, In.vTexUV);
+
+	// 브러쉬 텍스처
+	vector	vBrushColor = (vector)0.f;
+
+	if (g_vBrushPos.x - g_fRadius < In.vWorldPos.x &&  g_vBrushPos.x + g_fRadius >= In.vWorldPos.x &&
+		g_vBrushPos.z - g_fRadius < In.vWorldPos.z &&  g_vBrushPos.z + g_fRadius >= In.vWorldPos.z)
+	{
+		float2		vBrushUV;
+		vBrushUV.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fRadius)) / (2.f * g_fRadius);
+		vBrushUV.y = (In.vWorldPos.z - (g_vBrushPos.z + g_fRadius)) / (2.f * g_fRadius);
+
+		vBrushColor = g_BrushTexture.Sample(PointSampler, vBrushUV);
+	}
+
+
+	// diffuse = (ATex * Fiter) + ((1 - Fiter) * BTex)
+	float4	vMtrlDiffuse = vSourMtrlDiffuse * vFilterColor.r + vDestMtrlDiffuse * (1.f - vFilterColor.r);
 	float	Nomal = saturate(dot(normalize(g_vLightDir) * -1.f, In.vNormal));
-	float4  Diifuse = g_vLightDiffuse * Albedo * Nomal + (g_vLightAmbient * g_vMtrlAmbient);
+	float4	Diffuse = g_vLightDiffuse * vMtrlDiffuse * saturate(Nomal + (g_vLightAmbient * g_vMtrlAmbient))+ vBrushColor;
 
-	// TOON
-	Diifuse = ceil(Diifuse * 5) / 5.0f;
+	float3	PN = In.vNormal* dot(normalize(g_vLightDir) * -1.f, In.vNormal);
+	float3	Reflection = normalize(g_vLightDir) + 2 * PN;
+	float3	LookVec = normalize(g_CameraPosition - In.vWorldPos);
 
-	Out.vColor = Diifuse;
+	float  SpecularPow = pow(saturate(dot(normalize(Reflection), LookVec)), 30.0f);
+	float4 Specular = g_vLightSpecular * g_vMtrlSpecular* SpecularPow;
+
+	Out.vColor = Diffuse + Specular;
 
 	return Out;
 }

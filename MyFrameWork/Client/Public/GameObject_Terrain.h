@@ -13,6 +13,9 @@ BEGIN(Client)
 class CGameObject_Terrain final :
 	public CGameObject
 {
+public:
+	enum TEXTURETYPE { TYPE_DIFFUSE, TYPE_FILTER, TYPE_BRUSH, TYPE_END };
+
 protected:
 	explicit CGameObject_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_Terrain(const CGameObject_Terrain& rhs);
@@ -34,7 +37,14 @@ private:
 	CShader*			mComShader = nullptr;
 	CRenderer*			mComRenderer = nullptr;
 	CVIBuffer*			mComVIBuffer = nullptr;
-	CTexture*			mComTexture = nullptr;
+	CTexture*			mComTexture[TYPE_END] = { nullptr };
+
+	// 제작한 텍스처
+	ID3D11ShaderResourceView*	mRSV = nullptr;
+
+public:
+	HRESULT Create_FilterTexture();
+
 
 public:
 	static CGameObject_Terrain* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

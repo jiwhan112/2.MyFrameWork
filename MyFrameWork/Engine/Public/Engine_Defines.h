@@ -20,6 +20,9 @@
 // 도큐먼트: https://github.com/microsoft/DirectXTK12/wiki/DirectXTK
 #include <Direct_TK/DDSTextureLoader.h>
 #include <Direct_TK/WICTextureLoader.h>
+#include <Direct_TK/ScreenGrab.h>
+#include <wincodec.h>
+
 
 using namespace DirectX;
 
