@@ -25,9 +25,6 @@
     <Filter Include="10.Imgui\01.Mgr">
       <UniqueIdentifier>{652cb1b7-82a6-427a-8bb1-695ce1d0b8b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10.Imgui\02.lib">
-      <UniqueIdentifier>{5d3dcb41-c8b6-4ca9-8706-1437af281d0d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Level">
       <UniqueIdentifier>{e0ac6f03-be32-44f3-80ec-1a4383b706f7}</UniqueIdentifier>
     </Filter>
@@ -70,6 +67,18 @@
     <Filter Include="02.GameObject\01.BackGround\3.Terrain">
       <UniqueIdentifier>{d3a94238-5c58-40ca-811a-a4e8d5705229}</UniqueIdentifier>
     </Filter>
+    <Filter Include="10.Imgui\99.lib">
+      <UniqueIdentifier>{5d3dcb41-c8b6-4ca9-8706-1437af281d0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools">
+      <UniqueIdentifier>{35d419d1-ce18-45fa-ace2-1e598dfc6c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\00.BaseTool">
+      <UniqueIdentifier>{84f726a0-0677-4385-9aba-6ee4f5c75cfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\01.UITool">
+      <UniqueIdentifier>{c21e93ea-bc53-4dd0-8468-6d52bf0a8ed1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -88,31 +97,28 @@
       <Filter>98.Default\01.Resource</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imconfig.h">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imgui.h">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imgui_impl_win32.h">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imgui_internal.h">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imstb_rectpack.h">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imstb_textedit.h">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui\imstb_truetype.h">
-      <Filter>10.Imgui\02.lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImguiMgr.h">
-      <Filter>10.Imgui\01.Mgr</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Includes.h">
       <Filter>99.Defines</Filter>
@@ -153,6 +159,15 @@
     <ClInclude Include="..\Public\GameObject_Terrain.h">
       <Filter>02.GameObject\01.BackGround\3.Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Tool\ImguiMgr.h">
+      <Filter>10.Imgui\01.Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_Base.h">
+      <Filter>10.Imgui\02.Tools\00.BaseTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_UI.h">
+      <Filter>10.Imgui\02.Tools\01.UITool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -162,28 +177,25 @@
       <Filter>98.Default\00.main</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui.cpp">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui_demo.cpp">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui_draw.cpp">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui_impl_dx11.cpp">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui_impl_win32.cpp">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui_tables.cpp">
-      <Filter>10.Imgui\02.lib</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Imgui\imgui_widgets.cpp">
-      <Filter>10.Imgui\02.lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ImguiMgr.cpp">
-      <Filter>10.Imgui\01.Mgr</Filter>
+      <Filter>10.Imgui\99.lib</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Loader.cpp">
       <Filter>01.Level\00.Loader</Filter>
@@ -214,6 +226,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_Terrain.cpp">
       <Filter>02.GameObject\01.BackGround\3.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\ImguiMgr.cpp">
+      <Filter>10.Imgui\01.Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_Base.cpp">
+      <Filter>10.Imgui\02.Tools\00.BaseTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_UI.cpp">
+      <Filter>10.Imgui\02.Tools\01.UITool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

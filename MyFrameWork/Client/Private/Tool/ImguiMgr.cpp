@@ -1,10 +1,12 @@
 #include "stdafx.h"
-#include "ImguiMgr.h"
+#include "Tool/ImguiMgr.h"
+#include "Tool/Imgui_UI.h"
 
 IMPLEMENT_SINGLETON(CImguiMgr)
 
 CImguiMgr::CImguiMgr()
 {
+	mIMGUI = nullptr;
 }
 
 void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -14,8 +16,8 @@ void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext*
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -112,6 +114,31 @@ void CImguiMgr::UpdateGUI()
 	}
 }
 
+HRESULT CImguiMgr::Update(_double time)
+{
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+
+	
+	if (mIMGUI == nullptr)
+		mIMGUI = CImgui_UI::Create(nullptr, nullptr);
+	if (mIMGUI)
+		mIMGUI->Update(time);
+	return S_OK;
+
+}
+
+HRESULT CImguiMgr::Render()
+{
+	if (mIMGUI)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
+	return S_OK;
+}
+
 void CImguiMgr::DestroyIMGUI()
 {
 	// IMGUI ªË¡¶
@@ -123,5 +150,7 @@ void CImguiMgr::DestroyIMGUI()
 
 void CImguiMgr::Free()
 {
+	Safe_Release(mIMGUI);
+
 	DestroyIMGUI();
 }

@@ -174,7 +174,6 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Includes.h" />
-    <ClInclude Include="..\Public\ImguiMgr.h" />
     <ClInclude Include="..\Public\Imgui\imconfig.h" />
     <ClInclude Include="..\Public\Imgui\imgui.h" />
     <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h" />
@@ -187,6 +186,9 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\stdafx.h" />
+    <ClInclude Include="..\Public\Tool\ImguiMgr.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_Base.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Client_Enum.h" />
     <ClInclude Include="Resource.h" />
@@ -200,7 +202,6 @@
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loader.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
-    <ClCompile Include="..\Private\ImguiMgr.cpp" />
     <ClCompile Include="..\Private\Level_Tool.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
@@ -208,6 +209,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\Tool\ImguiMgr.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_Base.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_UI.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_demo.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_draw.cpp" />

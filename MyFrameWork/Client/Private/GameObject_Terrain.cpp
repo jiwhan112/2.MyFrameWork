@@ -28,7 +28,7 @@ HRESULT CGameObject_Terrain::NativeConstruct_Prototype()
 HRESULT CGameObject_Terrain::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	Create_FilterTexture();
+//	Create_FilterTexture();
 	return S_OK;
 }
 
