@@ -1,10 +1,9 @@
 #include "..\Public\Camera.h"
 #include "PipeLine.h"
 
-
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-	:CGameObject(pDevice,pDeviceContext)
-	,mpPipeLine(CPipeLine::GetInstance())
+	:CGameObject(pDevice, pDeviceContext)
+	, mpPipeLine(CPipeLine::GetInstance())
 {
 	Safe_AddRef(mpPipeLine);
 }
@@ -47,8 +46,8 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 	mComTransform->SetState(CTransform::STATE_UP, vUp);
 	mComTransform->SetState(CTransform::STATE_RIGHT, vRight);
 	mComTransform->SetState(CTransform::STATE_LOOK, vLook);
-	// float3 형을 4의 vecotr로 바꿔서 넣어준다. &는 주소를 넘겨야하기 때문에 
-	mComTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat4(&_float4(mCameraDesc.vEye,1.f)));
+	// float3 형을 4의 vecotr로 바꿔서 넣어준다. &는 주소를 넘겨야하기 때문에
+	mComTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat4(&_float4(mCameraDesc.vEye, 1.f)));
 
 	return S_OK;
 }
@@ -84,5 +83,4 @@ void CCamera::Free()
 {
 	__super::Free();
 	Safe_Release(mpPipeLine);
-
 }

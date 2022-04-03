@@ -20,9 +20,9 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);
 
 private:
-	/* 
-	shader-resource-view 인터페이스는 
-	렌더링 중에 셰이더가 액세스할 수 있는 하위 리소스를 지정합니다. 
+	/*
+	shader-resource-view 인터페이스는
+	렌더링 중에 셰이더가 액세스할 수 있는 하위 리소스를 지정합니다.
 	셰이더 리소스의 예로는 상수 버퍼, 텍스처 버퍼 및 텍스처가 있습니다.
 	*/
 	vector<ID3D11ShaderResourceView*>				m_Textures;

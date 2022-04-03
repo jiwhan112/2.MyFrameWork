@@ -3,9 +3,6 @@
 // 씬이름 정의
 enum E_LEVEL { LEVEL_STATIC, LEVEL_LOADING, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_TOOL, LEVEL_END };
 
-
-
-
 // 레이어 이름 정의
 enum E_TAYLAY
 {
@@ -16,9 +13,6 @@ enum E_TAYLAY
 	LAY_OBJECT,
 	LAY_END
 };
-
-
-
 
 static const wchar_t* STR_TAYLAY(E_TAYLAY lay)
 {
@@ -40,7 +34,6 @@ static const wchar_t* STR_TAYLAY(E_TAYLAY lay)
 		return L"LAY";
 	}
 }
-
 
 // 컴포넌트 프로토 이름 정의
 enum E_TAYCOMPONENT
@@ -69,8 +62,6 @@ static const wchar_t* STR_TAYCOM(E_TAYCOMPONENT com)
 		return L"COMPONENT";
 	}
 }
-
-
 
 // 게임오브젝트 프로토 이름 정의
 enum E_TAYGAMEOBJECT

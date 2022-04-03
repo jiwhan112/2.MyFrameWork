@@ -4,7 +4,6 @@
 static const unsigned int g_iWinCX = 1280;
 static const unsigned int g_iWinCY = 720;
 
-
 extern HINSTANCE		g_hInst;
 extern HWND				g_hWnd;
 
@@ -19,5 +18,3 @@ extern double			g_Timer;
 namespace Client {}
 
 using namespace Client;
-
-

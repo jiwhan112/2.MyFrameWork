@@ -23,13 +23,12 @@ CGameObject::CGameObject(const CGameObject & rhs)
 
 CComponent * CGameObject::Get_Component(const _tchar * pComponentTag)
 {
-	return Find_Component(pComponentTag);	
+	return Find_Component(pComponentTag);
 }
 
 HRESULT CGameObject::NativeConstruct_Prototype()
 {
-
-	return S_OK;	
+	return S_OK;
 }
 
 HRESULT CGameObject::NativeConstruct(void * pArg)
@@ -95,10 +94,8 @@ CComponent * CGameObject::Find_Component(const _tchar * pComponentTag)
 	if (iter == m_Components.end())
 		return nullptr;
 
-	return iter->second;	
+	return iter->second;
 }
-
-
 
 void CGameObject::Free()
 {

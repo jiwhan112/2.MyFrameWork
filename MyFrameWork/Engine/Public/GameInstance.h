@@ -55,13 +55,12 @@ public: /* For. PipeLine Single*/
 	_matrix GetTransformMatrix(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
 	_float4x4 GetTransformFloat4x4(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
 	_float4x4 GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
-	_float4 GetCameraPosition_float() const; 
+	_float4 GetCameraPosition_float() const;
 	_vector GetCameraPosition_vec() const;
 
 public:
 	const LIGHTDESC* Get_LightDesc(_uint iIndex) const;
 	HRESULT Add_Light(ID3D11Device* device, ID3D11DeviceContext* context, const LIGHTDESC& desc);
-
 
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;

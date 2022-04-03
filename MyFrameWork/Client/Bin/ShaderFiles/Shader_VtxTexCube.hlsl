@@ -55,7 +55,7 @@ technique11		DefaultTechnique
 	{
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(NonZTestAndWriteState, 0);
-		SetRasterizerState(CullMode_cw); 
+		SetRasterizerState(CullMode_cw);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;

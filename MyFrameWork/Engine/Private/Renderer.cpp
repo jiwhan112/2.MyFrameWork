@@ -2,7 +2,6 @@
 
 #include "GameObject.h"
 
-
 CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
@@ -20,7 +19,7 @@ HRESULT CRenderer::NativeConstruct(void * pArg)
 
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pRenderObject)
 {
-	if (eRenderGroup >= RENDER_END || 
+	if (eRenderGroup >= RENDER_END ||
 		nullptr == pRenderObject)
 		return E_FAIL;
 
@@ -80,8 +79,6 @@ HRESULT CRenderer::Render_NonAlpha()
 	return S_OK;
 }
 
-
-
 HRESULT CRenderer::Render_Alpha()
 {
 	/*m_RenderObjects[RENDER_ALPHA].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
@@ -118,7 +115,7 @@ HRESULT CRenderer::Render_UI()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_UI].clear();	
+	m_RenderObjects[RENDER_UI].clear();
 
 	return S_OK;
 }
@@ -140,7 +137,7 @@ CComponent * CRenderer::Clone(void * pArg)
 {
 	AddRef();
 
-	return this;	
+	return this;
 }
 
 void CRenderer::Free()

@@ -8,7 +8,7 @@
 BEGIN(Engine)
 
 class ENGINE_DLL CRenderer final : public CComponent
-{	
+{
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
 public:

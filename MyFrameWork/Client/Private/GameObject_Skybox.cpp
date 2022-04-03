@@ -4,7 +4,6 @@
 CGameObject_Skybox::CGameObject_Skybox(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
 {
-
 }
 
 CGameObject_Skybox::CGameObject_Skybox(const CGameObject_Skybox& rhs)
@@ -23,7 +22,7 @@ CGameObject_Skybox::CGameObject_Skybox(const CGameObject_Skybox& rhs)
 HRESULT CGameObject_Skybox::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-	   
+
 	return S_OK;
 }
 
@@ -49,7 +48,6 @@ _int CGameObject_Skybox::LateTick(_double TimeDelta)
 	mComTransform->SetState(CTransform::STATE_POSITION, pGameInstance->GetCameraPosition_vec());
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
-
 }
 
 HRESULT CGameObject_Skybox::Render()
@@ -68,7 +66,6 @@ HRESULT CGameObject_Skybox::Set_Component()
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_SKY), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 	return S_OK;
-
 }
 
 HRESULT CGameObject_Skybox::Set_ConstantTable()
@@ -85,7 +82,6 @@ HRESULT CGameObject_Skybox::Set_ConstantTable()
 	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture", 2));
 	return S_OK;
 }
-
 
 CGameObject_Skybox * CGameObject_Skybox::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -115,10 +111,9 @@ CGameObject_Skybox* CGameObject_Skybox::Clone(void* pArg)
 void CGameObject_Skybox::Free()
 {
 	__super::Free();
-	
+
 	Safe_Release(mComShader);
 	Safe_Release(mComRenderer);
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
-
 }

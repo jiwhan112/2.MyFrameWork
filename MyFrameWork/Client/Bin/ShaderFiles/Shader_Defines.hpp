@@ -1,4 +1,3 @@
-
 // 셰이더 전역 변수 모음
 
 // Matrix
@@ -8,7 +7,6 @@ cbuffer	RenderingPipeLine
 	matrix			g_ViewMatrix;
 	matrix			g_ProjMatrix;
 };
-
 
 // Texture Type
 sampler DefaultSampler = sampler_state
@@ -38,12 +36,10 @@ cbuffer MtrlDesc
 	float4		g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
 };
 
-
 // Camera
 cbuffer CameraDesc
 {
 	float4 g_CameraPosition;
-
 };
 
 // Blends
@@ -105,7 +101,6 @@ DepthStencilState  NonZTestAndWriteState
 	DepthWriteMask = zero;
 };
 
-
 /*
 D3D11_FILL_MODE FillMode;
 D3D11_CULL_MODE CullMode;
@@ -137,7 +132,6 @@ RasterizerState CullMode_cw
 	FillMode = Solid;
 	CullMode = front;
 	FrontCounterClockwise = false;
-
 };
 
 RasterizerState CullMode_ccw
@@ -145,5 +139,4 @@ RasterizerState CullMode_ccw
 	FillMode = Solid;
 	CullMode = back;
 	FrontCounterClockwise = false;
-
 };

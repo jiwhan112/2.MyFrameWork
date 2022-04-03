@@ -3,14 +3,12 @@
 CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CVIBuffer(pDevice, pDeviceContext)
 {
-
 }
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain & rhs)
 	: CVIBuffer(rhs)
 
 {
-
 }
 
 HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
@@ -35,7 +33,6 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	_ulong*		pPixel = new _ulong[miNumX * miNumZ];
 	ReadFile(hFile, pPixel, sizeof(_ulong) * miNumX * miNumZ, &dwByte, nullptr);
 
-
 	ZeroMemory(&m_VBDesc, sizeof(D3D11_BUFFER_DESC));
 
 	m_iNumIndicesPerPrimitive = 3;
@@ -55,7 +52,6 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	mpVertexPos = DBG_NEW _float3[m_iNumVertices];
 	ZeroMemory(mpVertexPos, sizeof(_float3));
 
-
 	for (_uint z = 0; z < miNumZ; z++)
 	{
 		for (_uint x = 0; x < miNumX; x++)
@@ -71,13 +67,11 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	ZeroMemory(&m_VBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_VBSubResourceData.pSysMem = pVertices;
 
-
 	// m_pVB에 버텍스 버퍼 생성
 	Safe_Delete_Array(pPixel);
 	CloseHandle(hFile);
 
 #pragma endregion
-
 
 #pragma region INDEX_BUFFER
 	// 인덱스 버퍼는 사각형에 삼각형이 두개씩 들어간다.
@@ -93,12 +87,12 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	// 직접 Indices에 세팅
 	FACEINDICES32*	pIndices = DBG_NEW FACEINDICES32[m_iNumPrimitive];
 	ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitive);
-	
+
 	_uint		iNumFace = 0;
 
-	for (_uint z = 0; z < miNumZ-1; z++)
+	for (_uint z = 0; z < miNumZ - 1; z++)
 	{
-		for (_uint x = 0; x < miNumX-1; x++)
+		for (_uint x = 0; x < miNumX - 1; x++)
 		{
 			_uint		iIndex = z * miNumX + x;
 
@@ -129,7 +123,6 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._2].vNormal) + vNormal));
 
 			++iNumFace;
-
 
 			pIndices[iNumFace]._0 = iIndices[0];
 			pIndices[iNumFace]._1 = iIndices[2];
@@ -171,7 +164,6 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 HRESULT CVIBuffer_Terrain::NativeConstruct(void * pArg)
 {
 	return S_OK;
-
 }
 
 CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * HeightMap)
@@ -197,10 +189,6 @@ CComponent * CVIBuffer_Terrain::Clone(void * pArg)
 	}
 	return pInstance;
 }
-
-
-
-
 
 void CVIBuffer_Terrain::Free()
 {

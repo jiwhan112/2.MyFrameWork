@@ -9,14 +9,13 @@ class CTexture;
 END
 
 BEGIN(Client)
-class CGameObject_BackGround final:
+class CGameObject_BackGround final :
 	public CGameObject
 {
 protected:
 	explicit CGameObject_BackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_BackGround(const CGameObject_BackGround& rhs);
 	virtual ~CGameObject_BackGround() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();

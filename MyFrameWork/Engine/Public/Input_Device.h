@@ -17,18 +17,21 @@ private:
 	virtual ~CInput_Device() = default;
 
 public:
-	_byte Get_DIKeyState(_ubyte eKeyID) {
-		return m_byKeyState[eKeyID];
-	}	
+	_byte Get_DIKeyState(_ubyte eKeyID)
+ {
+return m_byKeyState[eKeyID];
+}
 
-	_long Get_DIMouseMoveState(MOUSEMOVESTATE eMouseMoveState) {
-		return *((_long*)&m_MouseState + eMouseMoveState);
-	}
+_long Get_DIMouseMoveState(MOUSEMOVESTATE eMouseMoveState)
+{
+return *((_long*)&m_MouseState + eMouseMoveState);
+}
 
-	_byte Get_DIMouseButtonState(MOUSEBUTTONSTATE eMouseButtonState) {
-		return m_MouseState.rgbButtons[eMouseButtonState];
-	}
-	
+_byte Get_DIMouseButtonState(MOUSEBUTTONSTATE eMouseButtonState)
+{
+return m_MouseState.rgbButtons[eMouseButtonState];
+}
+
 public:
 	HRESULT Ready_Input_Device(HINSTANCE hInst, HWND hWnd);
 	HRESULT SetUp_InputDeviceState();
@@ -36,7 +39,7 @@ public:
 private:
 	LPDIRECTINPUT8				m_pInput = nullptr;
 	LPDIRECTINPUTDEVICE8		m_pKeyboard = nullptr;
-	LPDIRECTINPUTDEVICE8		m_pMouse = nullptr;	
+	LPDIRECTINPUTDEVICE8		m_pMouse = nullptr;
 
 private:
 	_byte					m_byKeyState[256];

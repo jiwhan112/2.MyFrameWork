@@ -13,7 +13,7 @@ protected:
 	virtual ~CGameObject() = default;
 public:
 	class CComponent* Get_Component(const _tchar* pComponentTag);
-	
+
 public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
@@ -31,10 +31,9 @@ protected:
 
 public:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
-	
+
 private:
 	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
-
 
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
@@ -43,14 +42,14 @@ protected:
 protected:
 	class CTransform*		mComTransform = nullptr;
 	static const _tchar*	mComTag_Transform;
-	
+
 	// Á×À½ Ã¼Å©¿Í ·»´õ¸µ ¿©ºÎ
 	bool				mIsLife = true;
-	bool				mIsRenderer= true;
+	bool				mIsRenderer = true;
 
 protected:
 	CComponent*	Find_Component(const _tchar* pComponentTag);
-	
+
 protected:
 	map<const _tchar*, CComponent*>			m_Components;
 	typedef map<const _tchar*, CComponent*>	COMPONENTS;

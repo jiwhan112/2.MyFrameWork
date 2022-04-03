@@ -3,14 +3,13 @@
 #include "Camera.h"
 
 BEGIN(Client)
-class CCamera_Client final:
+class CCamera_Client final :
 	public CCamera
 {
 protected:
 	explicit CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CCamera_Client(const CCamera_Client& rhs);
 	virtual ~CCamera_Client() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();

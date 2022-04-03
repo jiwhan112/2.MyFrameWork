@@ -2,7 +2,7 @@
 
 #include "Base.h"
 
-// 여러 행렬을 저장하고 싱글턴에서 
+// 여러 행렬을 저장하고 싱글턴에서
 
 BEGIN(Engine)
 
@@ -39,7 +39,7 @@ public:
 private:
 	_float4x4				mMatrix[D3DTS_END];
 
-	// 카메라 구하는 작업을 여러번 하지 말자. 
+	// 카메라 구하는 작업을 여러번 하지 말자.
 	_float4					mCameraPostion;
 
 public:

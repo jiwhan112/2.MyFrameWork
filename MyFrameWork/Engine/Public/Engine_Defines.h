@@ -21,9 +21,7 @@
 #include <Direct_TK/DDSTextureLoader.h>
 #include <Direct_TK/WICTextureLoader.h>
 
-
 using namespace DirectX;
-
 
 #define DIRECTINPUT_VERSION 0x0800
 // Dinput에 필요한 라이브러리
@@ -41,8 +39,6 @@ using namespace DirectX;
 #include <time.h>
 
 using namespace std;
-
-
 
 #include "Engine_Macro.h"
 #include "Engine_Typedef.h"

@@ -1,8 +1,6 @@
 #include "..\Public\EasingMgr.h"
 
-
 IMPLEMENT_SINGLETON(CEasingMgr)
-
 
 CEasingMgr::CEasingMgr()
 {
@@ -102,7 +100,6 @@ _float CEasingMgr::Easing(_uint eEasingType, _float fStartPoint, _float fTargetP
 
 	return 0;
 }
-
 
 _float CEasingMgr::Linear(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 {
@@ -248,7 +245,6 @@ _float CEasingMgr::CircularInOut(_float fStartPoint, _float fTargetPoint, _float
 
 _float CEasingMgr::ElasticEaseOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 {
-
 	if ((fPassedTime /= fTotalTime) == 1)
 		return fStartPoint + (fTargetPoint - fStartPoint);
 
@@ -294,10 +290,9 @@ _float CEasingMgr::BounceEaseOut(_float fStartPoint, _float fTargetPoint, _float
 		return _float((fTargetPoint - fStartPoint) * (7.5625f * (fPassedTime -= (2.625f / 2.75f)) * fPassedTime + .984375f) + fStartPoint);
 }
 
-
 _float CEasingMgr::BounceEaseIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 {
-	return _float(BounceEaseOut(fTargetPoint, fStartPoint, fTotalTime - fPassedTime, fTotalTime) );
+	return _float(BounceEaseOut(fTargetPoint, fStartPoint, fTotalTime - fPassedTime, fTotalTime));
 }
 //_float CEasingMgr::BounceEaseInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 //{

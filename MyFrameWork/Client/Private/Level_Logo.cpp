@@ -3,17 +3,15 @@
 #include "Level_Loader.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CLevel(pDevice,pDeviceContext)
+	: CLevel(pDevice, pDeviceContext)
 {
 	mLevelIndex = LEVEL_LOGO;
 }
-
 
 HRESULT CLevel_Logo::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
 	FAILED_CHECK(Ready_Prototype_GameObject());
-
 
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
@@ -34,16 +32,13 @@ _int CLevel_Logo::LateTick(_double TimeDelta)
 
 	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
 
-
 	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & 0x8000)
 	{
-
 		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x8000)
 	{
-
 		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_TOOL)));
 	}
 
@@ -63,7 +58,6 @@ HRESULT CLevel_Logo::Render()
 
 HRESULT CLevel_Logo::Ready_Prototype_GameObject()
 {
-
 	return S_OK;
 }
 
@@ -73,7 +67,7 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 }
 
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
-{	
+{
 	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
 	return S_OK;
 }
@@ -94,5 +88,4 @@ CLevel_Logo * CLevel_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 void CLevel_Logo::Free()
 {
 	__super::Free();
-	
 }

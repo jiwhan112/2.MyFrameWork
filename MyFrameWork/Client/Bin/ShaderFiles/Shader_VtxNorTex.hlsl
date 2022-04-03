@@ -1,4 +1,3 @@
-
 #include "Shader_Defines.hpp"
 
 texture2D		g_DiffuseTexture;
@@ -22,7 +21,6 @@ struct VS_OUT
 	float3		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
-
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -55,7 +53,6 @@ struct PS_OUT
 	vector		vColor : SV_TARGET0;
 };
 
-
 PS_OUT PS_MAIN_TERRAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -65,11 +62,11 @@ PS_OUT PS_MAIN_TERRAIN(PS_IN In)
 
 	// 노말
 	float	Nomal = saturate(dot(normalize(g_vLightDir) * -1.f, In.vNormal));
-	
+
 	// 조명이 적용된 텍스처
 	float4  Diffuse = g_vLightDiffuse * Albedo * saturate(Nomal + (g_vLightAmbient * g_vMtrlAmbient));
 
-	// 스펙큘러 
+	// 스펙큘러
 	// 반사각 구하기
 	// 빛 -> 노말에 맞아 반사 벡터 구하기
 	float3 PN = In.vNormal* dot(normalize(g_vLightDir) * -1.f, In.vNormal);
@@ -99,7 +96,6 @@ PS_OUT PS_MAIN_TERRAIN2(PS_IN In)
 	Out.vColor = Diifuse;
 
 	return Out;
-
 }
 
 PS_OUT PS_MAIN_TOON(PS_IN In)
@@ -117,10 +113,7 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
 	Out.vColor = Diifuse;
 
 	return Out;
-
 }
-
-
 
 technique11		DefaultTechnique
 {
@@ -156,7 +149,4 @@ technique11		DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_TOON();
 	}
-
-
-
 }

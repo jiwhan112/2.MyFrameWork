@@ -1,9 +1,7 @@
-
 #include "Shader_Defines.hpp"
 
 texture2D			g_DiffuseTexture;
 texture2D			g_SourTexture;
-
 
 struct VS_IN
 {
@@ -51,7 +49,6 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	return Out;
 }
-
 
 technique11		DefaultTechnique
 {

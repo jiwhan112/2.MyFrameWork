@@ -15,7 +15,6 @@ namespace Engine
 		XMFLOAT4	vPosition;
 	}LIGHTDESC;
 
-
 	// 정점 타입별로 셰이더를 만들 것이다.
 	// 따라서 정점 타입별로 정의하자.
 
@@ -32,8 +31,6 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXTEX_DECLARATION;
 
-
-
 	typedef struct tagVertex_CubeTexture
 	{
 		XMFLOAT3			vPosition;
@@ -45,7 +42,6 @@ namespace Engine
 		static const unsigned int iNumElements = 2;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXCUBETEX_DECLARATION;
-
 
 	typedef struct tagVertex_Normal_Texture
 	{
@@ -60,13 +56,10 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXNORTEX_DECLARATION;
 
-
-
 	typedef struct tagLineIndices32
 	{
 		unsigned long	_0, _1;
 	}LINEINDICES32;
-
 
 	typedef struct tagLineIndices16
 	{
@@ -77,7 +70,6 @@ namespace Engine
 	{
 		unsigned long	_0, _1, _2;
 	}FACEINDICES32;
-
 
 	typedef struct tagFaceIndices16
 	{

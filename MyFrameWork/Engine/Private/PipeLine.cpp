@@ -1,9 +1,6 @@
 #include "..\Public\PipeLine.h"
 
-
 IMPLEMENT_SINGLETON(CPipeLine)
-
-
 
 HRESULT CPipeLine::Tick()
 {
@@ -13,7 +10,6 @@ HRESULT CPipeLine::Tick()
 
 	XMStoreFloat4(&mCameraPostion, ViewMat.r[3]);
 	return S_OK;
-
 }
 
 HRESULT CPipeLine::SetTransform(E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix)

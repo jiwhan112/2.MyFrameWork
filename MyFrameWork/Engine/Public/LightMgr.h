@@ -2,7 +2,6 @@
 
 #include "Base.h"
 
-
 // 라이트들을 관리하는 라이트 매니저
 
 BEGIN(Engine)
@@ -11,7 +10,7 @@ class CLightMgr final : public CBase
 {
 	DECLARE_SINGLETON(CLightMgr)
 public:
-	CLightMgr()= default;
+	CLightMgr() = default;
 	virtual ~CLightMgr() = default;
 
 public:

@@ -17,7 +17,7 @@ CComponent * CObject_Manager::Get_Component(_uint iLevelIndex, const _tchar * pL
 	if (nullptr == pLayer)
 		return nullptr;
 
-	return pLayer->Get_Component(pComponentTag, iIndex);	
+	return pLayer->Get_Component(pComponentTag, iIndex);
 }
 
 HRESULT CObject_Manager::Reserve_Container(_uint iNumLevels)
@@ -31,7 +31,7 @@ HRESULT CObject_Manager::Reserve_Container(_uint iNumLevels)
 
 HRESULT CObject_Manager::Add_Prototype(const _tchar * pPrototypeTag, CGameObject * pPrototype)
 {
-	if (nullptr == pPrototype || 
+	if (nullptr == pPrototype ||
 		nullptr != Find_Prototype(pPrototypeTag))
 		return E_FAIL;
 
@@ -70,7 +70,7 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar * pLayer
 	{
 		if (FAILED(pLayer->Add_GameObject(pGameObject)))
 			return E_FAIL;
-	}	
+	}
 
 	return S_OK;
 }

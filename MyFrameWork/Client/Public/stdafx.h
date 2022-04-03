@@ -15,5 +15,4 @@
 #include <memory.h>
 #include <tchar.h>
 
-
 #include "Client_Includes.h"

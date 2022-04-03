@@ -3,11 +3,10 @@
 #include "Camera.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CLevel(pDevice,pDeviceContext)
+	: CLevel(pDevice, pDeviceContext)
 {
 	mLevelIndex = LEVEL_GAMEPLAY;
 }
-
 
 HRESULT CLevel_GamePlay::NativeConstruct()
 {
@@ -24,7 +23,6 @@ HRESULT CLevel_GamePlay::NativeConstruct()
 _int CLevel_GamePlay::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
 
 	return UPDATENONE;
 }
@@ -69,7 +67,6 @@ HRESULT CLevel_GamePlay::Ready_Light()
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDeviceContext, LightDesc)))
 		return E_FAIL;
 
-
 	/*ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 
 	LightDesc.eLightType = LIGHTDESC::TYPE_POINT;
@@ -86,7 +83,6 @@ HRESULT CLevel_GamePlay::Ready_Light()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
-
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CameraDesc));
 
@@ -102,13 +98,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.SpeedPersec = 10.f;
 	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
 
-	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA),&CameraDesc));
+	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
-//	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
+	//	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
 	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
 	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_TERRAIN)));
 
@@ -141,5 +137,4 @@ CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
-	
 }

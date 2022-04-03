@@ -20,7 +20,6 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pLightMgr);
-	
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -28,8 +27,6 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	if (nullptr == m_pGraphic_Device ||
 		nullptr == m_pObject_Manager)
 		return E_FAIL;
-
-
 
 	FAILED_CHECK(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinCX, GraphicDesc.iWinCY, ppDeviceOut, ppDeviceContextOut));
 	FAILED_CHECK(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd));
@@ -160,7 +157,7 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar * pPrototyp
 
 CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, void * pArg)
 {
-	NULL_CHECK_RETURN(m_pComponent_Manager,nullptr);
+	NULL_CHECK_RETURN(m_pComponent_Manager, nullptr);
 	return m_pComponent_Manager->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
 }
 
@@ -191,7 +188,6 @@ HRESULT CGameInstance::SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, 
 
 _matrix CGameInstance::GetTransformMatrix(CPipeLine::E_TRANSFORMSTATETYPE eStateType)
 {
-
 	NULL_CHECK_BREAK(m_pPipeLine);
 	return m_pPipeLine->GetTransformMatrix(eStateType);
 }
@@ -231,7 +227,7 @@ HRESULT CGameInstance::Add_Light(ID3D11Device * device, ID3D11DeviceContext * co
 {
 	NULL_CHECK_BREAK(m_pLightMgr);
 
-	return m_pLightMgr->Add_Light(device,context,desc);
+	return m_pLightMgr->Add_Light(device, context, desc);
 }
 
 void CGameInstance::Release_Engine()
@@ -257,8 +253,8 @@ void CGameInstance::Release_Engine()
 	if (0 != CPipeLine::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CPipeLine")
 
-	if (0 != CInput_Device::GetInstance()->DestroyInstance())
-		MSGBOX("Failed to Delete CInput_Device");
+		if (0 != CInput_Device::GetInstance()->DestroyInstance())
+			MSGBOX("Failed to Delete CInput_Device");
 
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");
@@ -272,6 +268,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pInput_Device);
-	Safe_Release(m_pPipeLine); 
+	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pLightMgr);
 }

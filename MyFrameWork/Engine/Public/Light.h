@@ -8,7 +8,6 @@ BEGIN(Engine)
 
 class CLight final : public CBase
 {
-
 public:
 	CLight(ID3D11Device* device, ID3D11DeviceContext* devicecontext);
 	virtual ~CLight() = default;
@@ -17,7 +16,6 @@ public:
 
 public:
 	HRESULT NativeConstruct(const LIGHTDESC& LightDesc);
-
 
 private:
 	ID3D11Device*				mpDevice = nullptr;

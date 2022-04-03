@@ -15,7 +15,6 @@ public:
 		_float SpeedPersec;
 		_float RotPersec;
 		_float ScalePersec;
-
 }TRANSFORMDESC;
 
 public:
@@ -36,7 +35,7 @@ public:
 public:
 	// 인자로 들어올때의 타입 1~3 fvecotr
 	void SetState(E_STATE state, _fvector vec);
-	
+
 public:
 	virtual HRESULT NativeConstruct_Prototype() override;
 	virtual HRESULT NativeConstruct(void* pArg) override;
@@ -65,12 +64,9 @@ public:
 //	HRESULT Scaling(_fvector scale);
 	HRESULT Scaled(_fvector scale);
 
-
 private:
 	TRANSFORMDESC	mDesc;
 	_float4x4		mWorldMatrix;
-
-
 
 public:
 	static CTransform* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext);

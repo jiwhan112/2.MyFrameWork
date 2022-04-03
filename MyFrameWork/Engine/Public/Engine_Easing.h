@@ -36,7 +36,6 @@ public:
 		TYPE_BounceIn,
 		TYPE_BounceOut,
 		TYPE_BounceInOut
-
 	};
 
 	static float Linear(float t, float b, float c, float d)
@@ -187,7 +186,6 @@ public:
 	 */
 	static float ElasticEaseOut(float t, float b, float c, float d)
 	{
-
 		if ((t /= d) == 1)
 			return b + c;
 
@@ -263,10 +261,8 @@ public:
 	 */
 	static float BounceEaseOutIn(float t, float b, float c, float d)
 	{
-
 		if (t < d / 2)
 			return BounceEaseOut(t * 2, b, c / 2, d);
 		return BounceEaseIn((t * 2) - d, b + c / 2, c / 2, d);
 	}
 };
-

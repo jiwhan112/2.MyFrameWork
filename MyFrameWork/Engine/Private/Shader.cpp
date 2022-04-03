@@ -3,7 +3,6 @@
 CShader::CShader(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
 }
 
 CShader::CShader(const CShader & rhs)
@@ -16,7 +15,6 @@ CShader::CShader(const CShader & rhs)
 
 HRESULT CShader::NativeConstruct(void * pArg)
 {
-
 	return S_OK;
 }
 
@@ -81,8 +79,6 @@ HRESULT CShader::NativeConstruct_Prototype(const _tchar * pShaderFilePath, const
 	return S_OK;
 }
 
-
-
 HRESULT CShader::Apply(_uint iPassIndex)
 {
 	if (iPassIndex >= m_Passes.size())
@@ -91,7 +87,6 @@ HRESULT CShader::Apply(_uint iPassIndex)
 		return E_FAIL;
 
 	return m_Passes[iPassIndex]->pPass->Apply(0, m_pDeviceContext);
-
 }
 
 HRESULT CShader::Set_InputLayout(_uint iPassIndex)
@@ -108,7 +103,7 @@ HRESULT CShader::Set_InputLayout(_uint iPassIndex)
 
 HRESULT CShader::Set_RawValue(const char * pValueName, const void * pData, _uint iLength)
 {
-	// 셰이더의 변수 이름을 ID3DX11EffectVariable* 형으로 받는다. 
+	// 셰이더의 변수 이름을 ID3DX11EffectVariable* 형으로 받는다.
 	ID3DX11EffectVariable*		pValue = m_pEffect->GetVariableByName(pValueName);
 	if (nullptr == pValue)
 		return E_FAIL;
@@ -137,9 +132,9 @@ HRESULT CShader::Set_Texture(const char * pValueName, ID3D11ShaderResourceView *
 CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext,
 	const _tchar * pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC * pElements, _uint iNumElements)
 {
-	CShader*	pInstance = DBG_NEW CShader(pDevice,pDeviceContext);
+	CShader*	pInstance = DBG_NEW CShader(pDevice, pDeviceContext);
 
-	if (FAILED(pInstance->NativeConstruct_Prototype(pShaderFilePath,pElements,iNumElements)))
+	if (FAILED(pInstance->NativeConstruct_Prototype(pShaderFilePath, pElements, iNumElements)))
 	{
 		MSGBOX("Failed to Creating CShader");
 		Safe_Release(pInstance);

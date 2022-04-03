@@ -3,7 +3,7 @@
 #include "Level.h"
 
 BEGIN(Client)
-class CLevel_Loader final:
+class CLevel_Loader final :
 	public CLevel
 {
 private:

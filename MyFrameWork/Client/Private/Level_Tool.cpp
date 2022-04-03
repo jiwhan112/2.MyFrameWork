@@ -2,12 +2,10 @@
 #include "Level_Tool.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CLevel(pDevice,pDeviceContext)
+	: CLevel(pDevice, pDeviceContext)
 {
 	mLevelIndex = LEVEL_TOOL;
-
 }
-
 
 HRESULT CLevel_Tool::NativeConstruct()
 {
@@ -32,7 +30,6 @@ _int CLevel_Tool::Tick(_double TimeDelta)
 
 		ImGui::ShowDemoWindow(&bImguiDemo);
 		ImGui::EndFrame();
-
 	}
 
 	return _int();
@@ -49,9 +46,8 @@ HRESULT CLevel_Tool::Render()
 
 	if (bImguiInit)
 	{
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	}
 
 #ifdef _DEBUG
@@ -77,5 +73,4 @@ CLevel_Tool * CLevel_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 void CLevel_Tool::Free()
 {
 	__super::Free();
-	
 }

@@ -5,7 +5,7 @@ namespace Engine
 	class CTagFinder
 	{
 	public:
-		CTagFinder(const wchar_t* pTag) : m_pTag(pTag) { }
+		CTagFinder(const wchar_t* pTag) : m_pTag(pTag) {}
 		~CTagFinder() = default;
 
 	public:
@@ -36,7 +36,7 @@ namespace Engine
 	{
 		if (nullptr != pPointer)
 		{
-			delete [] pPointer;
+			delete[] pPointer;
 			pPointer = nullptr;
 		}
 	}
@@ -46,8 +46,8 @@ namespace Engine
 	{
 		unsigned long		dwRefCnt = 0;
 
-		if (nullptr != pInstance)		
-			dwRefCnt = pInstance->AddRef();					
+		if (nullptr != pInstance)
+			dwRefCnt = pInstance->AddRef();
 
 		return dwRefCnt;
 	}
@@ -61,12 +61,10 @@ namespace Engine
 		{
 			dwRefCnt = pInstance->Release();
 
-			if(0 == dwRefCnt)
+			if (0 == dwRefCnt)
 				pInstance = nullptr;
 		}
 
 		return dwRefCnt;
 	}
-
-
 }

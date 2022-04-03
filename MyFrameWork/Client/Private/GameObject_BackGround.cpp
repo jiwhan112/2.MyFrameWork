@@ -2,9 +2,8 @@
 #include "GameObject_BackGround.h"
 
 CGameObject_BackGround::CGameObject_BackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CGameObject(pDevice,pDeviceContext)
+	: CGameObject(pDevice, pDeviceContext)
 {
-
 }
 
 CGameObject_BackGround::CGameObject_BackGround(const CGameObject_BackGround& rhs)
@@ -18,15 +17,12 @@ CGameObject_BackGround::CGameObject_BackGround(const CGameObject_BackGround& rhs
 	Safe_AddRef(mComRenderer);
 	Safe_AddRef(mComVIBuffer);
 	Safe_AddRef(mComTexture);
-
 }
-
-
 
 HRESULT CGameObject_BackGround::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-	   
+
 	return S_OK;
 }
 
@@ -46,7 +42,6 @@ _int CGameObject_BackGround::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-
 	return _int();
 }
 
@@ -59,7 +54,6 @@ _int CGameObject_BackGround::LateTick(_double TimeDelta)
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return _int();
-
 }
 
 HRESULT CGameObject_BackGround::Render()
@@ -75,7 +69,6 @@ HRESULT CGameObject_BackGround::Render()
 	// 텍스처 넘기기
 	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture", 0));
 
-
 	FAILED_CHECK(mComVIBuffer->Render(mComShader, 0));
 	return S_OK;
 }
@@ -88,7 +81,6 @@ HRESULT CGameObject_BackGround::Set_Component()
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 	return S_OK;
 }
-
 
 CGameObject_BackGround * CGameObject_BackGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -123,5 +115,4 @@ void CGameObject_BackGround::Free()
 	Safe_Release(mComRenderer);
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
-	
 }

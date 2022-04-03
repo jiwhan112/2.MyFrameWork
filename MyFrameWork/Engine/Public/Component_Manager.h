@@ -9,7 +9,6 @@
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
 
-
 /* 컴포넌트 원형들을 모아놓는다. */
 
 BEGIN(Engine)
@@ -28,7 +27,7 @@ public:
 	HRESULT Clear_LevelObject(_uint iLevelIndex);
 private:
 	map<const _tchar*, class CComponent*>*				m_pPrototypes = nullptr;
-	typedef map<const _tchar*, class CComponent*>		PROTOTYPES;	
+	typedef map<const _tchar*, class CComponent*>		PROTOTYPES;
 
 private:
 	_uint			m_iNumLevels;

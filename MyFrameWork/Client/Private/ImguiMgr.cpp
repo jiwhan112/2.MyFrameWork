@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "ImguiMgr.h"
 
-
 IMPLEMENT_SINGLETON(CImguiMgr)
-
 
 CImguiMgr::CImguiMgr()
 {
@@ -11,7 +9,6 @@ CImguiMgr::CImguiMgr()
 
 void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
-
 	// IMGUI √ ±‚»≠
 	 // Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -122,7 +119,6 @@ void CImguiMgr::DestroyIMGUI()
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-
 }
 
 void CImguiMgr::Free()

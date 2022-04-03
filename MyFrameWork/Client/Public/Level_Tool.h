@@ -3,7 +3,7 @@
 #include "Level.h"
 
 BEGIN(Client)
-class CLevel_Tool final:
+class CLevel_Tool final :
 	public CLevel
 {
 private:
@@ -17,10 +17,8 @@ public:
 	virtual HRESULT Render();
 
 private:
-	bool bImguiInit; 
-	bool bImguiDemo; 
-
-
+	bool bImguiInit;
+	bool bImguiDemo;
 
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

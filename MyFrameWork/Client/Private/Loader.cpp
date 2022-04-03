@@ -11,7 +11,7 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 }
 
 unsigned int APIENTRY ThreadFunction(void* pArg)
-{	
+{
 	/* CLoader객체안에 로딩에 필요한 데이터들을 담아놨는데 그걸 써야혀? */
 	/* CLoader객체의 주소를 가지고있으면 좋을것같다. */
 	CLoader*		pLoader = (CLoader*)pArg;
@@ -26,14 +26,12 @@ unsigned int APIENTRY ThreadFunction(void* pArg)
 	case LEVEL_TOOL:
 		pLoader->Loading_ForTool();
 		break;
-	}	
+	}
 
-	LeaveCriticalSection(&pLoader->Get_CS());	
+	LeaveCriticalSection(&pLoader->Get_CS());
 
 	return 0;
 }
-
-
 
 HRESULT CLoader::NativeConstruct(E_LEVEL eNextLevel)
 {
@@ -57,7 +55,7 @@ HRESULT CLoader::Loading_ForGamePlay()
 
 	///* For.Prototype_Component_VIBuffer_Terrain */
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pGraphic_Device, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp")/*129, 129*/))))
-	//	return E_FAIL;	
+	//	return E_FAIL;
 
 	///* For.Prototype_Component_VIBuffer_Cube */
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
@@ -78,9 +76,6 @@ HRESULT CLoader::Loading_ForGamePlay()
 	///* For.Prototype_Component_Texture_Sky */
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"), CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
 	//	return E_FAIL;
-
-
-	
 
 #pragma endregion
 
@@ -107,7 +102,7 @@ HRESULT CLoader::Loading_ForGamePlay()
 	//	return E_FAIL;
 
 #pragma endregion
-	
+
 	m_isFinished = true;
 
 	return S_OK;
@@ -115,9 +110,8 @@ HRESULT CLoader::Loading_ForGamePlay()
 
 HRESULT CLoader::Loading_ForTool()
 {
-
 	m_isFinished = true;
-	
+
 	return S_OK;
 }
 
@@ -146,6 +140,4 @@ void CLoader::Free()
 
 	Safe_Release(m_pDeviceContext);
 	Safe_Release(m_pDevice);
-
-
 }

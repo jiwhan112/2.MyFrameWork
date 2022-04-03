@@ -4,7 +4,6 @@
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
 }
 
 CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
@@ -25,7 +24,6 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
-
 }
 
 HRESULT CVIBuffer::NativeConstruct_Prototype()
@@ -53,9 +51,8 @@ HRESULT CVIBuffer::Render(CShader* shader, _uint passindex)
 	};
 
 	_uint			iOffsets[] = {
-		0, 
+		0,
 	};
-
 
 	// 버텍스 인덱스 Topology 타입을 context에 바인딩해서 사용한다.
 	m_pDeviceContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iStrides, iOffsets);
@@ -69,9 +66,7 @@ HRESULT CVIBuffer::Render(CShader* shader, _uint passindex)
 	m_pDeviceContext->DrawIndexed(m_iNumIndicesPerPrimitive * m_iNumPrimitive, 0, 0);
 
 	return S_OK;
-
 }
-
 
 HRESULT CVIBuffer::Create_VertexBuffer()
 {
@@ -79,7 +74,7 @@ HRESULT CVIBuffer::Create_VertexBuffer()
 		return E_FAIL;
 
 	// DESC의 정보로 DESC를 설정한다.
-	return m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubResourceData, &m_pVB);	
+	return m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubResourceData, &m_pVB);
 }
 
 HRESULT CVIBuffer::Create_IndexBuffer()
@@ -88,7 +83,7 @@ HRESULT CVIBuffer::Create_IndexBuffer()
 		return E_FAIL;
 
 	// DESC의 정보로 DESC를 설정한다.
-	return m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubResourceData,&m_pIB);
+	return m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubResourceData, &m_pIB);
 }
 
 void CVIBuffer::Free()

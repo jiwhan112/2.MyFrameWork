@@ -45,7 +45,6 @@ private:
 		TYPE_BounceIn = 25,
 		TYPE_BounceOut,
 
-
 		TYPE_End
 	};
 
@@ -56,8 +55,7 @@ private:
 	virtual ~CEasingMgr() = default;
 
 public:
-	_float	Easing(_uint eEasingType,_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
-
+	_float	Easing(_uint eEasingType, _float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
 
 private:
 	_float Linear(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
@@ -97,12 +95,8 @@ private:
 	_float BounceEaseIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
 	_float BounceEaseOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
 
-
-
 public:
 	virtual void Free() override;
-
 };
 
 END
-

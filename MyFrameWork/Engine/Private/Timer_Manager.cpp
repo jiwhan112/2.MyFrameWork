@@ -5,7 +5,6 @@ IMPLEMENT_SINGLETON(CTimer_Manager)
 
 CTimer_Manager::CTimer_Manager()
 {
-
 }
 
 _double CTimer_Manager::Get_TimeDelta(const _tchar * pTimerTag)
@@ -15,7 +14,7 @@ _double CTimer_Manager::Get_TimeDelta(const _tchar * pTimerTag)
 	if (nullptr == pTimer)
 		return 0.f;
 
-	return pTimer->Get_TimeDelta();	
+	return pTimer->Get_TimeDelta();
 }
 
 HRESULT CTimer_Manager::Add_Timer(const _tchar * pTimerTag)
@@ -27,14 +26,14 @@ HRESULT CTimer_Manager::Add_Timer(const _tchar * pTimerTag)
 	if (nullptr == pTimer)
 		return E_FAIL;
 
-	m_Timers.insert(TIMERS::value_type(pTimerTag, pTimer));	
+	m_Timers.insert(TIMERS::value_type(pTimerTag, pTimer));
 
 	return S_OK;
 }
 
 CTimer * CTimer_Manager::Find_Timer(const _tchar * pTimerTag)
 {
-	/*CTagFinder			TagFinder(pTimerTag);	
+	/*CTagFinder			TagFinder(pTimerTag);
 
 	find_if(m_Timers.begin(), m_Timers.end(), TagFinder);*/
 
@@ -42,15 +41,13 @@ CTimer * CTimer_Manager::Find_Timer(const _tchar * pTimerTag)
 	if (iter == m_Timers.end())
 		return nullptr;
 
-	return iter->second;	
+	return iter->second;
 }
 
 void CTimer_Manager::Free()
 {
-	for (auto& Pair : m_Timers)	
+	for (auto& Pair : m_Timers)
 		Safe_Release(Pair.second);
 
 	m_Timers.clear();
-
-	
 }

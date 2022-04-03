@@ -2,9 +2,8 @@
 #include "GameObject_Terrain.h"
 
 CGameObject_Terrain::CGameObject_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CGameObject(pDevice,pDeviceContext)
+	: CGameObject(pDevice, pDeviceContext)
 {
-
 }
 
 CGameObject_Terrain::CGameObject_Terrain(const CGameObject_Terrain& rhs)
@@ -18,15 +17,12 @@ CGameObject_Terrain::CGameObject_Terrain(const CGameObject_Terrain& rhs)
 	Safe_AddRef(mComRenderer);
 	Safe_AddRef(mComVIBuffer);
 	Safe_AddRef(mComTexture);
-
 }
-
-
 
 HRESULT CGameObject_Terrain::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-	   
+
 	return S_OK;
 }
 
@@ -41,7 +37,6 @@ _int CGameObject_Terrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-
 	return _int();
 }
 
@@ -51,10 +46,7 @@ _int CGameObject_Terrain::LateTick(_double TimeDelta)
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return _int();
-
 }
-
-
 
 HRESULT CGameObject_Terrain::Render()
 {
@@ -88,21 +80,19 @@ HRESULT CGameObject_Terrain::Set_ConstantTable()
 	// 텍스처 넘기기
 	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture"));
 
-	
 	// 카메라 빛 세팅
 	const LIGHTDESC* pLightDesc = pGameInstance->Get_LightDesc(0);
 	if (pLightDesc == nullptr)
 		return E_FAIL;
-	
-//	FAILED_CHECK(mComShader->Set_RawValue("g_vLightPos", &pLightDesc->vDiffuse, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4)));	
+
+	//	FAILED_CHECK(mComShader->Set_RawValue("g_vLightPos", &pLightDesc->vDiffuse, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4)));
 	FAILED_CHECK(mComShader->Set_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4)));
 	FAILED_CHECK(mComShader->Set_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4)));
 	FAILED_CHECK(mComShader->Set_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4)));
 
 	FAILED_CHECK(mComShader->Set_RawValue("g_CameraPosition", &pGameInstance->GetCameraPosition_vec(), sizeof(_float4)));
 
-	
 	return S_OK;
 }
 
@@ -139,5 +129,4 @@ void CGameObject_Terrain::Free()
 	Safe_Release(mComRenderer);
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
-	
 }

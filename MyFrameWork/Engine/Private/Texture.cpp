@@ -4,7 +4,6 @@
 CTexture::CTexture(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
 }
 
 CTexture::CTexture(const CTexture & rhs)
@@ -15,7 +14,6 @@ CTexture::CTexture(const CTexture & rhs)
 	{
 		Safe_AddRef(pTex);
 	}
-
 }
 
 HRESULT CTexture::SetUp_OnShader(CShader * pShader, const char * pValueName, _uint iTextureIndex)
@@ -25,12 +23,10 @@ HRESULT CTexture::SetUp_OnShader(CShader * pShader, const char * pValueName, _ui
 		return E_FAIL;
 
 	return pShader->Set_Texture(pValueName, m_Textures[iTextureIndex]);
-
 }
 
 HRESULT CTexture::NativeConstruct_Prototype(const _tchar* pTexturePath, _uint iNumTextures)
 {
-
 	// 스레드가 여러개 실행될 떄 잘못 초기화될 경우를 방지.
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
@@ -67,7 +63,6 @@ HRESULT CTexture::NativeConstruct_Prototype(const _tchar* pTexturePath, _uint iN
 		}
 		// 셰이더는 ShaderResourceView 형태로 데이터를 받는다.
 		m_Textures.push_back(pSRV);
-
 	}
 
 	return S_OK;
@@ -82,7 +77,7 @@ CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevic
 {
 	CTexture*	pInstance = DBG_NEW CTexture(pDevice, pDeviceContext);
 
-	if (FAILED(pInstance->NativeConstruct_Prototype(pTexturePath,iNumTextures)))
+	if (FAILED(pInstance->NativeConstruct_Prototype(pTexturePath, iNumTextures)))
 	{
 		MSGBOX("Failed to Created CTexture");
 		Safe_Release(pInstance);
@@ -101,7 +96,6 @@ CComponent * CTexture::Clone(void * pArg)
 	}
 	return pInstance;
 }
-
 
 void CTexture::Free()
 {

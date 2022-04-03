@@ -14,8 +14,8 @@ HRESULT CLevel_Manager::OpenLevel(_uint iLevelIndex, CLevel * pNextLevel)
 		return E_FAIL;
 
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
-	
-	if(nullptr != m_pCurrentLevel)
+
+	if (nullptr != m_pCurrentLevel)
 	{
 		if (FAILED(pGameInstance->Clear_LevelResource(m_iCurrentLevelIndex)))
 			return E_FAIL;

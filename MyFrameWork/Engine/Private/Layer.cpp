@@ -15,7 +15,7 @@ CComponent * CLayer::Get_Component(const _tchar * pComponentTag, _uint iIndex)
 	for (_uint i = 0; i < iIndex; ++i)
 		++iter;
 
-	return (*iter)->Get_Component(pComponentTag);	
+	return (*iter)->Get_Component(pComponentTag);
 }
 
 HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
@@ -50,7 +50,7 @@ CLayer * CLayer::Create()
 {
 	CLayer* pLayer = DBG_NEW CLayer();
 
-	return pLayer;	
+	return pLayer;
 }
 
 void CLayer::Free()

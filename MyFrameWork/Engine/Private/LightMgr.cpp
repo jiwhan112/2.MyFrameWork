@@ -1,7 +1,6 @@
 #include "..\Public\LightMgr.h"
 #include "..\Public\Light.h"
 
-
 IMPLEMENT_SINGLETON(CLightMgr)
 
 const LIGHTDESC* CLightMgr::Get_LightDesc(_uint iIndex) const

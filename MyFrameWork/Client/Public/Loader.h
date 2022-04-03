@@ -15,15 +15,18 @@ private:
 	virtual ~CLoader() = default;
 
 public:
-	CRITICAL_SECTION Get_CS() {
+	CRITICAL_SECTION Get_CS()
+	{
 		return m_CS;
 	}
 
-	E_LEVEL Get_LevelID() const {
+	E_LEVEL Get_LevelID() const
+	{
 		return m_eLevel;
 	}
 
-	_bool isFinished() const {
+	_bool isFinished() const
+	{
 		return m_isFinished;
 	}
 public:
@@ -34,7 +37,7 @@ public:
 private:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
-	
+
 	E_LEVEL				m_eLevel = LEVEL_END;
 	HANDLE				m_hThread;
 	_bool				m_isFinished = false;

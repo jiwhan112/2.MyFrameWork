@@ -2,17 +2,14 @@
 #include "Camera_Client.h"
 
 CCamera_Client::CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CCamera(pDevice,pDeviceContext)
+	: CCamera(pDevice, pDeviceContext)
 {
-
 }
 
 CCamera_Client::CCamera_Client(const CCamera_Client & rhs)
-	:CCamera(rhs)
+	: CCamera(rhs)
 {
 }
-
-
 
 HRESULT CCamera_Client::NativeConstruct_Prototype()
 {
@@ -25,7 +22,6 @@ HRESULT CCamera_Client::NativeConstruct(void* pArg)
 
 	return S_OK;
 }
-
 
 _int CCamera_Client::Tick(_double TimeDelta)
 {
@@ -53,7 +49,7 @@ _int CCamera_Client::Tick(_double TimeDelta)
 
 	_long		MouseMove = 0;
 
-	const _float MouseSpeed = 2.0f ;
+	const _float MouseSpeed = 2.0f;
 	if (MouseMove = pGameInstance->Get_DIMouseMoveState(CInput_Device::MMS_X))
 	{
 		mComTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta * MouseMove * MouseSpeed);
@@ -65,7 +61,6 @@ _int CCamera_Client::Tick(_double TimeDelta)
 	}
 
 	return __super::Tick(TimeDelta);
-
 }
 
 _int CCamera_Client::LateTick(_double TimeDelta)
@@ -79,7 +74,6 @@ HRESULT CCamera_Client::Render()
 	FAILED_CHECK(__super::Render());
 	return S_OK;
 }
-
 
 CCamera_Client * CCamera_Client::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -109,5 +103,4 @@ CCamera_Client * CCamera_Client::Clone(void * pArg)
 void CCamera_Client::Free()
 {
 	__super::Free();
-	
 }

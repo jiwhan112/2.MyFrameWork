@@ -5,7 +5,6 @@ IMPLEMENT_SINGLETON(CComponent_Manager)
 
 CComponent_Manager::CComponent_Manager()
 {
-
 }
 
 HRESULT CComponent_Manager::Reserve_Container(_uint iNumLevels)
@@ -14,7 +13,7 @@ HRESULT CComponent_Manager::Reserve_Container(_uint iNumLevels)
 
 	m_pPrototypes = DBG_NEW PROTOTYPES[m_iNumLevels];
 
-	return S_OK;	
+	return S_OK;
 }
 
 HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, CComponent * pPrototype)
@@ -26,7 +25,7 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 	if (nullptr != Find_Component(iLevelIndex, pPrototypeTag))
 		return E_FAIL;
 
-	m_pPrototypes[iLevelIndex].emplace(pPrototypeTag, pPrototype);	
+	m_pPrototypes[iLevelIndex].emplace(pPrototypeTag, pPrototype);
 
 	return S_OK;
 }
@@ -45,7 +44,7 @@ CComponent * CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar
 	if (nullptr == pComponent)
 		return nullptr;
 
-	return pComponent;	
+	return pComponent;
 }
 
 HRESULT CComponent_Manager::Clear_LevelObject(_uint iLevelIndex)

@@ -7,25 +7,22 @@
 #include "Level_Logo.h"
 #include "Level_Loader.h"
 
-
 #include "Camera_Client.h"
 #include "GameObject_BackGround.h"
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
 
-
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
 	Safe_AddRef(m_pGameInstance);
-
 }
 
 HRESULT CMainApp::NativeConstruct()
 {
 	FAILED_CHECK(Ready_Initialize());
 	FAILED_CHECK(Ready_Prototype_Components());
-	FAILED_CHECK(Ready_Prototype_GameObject());	
+	FAILED_CHECK(Ready_Prototype_GameObject());
 	FAILED_CHECK(Open_Level(LEVEL_LOGO));
 
 	return S_OK;
@@ -39,13 +36,12 @@ _int CMainApp::Tick(_double TimeDelta)
 
 HRESULT CMainApp::Render()
 {
-
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
 	// 백버퍼 / 깊이버퍼 클리어
 
-	m_pGameInstance->Clear_BackBuffer_View(_float4(_float3(0,0,1), 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_float4(_float3(0, 0, 1), 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
 	m_pGameInstance->Render_Level();
@@ -78,7 +74,6 @@ HRESULT CMainApp::Open_Level(E_LEVEL eLevelIndex)
 		return E_FAIL;
 
 	return S_OK;
-
 }
 
 HRESULT CMainApp::Ready_Initialize()
@@ -90,7 +85,6 @@ HRESULT CMainApp::Ready_Initialize()
 	GraphicDesc.eWinMode = CGraphic_Device::MODE_WIN;
 	GraphicDesc.iWinCX = g_iWinCX;
 	GraphicDesc.iWinCY = g_iWinCY;
-
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
 		return E_FAIL;
@@ -114,22 +108,27 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),
 		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
-		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));	
+		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
 
-
-	// 텍스처 컴포넌트 
+	// 텍스처 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT),
-		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Default%d.dds"),2)));
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Default%d.dds"), 2)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_SKY),
-		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/SkyBox/burger%d.dds"), 4)));	
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/SkyBox/burger%d.dds"), 4)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_TERRAIN),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.dds"), 1)));
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_BRUSH),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Brush.png"), 1)));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Filter.bmp"), 1)));
+
 	// 셰이더 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX),
-		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), 
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"),
 			VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEXCUBE),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexCube.hlsl"),
@@ -137,7 +136,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"),
 			VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements)));
-	
+
 	Safe_AddRef(m_pRenderer);
 	return S_OK;
 }
@@ -161,8 +160,6 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 
 	return S_OK;
 }
-
-
 
 CMainApp * CMainApp::Create()
 {

@@ -4,7 +4,6 @@
 CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
 }
 
 CTransform::CTransform(const CTransform & rhs)
@@ -37,7 +36,7 @@ HRESULT CTransform::NativeConstruct_Prototype()
 HRESULT CTransform::NativeConstruct(void * pArg)
 {
 	if (pArg != nullptr)
-		memcpy( &mDesc, pArg, sizeof(TRANSFORMDESC));
+		memcpy(&mDesc, pArg, sizeof(TRANSFORMDESC));
 
 	return S_OK;
 }
@@ -46,7 +45,7 @@ HRESULT CTransform::Bind_OnShader(CShader * pShader, const char * pValueName)
 {
 	// 셰이더로 넘기기위해 전치 행렬을 만든다.
 	// 만드는 과정은 연산을 하기 때문에 SIMD 전용 연산으로 바꿔준다.
-	
+
 	_float4x4		WorldMatrix;
 
 	// SIMD 연산용 자료형을 다시 일반 자료형으로 변환해서 대입
@@ -62,7 +61,6 @@ void CTransform::SetTransformDesc(const TRANSFORMDESC& desc)
 
 HRESULT CTransform::GO_Straight(_double deltatime)
 {
-	
 	_vector		vPosition = GetState(CTransform::STATE_POSITION);
 	_vector		vLook = GetState(CTransform::STATE_LOOK);
 
@@ -74,7 +72,6 @@ HRESULT CTransform::GO_Straight(_double deltatime)
 
 HRESULT CTransform::GO_Backward(_double deltatime)
 {
-
 	_vector		vPosition = GetState(CTransform::STATE_POSITION);
 	_vector		vLook = GetState(CTransform::STATE_LOOK);
 
@@ -104,7 +101,6 @@ HRESULT CTransform::GO_Left(_double deltatime)
 
 	SetState(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
-
 }
 
 HRESULT CTransform::Turn(_fvector vAxis, _double time)
@@ -148,7 +144,6 @@ HRESULT CTransform::Rotation(_fvector vAxis, _float fRadian)
 
 HRESULT CTransform::Chase(_fvector TargetPos, _double time)
 {
-
 	return S_OK;
 }
 

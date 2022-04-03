@@ -3,14 +3,12 @@
 CVIBuffer_Cube::CVIBuffer_Cube(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CVIBuffer(pDevice, pDeviceContext)
 {
-
 }
 
 CVIBuffer_Cube::CVIBuffer_Cube(const CVIBuffer_Cube & rhs)
 	: CVIBuffer(rhs)
 
 {
-
 }
 
 HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
@@ -33,7 +31,6 @@ HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
 	VTXCUBETEX*		pVertices = DBG_NEW VTXCUBETEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXCUBETEX) * m_iNumVertices);
 
-	
 	pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
 	pVertices[0].vTexUV = pVertices[0].vPosition;
 
@@ -58,9 +55,8 @@ HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
 	pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
 	pVertices[7].vTexUV = pVertices[7].vPosition;
 
-
 	// 버퍼리소스 D3D11_SUBRESOURCE_DATA 데이터 텍스처 인덱스 정수등의 버퍼들은 리소스내에 실제 데이터들이다.
-	// pVertices들의 버퍼를 서브 리소스의 포인터에 넣어주고 CreateData에서 
+	// pVertices들의 버퍼를 서브 리소스의 포인터에 넣어주고 CreateData에서
 	// 버퍼의 타입과 실제 데이터로 버텍스 버퍼를 생성한다.
 	ZeroMemory(&m_VBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_VBSubResourceData.pSysMem = pVertices;
@@ -72,7 +68,6 @@ HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
 	Safe_Delete_Array(pVertices);
 
 #pragma endregion
-
 
 #pragma region INDEX_BUFFER
 	// 들어가는 인수는 DX9과 비슷한다.
@@ -89,7 +84,6 @@ HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
 	// 직접 Indices에 세팅
 	FACEINDICES16*	pIndices = DBG_NEW FACEINDICES16[m_iNumPrimitive];
 	ZeroMemory(pIndices, sizeof(FACEINDICES16) * m_iNumPrimitive);
-
 
 	/* +x */
 	pIndices[0]._0 = 1; pIndices[0]._1 = 5; pIndices[0]._2 = 6;
@@ -115,8 +109,6 @@ HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
 	pIndices[10]._0 = 0; pIndices[10]._1 = 1; pIndices[10]._2 = 2;
 	pIndices[11]._0 = 0; pIndices[11]._1 = 2; pIndices[11]._2 = 3;
 
-
-
 	// DX11에서는 버퍼정보를 모두 서브 데이터 넣어 세팅해준다.
 	ZeroMemory(&m_IBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_IBSubResourceData.pSysMem = pIndices;
@@ -133,7 +125,6 @@ HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
 HRESULT CVIBuffer_Cube::NativeConstruct(void * pArg)
 {
 	return S_OK;
-
 }
 CVIBuffer_Cube * CVIBuffer_Cube::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -159,12 +150,7 @@ CComponent * CVIBuffer_Cube::Clone(void * pArg)
 	return pInstance;
 }
 
-
-
-
-
 void CVIBuffer_Cube::Free()
 {
 	__super::Free();
-
 }
