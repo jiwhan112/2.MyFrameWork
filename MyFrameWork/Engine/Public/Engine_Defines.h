@@ -13,6 +13,9 @@
 #include <d3dcompiler.h>
 #include <d3dx11effect.h>
 
+#include <DirectXCollision.h>
+
+
 // 텍스처 로드 관련 Include
 // DDS 및 이외의 텍스처 로드 단 tga는 지원 안함
 // DDS가 가장 빠르다.
@@ -23,6 +26,15 @@
 #include <Direct_TK/ScreenGrab.h>
 #include <wincodec.h>
 
+// assimp 설명
+// https://github.com/assimp/assimp/wiki/FBX-File-format
+// FBX 설명
+// https://banexdevblog.wordpress.com/2014/06/23/a-quick-tutorial-about-the-fbx-ascii-format/
+
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+using namespace Assimp;
 
 using namespace DirectX;
 
