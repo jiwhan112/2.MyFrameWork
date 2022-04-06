@@ -23,7 +23,7 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pRend
 		nullptr == pRenderObject)
 		return E_FAIL;
 
-	m_RenderObjects[eRenderGroup].push_back(pRenderObject);
+	mRenderObjects[eRenderGroup].push_back(pRenderObject);
 
 	Safe_AddRef(pRenderObject);
 
@@ -49,7 +49,7 @@ HRESULT CRenderer::Render()
 
 HRESULT CRenderer::Render_Priority()
 {
-	for (auto& pRenderObject : m_RenderObjects[RENDER_PRIORITY])
+	for (auto& pRenderObject : mRenderObjects[RENDER_PRIORITY])
 	{
 		if (nullptr != pRenderObject)
 		{
@@ -58,14 +58,14 @@ HRESULT CRenderer::Render_Priority()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_PRIORITY].clear();
+	mRenderObjects[RENDER_PRIORITY].clear();
 
 	return S_OK;
 }
 
 HRESULT CRenderer::Render_NonAlpha()
 {
-	for (auto& pRenderObject : m_RenderObjects[RENDER_NONBLEND])
+	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND])
 	{
 		if (nullptr != pRenderObject)
 		{
@@ -74,7 +74,7 @@ HRESULT CRenderer::Render_NonAlpha()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_NONBLEND].clear();
+	mRenderObjects[RENDER_NONBLEND].clear();
 
 	return S_OK;
 }
@@ -86,7 +86,7 @@ HRESULT CRenderer::Render_Alpha()
 		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
 	});*/
 
-	for (auto& pRenderObject : m_RenderObjects[RENDER_BLEND])
+	for (auto& pRenderObject : mRenderObjects[RENDER_BLEND])
 	{
 		if (nullptr != pRenderObject)
 		{
@@ -95,7 +95,7 @@ HRESULT CRenderer::Render_Alpha()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_BLEND].clear();
+	mRenderObjects[RENDER_BLEND].clear();
 
 	return S_OK;
 }
@@ -106,7 +106,7 @@ HRESULT CRenderer::Render_UI()
 		nullptr == m_pDeviceContext)
 		return E_FAIL;
 
-	for (auto& pRenderObject : m_RenderObjects[RENDER_UI])
+	for (auto& pRenderObject : mRenderObjects[RENDER_UI])
 	{
 		if (nullptr != pRenderObject)
 		{
@@ -115,14 +115,14 @@ HRESULT CRenderer::Render_UI()
 		}
 		Safe_Release(pRenderObject);
 	}
-	m_RenderObjects[RENDER_UI].clear();
+	mRenderObjects[RENDER_UI].clear();
 
 	return S_OK;
 }
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
-	CRenderer*	pInstance = DBG_NEW CRenderer(pDevice, pDeviceContext);
+	CRenderer*	pInstance = NEW CRenderer(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -144,7 +144,7 @@ void CRenderer::Free()
 {
 	__super::Free();
 
-	for (auto& RenderObjects : m_RenderObjects)
+	for (auto& RenderObjects : mRenderObjects)
 	{
 		for (auto& pGameObject : RenderObjects)
 			Safe_Release(pGameObject);

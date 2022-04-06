@@ -134,7 +134,7 @@ HRESULT CGameObject_Terrain::Create_FilterTexture()
 	_uint NumX = 129;
 	_uint NumY = 129;
 
-	_ulong*		pPixel = new _ulong[NumX * NumY];
+	_ulong*		pPixel = NEW _ulong[NumX * NumY];
 	ZeroMemory(pPixel, sizeof(_ulong) * NumX * NumY);
 
 	for (_uint y = 0; y < NumY; ++y)
@@ -173,7 +173,7 @@ HRESULT CGameObject_Terrain::Create_FilterTexture()
 
 CGameObject_Terrain * CGameObject_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CGameObject_Terrain*	pInstance = DBG_NEW CGameObject_Terrain(pDevice, pDeviceContext);
+	CGameObject_Terrain*	pInstance = NEW CGameObject_Terrain(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -186,7 +186,7 @@ CGameObject_Terrain * CGameObject_Terrain::Create(ID3D11Device * pDevice, ID3D11
 
 CGameObject_Terrain* CGameObject_Terrain::Clone(void* pArg)
 {
-	CGameObject_Terrain*	pInstance = DBG_NEW CGameObject_Terrain(*this);
+	CGameObject_Terrain*	pInstance = NEW CGameObject_Terrain(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

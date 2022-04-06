@@ -58,7 +58,7 @@ HRESULT CShader::NativeConstruct_Prototype(const _tchar * pShaderFilePath, const
 	// 4. pass의 개수에따라 셰이더 pass Vecotr에 넣어준다.
 	for (_uint i = 0; i < TechniqueDesc.Passes; ++i)
 	{
-		PASSDESC*		pPassDesc = DBG_NEW PASSDESC;
+		PASSDESC*		pPassDesc = NEW PASSDESC;
 		ZeroMemory(pPassDesc, sizeof(PASSDESC));
 
 		pPassDesc->pPass = pTechnique->GetPassByIndex(i);
@@ -132,7 +132,7 @@ HRESULT CShader::Set_Texture(const char * pValueName, ID3D11ShaderResourceView *
 CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext,
 	const _tchar * pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC * pElements, _uint iNumElements)
 {
-	CShader*	pInstance = DBG_NEW CShader(pDevice, pDeviceContext);
+	CShader*	pInstance = NEW CShader(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(pShaderFilePath, pElements, iNumElements)))
 	{
@@ -144,7 +144,7 @@ CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceC
 
 CComponent * CShader::Clone(void * pArg)
 {
-	CShader*	pInstance = DBG_NEW CShader(*this);
+	CShader*	pInstance = NEW CShader(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

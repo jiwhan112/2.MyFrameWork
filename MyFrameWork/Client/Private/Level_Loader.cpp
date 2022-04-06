@@ -67,7 +67,7 @@ HRESULT CLevel_Loader::Render()
 
 CLevel_Loader * CLevel_Loader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_LEVEL nextLevel)
 {
-	CLevel_Loader*	pInstance = DBG_NEW CLevel_Loader(pDevice, pDeviceContext);
+	CLevel_Loader*	pInstance = NEW CLevel_Loader(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct(nextLevel)))
 	{

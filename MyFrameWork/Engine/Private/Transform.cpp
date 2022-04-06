@@ -171,7 +171,7 @@ HRESULT CTransform::Scaled(_fvector scale)
 
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CTransform*	pInstance = DBG_NEW CTransform(pDevice, pDeviceContext);
+	CTransform*	pInstance = NEW CTransform(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -183,7 +183,7 @@ CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pD
 
 CComponent * CTransform::Clone(void * pArg)
 {
-	CTransform*	pInstance = DBG_NEW CTransform(*this);
+	CTransform*	pInstance = NEW CTransform(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

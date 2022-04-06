@@ -2,6 +2,13 @@
 
 namespace Engine
 {
+	// MeshMaterialDESC
+	typedef struct tagMeshMaterialDesc
+	{
+		// aiTextureType_UNKNOWN = 18;
+		class CTexture*	pTexture[AI_TEXTURE_TYPE_MAX];
+	}MESHMATERIALDESC;
+
 	// Α¶Έν
 	typedef struct tagLightDesc
 	{
@@ -55,6 +62,39 @@ namespace Engine
 		static const unsigned int iNumElements = 3;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXNORTEX_DECLARATION;
+
+
+	typedef struct tagVertex_Model
+	{
+		XMFLOAT3			vPosition;
+		XMFLOAT3			vNormal;
+		XMFLOAT2			vTexUV;
+		XMFLOAT3			vTangent;
+	}VTXMODEL;
+
+	typedef struct ENGINE_DLL tagVertex_Model_Declaration
+	{
+		static const unsigned int iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXMODEL_DECLARATION;
+
+	typedef struct tagVertex_Model_Animaion
+	{
+		XMFLOAT3			vPosition;
+		XMFLOAT3			vNormal;
+		XMFLOAT2			vTexUV;
+		XMFLOAT3			vTangent;
+		XMUINT4				vBlendIndex;
+		XMFLOAT4			vBlendWeight;
+	}VTXANIMODEL;
+
+	typedef struct ENGINE_DLL tagVertex_Model_Animaion_Declaration
+	{
+		static const unsigned int iNumElements = 6;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXANIMODEL_DECLARATION;
+
+
 
 	typedef struct tagLineIndices32
 	{

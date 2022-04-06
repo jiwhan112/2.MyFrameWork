@@ -11,7 +11,7 @@ HRESULT CComponent_Manager::Reserve_Container(_uint iNumLevels)
 {
 	m_iNumLevels = iNumLevels;
 
-	m_pPrototypes = DBG_NEW PROTOTYPES[m_iNumLevels];
+	mMapProtos = NEW PROTOTYPES[m_iNumLevels];
 
 	return S_OK;
 }
@@ -19,13 +19,13 @@ HRESULT CComponent_Manager::Reserve_Container(_uint iNumLevels)
 HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, CComponent * pPrototype)
 {
 	if (iLevelIndex >= m_iNumLevels ||
-		nullptr == m_pPrototypes)
+		nullptr == mMapProtos)
 		return E_FAIL;
 
 	if (nullptr != Find_Component(iLevelIndex, pPrototypeTag))
 		return E_FAIL;
 
-	m_pPrototypes[iLevelIndex].emplace(pPrototypeTag, pPrototype);
+	mMapProtos[iLevelIndex].emplace(pPrototypeTag, pPrototype);
 
 	return S_OK;
 }
@@ -33,7 +33,7 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 CComponent * CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, void * pArg)
 {
 	if (iLevelIndex >= m_iNumLevels ||
-		nullptr == m_pPrototypes)
+		nullptr == mMapProtos)
 		return nullptr;
 
 	CComponent*		pPrototype = Find_Component(iLevelIndex, pPrototypeTag);
@@ -52,19 +52,19 @@ HRESULT CComponent_Manager::Clear_LevelObject(_uint iLevelIndex)
 	if (iLevelIndex >= m_iNumLevels)
 		return E_FAIL;
 
-	for (auto& Pair : m_pPrototypes[iLevelIndex])
+	for (auto& Pair : mMapProtos[iLevelIndex])
 		Safe_Release(Pair.second);
 
-	m_pPrototypes[iLevelIndex].clear();
+	mMapProtos[iLevelIndex].clear();
 
 	return S_OK;
 }
 
 CComponent * CComponent_Manager::Find_Component(_uint iLevelIndex, const _tchar * pPrototypeTag)
 {
-	auto	iter = find_if(m_pPrototypes[iLevelIndex].begin(), m_pPrototypes[iLevelIndex].end(), CTagFinder(pPrototypeTag));
+	auto	iter = find_if(mMapProtos[iLevelIndex].begin(), mMapProtos[iLevelIndex].end(), CTagFinder(pPrototypeTag));
 
-	if (iter == m_pPrototypes[iLevelIndex].end())
+	if (iter == mMapProtos[iLevelIndex].end())
 		return nullptr;
 
 	return iter->second;
@@ -74,10 +74,10 @@ void CComponent_Manager::Free()
 {
 	for (_uint i = 0; i < m_iNumLevels; ++i)
 	{
-		for (auto& Pair : m_pPrototypes[i])
+		for (auto& Pair : mMapProtos[i])
 			Safe_Release(Pair.second);
-		m_pPrototypes[i].clear();
+		mMapProtos[i].clear();
 	}
 
-	Safe_Delete_Array(m_pPrototypes);
+	Safe_Delete_Array(mMapProtos);
 }

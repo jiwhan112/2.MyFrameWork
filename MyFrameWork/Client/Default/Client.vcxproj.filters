@@ -52,9 +52,6 @@
     <Filter Include="02.GameObject\01.BackGround">
       <UniqueIdentifier>{f3e6f898-9cb3-4b56-a2f4-43df4f56ed11}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\02.Camera">
-      <UniqueIdentifier>{bc388d12-b47d-405c-817c-c4e00817d90f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\01.BackGround\0.BaseObject">
       <UniqueIdentifier>{14ac5b3b-8fde-4a60-b332-c31b71923ded}</UniqueIdentifier>
     </Filter>
@@ -78,6 +75,15 @@
     </Filter>
     <Filter Include="10.Imgui\02.Tools\01.UITool">
       <UniqueIdentifier>{c21e93ea-bc53-4dd0-8468-6d52bf0a8ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.Camera">
+      <UniqueIdentifier>{bc388d12-b47d-405c-817c-c4e00817d90f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.Objects">
+      <UniqueIdentifier>{406589d9-036d-4593-9891-8471faacaede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.Objects\FBX">
+      <UniqueIdentifier>{429dd477-b728-42af-94b7-e55a37d15af3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +174,9 @@
     <ClInclude Include="..\Public\Tool\Imgui_UI.h">
       <Filter>10.Imgui\02.Tools\01.UITool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject_FBX.h">
+      <Filter>02.GameObject\03.Objects\FBX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -236,6 +245,9 @@
     <ClCompile Include="..\Private\Tool\Imgui_UI.cpp">
       <Filter>10.Imgui\02.Tools\01.UITool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\GameObject_FBX.cpp">
+      <Filter>02.GameObject\03.Objects\FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -258,6 +270,9 @@
       <Filter>97.Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
   </ItemGroup>

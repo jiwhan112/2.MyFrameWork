@@ -24,7 +24,7 @@ public:
 	HRESULT Render();
 
 private:
-	list<class CGameObject*>				m_RenderObjects[RENDER_END];
+	list<class CGameObject*>				mRenderObjects[RENDER_END];
 	typedef	list <class CGameObject* >		RENDEROBJECTS;
 
 private:

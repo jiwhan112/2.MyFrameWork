@@ -51,6 +51,7 @@ cbuffer CameraDesc
 	float4 g_CameraPosition;
 };
 
+
 // Blends
 /*
 typedef struct D3D11_RENDER_TARGET_BLEND_DESC
@@ -147,5 +148,12 @@ RasterizerState CullMode_ccw
 {
 	FillMode = Solid;
 	CullMode = back;
+	FrontCounterClockwise = false;
+};
+
+RasterizerState CullMode_None
+{
+	FillMode = Solid;
+	CullMode = none;
 	FrontCounterClockwise = false;
 };

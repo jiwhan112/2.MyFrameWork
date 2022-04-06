@@ -94,6 +94,12 @@
     <Filter Include="01.Utility\08.Light\Mgr">
       <UniqueIdentifier>{7cb979f7-4b98-43da-8582-bbb89358ad76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model">
+      <UniqueIdentifier>{eea3dc44-9d8b-475e-8312-365988f3b9b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer">
+      <UniqueIdentifier>{37c56d41-e9fc-43c6-9ef6-f719d9c2f8a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -176,6 +182,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\LightMgr.cpp">
       <Filter>01.Utility\08.Light\Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MeshContainer.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +298,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\LightMgr.h">
       <Filter>01.Utility\08.Light\Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MeshContainer.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

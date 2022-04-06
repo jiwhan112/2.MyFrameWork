@@ -74,7 +74,7 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 CLevel_Logo * CLevel_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CLevel_Logo*	pInstance = DBG_NEW CLevel_Logo(pDevice, pDeviceContext);
+	CLevel_Logo*	pInstance = NEW CLevel_Logo(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{

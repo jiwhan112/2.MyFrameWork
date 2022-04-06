@@ -17,7 +17,7 @@ HRESULT CLight::NativeConstruct(const LIGHTDESC & LightDesc)
 
 CLight * CLight::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const LIGHTDESC & LightDesc)
 {
-	CLight*	pInstance = new CLight(pDevice, pDeviceContext);
+	CLight*	pInstance = NEW CLight(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct(LightDesc)))
 	{

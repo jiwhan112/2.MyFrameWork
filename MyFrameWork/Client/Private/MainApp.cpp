@@ -11,6 +11,7 @@
 #include "GameObject_BackGround.h"
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
+#include "GameObject_FBX.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -40,7 +41,6 @@ HRESULT CMainApp::Render()
 		return E_FAIL;
 
 	// 백버퍼 / 깊이버퍼 클리어
-
 	m_pGameInstance->Clear_BackBuffer_View(_float4(_float3(0, 0, 1), 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
@@ -104,6 +104,8 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TRANSFORM),
 		CTransform::Create(m_pDevice, m_pDeviceContext)));
 
+
+
 	// 버퍼 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),
 		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
@@ -111,6 +113,15 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
+	
+	_matrix			TransformMatrix;
+//	TransformMatrix = XMMatrixIdentity();
+//	TransformMatrix = XMMatrixScaling(3, 3, 3) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//
+//	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
+//		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", TransformMatrix)));
+
+
 
 	// 텍스처 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT),
@@ -136,6 +147,9 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"),
 			VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"),
+			VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements)));
 
 	Safe_AddRef(m_pRenderer);
 	return S_OK;
@@ -158,12 +172,15 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
 
+//	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
+//		CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
+	
 	return S_OK;
 }
 
 CMainApp * CMainApp::Create()
 {
-	CMainApp*	pInstance = DBG_NEW CMainApp();
+	CMainApp*	pInstance = NEW CMainApp();
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{

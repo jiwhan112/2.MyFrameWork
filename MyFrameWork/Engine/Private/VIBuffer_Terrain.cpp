@@ -30,7 +30,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	miNumX = ih.biWidth;
 	miNumZ = ih.biHeight;
 
-	_ulong*		pPixel = new _ulong[miNumX * miNumZ];
+	_ulong*		pPixel = NEW _ulong[miNumX * miNumZ];
 	ReadFile(hFile, pPixel, sizeof(_ulong) * miNumX * miNumZ, &dwByte, nullptr);
 
 	ZeroMemory(&m_VBDesc, sizeof(D3D11_BUFFER_DESC));
@@ -46,10 +46,10 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	m_VBDesc.StructureByteStride = sizeof(VTXNORTEX);
 
 	// 이제 정점 세팅을 LOCK UNLOCK을 하지 않고 해준다.
-	VTXNORTEX*		pVertices = DBG_NEW VTXNORTEX[m_iNumVertices];
+	VTXNORTEX*		pVertices = NEW VTXNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
 
-	mpVertexPos = DBG_NEW _float3[m_iNumVertices];
+	mpVertexPos = NEW _float3[m_iNumVertices];
 	ZeroMemory(mpVertexPos, sizeof(_float3));
 
 	for (_uint z = 0; z < miNumZ; z++)
@@ -85,7 +85,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	m_IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 	// 직접 Indices에 세팅
-	FACEINDICES32*	pIndices = DBG_NEW FACEINDICES32[m_iNumPrimitive];
+	FACEINDICES32*	pIndices = NEW FACEINDICES32[m_iNumPrimitive];
 	ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitive);
 
 	_uint		iNumFace = 0;
@@ -168,7 +168,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct(void * pArg)
 
 CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * HeightMap)
 {
-	CVIBuffer_Terrain*	pInstance = DBG_NEW CVIBuffer_Terrain(pDevice, pDeviceContext);
+	CVIBuffer_Terrain*	pInstance = NEW CVIBuffer_Terrain(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(HeightMap)))
 	{
@@ -180,7 +180,7 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11Devi
 
 CComponent * CVIBuffer_Terrain::Clone(void * pArg)
 {
-	CVIBuffer_Terrain*	pInstance = DBG_NEW CVIBuffer_Terrain(*this);
+	CVIBuffer_Terrain*	pInstance = NEW CVIBuffer_Terrain(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

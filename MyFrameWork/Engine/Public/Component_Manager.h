@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Model.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
@@ -26,7 +27,7 @@ public:
 	CComponent* Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg);
 	HRESULT Clear_LevelObject(_uint iLevelIndex);
 private:
-	map<const _tchar*, class CComponent*>*				m_pPrototypes = nullptr;
+	map<const _tchar*, class CComponent*>*				mMapProtos = nullptr;
 	typedef map<const _tchar*, class CComponent*>		PROTOTYPES;
 
 private:

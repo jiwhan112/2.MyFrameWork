@@ -48,6 +48,7 @@ _int CGameObject_Skybox::LateTick(_double TimeDelta)
 	mComTransform->SetState(CTransform::STATE_POSITION, pGameInstance->GetCameraPosition_vec());
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
+	return UPDATENONE;
 }
 
 HRESULT CGameObject_Skybox::Render()
@@ -85,7 +86,7 @@ HRESULT CGameObject_Skybox::Set_ConstantTable()
 
 CGameObject_Skybox * CGameObject_Skybox::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CGameObject_Skybox*	pInstance = DBG_NEW CGameObject_Skybox(pDevice, pDeviceContext);
+	CGameObject_Skybox*	pInstance = NEW CGameObject_Skybox(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -97,7 +98,7 @@ CGameObject_Skybox * CGameObject_Skybox::Create(ID3D11Device * pDevice, ID3D11De
 }
 CGameObject_Skybox* CGameObject_Skybox::Clone(void* pArg)
 {
-	CGameObject_Skybox*	pInstance = DBG_NEW CGameObject_Skybox(*this);
+	CGameObject_Skybox*	pInstance = NEW CGameObject_Skybox(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

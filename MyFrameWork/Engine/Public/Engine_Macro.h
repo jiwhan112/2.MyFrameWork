@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#define DBG_NEW new ( _NORMAL_BLOCK, __FILE__,__LINE__ )
+#define NEW new ( _NORMAL_BLOCK, __FILE__,__LINE__ )
 
 #else
-#define DBG_NEW new
+#define NEW new
 
 #endif
 
@@ -75,7 +75,7 @@
 		CLASSNAME*	CLASSNAME::m_pInstance = NULL;				\
 		CLASSNAME*	CLASSNAME::GetInstance( void )	{			\
 			if(nullptr == m_pInstance) {						\
-				m_pInstance = DBG_NEW CLASSNAME;					\
+				m_pInstance = NEW CLASSNAME;					\
 			}													\
 			return m_pInstance;									\
 		}														\
@@ -154,3 +154,18 @@ return _return;}
 { MessageBox(NULL, _message, L"System Message"sp,MB_OK); __debugbreak();return _return;}
 
 #define FAILED_UPDATE(_func) if(0>_func) {__debugbreak(); return -1;}
+
+// SHADER
+
+static const char* SHADER_TEX_DIFFUSE = "g_DiffuseTexture";
+static const char* SHADER_TEX_NOMAL = "g_NormalTexture";
+
+static const char* SHADER_MAT_WORLD = "g_WorldMatrix";
+static const char* SHADER_MAT_VIEW = "g_ViewMatrix";
+static const char* SHADER_MAT_PROJ = "g_ProjMatrix";
+
+static const char* SHADER_LIGHTDIR = "g_vLightDir";
+static const char* SHADER_LIGHTPOS = "g_vLightPos";
+
+static const char* SHADER_CAMPOS = "g_CameraPosition";
+

@@ -77,7 +77,7 @@ HRESULT CCamera_Client::Render()
 
 CCamera_Client * CCamera_Client::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CCamera_Client*	pInstance = DBG_NEW CCamera_Client(pDevice, pDeviceContext);
+	CCamera_Client*	pInstance = NEW CCamera_Client(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -90,7 +90,7 @@ CCamera_Client * CCamera_Client::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 
 CCamera_Client * CCamera_Client::Clone(void * pArg)
 {
-	CCamera_Client*	pInstance = DBG_NEW CCamera_Client(*this);
+	CCamera_Client*	pInstance = NEW CCamera_Client(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

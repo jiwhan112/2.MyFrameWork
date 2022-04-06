@@ -7,6 +7,27 @@ BEGIN(Client)
 class CImgui_Base abstract:
 	public CBase
 {
+public:
+	// 메인 창이름 정의
+	enum E_IMGUI_CHANEL
+	{
+		IMGUI_CHANEL_TEST,
+		IMGUI_CHANEL_MAP,
+		IMGUI_CHANEL_END,
+
+	};
+	const char* IMGUI_MAIN[IMGUI_CHANEL_END] =
+	{
+		"TestBar",
+		"MapTool"
+
+	};
+
+	const char* TAG_IMGUI(E_IMGUI_CHANEL e)
+	{
+		return IMGUI_MAIN[e];
+
+	}
 
 protected:
 	explicit CImgui_Base(ID3D11Device* device , ID3D11DeviceContext* context);

@@ -238,11 +238,11 @@ void CGameInstance::Release_Engine()
 	if (0 != CTimer_Manager::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CTimer_Manager");
 
-	if (0 != CComponent_Manager::GetInstance()->DestroyInstance())
-		MSGBOX("Failed to Delete CComponent_Manager");
-
 	if (0 != CObject_Manager::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CObject_Manager");
+
+	if (0 != CComponent_Manager::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CComponent_Manager");
 
 	if (0 != CLevel_Manager::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CLevel_Manager");

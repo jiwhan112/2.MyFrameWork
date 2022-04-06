@@ -19,14 +19,28 @@ public:
 	virtual HRESULT Update(_double time) override;
 public:
 	void DemoTest();
+	void FrameUI(_double time);
+
 	void UISaver();
 	void TextureSaver();
 
+public:
+
+	// 데모에 나오는 기능 정리
+	void TestMenuBar();
+	void TestWidgets();
+	void TestUI3();
+	void TestUI4();
+
+
 
 private:
-	bool bDemo;
+	_double dClock=0;
+	int		mFrameCount=0;
+	int		mCurrentFrame=0;
+	bool bDemo= false;
+	float f=0;
 
-	float f;
 public:
 	static CImgui_UI* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);
 	virtual void Free() override;
