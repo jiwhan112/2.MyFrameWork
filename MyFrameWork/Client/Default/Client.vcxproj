@@ -189,6 +189,7 @@
     <ClInclude Include="..\Public\stdafx.h" />
     <ClInclude Include="..\Public\Tool\ImguiMgr.h" />
     <ClInclude Include="..\Public\Tool\Imgui_Base.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h" />
     <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Client_Enum.h" />
@@ -213,6 +214,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tool\ImguiMgr.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_Base.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_UI.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_demo.cpp" />

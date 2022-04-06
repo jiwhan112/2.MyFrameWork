@@ -14,7 +14,6 @@ private:
 	virtual ~CImguiMgr() = default;
 
 	void DestroyIMGUI();
-	void UpdateGUI();
 
 public:
 	void InitImGUI(HWND hwnd, ID3D11Device* ppDeviceOut, ID3D11DeviceContext* ppDeviceContextOut);
