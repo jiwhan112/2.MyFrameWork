@@ -2,7 +2,7 @@
 
 BEGIN(Client)
 
-// IMGUI 사용할 것만 업데이트
+// IMGUI UI 툴
 
 class CImgui_UI final:
 	public CImgui_Base
@@ -17,19 +17,18 @@ public:
 	// CImgui_Base을(를) 통해 상속됨
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT Update(_double time) override;
+
 public:
-
 	void UISaver();
-	void TextureSaver();
+	void UILoad();
 
+	// UI 정보 저장
+	void Button_SaveUI();
 
 
 public:
 	static CImgui_UI* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);
 	virtual void Free() override;
-
-
-	
 
 
 };

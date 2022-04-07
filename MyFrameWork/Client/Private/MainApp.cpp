@@ -115,11 +115,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
 	
 	_matrix			TransformMatrix;
-//	TransformMatrix = XMMatrixIdentity();
-//	TransformMatrix = XMMatrixScaling(3, 3, 3) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-//
-//	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
-//		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", TransformMatrix)));
+	TransformMatrix = XMMatrixIdentity();
+	TransformMatrix = XMMatrixScaling(3, 3, 3) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
+		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", TransformMatrix)));
 
 
 
@@ -172,8 +172,8 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
 
-//	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
-//		CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
+		CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
 	
 	return S_OK;
 }

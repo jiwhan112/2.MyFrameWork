@@ -75,7 +75,15 @@ HRESULT CGameObject_FBX::Render()
 {
 	FAILED_CHECK(__super::Render());
 	FAILED_CHECK(Set_ConstantTable());
-	FAILED_CHECK(mComModel->Render(mComShader, 0));
+
+	_uint iNumMaterials = mComModel->Get_Materials();
+
+	for (_uint i = 0; i < iNumMaterials; ++i)
+	{
+		mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+	//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+		mComModel->Render(mComShader, 0, i);
+	}
 
 	return S_OK;
 }
@@ -118,19 +126,19 @@ HRESULT CGameObject_FBX::Set_ConstantTable()
 {
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 
-	FAILED_CHECK(mComTransform->Bind_OnShader(mComShader, "g_WorldMatrix"));
-	FAILED_CHECK(mComShader->Set_RawValue("g_ViewMatrix", &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_VIEW), sizeof(_float4x4)));
-	FAILED_CHECK(mComShader->Set_RawValue("g_ProjMatrix", &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_PROJ), sizeof(_float4x4)));
+	FAILED_CHECK(mComTransform->Bind_OnShader(mComShader, STR_MAT_WORLD));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_VIEW, &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_VIEW), sizeof(_float4x4)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_PROJ, &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_PROJ), sizeof(_float4x4)));
 
 	const LIGHTDESC* pLightDesc = pGameInstance->Get_LightDesc(0);
 	if (pLightDesc == nullptr)
 		return E_FAIL;
 
 	//	FAILED_CHECK(mComShader->Set_RawValue("g_vLightPos", &pLightDesc->vDiffuse, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_DIR, &pLightDesc->vDirection, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_DIFFUSE, &pLightDesc->vDiffuse, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_AMBIENT, &pLightDesc->vAmbient, sizeof(_float4)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_SPECULAR, &pLightDesc->vSpecular, sizeof(_float4)));
 
 
 	return S_OK;

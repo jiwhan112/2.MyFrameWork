@@ -18,11 +18,16 @@ private:
 public:
 	void InitImGUI(HWND hwnd, ID3D11Device* ppDeviceOut, ID3D11DeviceContext* ppDeviceContextOut);
 
+	HRESULT Add_IMGUI(class CImgui_Base* base);
+	HRESULT Remove_IMGUI(_uint idx);
+
 	HRESULT Update(_double time);
 	HRESULT Render();
 
+	
 private:
-	class CImgui_Base* mIMGUI = nullptr;
+	vector<class CImgui_Base*> mVecIMGUI;
+
 
 public:
 	virtual void Free() override;

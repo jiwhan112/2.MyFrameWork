@@ -82,11 +82,17 @@
     <Filter Include="02.GameObject\03.Objects">
       <UniqueIdentifier>{406589d9-036d-4593-9891-8471faacaede}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\03.Objects\FBX">
-      <UniqueIdentifier>{429dd477-b728-42af-94b7-e55a37d15af3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="10.Imgui\02.Tools\00.BaseTool\MyDemo">
       <UniqueIdentifier>{2f184d08-8e0e-43cc-a829-b894015705e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.Objects\01.Mouse">
+      <UniqueIdentifier>{f45b738c-082d-4f08-ae7b-86c8ba42290b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.Objects\02.UI">
+      <UniqueIdentifier>{988341a4-7b8c-478b-9668-336da51672c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.Objects\03FBX">
+      <UniqueIdentifier>{429dd477-b728-42af-94b7-e55a37d15af3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -178,7 +184,7 @@
       <Filter>10.Imgui\02.Tools\01.UITool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_FBX.h">
-      <Filter>02.GameObject\03.Objects\FBX</Filter>
+      <Filter>02.GameObject\03.Objects\03FBX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h">
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
@@ -252,7 +258,7 @@
       <Filter>10.Imgui\02.Tools\01.UITool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_FBX.cpp">
-      <Filter>02.GameObject\03.Objects\FBX</Filter>
+      <Filter>02.GameObject\03.Objects\03FBX</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp">
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>

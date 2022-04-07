@@ -157,15 +157,19 @@ return _return;}
 
 // SHADER
 
-static const char* SHADER_TEX_DIFFUSE = "g_DiffuseTexture";
-static const char* SHADER_TEX_NOMAL = "g_NormalTexture";
+static const char* STR_TEX_DIFFUSE = "g_DiffuseTexture";
+static const char* STR_TEX_NOMAL = "g_NormalTexture";
 
-static const char* SHADER_MAT_WORLD = "g_WorldMatrix";
-static const char* SHADER_MAT_VIEW = "g_ViewMatrix";
-static const char* SHADER_MAT_PROJ = "g_ProjMatrix";
+static const char* STR_MAT_WORLD = "g_WorldMatrix";
+static const char* STR_MAT_VIEW = "g_ViewMatrix";
+static const char* STR_MAT_PROJ = "g_ProjMatrix";
 
-static const char* SHADER_LIGHTDIR = "g_vLightDir";
-static const char* SHADER_LIGHTPOS = "g_vLightPos";
+static const char* STR_LIGHT_DIR = "g_vLightDir";
+static const char* STR_LIGHT_POS = "g_vLightPos";
+static const char* STR_LIGHT_DIFFUSE = "g_vLightDiffuse";
+static const char* STR_LIGHT_AMBIENT = "g_vLightAmbient";
+static const char* STR_LIGHT_SPECULAR = "g_vLightSpecular";
 
-static const char* SHADER_CAMPOS = "g_CameraPosition";
+
+static const char* STR_CAMPOS = "g_CameraPosition";
 

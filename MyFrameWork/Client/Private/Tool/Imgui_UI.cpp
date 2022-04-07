@@ -29,9 +29,6 @@ void CImgui_UI::UISaver()
 
 }
 
-void CImgui_UI::TextureSaver()
-{
-}
 
 CImgui_UI * CImgui_UI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {

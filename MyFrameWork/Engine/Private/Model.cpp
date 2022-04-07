@@ -12,26 +12,34 @@ CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 CModel::CModel(const CModel & rhs)
 	: CComponent(rhs)
 	, mNumMeshContainer(rhs.mNumMeshContainer)
-	, mVectorMeshContainer(rhs.mVectorMeshContainer)
+	, mpVectorMeshContainers(rhs.mpVectorMeshContainers)
 	, meModelType(rhs.meModelType)
 	, mNumMaterials(rhs.mNumMaterials)
 	, mVectorMaterials(rhs.mVectorMaterials)
-	, mScene(rhs.mScene)
-
 
 {
-	for (auto& mesh : mVectorMeshContainer)
-	{
-		Safe_AddRef(mesh);
-	}
-
+	// 재질 벡터 복사
 	for (auto& mmatrial : mVectorMaterials)
 	{
 		for (auto& tex : mmatrial->pTexture)
 		{
 			Safe_AddRef(tex);
 		}
-	}	
+	}
+
+	// 메시 벡터들 복사
+	if(mpVectorMeshContainers != nullptr)
+	{
+		for (_uint i = 0; i<mNumMaterials;++i)
+		{
+			for (auto& mesh : mpVectorMeshContainers[i])
+			{
+				Safe_AddRef(mesh);
+			}
+		}
+
+	}
+
 }
 
 
@@ -42,9 +50,9 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE type, const char * ModelP
 
 	if (type == CModel::MODEL_END)
 		return E_FAIL;
+
 	meModelType = type;
 	XMStoreFloat4x4(&mTransformMatrix, defaultMatrix);
-
 
 	strcpy_s(szFullPath, ModelPath);
 	strcat_s(szFullPath, ModelName);
@@ -64,17 +72,13 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE type, const char * ModelP
 	// aiScene 객체는 모든 메쉬 데이터를 저장한다. 
 	// 모델 생성자는 aiScene을 초기화하는 것과 다름 없다.
 	mScene = mImporter.ReadFile(szFullPath, iFlag);
-
-	if (nullptr == mScene)
+	if (mScene == nullptr)
 		return E_FAIL;
 
-	// 이렇게 메쉬에 접근한다.
-//	mScene->mNumMeshes;
-//	mScene->mMeshes[0]->mNumVertices[];
-
 	// Scene 정보로 한 모델의 메쉬 파츠를 저장한다.
-	Ready_MeshContainers();
-	Ready_Materials(ModelPath);
+	FAILED_CHECK(Ready_Materials(ModelPath));
+	FAILED_CHECK(Ready_MeshContainers());
+
 	return S_OK;
 }
 
@@ -85,21 +89,35 @@ HRESULT CModel::NativeConstruct(void * pArg)
 
 
 
-HRESULT CModel::Render(CShader* shader,_uint pass)
+HRESULT CModel::Bind_OnShader(CShader * pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char * pValueName)
 {
-	if (mScene == nullptr)
+	if (iMaterialIndex >= mNumMaterials)
 		return E_FAIL;
 
-	int count = 0;
-	for (auto& mesh : mVectorMeshContainer)
+	// 각 텍스처 바인딩
+	CTexture*		pTexture = mVectorMaterials[iMaterialIndex]->pTexture[eTextureType];
+	if (nullptr == pTexture)
+		return E_FAIL;
+	
+	return pTexture->SetUp_OnShader(pShader, pValueName);
+}
+
+// 재질마다 다른 셰이더로 그려줄 수 있음.
+HRESULT CModel::Render(CShader* shader,_uint pass, _uint iMaterialIndex)
+{
+	// 바인딩이 끝나면 메쉬의 개수가 아닌 재질의 개수로 루프를 돈다.
+	if (iMaterialIndex >= mNumMaterials ||
+		mpVectorMeshContainers == nullptr)
+		return E_FAIL;
+
+
+	// 메시컨테이너들을 저장하는 컨테이너를 재질 개수만큼 만들고
+	// 메시컨테이너를 재질 개수만큼 호출시킨다.
+	for (auto& pMeshContainer : mpVectorMeshContainers[iMaterialIndex])
 	{
-		// 텍스처를 넘기고 랜더링
-		_uint matindex = mScene->mMeshes[count]->mMaterialIndex;
-		mVectorMaterials[matindex]->pTexture[aiTextureType_DIFFUSE]->SetUp_OnShader(shader, SHADER_TEX_DIFFUSE, 0);
-	//	mVectorMaterials[matindex]->pTexture[aiTextureType_NORMALS]->SetUp_OnShader(shader, SHADER_TEX_NOMAL, 0);
-		mVectorMaterials[matindex]->pTexture[aiTextureType_HEIGHT]->SetUp_OnShader(shader, SHADER_TEX_NOMAL, 0);
-		count++;
-		mesh->Render(shader, pass);
+		// 기존 같이 메시버퍼 랜더링
+		if (pMeshContainer != nullptr)
+			pMeshContainer->Render(shader, pass);
 	}
 	return S_OK;
 }
@@ -108,32 +126,35 @@ HRESULT CModel::Render(CShader* shader,_uint pass)
 
 HRESULT CModel::Ready_MeshContainers()
 {
-	// 메쉬 파츠 생성
+	// 메쉬 파츠 초기화
 
 	if (nullptr == mScene)
 		return E_FAIL;
 
+	// 메시 컨테이너 벡터를 재질의 총 개수만큼 동적할당.
 	mNumMeshContainer = mScene->mNumMeshes;
+	mpVectorMeshContainers = NEW MESHCONTAINERS[mNumMaterials];
 
-	mVectorMeshContainer.reserve(mNumMeshContainer);
-
+	// 메시 개수 만큼
 	for (_uint i = 0; i < mNumMeshContainer; ++i)
 	{
 		CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pDeviceContext, meModelType, mScene->mMeshes[i], XMLoadFloat4x4(&mTransformMatrix));
 		if (nullptr == pMeshContainer)
 			return E_FAIL;
 
-		mVectorMeshContainer.push_back(pMeshContainer);
+		// 각 메시가 가지고 있는 재질 번호로 메시를 넣는다.
+		// 즉 같은 번호의 텍스처를 사용해 그리는 객체는 같은 벡터[ID]에 저장된다.
+		mpVectorMeshContainers[mScene->mMeshes[i]->mMaterialIndex].push_back(pMeshContainer);
 	}
 	return S_OK;
 }
 
 HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 {
+	// 재질 초기화
 	if (mScene == nullptr)
 		return E_FAIL;
 	
-	// 재질의 총 개수 반환
 	mNumMaterials = mScene->mNumMaterials;
 	for (_uint i = 0; i < mNumMaterials; ++i)
 	{
@@ -169,7 +190,6 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 
 		}
 		mVectorMaterials.push_back(meshDesc);
-
 	}
 
 	return S_OK;
@@ -205,29 +225,38 @@ void CModel::Free()
 {
 	__super::Free();
 
-	for (auto& mesh : mVectorMeshContainer)
+	// 재질 해제
+	for (auto& mat : mVectorMaterials)
 	{
-		Safe_Release(mesh);
-	}
-
-	for (auto& material : mVectorMaterials)
-	{
-		for (auto& tex : material->pTexture)
+		for (auto& tex : mat->pTexture)
 			Safe_Release(tex);
 
+		if (m_isCloned == false)
+			Safe_Delete(mat);	
 	}
+	mVectorMaterials.clear();
 
-	// 메쉬 해체
-	if (m_isCloned == false)
+
+	// 메쉬 해제
+	if (mpVectorMeshContainers != nullptr)
 	{
+		for (_uint i = 0; i < mNumMaterials; ++i)
+		{
+			for (auto& mesh : mpVectorMeshContainers[i])
+				Safe_Release(mesh);
 
-		for (auto& material : mVectorMaterials)
-		{			
-			Safe_Release(*material->pTexture);
-			Safe_Delete(material);
+			if (m_isCloned == false)
+				mpVectorMeshContainers[i].clear();
 		}
-
-		mVectorMaterials.clear();
-		mImporter.FreeScene();
 	}
+
+	if (false == m_isCloned)
+	{
+		Safe_Delete_Array(mpVectorMeshContainers);
+	}
+
+	// 하이어라키 해제
+
+	mImporter.FreeScene();
+
 }

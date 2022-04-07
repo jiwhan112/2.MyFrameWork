@@ -2,7 +2,7 @@
 
 BEGIN(Client)
 
-// IMGUI 사용할 것만 업데이트
+// IMGUI 테스트 코드 작성
 
 class CImgui_MyDemo final:
 	public CImgui_Base

@@ -8,7 +8,6 @@ IMPLEMENT_SINGLETON(CImguiMgr)
 
 CImguiMgr::CImguiMgr()
 {
-	mIMGUI = nullptr;
 }
 
 void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -28,6 +27,16 @@ void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext*
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+}
+
+HRESULT CImguiMgr::Add_IMGUI(CImgui_Base * base)
+{
+	return S_OK;
+}
+
+HRESULT CImguiMgr::Remove_IMGUI(_uint idx)
+{
+	return S_OK;
 }
 
 //void CImguiMgr::UpdateGUI()
@@ -116,17 +125,18 @@ void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext*
 //	}
 //}
 
+
+
 HRESULT CImguiMgr::Update(_double time)
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	
-	if (mIMGUI == nullptr)
-		mIMGUI = CImgui_MyDemo::Create(nullptr, nullptr);
-	if (mIMGUI)
-		mIMGUI->Update(time);
-
+	for (auto& gui : mVecIMGUI)
+	{
+		gui->Update(time);
+	}
 
 	ImGui::EndFrame();
 	return S_OK;
@@ -135,7 +145,8 @@ HRESULT CImguiMgr::Update(_double time)
 
 HRESULT CImguiMgr::Render()
 {
-	if (mIMGUI)
+	
+	if (mVecIMGUI.empty()== false)
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -155,7 +166,10 @@ void CImguiMgr::DestroyIMGUI()
 
 void CImguiMgr::Free()
 {
-	Safe_Release(mIMGUI);
+	for (auto& gui : mVecIMGUI)
+	{
+		Safe_Release(gui);
+	}
 
 	DestroyIMGUI();
 }
