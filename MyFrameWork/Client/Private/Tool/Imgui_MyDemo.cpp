@@ -906,6 +906,6 @@ CImgui_MyDemo * CImgui_MyDemo::Create(ID3D11Device* deviec, ID3D11DeviceContext*
 
 void CImgui_MyDemo::Free()
 {
-//	__super::Free();
+	__super::Free();
 
 }

@@ -29,13 +29,22 @@ void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext*
 	ImGui_ImplDX11_Init(pDevice, pDeviceContext);
 }
 
-HRESULT CImguiMgr::Add_IMGUI(CImgui_Base * base)
+HRESULT CImguiMgr::Add_IMGUI(CImgui_Base * imgui)
 {
+	if (imgui == nullptr)
+		return E_FAIL;
+
+	mVecIMGUI.push_back(imgui);
 	return S_OK;
 }
 
 HRESULT CImguiMgr::Remove_IMGUI(_uint idx)
 {
+	if (idx >= mVecIMGUI.size())
+		return E_FAIL;
+
+	Safe_Release(mVecIMGUI[idx]);
+	misUpdate = false;
 	return S_OK;
 }
 
@@ -129,6 +138,8 @@ HRESULT CImguiMgr::Remove_IMGUI(_uint idx)
 
 HRESULT CImguiMgr::Update(_double time)
 {
+	misUpdate = true;
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -145,6 +156,8 @@ HRESULT CImguiMgr::Update(_double time)
 
 HRESULT CImguiMgr::Render()
 {
+	if (misUpdate == false)
+		return S_OK;
 	
 	if (mVecIMGUI.empty()== false)
 	{
@@ -170,6 +183,6 @@ void CImguiMgr::Free()
 	{
 		Safe_Release(gui);
 	}
-
+	mVecIMGUI.clear();
 	DestroyIMGUI();
 }

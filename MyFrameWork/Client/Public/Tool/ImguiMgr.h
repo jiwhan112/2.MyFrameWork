@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.h"
 
+
 BEGIN(Client)
 
 // IMGUI 사용할 것만 업데이트
@@ -18,7 +19,7 @@ private:
 public:
 	void InitImGUI(HWND hwnd, ID3D11Device* ppDeviceOut, ID3D11DeviceContext* ppDeviceContextOut);
 
-	HRESULT Add_IMGUI(class CImgui_Base* base);
+	HRESULT Add_IMGUI(class CImgui_Base* imgui);
 	HRESULT Remove_IMGUI(_uint idx);
 
 	HRESULT Update(_double time);
@@ -27,6 +28,8 @@ public:
 	
 private:
 	vector<class CImgui_Base*> mVecIMGUI;
+
+	bool misUpdate = false;
 
 
 public:

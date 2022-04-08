@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "Transform.h"
 #include "Texture.h"
+#include "Texture_map.h"
 #include "Shader.h"
 #include "Model.h"
 #include "VIBuffer_Rect.h"

@@ -20,6 +20,8 @@ HRESULT CCamera_Client::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
+	// 직교 투영 행렬 초기화 
+	FAILED_CHECK(GetSingle(CGameInstance)->SetTransform(CPipeLine::D3DTS_PROJ_ORI, XMMatrixOrthographicLH((float)g_iWinCX, (float)g_iWinCY, 0.f, 1.f)));
 	return S_OK;
 }
 
@@ -61,6 +63,10 @@ _int CCamera_Client::Tick(_double TimeDelta)
 	}
 
 	return __super::Tick(TimeDelta);
+
+	
+
+
 }
 
 _int CCamera_Client::LateTick(_double TimeDelta)

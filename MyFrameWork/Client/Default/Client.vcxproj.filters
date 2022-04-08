@@ -94,6 +94,9 @@
     <Filter Include="02.GameObject\03.Objects\03FBX">
       <UniqueIdentifier>{429dd477-b728-42af-94b7-e55a37d15af3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.2D">
+      <UniqueIdentifier>{b83ff735-73f2-4cf5-9a01-c76e93931aed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -189,6 +192,9 @@
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h">
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_2D.h">
+      <Filter>02.GameObject\01.2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -262,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp">
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp">
+      <Filter>02.GameObject\01.2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

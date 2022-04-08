@@ -48,6 +48,11 @@
 
 #define GetSingle(SINGLETON) SINGLETON::GetInstance()
 
+#define  MAX_FILENAME	256;
+#define  MAX_STR			256;
+#define  MAX_EXENAME		32;
+
+
 #define DIS_Up				0b00000001
 #define DIS_Down			0b00000110
 #define DIS_DoubleDown		0b00000100
@@ -155,7 +160,8 @@ return _return;}
 
 #define FAILED_UPDATE(_func) if(0>_func) {__debugbreak(); return -1;}
 
-// SHADER
+// #Tag STR_SHADER
+#pragma region STR_SHADER
 
 static const char* STR_TEX_DIFFUSE = "g_DiffuseTexture";
 static const char* STR_TEX_NOMAL = "g_NormalTexture";
@@ -170,6 +176,17 @@ static const char* STR_LIGHT_DIFFUSE = "g_vLightDiffuse";
 static const char* STR_LIGHT_AMBIENT = "g_vLightAmbient";
 static const char* STR_LIGHT_SPECULAR = "g_vLightSpecular";
 
-
 static const char* STR_CAMPOS = "g_CameraPosition";
+
+
+#pragma endregion
+
+// #Tag STR_FILEPATH
+#pragma region STR_FILEPATH
+
+	static const char* FILEPATH_RESOURCE = "..\\Bin\\Resources";
+	static const char* FILEPATH_TXT_TEST = "..\\Bin\\Resources\\PathFinder\\test.txt";
+	static const char* FILEPATH_TXT_RSOURCES = "..\\Bin\\Resources\\PathFinder\\path.txt";
+
+#pragma endregion
 

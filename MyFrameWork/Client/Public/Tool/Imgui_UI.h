@@ -19,6 +19,7 @@ public:
 	virtual HRESULT Update(_double time) override;
 
 public:
+	void TextureLoad();
 	void UISaver();
 	void UILoad();
 

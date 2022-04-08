@@ -11,7 +11,7 @@ class CPipeLine final : public CBase
 	DECLARE_SINGLETON(CPipeLine)
 
 public:
-	enum E_TRANSFORMSTATETYPE { D3DTS_VIEW, D3DTS_PROJ, D3DTS_END };
+	enum E_TRANSFORMSTATETYPE { D3DTS_VIEW, D3DTS_PROJ, D3DTS_PROJ_ORI, D3DTS_END };
 
 public:
 	CPipeLine() = default;

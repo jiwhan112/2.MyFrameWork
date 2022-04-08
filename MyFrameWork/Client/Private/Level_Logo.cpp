@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Level_Logo.h"
 #include "Level_Loader.h"
+#include "Camera_Client.h"
+#include "GameObject/GameObject_2D.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice, pDeviceContext)
@@ -63,12 +65,39 @@ HRESULT CLevel_Logo::Ready_Prototype_GameObject()
 
 HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
+	CCamera::CAMERADESC		CameraDesc;
+	ZeroMemory(&CameraDesc, sizeof(CameraDesc));
+
+	CameraDesc.vEye = _float3(0.f, 0.0f, -5.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
+
+	CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
+	CameraDesc.fNear = 0.2f;
+	CameraDesc.fFar = 300.f;
+
+	CameraDesc.TransformDesc.SpeedPersec = 10.f;
+	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
+
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
+	return S_OK;
+
 	return S_OK;
 }
 
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
-	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
+	UIDESC desc;
+
+	desc.mPivot = _float2(0.5f, 0.5f);
+	desc.mSize = { (float)g_iWinCX,(float)g_iWinCY };
+	desc.mPos = { g_iWinCX*0.5f,g_iWinCY *0.5f };
+	
+
+
+	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND));
+	static_cast<CGameObject_2D*>(obj)->Set_LoadUIDesc(desc);
 	return S_OK;
 }
 

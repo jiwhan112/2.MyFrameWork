@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\Public\MainApp.h"
-#include "GameInstance.h"
 
 #include "Tool/ImguiMgr.h"
 
@@ -8,14 +7,16 @@
 #include "Level_Loader.h"
 
 #include "Camera_Client.h"
-#include "GameObject_BackGround.h"
+#include "GameObject/GameObject_2D.h"
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
 #include "GameObject_FBX.h"
 
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
+	GetSingle(CImguiMgr)->GetInstance();
 	Safe_AddRef(m_pGameInstance);
 }
 
@@ -26,6 +27,11 @@ HRESULT CMainApp::NativeConstruct()
 	FAILED_CHECK(Ready_Prototype_GameObject());
 	FAILED_CHECK(Open_Level(LEVEL_LOGO));
 
+	// 탐색
+	// GetSingle(CGameInstance)->FolderFinder(STR_FILEPATH_RESOURCE);
+	// 탐색한 리스트 저장
+	// GetSingle(CGameInstance)->SaveVectorToDat();
+	
 	return S_OK;
 }
 
@@ -114,12 +120,12 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
 	
-	_matrix			TransformMatrix;
-	TransformMatrix = XMMatrixIdentity();
-	TransformMatrix = XMMatrixScaling(3, 3, 3) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
-		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", TransformMatrix)));
+	// _matrix			TransformMatrix;
+	// TransformMatrix = XMMatrixIdentity();
+	// TransformMatrix = XMMatrixScaling(3, 3, 3) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	// 
+	// FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
+	// 	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", TransformMatrix)));
 
 
 
@@ -136,6 +142,19 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Brush.png"), 1)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Filter.bmp"), 1)));
+
+	// 텍스처 맵 컴포넌트
+	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_TexturePng(FILEPATH_TXT_RSOURCES);
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
+		CTexture_map::Create(m_pDevice, m_pDeviceContext, listpngpath)));
+
+	// Path 데이터 삭제
+	for (auto s : listpngpath)
+	{
+		Safe_Delete(s);
+	}
+	listpngpath.clear();
 
 	// 셰이더 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX),
@@ -161,7 +180,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 
 	/* For.Prototype_GameObject_BackGround */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
-		CGameObject_BackGround::Create(m_pDevice, m_pDeviceContext)));
+		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA),
 		CCamera_Client::Create(m_pDevice, m_pDeviceContext)));
@@ -172,8 +191,8 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
 
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
-		CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
+	//	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
 	
 	return S_OK;
 }

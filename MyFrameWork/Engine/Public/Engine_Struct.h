@@ -115,4 +115,16 @@ namespace Engine
 	{
 		unsigned short	_0, _1, _2;
 	}FACEINDICES16;
+
+	enum E_FILETYPE { FILETYPE_PNG, FILETYPE_TXT, FILETYPE_FBX, FILETYPE_END };
+
+	typedef struct ENGINE_DLL tag_FilePath
+	{
+		wchar_t FullPath[260] = L"";
+		wchar_t FileName[256] = L"";
+		wchar_t Extension[32] = L"";
+		unsigned int FileCount = 0;
+
+	}MYFILEPATH;
+
 }

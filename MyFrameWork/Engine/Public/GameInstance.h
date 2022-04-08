@@ -8,6 +8,7 @@
 #include "Object_Manager.h"
 #include "PipeLine.h"
 #include "LightMgr.h"
+#include "FileInfo.h"
 
 BEGIN(Engine)
 
@@ -48,7 +49,7 @@ public: /* For.Component_Manager */
 public: /* For.Object_Manager */
 	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIndex = 0);
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
-	HRESULT Add_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg = nullptr);
+	CGameObject* Add_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg = nullptr);
 
 public: /* For. PipeLine Single*/
 	HRESULT SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);
@@ -58,9 +59,15 @@ public: /* For. PipeLine Single*/
 	_float4 GetCameraPosition_float() const;
 	_vector GetCameraPosition_vec() const;
 
-public:
+public: // For. Light
 	const LIGHTDESC* Get_LightDesc(_uint iIndex) const;
 	HRESULT Add_Light(ID3D11Device* device, ID3D11DeviceContext* context, const LIGHTDESC& desc);
+
+public: // For. File
+	HRESULT FolderFinder(const wstring& FileFolder);
+	void SaveVectorToDat(const char* savetxtName = FILEPATH_TXT_RSOURCES);
+	list<MYFILEPATH*> Load_TexturePng(const char* txtfilepath);
+
 
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;
@@ -71,6 +78,7 @@ private:
 	CInput_Device*				m_pInput_Device = nullptr;
 	CPipeLine*					m_pPipeLine = nullptr;
 	CLightMgr*					m_pLightMgr = nullptr;
+	CFileInfo*					m_pFileMgr = nullptr;
 
 public:
 	static void Release_Engine();

@@ -16,6 +16,8 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
+public:
+	HRESULT ReadyTools();
 
 
 public:

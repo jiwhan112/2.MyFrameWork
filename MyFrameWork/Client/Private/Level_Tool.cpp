@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Level_Tool.h"
-
-#include "Tool/ImguiMgr.h"
+#include "Tool/Imgui_MyDemo.h"
 
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -14,6 +13,8 @@ HRESULT CLevel_Tool::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
 
+	FAILED_CHECK(ReadyTools());
+
 	return S_OK;
 }
 
@@ -24,12 +25,13 @@ _int CLevel_Tool::Tick(_double TimeDelta)
 	GetSingle(CImguiMgr)->Update(TimeDelta);
 	
 
-	return _int();
+	return UPDATENONE;
 }
 
 _int CLevel_Tool::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	return UPDATENONE;
 }
 
 HRESULT CLevel_Tool::Render()
@@ -44,6 +46,13 @@ HRESULT CLevel_Tool::Render()
 #ifdef _DEBUG
 	SetWindowText(g_hWnd, TEXT("Toll Level"));
 #endif
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::ReadyTools()
+{
+	GetSingle(CImguiMgr)->Add_IMGUI(CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
 
 	return S_OK;
 }

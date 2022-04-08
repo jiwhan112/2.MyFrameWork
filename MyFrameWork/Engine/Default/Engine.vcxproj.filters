@@ -100,6 +100,9 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer">
       <UniqueIdentifier>{37c56d41-e9fc-43c6-9ef6-f719d9c2f8a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\09.FileInfo">
+      <UniqueIdentifier>{4728858e-21a8-4477-b651-e17a5695617f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -188,6 +191,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\MeshContainer.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FileInfo.cpp">
+      <Filter>01.Utility\09.FileInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Texture_map.cpp">
+      <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +313,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\MeshContainer.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FileInfo.h">
+      <Filter>01.Utility\09.FileInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Texture_map.h">
+      <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

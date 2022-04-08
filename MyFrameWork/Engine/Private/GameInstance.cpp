@@ -11,6 +11,7 @@ CGameInstance::CGameInstance()
 	, m_pObject_Manager(CObject_Manager::GetInstance())
 	, m_pPipeLine(CPipeLine::GetInstance())
 	, m_pLightMgr(CLightMgr::GetInstance())
+	, m_pFileMgr(CFileInfo::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -20,6 +21,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pLightMgr);
+	Safe_AddRef(m_pFileMgr);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -173,9 +175,10 @@ HRESULT CGameInstance::Add_Prototype(const _tchar * pPrototypeTag, CGameObject *
 	return m_pObject_Manager->Add_Prototype(pPrototypeTag, pPrototype);
 }
 
-HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pPrototypeTag, void * pArg)
+CGameObject* CGameInstance::Add_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pPrototypeTag, void * pArg)
 {
-	NULL_CHECK_HR(m_pObject_Manager);
+	if (m_pObject_Manager == nullptr)
+		return nullptr;
 
 	return m_pObject_Manager->Add_GameObject(iLevelIndex, pLayerTag, pPrototypeTag, pArg);
 }
@@ -230,6 +233,26 @@ HRESULT CGameInstance::Add_Light(ID3D11Device * device, ID3D11DeviceContext * co
 	return m_pLightMgr->Add_Light(device, context, desc);
 }
 
+HRESULT CGameInstance::FolderFinder(const wstring& FileFolder)
+{
+	NULL_CHECK_BREAK(m_pFileMgr);
+
+	return m_pFileMgr->FolderFinder(FileFolder);
+}
+
+void CGameInstance::SaveVectorToDat(const char * savetxtName)
+{
+	NULL_CHECK_BREAK(m_pFileMgr);
+	m_pFileMgr->SaveVectorToDat(savetxtName);
+}
+
+list<MYFILEPATH*> CGameInstance::Load_TexturePng(const char * txtfilepath)
+{
+	NULL_CHECK_BREAK(m_pFileMgr);
+	return m_pFileMgr->Load_TexturePng(txtfilepath);
+}
+
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -251,10 +274,13 @@ void CGameInstance::Release_Engine()
 		MSGBOX("Failed to Delete CLightMgr");
 
 	if (0 != CPipeLine::GetInstance()->DestroyInstance())
-		MSGBOX("Failed to Delete CPipeLine")
+		MSGBOX("Failed to Delete CPipeLine");
 
-		if (0 != CInput_Device::GetInstance()->DestroyInstance())
-			MSGBOX("Failed to Delete CInput_Device");
+	if (0 != CFileInfo::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CFileInfo");
+
+	if (0 != CInput_Device::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CInput_Device");
 
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");
@@ -270,4 +296,5 @@ void CGameInstance::Free()
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pLightMgr);
+	Safe_Release(m_pFileMgr);
 }

@@ -166,7 +166,11 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp" />
     <ClInclude Include="..\Public\Camera_Client.h" />
-    <ClInclude Include="..\Public\GameObject_BackGround.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
+    <ClInclude Include="..\Public\GameObject_BackGround.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\GameObject_FBX.h" />
     <ClInclude Include="..\Public\GameObject_Skybox.h" />
     <ClInclude Include="..\Public\GameObject_Terrain.h" />
@@ -198,7 +202,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Camera_Client.cpp" />
-    <ClCompile Include="..\Private\GameObject_BackGround.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
+    <ClCompile Include="..\Private\GameObject_BackGround.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\GameObject_FBX.cpp" />
     <ClCompile Include="..\Private\GameObject_Skybox.cpp" />
     <ClCompile Include="..\Private\GameObject_Terrain.cpp" />

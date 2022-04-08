@@ -44,9 +44,9 @@ using namespace DirectX;
 #include <dinput.h>
 #include <process.h>
 
-//#include <string>
-//#include <fstream>
-//#include <tchar.h>
+#include <string>
+#include <fstream>
+#include <tchar.h>
 #include <vector>
 #include <list>
 #include <map>

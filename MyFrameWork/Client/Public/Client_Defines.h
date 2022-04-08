@@ -20,3 +20,16 @@ namespace Client {}
 using namespace Client;
 
 
+
+
+typedef struct tag_UIDESC
+{
+	_float2 mSize;
+	_float2 mPos;
+	_float2 mPivot;
+	bool	mIsScreen;
+
+}UIDESC;
+
+
+#define  STR_FILEPATH_RESOURCE L"..\\Bin\\Resources"
