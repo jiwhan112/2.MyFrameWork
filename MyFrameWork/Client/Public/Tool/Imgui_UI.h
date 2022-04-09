@@ -7,6 +7,8 @@ BEGIN(Client)
 class CImgui_UI final:
 	public CImgui_Base
 {
+public:
+	const char* mUIItems[2] = { "PathFinder", "UIEdit" };
 
 private:
 	explicit CImgui_UI(ID3D11Device* device, ID3D11DeviceContext* context);
@@ -19,12 +21,33 @@ public:
 	virtual HRESULT Update(_double time) override;
 
 public:
-	void TextureLoad();
-	void UISaver();
-	void UILoad();
+	void Set_UIObject(class CGameObject_2D* obj);
 
-	// UI 정보 저장
-	void Button_SaveUI();
+	HRESULT Render_UI();
+	//	void Render_Object(CGameObject* obj);
+
+
+private:
+	void Button_PathTxtSave();
+	void Button_TextureLoader();
+	HRESULT Edit_UIObject();
+	HRESULT Edit_Texture();
+
+	//void Button_Create2DBuffer();
+	//void Texturebb();
+
+
+	//// UI 정보 저장
+	//void Button_UISave();
+
+private:
+	int item_current = 0;
+	// UI 오브젝트 1개에대한 정보 저장코드 만들어보기
+	class CGameObject_2D* mUIObject = nullptr;
+	list<string>*			mListTextureKey = nullptr;
+
+
+
 
 
 public:

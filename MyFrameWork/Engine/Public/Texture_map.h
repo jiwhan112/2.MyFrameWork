@@ -22,7 +22,8 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);
 
 public:
-	
+	// 키 리스트 반환
+	list<string>* Get_MapKeyList() const { return mListKey; }
 
 private:
 	ID3D11ShaderResourceView* Find_MapTexture(string key);
@@ -41,7 +42,8 @@ private:
 	*/
 
 	// 텍스처 맵
-	map<string,ID3D11ShaderResourceView*>				mMapTextures;
+	map<string, ID3D11ShaderResourceView*>				mMapTextures;
+	list<string>*										mListKey = nullptr;
 	typedef map<string, ID3D11ShaderResourceView*>		TEXTURES_MAP;
 
 public:

@@ -17,8 +17,13 @@ public:
 	virtual HRESULT Render();
 
 public:
+	HRESULT Ready_Layer_Camera(const _tchar * pLayerTag);
+	HRESULT	Ready_Layer_BackGround(const _tchar * pLayerTag);
 	HRESULT ReadyTools();
 
+private:
+	class CImgui_MyDemo* mDemo;
+	class CImgui_UI* mUI;
 
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

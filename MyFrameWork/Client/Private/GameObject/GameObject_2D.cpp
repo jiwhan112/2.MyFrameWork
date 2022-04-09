@@ -49,8 +49,8 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
 
-	mComTransform->Scaled(XMVectorSet(mUiDesc.mSize.x, mUiDesc.mSize.y, 1.f, 0.0f));
-	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPos.x - (g_iWinCX * 0.5f), -mUiDesc.mPos.y + (g_iWinCY * 0.5f), 0.f, 1.f));
+	mComTransform->Scaled(XMVectorSet(mUiDesc.mSizeX, mUiDesc.mSizeY, 1.f, 0.0f));
+	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * 0.5f), -mUiDesc.mPosY + (g_iWinCY * 0.5f), 0, 1.f));
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return _int();
@@ -88,7 +88,12 @@ HRESULT CGameObject_2D::Set_ConstantTable_UI()
 
 	_float4x4 view;
 	XMStoreFloat4x4(&view, XMMatrixIdentity());
-	_float4x4 projori =  GetSingle(CGameInstance)->GetTransformFloat4x4_TP(CPipeLine::D3DTS_PROJ_ORI);
+
+
+
+//	_float4x4 projori = GetSingle(CGameInstance)->GetTransformFloat4x4_TP(CPipeLine::D3DTS_PROJ_ORI);
+	_float4x4 projori;// = GetSingle(CGameInstance)->GetTransformFloat4x4_TP(CPipeLine::D3DTS_PROJ_ORI);
+	XMStoreFloat4x4(&projori, XMMatrixTranspose(XMMatrixOrthographicLH(g_iWinCX, g_iWinCY, 0, 1)));
 
 	// WVP
 	mComTransform->Bind_OnShader(mComShader, STR_MAT_WORLD);

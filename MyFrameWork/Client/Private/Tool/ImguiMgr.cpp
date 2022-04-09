@@ -168,6 +168,13 @@ HRESULT CImguiMgr::Render()
 	return S_OK;
 }
 
+CImgui_Base * CImguiMgr::Get_IMGUI(_uint index)
+{
+	if (mVecIMGUI.size() >= index)
+		return nullptr;
+	return mVecIMGUI[index];
+}
+
 void CImguiMgr::DestroyIMGUI()
 {
 	// IMGUI ªË¡¶

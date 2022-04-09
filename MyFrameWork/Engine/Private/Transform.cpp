@@ -22,6 +22,17 @@ _vector CTransform::GetScale(E_STATE state) const
 	return XMVector3Length(XMLoadFloat3((_float3*)&mWorldMatrix.m[state][0]));
 }
 
+_float3 CTransform::GetScaleXYZ() const
+{
+	_float3 fSizeX, fSizeY, fSizeZ;
+
+	XMStoreFloat3(&fSizeX, XMVector3Length(XMLoadFloat3((_float3*)&mWorldMatrix.m[0][0])));
+	XMStoreFloat3(&fSizeY, XMVector3Length(XMLoadFloat3((_float3*)&mWorldMatrix.m[1][0])));
+	XMStoreFloat3(&fSizeZ, XMVector3Length(XMLoadFloat3((_float3*)&mWorldMatrix.m[2][0])));
+
+	return _float3(fSizeX.x, fSizeY.x, fSizeZ.x);
+}
+
 void CTransform::SetState(E_STATE state, _fvector vec)
 {
 	XMStoreFloat4((_float4*)&mWorldMatrix.m[state][0], vec);

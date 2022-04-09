@@ -74,7 +74,7 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
-	CameraDesc.fNear = 0.2f;
+	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 300.f;
 
 	CameraDesc.TransformDesc.SpeedPersec = 10.f;
@@ -83,18 +83,14 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
 	return S_OK;
 
-	return S_OK;
 }
 
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
-	UIDESC desc;
 
-	desc.mPivot = _float2(0.5f, 0.5f);
-	desc.mSize = { (float)g_iWinCX,(float)g_iWinCY };
-	desc.mPos = { g_iWinCX*0.5f,g_iWinCY *0.5f };
-	
-
+	UIDESC desc = { g_iWinCX*0.5f,g_iWinCY *0.5f,
+		 g_iWinCX,g_iWinCY,_float2(0.5f, 0.5f),false
+	};
 
 	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND));
 	static_cast<CGameObject_2D*>(obj)->Set_LoadUIDesc(desc);

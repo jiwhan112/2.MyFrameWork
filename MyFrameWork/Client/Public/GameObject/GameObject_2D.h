@@ -36,6 +36,15 @@ public:
 	{
 		memcpy(&mUiDesc, &desc, sizeof(UIDESC));
 	}
+	const UIDESC& Get_UIDesc() const
+	{
+		return mUiDesc;
+	}
+
+	CTexture_map* Get_TextureMap() const
+	{
+		return mComTexture;
+	}
 
 protected:
 	virtual HRESULT Set_Component()override;

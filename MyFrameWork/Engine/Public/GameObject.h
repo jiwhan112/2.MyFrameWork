@@ -22,6 +22,8 @@ public:
 	virtual HRESULT Render();
 
 public:
+	class CTransform*	Get_TransformCom() const { return mComTransform; }
+
 	bool GetIsLife() const { return mIsLife; }
 	bool GetIsRenderer() const { return mIsRenderer; }
 	void SetDead() { mIsLife = false; }

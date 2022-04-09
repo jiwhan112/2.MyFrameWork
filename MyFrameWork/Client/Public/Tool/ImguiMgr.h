@@ -25,12 +25,11 @@ public:
 	HRESULT Update(_double time);
 	HRESULT Render();
 
-	
+	class CImgui_Base* Get_IMGUI(_uint index);
+
 private:
 	vector<class CImgui_Base*> mVecIMGUI;
-
 	bool misUpdate = false;
-
 
 public:
 	virtual void Free() override;

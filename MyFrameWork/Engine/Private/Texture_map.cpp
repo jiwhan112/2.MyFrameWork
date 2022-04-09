@@ -10,6 +10,7 @@ CTexture_map::CTexture_map(const CTexture_map & rhs)
 	: CComponent(rhs)
 	, mMapTextures(rhs.mMapTextures)
 	, mCurrentKey(rhs.mCurrentKey)
+	, mListKey(rhs.mListKey)
 {
 	for (auto& maptex : mMapTextures)
 	{
@@ -44,6 +45,7 @@ HRESULT CTexture_map::NativeConstruct_Prototype(list<MYFILEPATH*> listpath)
 {
 	// 스레드가 여러개 실행될 떄 잘못 초기화될 경우를 방지.
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	mListKey = NEW list<string>;
 
 	if (listpath.empty())
 		return E_FAIL;
@@ -87,8 +89,8 @@ HRESULT CTexture_map::NativeConstruct_Prototype(list<MYFILEPATH*> listpath)
 		}
 		mMapTextures.emplace(keyname, pSRV);
 
+		mListKey->push_front(keyname);
 	}
-
 
 	return S_OK;
 }
@@ -140,8 +142,9 @@ void CTexture_map::Free()
 	for (auto& maptex : mMapTextures)
 	{
 		Safe_Release(maptex.second);
-	}
-	
-
+	}	
 	mMapTextures.clear();
+
+	if (m_isCloned == false)
+		Safe_Delete(mListKey);
 }

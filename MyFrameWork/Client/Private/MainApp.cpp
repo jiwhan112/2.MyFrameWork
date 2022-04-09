@@ -27,10 +27,7 @@ HRESULT CMainApp::NativeConstruct()
 	FAILED_CHECK(Ready_Prototype_GameObject());
 	FAILED_CHECK(Open_Level(LEVEL_LOGO));
 
-	// 탐색
-	// GetSingle(CGameInstance)->FolderFinder(STR_FILEPATH_RESOURCE);
-	// 탐색한 리스트 저장
-	// GetSingle(CGameInstance)->SaveVectorToDat();
+
 	
 	return S_OK;
 }
@@ -50,9 +47,8 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_BackBuffer_View(_float4(_float3(0, 0, 1), 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
-	m_pGameInstance->Render_Level();
 	m_pRenderer->Render();
-
+	m_pGameInstance->Render_Level();
 	// 스왑체인
 	m_pGameInstance->Present();
 

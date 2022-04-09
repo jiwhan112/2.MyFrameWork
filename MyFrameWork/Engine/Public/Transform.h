@@ -25,7 +25,7 @@ public:
 public:
 	_vector GetState(E_STATE state) const;
 	_vector GetScale(E_STATE state) const;
-
+	_float3 GetScaleXYZ() const;
 	// 연산용 데이터
 	_matrix GetWorldMatrix() const { return XMLoadFloat4x4(&mWorldMatrix); }
 

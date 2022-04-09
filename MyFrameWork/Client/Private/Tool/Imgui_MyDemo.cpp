@@ -18,7 +18,7 @@ HRESULT CImgui_MyDemo::NativeConstruct()
 
 HRESULT CImgui_MyDemo::Update(_double time)
 {
-	// DemoTest();
+	 DemoTest();
 
 	// TestUI
 	IMGUI_TEST_MyDemo();
