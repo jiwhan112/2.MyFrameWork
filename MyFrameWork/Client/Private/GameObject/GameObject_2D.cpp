@@ -31,6 +31,9 @@ HRESULT CGameObject_2D::NativeConstruct_Prototype()
 HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
+	string str("GUI_Menu_Main_Curtain.png");
+
+	mComTexture->Set_TextureMap(str);
 
 	return S_OK;
 }
@@ -73,7 +76,7 @@ HRESULT CGameObject_2D::Set_Component()
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
 	return S_OK;
 }
@@ -102,7 +105,7 @@ HRESULT CGameObject_2D::Set_ConstantTable_World()
 HRESULT CGameObject_2D::Set_ConstantTable_Tex(_uint texid)
 {
 	// 텍스처 넘기기
-	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE, texid));
+	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
 	return S_OK;
 }
 

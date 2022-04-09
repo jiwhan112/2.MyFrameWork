@@ -14,12 +14,15 @@ public:
 
 public:
 	// 텍스처를 셰이더 파일에 전달
-	HRESULT SetUp_OnShader(class CShader * pShader, const char * pValueName, string texturename);
+	HRESULT SetUp_OnShader(class CShader * pShader, const char * pValueName);
+	HRESULT Set_TextureMap(string texturename);
 
 public:
-	virtual HRESULT NativeConstruct_Prototype(list<MYFILEPATH*> listpath);
-	
+	virtual HRESULT NativeConstruct_Prototype(list<MYFILEPATH*> listpath);	
 	virtual HRESULT NativeConstruct(void* pArg);
+
+public:
+	
 
 private:
 	ID3D11ShaderResourceView* Find_MapTexture(string key);
@@ -27,7 +30,7 @@ private:
 private:
 	// 현재 바인딩된 텍스처
 	string	mCurrentKey = "";
-//	ID3D11ShaderResourceView* mCurrentTexture = nullptr;
+	ID3D11ShaderResourceView* mCurrentTexture = nullptr;
 
 
 private:

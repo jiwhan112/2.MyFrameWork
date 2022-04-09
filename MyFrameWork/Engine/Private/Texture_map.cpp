@@ -9,26 +9,35 @@ CTexture_map::CTexture_map(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice
 CTexture_map::CTexture_map(const CTexture_map & rhs)
 	: CComponent(rhs)
 	, mMapTextures(rhs.mMapTextures)
+	, mCurrentKey(rhs.mCurrentKey)
 {
 	for (auto& maptex : mMapTextures)
 	{
 		Safe_AddRef(maptex.second);
 	}
+
+	mCurrentKey = "";
+	mCurrentTexture = nullptr;
+
 }
 
-HRESULT CTexture_map::SetUp_OnShader(CShader * pShader, const char * pValueName, string texturename)
+HRESULT CTexture_map::SetUp_OnShader(CShader * pShader, const char * pValueName)
 {
-	if ((mCurrentKey == texturename) == false)
-	{
-	//새로 바인딩
-		mCurrentKey = texturename;
-	//	mCurrentTexture = Find_MapTexture(mCurrentKey);
-	//	if (mCurrentTexture == nullptr)
-	//		return E_FAIL;
+	if (mCurrentTexture == nullptr)
+		return E_FAIL;
 
-	}
+	return pShader->Set_Texture(pValueName, mCurrentTexture);
+}
 
-	return pShader->Set_Texture(pValueName, Find_MapTexture(mCurrentKey));
+HRESULT CTexture_map::Set_TextureMap(string texturename)
+{
+	mCurrentKey = texturename;
+	mCurrentTexture = Find_MapTexture(mCurrentKey);
+
+	if (mCurrentTexture == nullptr)
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CTexture_map::NativeConstruct_Prototype(list<MYFILEPATH*> listpath)
@@ -94,7 +103,7 @@ ID3D11ShaderResourceView * CTexture_map::Find_MapTexture(string key)
 	if (mMapTextures.empty())
 		return nullptr;
 
-	auto iter =  mMapTextures.find(key);
+	auto iter =  mMapTextures.find(key.c_str());
 	if (iter == mMapTextures.end())
 		return nullptr;
 	return iter->second;
@@ -127,9 +136,12 @@ CComponent * CTexture_map::Clone(void * pArg)
 void CTexture_map::Free()
 {
 	__super::Free();
+
 	for (auto& maptex : mMapTextures)
 	{
 		Safe_Release(maptex.second);
 	}
+	
+
 	mMapTextures.clear();
 }

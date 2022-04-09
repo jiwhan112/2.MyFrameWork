@@ -54,7 +54,8 @@ private:
 	CShader*		mComShader		= nullptr;
 	CRenderer*		mComRenderer	= nullptr;
 	CVIBuffer_Rect*	mComVIBuffer	= nullptr;
-	CTexture*		mComTexture		= nullptr;
+	CTexture_map*	mComTexture		= nullptr;
+//	CTexture*		mComTexture		= nullptr;
 
 public:
 	static CGameObject_2D* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
