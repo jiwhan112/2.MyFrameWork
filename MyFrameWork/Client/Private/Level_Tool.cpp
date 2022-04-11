@@ -10,6 +10,9 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 	: CLevel(pDevice, pDeviceContext)
 {
 	mLevelIndex = LEVEL_TOOL;
+
+	mDemo = nullptr;
+	mUI = nullptr;
 }
 
 HRESULT CLevel_Tool::NativeConstruct()
@@ -57,10 +60,10 @@ HRESULT CLevel_Tool::Render()
 HRESULT CLevel_Tool::ReadyTools()
 {
 	// IMGUI 积己
-	GetSingle(CImguiMgr)->Add_IMGUI(mDemo = CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
+//	GetSingle(CImguiMgr)->Add_IMGUI(mDemo = CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CImguiMgr)->Add_IMGUI(mUI = CImgui_UI::Create(m_pDevice, m_pDeviceContext));
 
-	Safe_AddRef(mDemo);
+//	Safe_AddRef(mDemo);
 	Safe_AddRef(mUI);
 
 	// 坷宏璃飘 积己
@@ -94,7 +97,8 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 
 	UIDESC desc = { g_iWinCX*0.5f,g_iWinCY *0.5f,
-		 g_iWinCX,g_iWinCY,_float2(0.5f, 0.5f),false
+		 g_iWinCX,g_iWinCY,
+		_float2(0.5f, 0.5f),
 	};
 
 

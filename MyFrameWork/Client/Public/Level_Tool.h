@@ -22,8 +22,8 @@ public:
 	HRESULT ReadyTools();
 
 private:
-	class CImgui_MyDemo* mDemo;
-	class CImgui_UI* mUI;
+	class CImgui_MyDemo*	mDemo = nullptr;
+	class CImgui_UI*		mUI = nullptr;
 
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

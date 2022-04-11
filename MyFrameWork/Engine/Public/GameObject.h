@@ -28,6 +28,11 @@ public:
 	bool GetIsRenderer() const { return mIsRenderer; }
 	void SetDead() { mIsLife = false; }
 
+	const _uint& Get_ObjectTypeID() const
+	{
+		return mObjectTypeid;
+	}
+
 protected:
 	virtual HRESULT Set_Component()PURE;
 
@@ -35,7 +40,7 @@ public:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
 
 private:
-	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+//	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
 
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
@@ -48,6 +53,9 @@ protected:
 	// Á×À½ Ã¼Å©¿Í ·»´õ¸µ ¿©ºÎ
 	bool				mIsLife = true;
 	bool				mIsRenderer = true;
+
+	_uint				mObjectTypeid = 99;
+
 
 protected:
 	CComponent*	Find_Component(const _tchar* pComponentTag);

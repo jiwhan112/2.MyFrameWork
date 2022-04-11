@@ -8,7 +8,7 @@ class CImgui_UI final:
 	public CImgui_Base
 {
 public:
-	const char* mUIItems[2] = { "PathFinder", "UIEdit" };
+	const char* mUIItems[2] = { "PathFinder", "UIEdit",};
 
 private:
 	explicit CImgui_UI(ID3D11Device* device, ID3D11DeviceContext* context);
@@ -43,11 +43,12 @@ private:
 private:
 	int item_current = 0;
 	// UI 오브젝트 1개에대한 정보 저장코드 만들어보기
-	class CGameObject_2D* mUIObject = nullptr;
+	class CGameObject_2D*	mCurrentUIObject = nullptr;
 	list<string>*			mListTextureKey = nullptr;
 
-
-
+	// UI 오브젝트 리스트
+	// 여기에 저장된 UISet이 한 묶음의 형태로 저장된다.
+	// list<class CGameObject_2D*> mListUISet;
 
 
 public:

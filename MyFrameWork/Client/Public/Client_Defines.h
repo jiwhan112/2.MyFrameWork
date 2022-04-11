@@ -20,18 +20,46 @@ namespace Client {}
 using namespace Client;
 
 
+// 데이터 타입 별 정보
+enum E_OBJECT_DATA_TYPE
+{
+	OBJECT_TYPE_DATA_OBJECT,
+	OBJECT_TYPE_DATA_UIDESC,
+	OBJECT_TYPE_DATA_TEXTUREDESC,
+	OBJECT_TYPE_DATA_END,
+};
+
+
+// 오브젝트 별 파일 정보
+enum E_OBJECT_TYPE
+{
+	OBJECT_TYPE_UI,
+	OBJECT_TYPE_END,
+
+};
 
 
 typedef struct tag_UIDESC
 {
-	_int mPosX;
-	_int mPosY;
-	_int mSizeX;
-	_int mSizeY;
+	_int mPosX ;
+	_int mPosY ;
+	_int mSizeX ;
+	_int mSizeY ;
 	_float2 mPivot;
-	bool	mIsScreen;
 
 }UIDESC;
 
 
-#define  STR_FILEPATH_RESOURCE L"..\\Bin\\Resources\\Sprite"
+typedef struct tag_TEXTUREDESC
+{
+	char mTextureKey[MAX_STR] = "";
+}TEXTUREDESC;
+
+
+
+
+#define  STR_FILEPATH_RESOURCE_L		L"..\\Bin\\Resources\\Sprite"
+#define  STR_FILEPATH_RESOURCE_			"..\\Bin\\Resources\\Sprite"
+
+#define  STR_FILEPATH_DATA_L		L"..\\Bin\\Resources\\Data"
+#define  STR_FILEPATH_DATA			"..\\Bin\\Resources\\Data"

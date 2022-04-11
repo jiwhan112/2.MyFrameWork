@@ -49,21 +49,6 @@
     <Filter Include="97.Shaders">
       <UniqueIdentifier>{8d4bad26-419a-4f30-9d72-694e1b7224ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.BackGround">
-      <UniqueIdentifier>{f3e6f898-9cb3-4b56-a2f4-43df4f56ed11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.BackGround\0.BaseObject">
-      <UniqueIdentifier>{14ac5b3b-8fde-4a60-b332-c31b71923ded}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.BackGround\1.UI">
-      <UniqueIdentifier>{5d327b76-64a1-4aca-a783-fc6559dc4e33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.BackGround\2.Sky">
-      <UniqueIdentifier>{d5f97766-fe7b-4871-bd7c-3088f95304b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.BackGround\3.Terrain">
-      <UniqueIdentifier>{d3a94238-5c58-40ca-811a-a4e8d5705229}</UniqueIdentifier>
-    </Filter>
     <Filter Include="10.Imgui\99.lib">
       <UniqueIdentifier>{5d3dcb41-c8b6-4ca9-8706-1437af281d0d}</UniqueIdentifier>
     </Filter>
@@ -94,8 +79,35 @@
     <Filter Include="02.GameObject\03.Objects\03FBX">
       <UniqueIdentifier>{429dd477-b728-42af-94b7-e55a37d15af3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.2D">
+    <Filter Include="02.GameObject\01.2DObject">
       <UniqueIdentifier>{b83ff735-73f2-4cf5-9a01-c76e93931aed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.BackGround">
+      <UniqueIdentifier>{f3e6f898-9cb3-4b56-a2f4-43df4f56ed11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.BackGround\0.BaseObject">
+      <UniqueIdentifier>{14ac5b3b-8fde-4a60-b332-c31b71923ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.BackGround\1.UI">
+      <UniqueIdentifier>{5d327b76-64a1-4aca-a783-fc6559dc4e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.BackGround\2.Sky">
+      <UniqueIdentifier>{d5f97766-fe7b-4871-bd7c-3088f95304b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.BackGround\3.Terrain">
+      <UniqueIdentifier>{d3a94238-5c58-40ca-811a-a4e8d5705229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject">
+      <UniqueIdentifier>{07567c0f-55dd-4aee-a9d0-c7f7100acc41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Creater">
+      <UniqueIdentifier>{cf7a3b89-3b5d-4c99-94d9-73450e026ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Creater\01.ObjectIO">
+      <UniqueIdentifier>{f6cf2dec-78b7-4f65-81eb-a81e0709e4b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Creater\02.Creater">
+      <UniqueIdentifier>{f7319978-bbc4-4c25-82f7-916d50e42b24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,19 +175,19 @@
       <Filter>01.Level\00.Loader\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_BackGround.h">
-      <Filter>02.GameObject\01.BackGround</Filter>
+      <Filter>02.GameObject\99.BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Client.h">
       <Filter>02.GameObject\02.Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_Skybox.h">
-      <Filter>02.GameObject\01.BackGround\2.Sky</Filter>
+      <Filter>02.GameObject\99.BackGround\2.Sky</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp">
       <Filter>97.Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_Terrain.h">
-      <Filter>02.GameObject\01.BackGround\3.Terrain</Filter>
+      <Filter>02.GameObject\99.BackGround\3.Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tool\ImguiMgr.h">
       <Filter>10.Imgui\01.Mgr</Filter>
@@ -193,7 +205,13 @@
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h">
-      <Filter>02.GameObject\01.2D</Filter>
+      <Filter>02.GameObject\01.2DObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FIleIO\ObjectIO.h">
+      <Filter>03.Creater\01.ObjectIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h">
+      <Filter>03.Creater\02.Creater</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -243,16 +261,16 @@
       <Filter>01.Level\00.Loader\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_BackGround.cpp">
-      <Filter>02.GameObject\01.BackGround</Filter>
+      <Filter>02.GameObject\99.BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Client.cpp">
       <Filter>02.GameObject\02.Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_Skybox.cpp">
-      <Filter>02.GameObject\01.BackGround\2.Sky</Filter>
+      <Filter>02.GameObject\99.BackGround\2.Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_Terrain.cpp">
-      <Filter>02.GameObject\01.BackGround\3.Terrain</Filter>
+      <Filter>02.GameObject\99.BackGround\3.Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tool\ImguiMgr.cpp">
       <Filter>10.Imgui\01.Mgr</Filter>
@@ -270,7 +288,13 @@
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp">
-      <Filter>02.GameObject\01.2D</Filter>
+      <Filter>02.GameObject\01.2DObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FileIO\ObjectIO.cpp">
+      <Filter>03.Creater\01.ObjectIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp">
+      <Filter>03.Creater\02.Creater</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

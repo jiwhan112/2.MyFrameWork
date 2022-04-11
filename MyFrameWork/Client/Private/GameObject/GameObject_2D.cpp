@@ -4,6 +4,7 @@
 CGameObject_2D::CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
 {
+	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_UI;
 
 }
 
@@ -32,8 +33,11 @@ HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	string str("GUI_Menu_Main_Curtain.png");
+	
+	strcpy_s(mTexDESC.mTextureKey, str.c_str());
 
-	mComTexture->Set_TextureMap(str);
+	mComTexture->Set_TextureMap(mTexDESC.mTextureKey);
+
 
 	return S_OK;
 }
@@ -50,7 +54,7 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 
 
 	mComTransform->Scaled(XMVectorSet(mUiDesc.mSizeX, mUiDesc.mSizeY, 1.f, 0.0f));
-	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * 0.5f), -mUiDesc.mPosY + (g_iWinCY * 0.5f), 0, 1.f));
+	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * mUiDesc.mPivot.x), -mUiDesc.mPosY + (g_iWinCY * mUiDesc.mPivot.y), 0, 1.f));
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return _int();
@@ -69,6 +73,13 @@ HRESULT CGameObject_2D::Render()
 
 
 	return S_OK;
+}
+
+void CGameObject_2D::Set_LoadTexDesc(const TEXTUREDESC & desc)
+{
+	memcpy(&mTexDESC, &desc, sizeof(TEXTUREDESC));
+	mComTexture->Set_TextureMap(mTexDESC.mTextureKey);
+
 }
 
 HRESULT CGameObject_2D::Set_Component()

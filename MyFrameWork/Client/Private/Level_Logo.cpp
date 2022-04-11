@@ -89,7 +89,7 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 
 	UIDESC desc = { g_iWinCX*0.5f,g_iWinCY *0.5f,
-		 g_iWinCX,g_iWinCY,_float2(0.5f, 0.5f),false
+		 g_iWinCX,g_iWinCY,_float2(0.5f, 0.5f),
 	};
 
 	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND));

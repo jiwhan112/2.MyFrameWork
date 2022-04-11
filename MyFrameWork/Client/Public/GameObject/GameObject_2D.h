@@ -36,15 +36,16 @@ public:
 	{
 		memcpy(&mUiDesc, &desc, sizeof(UIDESC));
 	}
-	const UIDESC& Get_UIDesc() const
-	{
-		return mUiDesc;
-	}
+	void Set_LoadTexDesc(const TEXTUREDESC& desc);
 
 	CTexture_map* Get_TextureMap() const
 	{
 		return mComTexture;
 	}
+
+	const UIDESC& Get_UIDesc() const { return mUiDesc; }
+	const TEXTUREDESC& Get_TextureDesc() const { return mTexDESC; }
+
 
 protected:
 	virtual HRESULT Set_Component()override;
@@ -57,9 +58,10 @@ private:
 
 private:
 	UIDESC			mUiDesc;
+	TEXTUREDESC		mTexDESC;
 
 
-	// 컴포넌트만 갈아끼우면 이미지가 바뀌게 수정
+	// 컴포넌트 내부 데이터만 갈아끼우면 이미지가 바뀌게 수정
 	CShader*		mComShader		= nullptr;
 	CRenderer*		mComRenderer	= nullptr;
 	CVIBuffer_Rect*	mComVIBuffer	= nullptr;

@@ -16,6 +16,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_pDeviceContext(rhs.m_pDeviceContext)
 	, mIsLife(rhs.mIsLife)
 	, mIsRenderer(rhs.mIsRenderer)
+	, mObjectTypeid(rhs.mObjectTypeid)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);

@@ -48,9 +48,9 @@
 
 #define GetSingle(SINGLETON) SINGLETON::GetInstance()
 
-#define  MAX_FILENAME	256;
-#define  MAX_STR			256;
-#define  MAX_EXENAME		32;
+#define  MAX_FILENAME		256
+#define  MAX_STR			256
+#define  MAX_EXENAME		32
 
 
 #define DIS_Up				0b00000001
