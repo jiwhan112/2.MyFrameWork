@@ -16,10 +16,10 @@ class CObjectIO final
 {
 
 private:
-	CObjectIO() = default;
-	CObjectIO(const CObjectIO& rhs) = default;
-	virtual~CObjectIO() = default;
-
+	explicit	CObjectIO() = default;
+	explicit	CObjectIO(const CObjectIO& rhs) = default;
+	virtual		~CObjectIO() = default;
+	
 public:
 	HRESULT NativeConstruct();
 
@@ -31,7 +31,7 @@ public:
 	HRESULT SaverData(ofstream* fwrite, E_OBJECT_DATA_TYPE type, const void * desc);
 
 	// 데이터를 불러와서 생성기에 넘김
-	HRESULT LoadObject(wstring FolderPath, wstring filename, CGameObject* obj);
+	HRESULT LoadObject(wstring FolderPath, wstring filename, char** pData, E_OBJECT_TYPE* type);
 
 
 private:
@@ -49,7 +49,6 @@ private:
 
 public:
 	static CObjectIO* Create();
-//	virtual CObjectIO* Clone(void* pArg);
 	virtual void Free() override;
 
 };

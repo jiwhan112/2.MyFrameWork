@@ -19,13 +19,12 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		return E_FAIL;
 	}
 
-
 	// 1. 파일을 연다
 	// 2. 오브젝트 별로 저장할 데이터 분기
 
 	switch (type)
 	{
-	case OBJECT_TYPE_UI:
+	case OBJECT_TYPE_2D:
 	{
 		CGameObject_2D* oobj = static_cast<CGameObject_2D*>(obj);
 		SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
@@ -73,41 +72,42 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void
 
 }
 
-HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, CGameObject* obj)
+HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData, E_OBJECT_TYPE* type)
 {
 	ifstream fRead(FolderPath + L"\\" + filename, ios::in | ios::binary);
 	if (fRead.is_open() == false)
 	{
 		return E_FAIL;
 	}
+	_uint bufsize = 0;
 
 	char* objType  = NEW char[sizeof(E_OBJECT_DATA_TYPE)];
-	char* DataLoad = nullptr;
 
 	// 데이터 가장 위쪽에 현재 저장된 타입의 ID 해석.
 	fRead.read(objType, sizeof(E_OBJECT_DATA_TYPE));
 
 	E_OBJECT_TYPE	TypeDESC;
 	memcpy(&TypeDESC, objType, sizeof(E_OBJECT_TYPE));
+	*type = TypeDESC;
 
 	// 타입에 따라 오브젝트 해석방식이 달라짐
-	switch (TypeDESC)
+	switch (*type)
 	{
-	case OBJECT_TYPE_UI:
+	case OBJECT_TYPE_2D:
 	{
 		// 로드 확인 완료
-
-		DataLoad = NEW char[sizeof(UIDESC) + sizeof(TEXTUREDESC)];
+		bufsize = sizeof(UIDESC) + sizeof(TEXTUREDESC);
+		*pData = NEW char[bufsize];
 		UIDESC uiDesc;
 		TEXTUREDESC texDesc;
+		int offset = sizeof(UIDESC);
 
-		fRead.read(DataLoad, sizeof(UIDESC));
-		memcpy(&uiDesc, DataLoad, sizeof(UIDESC));
+		fRead.read(*pData, sizeof(UIDESC));
+		memcpy(&uiDesc, *pData, sizeof(UIDESC));
 
-		fRead.read(DataLoad, sizeof(TEXTUREDESC));
-		memcpy(&texDesc, DataLoad, sizeof(TEXTUREDESC));
-
-		// 생성기에 넣어준다??
+		fRead.read(*pData + offset, sizeof(TEXTUREDESC));
+		memcpy(&texDesc, *pData+ offset, sizeof(TEXTUREDESC));
+		int a = 0;
 		
 	}
 	break;
@@ -118,7 +118,7 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, CGameObject*
 		break;
 	}
 	Safe_Delete_Array(objType);
-	Safe_Delete_Array(DataLoad);
+//	Safe_Delete_Array(DataLoad);
 
 	return S_OK;
 

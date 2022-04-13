@@ -58,12 +58,13 @@ HRESULT CImgui_UI::Render_UI()
 
 				if (ImGui::Button("SaveTest"))
 				{
-					mObjectIO->SaverObject(OBJECT_TYPE_UI, STR_FILEPATH_RESOURCE_DAT_L,L"name1.dat", mCurrentUIObject);
+					mObjectIO->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L,L"name1.dat", mCurrentUIObject);
 
 				}
-				if (ImGui::Button("LoadTest"))
+
+				if (ImGui::Button("LoadTest2"))
 				{
-					mObjectIO->LoadObject(STR_FILEPATH_RESOURCE_DAT_L, L"name1.dat", mCurrentUIObject);
+					GetSingle(CGameObject_Creater)->LoaderDatFile_For_PrototypeObject();
 				}
 
 				break;

@@ -74,6 +74,18 @@ CGameObject* CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar * p
 	return pGameObject;
 }
 
+CGameObject * CObject_Manager::Create_GameObject(const _tchar * pPrototypeTag, void * pArg)
+{
+	CGameObject*	pPrototype = Find_Prototype(pPrototypeTag);
+	if (nullptr == pPrototype)
+		return nullptr;
+
+	CGameObject*	pGameObject = pPrototype->Clone(pArg);
+	if (nullptr == pGameObject)
+		return nullptr;
+	return pGameObject;
+}
+
 HRESULT CObject_Manager::Clear_LevelObject(_uint iLevelIndex)
 {
 	if (iLevelIndex >= m_iNumLevels)

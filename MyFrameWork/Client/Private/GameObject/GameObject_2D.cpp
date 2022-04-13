@@ -4,7 +4,7 @@
 CGameObject_2D::CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
-	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_UI;
+	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_2D;
 
 }
 

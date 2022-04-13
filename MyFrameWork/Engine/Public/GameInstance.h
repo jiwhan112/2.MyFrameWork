@@ -50,6 +50,7 @@ public: /* For.Object_Manager */
 	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIndex = 0);
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	CGameObject* Add_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg = nullptr);
+	CGameObject* Create_GameObject(const _tchar* pPrototypeTag, void* pArg = nullptr);
 
 public: /* For. PipeLine Single*/
 	HRESULT SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);

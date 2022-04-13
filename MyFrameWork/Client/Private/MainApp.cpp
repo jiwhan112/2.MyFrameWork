@@ -18,12 +18,15 @@ CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
 	GetSingle(CImguiMgr)->GetInstance();
+	GetSingle(CGameObject_Creater)->GetInstance();
+
 	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CMainApp::NativeConstruct()
 {
 	FAILED_CHECK(Ready_Initialize());
+	GetSingle(CGameObject_Creater)->Set_Device(m_pDevice,m_pDeviceContext);
 	FAILED_CHECK(Ready_Prototype_Components());
 	FAILED_CHECK(Ready_Prototype_GameObject());
 	FAILED_CHECK(Open_Level(LEVEL_LOGO));	
@@ -144,6 +147,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Filter.bmp"), 1)));
 
 	// ÅØ½ºÃ³ ¸Ê ÄÄÆ÷³ÍÆ®
+	
 	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(L"..\\Bin\\Resources\\PathTxT\\SpritePath.txt","png");
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
@@ -226,6 +230,8 @@ void CMainApp::Free()
 	Safe_Release(m_pGameInstance);
 
 	GetSingle(CImguiMgr)->DestroyInstance();
+	GetSingle(CGameObject_Creater)->DestroyInstance();
 
+	
 	CGameInstance::Release_Engine();
 }

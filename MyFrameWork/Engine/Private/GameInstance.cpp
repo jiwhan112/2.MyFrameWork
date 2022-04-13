@@ -183,6 +183,14 @@ CGameObject* CGameInstance::Add_GameObject(_uint iLevelIndex, const _tchar * pLa
 	return m_pObject_Manager->Add_GameObject(iLevelIndex, pLayerTag, pPrototypeTag, pArg);
 }
 
+CGameObject * CGameInstance::Create_GameObject(const _tchar * pPrototypeTag, void * pArg)
+{
+	if (m_pObject_Manager == nullptr)
+		return nullptr;
+
+	return m_pObject_Manager->Create_GameObject(pPrototypeTag, pArg);
+}
+
 HRESULT CGameInstance::SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix)
 {
 	NULL_CHECK_HR(m_pPipeLine);

@@ -19,6 +19,9 @@ public:
 	HRESULT			Reserve_Container(_uint iNumLevels);
 	HRESULT			Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype); /* 원형객체를 추가한다. */
 	CGameObject*	Add_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg); /* 사본(게임내에 출현해야할 객체) 객체를 추가한다. */
+
+	// 원형오브젝트를 클론해서 넘겨준다.
+	CGameObject*	Create_GameObject(const _tchar* pPrototypeTag, void* pArg);
 	HRESULT			Clear_LevelObject(_uint iLevelIndex);
 public:
 	_int Tick(_double TimeDelta);

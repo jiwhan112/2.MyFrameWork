@@ -31,9 +31,10 @@ enum E_OBJECT_DATA_TYPE
 
 
 // 오브젝트 별 파일 정보
+// 로드로 만드는 오브젝트는 모두 깡통오브젝트이다.
 enum E_OBJECT_TYPE
 {
-	OBJECT_TYPE_UI,
+	OBJECT_TYPE_2D,
 	OBJECT_TYPE_3D,
 	OBJECT_TYPE_TERRAIN,
 	OBJECT_TYPE_END,
@@ -75,3 +76,5 @@ typedef struct tag_TEXTUREDESC
 #define  STR_FILEPATH_RESOURCE_3DMODEL_L		L"..\\Bin\\Resources\\TestFBX"
 #define  STR_FILEPATH_RESOURCE_PATH_L			L"..\\Bin\\Resources\\PathTxT"
 #define  STR_FILEPATH_RESOURCE_L				L"..\\Bin\\Resources"
+
+#define  STR_FILEPATH_RESOURCE_DATPATHTXT_L		L"..\\Bin\\Resources\\PathTxT\\DatPath.txt"
