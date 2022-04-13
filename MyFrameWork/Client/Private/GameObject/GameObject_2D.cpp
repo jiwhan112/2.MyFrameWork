@@ -2,24 +2,16 @@
 #include "GameObject/GameObject_2D.h"
 
 CGameObject_2D::CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
-	: CGameObject(pDevice, pDeviceContext)
+	: CGameObject_Base(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_UI;
 
 }
 
 CGameObject_2D::CGameObject_2D(const CGameObject_2D& rhs)
-	: CGameObject(rhs)
+	: CGameObject_Base(rhs)
 {
-	mComShader = rhs.mComShader;
-	mComRenderer = rhs.mComRenderer;
-	mComVIBuffer = rhs.mComVIBuffer;
-	mComTexture = rhs.mComTexture;
 
-	Safe_AddRef(mComShader);
-	Safe_AddRef(mComRenderer);
-	Safe_AddRef(mComVIBuffer);
-	Safe_AddRef(mComTexture);
 }
 
 HRESULT CGameObject_2D::NativeConstruct_Prototype()
@@ -32,11 +24,10 @@ HRESULT CGameObject_2D::NativeConstruct_Prototype()
 HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	string str("GUI_Menu_Main_Curtain.png");
-	
-	strcpy_s(mTexDESC.mTextureKey, str.c_str());
+	string str("GUI_Menu_Main_Curtain.png");	
+	strcpy_s(mTexDESC.mTextureKey_Diffuse, str.c_str());
 
-	mComTexture->Set_TextureMap(mTexDESC.mTextureKey);
+	mComTexture->Set_TextureMap(mTexDESC.mTextureKey_Diffuse);
 
 
 	return S_OK;
@@ -65,22 +56,15 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_2D::Render()
 {
-	FAILED_CHECK(__super::Render());
-	
+
 	FAILED_CHECK(Set_ConstantTable_UI());
-	FAILED_CHECK(Set_ConstantTable_Tex(0));
-	FAILED_CHECK(mComVIBuffer->Render(mComShader, 0));
-
-
+	FAILED_CHECK(Set_ConstantTable_Tex());
+	FAILED_CHECK(Set_ConstantTable_Light());
+	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 	return S_OK;
 }
 
-void CGameObject_2D::Set_LoadTexDesc(const TEXTUREDESC & desc)
-{
-	memcpy(&mTexDESC, &desc, sizeof(TEXTUREDESC));
-	mComTexture->Set_TextureMap(mTexDESC.mTextureKey);
 
-}
 
 HRESULT CGameObject_2D::Set_Component()
 {
@@ -113,18 +97,6 @@ HRESULT CGameObject_2D::Set_ConstantTable_UI()
 	return S_OK;
 }
 
-HRESULT CGameObject_2D::Set_ConstantTable_World()
-{
-	return S_OK;
-}
-
-HRESULT CGameObject_2D::Set_ConstantTable_Tex(_uint texid)
-{
-	// 텍스처 넘기기
-	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
-	return S_OK;
-}
-
 
 CGameObject_2D * CGameObject_2D::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -154,9 +126,6 @@ CGameObject_2D* CGameObject_2D::Clone(void* pArg)
 void CGameObject_2D::Free()
 {
 	__super::Free();
-	Safe_Release(mComShader);
-	Safe_Release(mComRenderer);
-	Safe_Release(mComVIBuffer);
-	Safe_Release(mComTexture);
+
 
 }

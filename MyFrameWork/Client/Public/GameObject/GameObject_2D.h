@@ -1,21 +1,12 @@
 #pragma once
 
-#include "GameObject.h"
-
-// 2D에 해당하는 UI / 파티클을 만들기 위한 오브젝트
-
-BEGIN(Engine)
-class CShader;
-class CRenderer;
-class CVIBuffer_Rect;
-class CTexture;
-END
+#include "GameObject_Base.h"
 
 BEGIN(Client)
 
-
+// 2D 오브젝트용 부모클래스
 class CGameObject_2D final:
-	public CGameObject
+	public CGameObject_Base
 {
 protected:
 	explicit CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -36,37 +27,17 @@ public:
 	{
 		memcpy(&mUiDesc, &desc, sizeof(UIDESC));
 	}
-	void Set_LoadTexDesc(const TEXTUREDESC& desc);
-
-	CTexture_map* Get_TextureMap() const
-	{
-		return mComTexture;
-	}
-
 	const UIDESC& Get_UIDesc() const { return mUiDesc; }
-	const TEXTUREDESC& Get_TextureDesc() const { return mTexDESC; }
-
 
 protected:
 	virtual HRESULT Set_Component()override;
 
 private:
-	HRESULT Set_ConstantTable_UI();
-	HRESULT Set_ConstantTable_World();
-	HRESULT Set_ConstantTable_Tex(_uint texid);
+	virtual HRESULT Set_ConstantTable_UI();
 
 
 private:
 	UIDESC			mUiDesc;
-	TEXTUREDESC		mTexDESC;
-
-
-	// 컴포넌트 내부 데이터만 갈아끼우면 이미지가 바뀌게 수정
-	CShader*		mComShader		= nullptr;
-	CRenderer*		mComRenderer	= nullptr;
-	CVIBuffer_Rect*	mComVIBuffer	= nullptr;
-	CTexture_map*	mComTexture		= nullptr;
-//	CTexture*		mComTexture		= nullptr;
 
 public:
 	static CGameObject_2D* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

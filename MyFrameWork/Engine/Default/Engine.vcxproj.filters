@@ -103,6 +103,15 @@
     <Filter Include="01.Utility\09.FileInfo">
       <UniqueIdentifier>{4728858e-21a8-4477-b651-e17a5695617f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\03.HierarchyNode">
+      <UniqueIdentifier>{de9996fd-f0b7-4893-afeb-620c14f4956c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation">
+      <UniqueIdentifier>{35bfa7f0-1ff9-40a7-b47c-899c5d08b7aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation\Channel">
+      <UniqueIdentifier>{50620e33-99be-4faf-8282-0dfd63f7af76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -197,6 +206,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Texture_map.cpp">
       <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HierarchyNode.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\03.HierarchyNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Channel.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +337,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Texture_map.h">
       <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HierarchyNode.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\03.HierarchyNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

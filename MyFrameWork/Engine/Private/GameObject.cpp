@@ -55,6 +55,7 @@ HRESULT CGameObject::NativeConstruct(void * pArg)
 
 _int CGameObject::Tick(_double TimeDelta)
 {
+	// 부모 움직임
 	return _int();
 }
 
@@ -65,6 +66,7 @@ _int CGameObject::LateTick(_double TimeDelta)
 
 HRESULT CGameObject::Render()
 {
+
 	return S_OK;
 }
 

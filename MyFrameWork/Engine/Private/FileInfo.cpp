@@ -108,6 +108,7 @@ static int isFileOrDir(_finddatai64_t fd)
 	#define _A_ARCH   0x20 // Archive file
 	*/
 
+	// 파일인지 디렉토리인지 확인
 
 	if (fd.name[0] == '.')
 		return 2;

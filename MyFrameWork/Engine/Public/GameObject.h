@@ -24,13 +24,22 @@ public:
 public:
 	class CTransform*	Get_TransformCom() const { return mComTransform; }
 
-	bool GetIsLife() const { return mIsLife; }
-	bool GetIsRenderer() const { return mIsRenderer; }
-	void SetDead() { mIsLife = false; }
+	bool Get_IsLife() const { return mIsLife; }
+	bool Get_IsRenderer() const { return mIsRenderer; }
+	void Set_Dead() { mIsLife = false; }
+
+	void Set_isVisible(bool b) { mIsRenderer = b; }
 
 	const _uint& Get_ObjectTypeID() const
 	{
 		return mObjectTypeid;
+	}
+
+	CGameObject* Get_Parent()const
+	{
+		if (mParrent)
+			return mParrent;
+		return nullptr;
 	}
 
 protected:
@@ -47,6 +56,8 @@ protected:
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
 protected:
+	CGameObject* mParrent = nullptr;
+
 	class CTransform*		mComTransform = nullptr;
 	static const _tchar*	mComTag_Transform;
 
@@ -55,7 +66,6 @@ protected:
 	bool				mIsRenderer = true;
 
 	_uint				mObjectTypeid = 99;
-
 
 protected:
 	CComponent*	Find_Component(const _tchar* pComponentTag);

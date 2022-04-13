@@ -8,6 +8,7 @@
 
 #include "Camera_Client.h"
 #include "GameObject/GameObject_2D.h"
+#include "GameObject/GameObject_MyTerrain.h"
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
 #include "GameObject_FBX.h"
@@ -25,10 +26,7 @@ HRESULT CMainApp::NativeConstruct()
 	FAILED_CHECK(Ready_Initialize());
 	FAILED_CHECK(Ready_Prototype_Components());
 	FAILED_CHECK(Ready_Prototype_GameObject());
-	FAILED_CHECK(Open_Level(LEVEL_LOGO));
-
-
-	
+	FAILED_CHECK(Open_Level(LEVEL_LOGO));	
 	return S_OK;
 }
 
@@ -113,9 +111,15 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
 		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
+
+	// 높이맵으로 처리
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
+	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
 	
+	// 임의로 처리
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
+
 	// _matrix			TransformMatrix;
 	// TransformMatrix = XMMatrixIdentity();
 	// TransformMatrix = XMMatrixScaling(3, 3, 3) * XMMatrixRotationY(XMConvertToRadians(180.0f));
@@ -184,12 +188,16 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_SKY),
 		CGameObject_Skybox::Create(m_pDevice, m_pDeviceContext)));
 
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
-		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
-
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
-	//	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
+	 FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
+	 	CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
+	// 
+	// FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
+	// 	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
 	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
+		CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
+
+
 	return S_OK;
 }
 

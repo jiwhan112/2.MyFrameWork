@@ -169,13 +169,23 @@
     <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h" />
     <ClInclude Include="..\Public\FIleIO\ObjectIO.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Base.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\GameObject_BackGround.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_FBX.h" />
+    <ClInclude Include="..\Public\GameObject_FBX_Ani.h" />
     <ClInclude Include="..\Public\GameObject_Skybox.h" />
-    <ClInclude Include="..\Public\GameObject_Terrain.h" />
+    <ClInclude Include="..\Public\GameObject_Terrain.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loader.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -207,13 +217,23 @@
     <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp" />
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\GameObject_BackGround.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\GameObject_FBX_Ani.cpp" />
     <ClCompile Include="..\Private\GameObject_FBX.cpp" />
     <ClCompile Include="..\Private\GameObject_Skybox.cpp" />
-    <ClCompile Include="..\Private\GameObject_Terrain.cpp" />
+    <ClCompile Include="..\Private\GameObject_Terrain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loader.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />

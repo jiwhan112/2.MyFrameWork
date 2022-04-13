@@ -2,6 +2,16 @@
 
 namespace Engine
 {
+	// KeyFrame
+	typedef struct tagKeyFrame
+	{
+		// 키프레임은 각 상태와 시간을 저장한다.
+		_float3		vScale;
+		_float4		vRotation;
+		_float3		vPosition;
+		_double		Time;
+	}KEYFRAME;
+
 	// MeshMaterialDESC
 	typedef struct tagMeshMaterialDesc
 	{

@@ -51,7 +51,6 @@ HRESULT CImgui_UI::Render_UI()
 				if (ImGui::Button("LoadTest"))
 				{
 					CObjectIO::LoadObject(STR_FILEPATH_DATA, "name.dat", mCurrentUIObject);
-
 				}
 
 				break;
@@ -116,7 +115,6 @@ HRESULT CImgui_UI::Edit_UIObject()
 	IMGUI_TREE_BEGIN("Pivot")
 	{
 		ImGui::SliderFloat2("PivotXY", (float*)&myDesc.mPivot, 0.0f, 1.0f);
-		ImGui::SliderFloat2("PivotXY", (float*)&myDesc.mPivot, 0.0f, 1.0f);
 		IMGUI_TREE_END
 	}
 	mCurrentUIObject->Set_LoadUIDesc(myDesc);
@@ -145,7 +143,7 @@ HRESULT CImgui_UI::Edit_Texture()
 			//	mUIObject->Get_TextureMap()->Set_TextureMap(selectTeture);
 
 				TEXTUREDESC tex;
-				strcpy_s(tex.mTextureKey, selectTeture.c_str());
+				strcpy_s(tex.mTextureKey_Diffuse, selectTeture.c_str());
 				mCurrentUIObject->Set_LoadTexDesc(tex);
 
 			}

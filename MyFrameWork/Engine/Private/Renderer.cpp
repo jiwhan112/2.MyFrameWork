@@ -53,8 +53,11 @@ HRESULT CRenderer::Render_Priority()
 	{
 		if (nullptr != pRenderObject)
 		{
-			if (FAILED(pRenderObject->Render()))
-				return E_FAIL;
+			if (pRenderObject->Get_IsRenderer())
+			{
+				if (FAILED(pRenderObject->Render()))
+					return E_FAIL;
+			}
 		}
 		Safe_Release(pRenderObject);
 	}
@@ -67,10 +70,14 @@ HRESULT CRenderer::Render_NonAlpha()
 {
 	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND])
 	{
+
 		if (nullptr != pRenderObject)
 		{
-			if (FAILED(pRenderObject->Render()))
-				return E_FAIL;
+			if (pRenderObject->Get_IsRenderer())
+			{
+				if (FAILED(pRenderObject->Render()))
+					return E_FAIL;
+			}
 		}
 		Safe_Release(pRenderObject);
 	}
@@ -90,8 +97,12 @@ HRESULT CRenderer::Render_Alpha()
 	{
 		if (nullptr != pRenderObject)
 		{
-			if (FAILED(pRenderObject->Render()))
-				return E_FAIL;
+
+			if (pRenderObject->Get_IsRenderer())
+			{
+				if (FAILED(pRenderObject->Render()))
+					return E_FAIL;
+			}
 		}
 		Safe_Release(pRenderObject);
 	}
@@ -110,8 +121,12 @@ HRESULT CRenderer::Render_UI()
 	{
 		if (nullptr != pRenderObject)
 		{
-			if (FAILED(pRenderObject->Render()))
-				return E_FAIL;
+
+			if (pRenderObject->Get_IsRenderer())
+			{
+				if (FAILED(pRenderObject->Render()))
+					return E_FAIL;
+			}
 		}
 		Safe_Release(pRenderObject);
 	}

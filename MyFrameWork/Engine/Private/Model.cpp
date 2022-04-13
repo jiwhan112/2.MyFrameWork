@@ -2,6 +2,9 @@
 #include "MeshContainer.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "HierarchyNode.h"
+#include "Animation.h"
+#include "Channel.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -16,8 +19,12 @@ CModel::CModel(const CModel & rhs)
 	, meModelType(rhs.meModelType)
 	, mNumMaterials(rhs.mNumMaterials)
 	, mVectorMaterials(rhs.mVectorMaterials)
+	, miCurrentAnim(rhs.miCurrentAnim)
+	, mNumAnimations(rhs.mNumAnimations)
+	, mVectorAnimations(rhs.mVectorAnimations)
 
 {
+	
 	// 재질 벡터 복사
 	for (auto& mmatrial : mVectorMaterials)
 	{
@@ -39,6 +46,12 @@ CModel::CModel(const CModel & rhs)
 		}
 
 	}
+
+	for (auto& ani : mVectorAnimations)
+	{
+		Safe_AddRef(ani);
+	}
+
 
 }
 
@@ -79,6 +92,37 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE type, const char * ModelP
 	FAILED_CHECK(Ready_Materials(ModelPath));
 	FAILED_CHECK(Ready_MeshContainers());
 
+	// 애니메이션이 없는 경우
+	if (meModelType == CModel::MODEL_NOANI)
+	{
+		for (_uint i =0; i<mNumMaterials;++i)
+		{
+			for (auto& a: mpVectorMeshContainers[i])
+			{
+				a->Ready_VertexIndexBuffer(meModelType, defaultMatrix);
+			}
+		}
+		return S_OK;
+	}
+
+	// 애니메이션이 있다면 계층 / 애니메이션 / 오프셋 모두 세팅
+	FAILED_CHECK(Ready_HierarchyNodes(mScene->mRootNode,nullptr,0));
+	sort(mVectorHierarchyNodes.begin(), mVectorHierarchyNodes.end(), [](CHierarchyNode* a, CHierarchyNode* b)
+	{
+		// 오름차순 정렬
+		return a->Get_Depth() < b->Get_Depth();
+	});
+
+	FAILED_CHECK(Ready_OffsetMatrices());
+
+	for (_uint i = 0; i < mNumMaterials; ++i)
+	{
+		for (auto& pMeshContainer : mpVectorMeshContainers[i])
+			pMeshContainer->Ready_VertexIndexBuffer(meModelType, defaultMatrix);
+	}
+
+	FAILED_CHECK(Ready_Animation());
+
 	return S_OK;
 }
 
@@ -102,7 +146,7 @@ HRESULT CModel::Bind_OnShader(CShader * pShader, _uint iMaterialIndex, aiTexture
 	return pTexture->SetUp_OnShader(pShader, pValueName);
 }
 
-// 재질마다 다른 셰이더로 그려줄 수 있음.
+// 재질마다 다른 셰이더로 그려줄 수 있음.`
 HRESULT CModel::Render(CShader* shader,_uint pass, _uint iMaterialIndex)
 {
 	// 바인딩이 끝나면 메쉬의 개수가 아닌 재질의 개수로 루프를 돈다.
@@ -138,7 +182,7 @@ HRESULT CModel::Ready_MeshContainers()
 	// 메시 개수 만큼
 	for (_uint i = 0; i < mNumMeshContainer; ++i)
 	{
-		CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pDeviceContext, meModelType, mScene->mMeshes[i], XMLoadFloat4x4(&mTransformMatrix));
+		CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pDeviceContext, mScene->mMeshes[i]);
 		if (nullptr == pMeshContainer)
 			return E_FAIL;
 
@@ -193,6 +237,156 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 	}
 
 	return S_OK;
+}
+
+HRESULT CModel::Ready_HierarchyNodes(aiNode * pAiNode, CHierarchyNode * pParent, _uint iDepth)
+{
+	if (nullptr == pAiNode)
+		return E_FAIL;
+
+	// 계층 구조를 만든다.
+	_float4x4 TransformMat;
+	memcpy(&TransformMat,&pAiNode->mTransformation,sizeof(_float4x4));
+
+	// ai노드 데이터로 루트노드부터 부모 -> 자식 관계를 만들어준다.
+	CHierarchyNode* node = CHierarchyNode::Create(pAiNode->mName.data, TransformMat, iDepth, pParent);
+	mVectorHierarchyNodes.push_back(node);
+
+	// 자식에 같은 부모를 넣오면서 처리한다.
+
+	for (_uint i=0; i<pAiNode->mNumChildren; ++i)
+	{
+		Ready_HierarchyNodes(pAiNode, node, iDepth + 1);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_OffsetMatrices()
+{
+	// 뼈에 있는 Offset 행렬 세팅
+	for (_uint i=0; i<mNumMaterials;++i)
+	{
+		for (auto& mesh : mpVectorMeshContainers[i])
+		{
+			_uint numBones = mesh->Get_NumBones();
+			aiMesh* pAiMesh = mesh->Get_AIMesh();
+
+			for (_uint j=0; j<numBones; ++j)
+			{
+				aiBone* pBone = pAiMesh->mBones[j];
+				CHierarchyNode* pHier = Find_HeirarchyNode(pBone->mName.data);
+
+				if (nullptr == pHier)
+					return E_FAIL;
+				_float4x4 offsetMat;
+				memcpy(&offsetMat , &pBone->mOffsetMatrix,sizeof(_float4x4));
+
+				pHier->Set_OffsetMat(offsetMat);
+				mesh->Add_HierarchyNode(pHier);
+			}
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Animation()
+{
+	if (mScene == nullptr)
+		return E_FAIL;
+
+	// 애니메이션 개수만큼 애니메이션 생성
+	mNumAnimations = mScene->mNumAnimations;
+	for (_uint i=0;i<mNumAnimations;++i)
+	{
+		// aiAnimation 정보로 애니메이션 생성 
+		aiAnimation* pAiani = mScene->mAnimations[i];
+		CAnimation* pAni = CAnimation::Create(pAiani->mName.data, pAiani->mDuration, pAiani->mTicksPerSecond);
+		if (nullptr == pAni)
+			return E_FAIL;
+
+		pAni->Reserve(pAiani->mNumChannels);
+
+		for (_uint j=0;j<pAiani->mNumChannels;++j)
+		{
+			// 각 애니메이션의 뼈 개수 만큼 루프해서 채널의 정보를 저장한다.
+
+			// aiNodeAnim 애니메이션 노드 == 채널
+			aiNodeAnim* pAniChannel = pAiani->mChannels[j];
+			CHierarchyNode* pNode = Find_HeirarchyNode(pAniChannel->mNodeName.data);
+			if (pNode == nullptr)
+				return E_FAIL;
+
+			CChannel* pChannel = CChannel::Create(pAniChannel->mNodeName.data, pNode);
+			if (pChannel == nullptr)
+				return E_FAIL;
+
+			_uint NumKetyrames = max(pAniChannel->mNumScalingKeys, pAniChannel->mNumRotationKeys);
+			NumKetyrames = max(NumKetyrames, pAniChannel->mNumPositionKeys);
+
+			pChannel->Reserve(NumKetyrames);
+
+			_float3 vScale;
+			_float4 vRot;
+			_float3 vPos;
+			_double Time;
+			
+			for (_uint k = 0; k < NumKetyrames; i++)
+			{
+				KEYFRAME* pKeyFrame = NEW KEYFRAME;
+				ZeroMemory(pKeyFrame,sizeof(KEYFRAME));
+
+				// 현재 키 탐색
+				if (pAniChannel->mNumScalingKeys > k)
+				{
+					// 크기 / 시간
+					memcpy(&vScale, &pAniChannel->mScalingKeys[k].mValue, sizeof(_float3));
+					Time = pAniChannel->mScalingKeys[k].mTime;
+				}
+				if (pAniChannel->mNumRotationKeys > k)
+				{
+					// 회전 값은 반대로 정렬되어있어서 직접 넣는다.
+					vRot.x = pAniChannel->mRotationKeys[k].mValue.x;
+					vRot.y = pAniChannel->mRotationKeys[k].mValue.y;
+					vRot.z = pAniChannel->mRotationKeys[k].mValue.z;
+					vRot.w = pAniChannel->mRotationKeys[k].mValue.w;
+					Time = pAniChannel->mRotationKeys[k].mTime;
+
+				}
+				if (pAniChannel->mNumScalingKeys > k)
+				{
+					// 위치 / 시간
+					memcpy(&vScale, &pAniChannel->mPositionKeys[k].mValue, sizeof(_float3));
+					Time = pAniChannel->mPositionKeys[k].mTime;
+				}
+				pKeyFrame->vScale = vScale;
+				pKeyFrame->vRotation = vRot;
+				pKeyFrame->vPosition = vPos;
+				pKeyFrame->Time = Time;
+
+				pChannel->Add_KeyFrame(pKeyFrame);
+			}
+			// 애니메이션의 뼈 정보 삽입
+			pAni->Add_Channel(pChannel);
+		}
+		// 애니메이션 삽입
+		mVectorAnimations.push_back(pAni);
+	}
+
+	return S_OK;
+}
+
+CHierarchyNode * CModel::Find_HeirarchyNode(const char * name)
+{
+	auto iter = find_if(mVectorHierarchyNodes.begin(), mVectorHierarchyNodes.end(), [&](CHierarchyNode* node)
+	{
+		return !strcmp(node->Get_Name(),name);
+	});
+	if (iter == mVectorHierarchyNodes.end())
+		return nullptr;
+
+	return *iter;
+
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_MODEL_TYPE eModelType, const char * modelPath, const char * modelName, _fmatrix defaultMatrix)
@@ -253,10 +447,18 @@ void CModel::Free()
 	if (false == m_isCloned)
 	{
 		Safe_Delete_Array(mpVectorMeshContainers);
+		mImporter.FreeScene();
+
 	}
 
 	// 하이어라키 해제
+	for (auto& pNode : mVectorHierarchyNodes)
+		Safe_Release(pNode);
 
-	mImporter.FreeScene();
+
+	for (auto& ani : mVectorAnimations)
+		Safe_Release(ani);
+
+
 
 }

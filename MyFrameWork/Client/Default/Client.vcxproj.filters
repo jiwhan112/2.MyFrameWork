@@ -85,12 +85,6 @@
     <Filter Include="02.GameObject\99.BackGround">
       <UniqueIdentifier>{f3e6f898-9cb3-4b56-a2f4-43df4f56ed11}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.BackGround\0.BaseObject">
-      <UniqueIdentifier>{14ac5b3b-8fde-4a60-b332-c31b71923ded}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.BackGround\1.UI">
-      <UniqueIdentifier>{5d327b76-64a1-4aca-a783-fc6559dc4e33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\99.BackGround\2.Sky">
       <UniqueIdentifier>{d5f97766-fe7b-4871-bd7c-3088f95304b0}</UniqueIdentifier>
     </Filter>
@@ -108,6 +102,18 @@
     </Filter>
     <Filter Include="03.Creater\02.Creater">
       <UniqueIdentifier>{f7319978-bbc4-4c25-82f7-916d50e42b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00.ObjectBase">
+      <UniqueIdentifier>{7105b8a6-3552-4ab3-832c-6f277a2ca3c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base">
+      <UniqueIdentifier>{ed446d0b-9acf-4e48-b684-61f319fea9c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\1.Terrain">
+      <UniqueIdentifier>{38065ed6-bb51-4b2f-9304-aff9d4922ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\2.Animation">
+      <UniqueIdentifier>{fe15df71-1d17-4bf5-bda0-ab386de44fec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +219,18 @@
     <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h">
       <Filter>03.Creater\02.Creater</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject_FBX_Ani.h">
+      <Filter>02.GameObject\03.Objects\03FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
+      <Filter>02.GameObject\02.3DObject\1.Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Base.h">
+      <Filter>02.GameObject\00.ObjectBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D.h">
+      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -295,6 +313,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp">
       <Filter>03.Creater\02.Creater</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject_FBX_Ani.cpp">
+      <Filter>02.GameObject\03.Objects\03FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
+      <Filter>02.GameObject\02.3DObject\1.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp">
+      <Filter>02.GameObject\00.ObjectBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

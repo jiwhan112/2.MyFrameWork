@@ -18,7 +18,8 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 HRESULT CLevel_Tool::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
-
+	
+	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(ReadyTools());
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
@@ -31,7 +32,7 @@ _int CLevel_Tool::Tick(_double TimeDelta)
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	GetSingle(CImguiMgr)->Update(TimeDelta);
-	
+
 
 	return UPDATENONE;
 }
@@ -71,12 +72,33 @@ HRESULT CLevel_Tool::ReadyTools()
 	return S_OK;
 }
 
+HRESULT CLevel_Tool::Ready_Light()
+{
+	// ºû ¼¼ÆÃ
+	// ½Ì±ÛÅÏÀÌ¶ó »èÁ¦¾ÈµÊ Á¶½É
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+
+	LIGHTDESC		LightDesc;
+	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+
+	LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	LightDesc.vDirection = _float4(0, -1.f, 0, 0.f);
+
+	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDeviceContext, LightDesc)))
+		return E_FAIL;
+	return S_OK;
+}
+
 HRESULT CLevel_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CameraDesc));
 
-	CameraDesc.vEye = _float3(0.f, 0.0f, -5.f);
+	CameraDesc.vEye = _float3(0, 5.0f, -5.0f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
@@ -87,6 +109,7 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.TransformDesc.SpeedPersec = 10.f;
 	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
+
 
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
 	return S_OK;
@@ -101,15 +124,25 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		_float2(0.5f, 0.5f),
 	};
 
+	//CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND));
+	//CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);
+	//uiobj->Set_LoadUIDesc(desc);
+	//mUI->Set_UIObject(uiobj);
 
 
-	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND));
-	CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);
-	uiobj->Set_LoadUIDesc(desc);
-	mUI->Set_UIObject(uiobj);
+//	CGameObject* obj2 = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MYTERRAIN));
+//	CGameObject_MyTerrain* uiobj = static_cast<CGameObject_MyTerrain*>(obj);
+
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
+
+	CGameObject* test= nullptr;
+	test = (GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MYTERRAIN)));
+	test->Set_isVisible(false);
 
 	return S_OK;
 }
+
+
 
 CLevel_Tool * CLevel_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

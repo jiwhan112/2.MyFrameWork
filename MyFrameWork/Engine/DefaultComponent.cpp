@@ -28,7 +28,7 @@ CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceCon
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
-		MSGBOX("Failed to Creating CImgui_Base");
+		MSGBOX("Failed to Creating CModel");
 		Safe_Release(pInstance);
 	}
 
@@ -41,7 +41,7 @@ CModel * CModel::Clone(void * pArg)
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{
-		MSGBOX("Failed to Creating CImgui_Base");
+		MSGBOX("Failed to Creating CModel");
 		Safe_Release(pInstance);
 	}
 

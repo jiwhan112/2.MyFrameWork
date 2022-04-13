@@ -13,6 +13,7 @@ public:
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(const _tchar* pHeightMap);
+	virtual HRESULT NativeConstruct_Prototype(_uint x,_uint z);
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
 private:
@@ -21,6 +22,7 @@ private:
 
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _tchar* HeightMap);
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, _uint x, _uint z);
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
 };

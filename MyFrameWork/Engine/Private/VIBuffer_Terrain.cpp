@@ -7,8 +7,11 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain & rhs)
 	: CVIBuffer(rhs)
+	, miNumX(rhs.miNumX)
+	, miNumZ(rhs.miNumZ)
 
 {
+	
 }
 
 HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
@@ -161,6 +164,141 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	return S_OK;
 }
 
+HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(_uint x, _uint z)
+{
+#pragma region VERTEX_BUFFER
+
+	miNumX = x;
+	miNumZ = z;
+
+
+	ZeroMemory(&m_VBDesc, sizeof(D3D11_BUFFER_DESC));
+
+	m_iNumIndicesPerPrimitive = 3;
+	m_iNumVertices = miNumX * miNumZ;
+	m_iNumVertexBuffers = 1;
+
+	// 버텍스 전체 크기 / 사용방식 / 버텍스 크기를 넣어준다.
+	m_VBDesc.ByteWidth = sizeof(VTXNORTEX) * m_iNumVertices;
+	m_VBDesc.Usage = D3D11_USAGE_IMMUTABLE;				// 정적 사용
+	m_VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;		// 버텍스버퍼로 사용한다고 알려줘야한다.
+	m_VBDesc.StructureByteStride = sizeof(VTXNORTEX);
+
+	// 이제 정점 세팅을 LOCK UNLOCK을 하지 않고 해준다.
+	VTXNORTEX*		pVertices = NEW VTXNORTEX[m_iNumVertices];
+	ZeroMemory(pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
+
+	mpVertexPos = NEW _float3[m_iNumVertices];
+	ZeroMemory(mpVertexPos, sizeof(_float3));
+
+	for (_uint z = 0; z < miNumZ; z++)
+	{
+		for (_uint x = 0; x < miNumX; x++)
+		{
+			_uint iIndex = z * miNumX + x;
+
+			pVertices[iIndex].vPosition = mpVertexPos[iIndex] = _float3(x, 0.0f, z);
+			pVertices[iIndex].vNormal = _float3(0.0f, 1, 0.0f); // 노말 구해 주기
+			pVertices[iIndex].vTexUV = _float2(x / (miNumX - 1.f), z / (miNumZ - 1.f));
+		}
+	}
+
+	ZeroMemory(&m_VBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	m_VBSubResourceData.pSysMem = pVertices;
+#pragma endregion
+
+#pragma region INDEX_BUFFER
+
+
+	// 인덱스 버퍼는 사각형에 삼각형이 두개씩 들어간다.
+	m_iNumPrimitive = (miNumX - 1) * (miNumZ - 1) * 2;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	ZeroMemory(&m_IBDesc, sizeof(D3D11_BUFFER_DESC));
+	m_IBDesc.ByteWidth = sizeof(FACEINDICES32) * m_iNumPrimitive;
+	m_IBDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	m_IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+	// 직접 Indices에 세팅
+	FACEINDICES32*	pIndices = NEW FACEINDICES32[m_iNumPrimitive];
+	ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitive);
+
+	_uint		iNumFace = 0;
+
+	for (_uint z = 0; z < miNumZ - 1; z++)
+	{
+		for (_uint x = 0; x < miNumX - 1; x++)
+		{
+			_uint		iIndex = z * miNumX + x;
+
+			_uint		iIndices[4] = {
+				iIndex + miNumX,
+				iIndex + miNumX + 1,
+				iIndex + 1,
+				iIndex
+			};
+			_vector P[2], vNormal;
+
+			pIndices[iNumFace]._0 = iIndices[0];
+			pIndices[iNumFace]._1 = iIndices[1];
+			pIndices[iNumFace]._2 = iIndices[2];
+
+			// 노말 채우기
+			// 폴리곤의 두 벡터를 외적해서 노말벡터를 구한다.
+			P[0] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._0]);
+			P[1] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._2]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]);
+			vNormal = XMVector3Normalize(XMVector3Cross(P[0], P[1]));
+
+			// 구한 노말을 노말라이즈해서 더해주고 다시 노말을 해준다.
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._0].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._0].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._1].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._1].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._2].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._2].vNormal) + vNormal));
+
+			++iNumFace;
+
+			pIndices[iNumFace]._0 = iIndices[0];
+			pIndices[iNumFace]._1 = iIndices[2];
+			pIndices[iNumFace]._2 = iIndices[3];
+
+			// 노말 채우기
+			P[0] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._0]);
+			P[1] = XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._2]) - XMLoadFloat3(&mpVertexPos[pIndices[iNumFace]._1]);
+			vNormal = XMVector3Normalize(XMVector3Cross(P[0], P[1]));
+
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._0].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._0].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._1].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._1].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFace]._2].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&pVertices[pIndices[iNumFace]._2].vNormal) + vNormal));
+
+			++iNumFace;
+		}
+	}
+
+	// DX11에서는 버퍼정보를 모두 서브 데이터 넣어 세팅해준다.
+	ZeroMemory(&m_IBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	m_IBSubResourceData.pSysMem = pIndices;
+
+	if (FAILED(Create_VertexBuffer()))
+		return E_FAIL;
+
+	Safe_Delete_Array(pVertices);
+
+	if (FAILED(Create_IndexBuffer()))
+		return E_FAIL;
+
+	Safe_Delete_Array(pIndices);
+
+#pragma endregion
+
+	return S_OK;
+}
+
 HRESULT CVIBuffer_Terrain::NativeConstruct(void * pArg)
 {
 	return S_OK;
@@ -171,6 +309,18 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11Devi
 	CVIBuffer_Terrain*	pInstance = NEW CVIBuffer_Terrain(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(HeightMap)))
+	{
+		MSGBOX("Failed to Created CVIBuffer_Terrain");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint x, _uint z)
+{
+	CVIBuffer_Terrain*	pInstance = NEW CVIBuffer_Terrain(pDevice, pDeviceContext);
+
+	if (FAILED(pInstance->NativeConstruct_Prototype(x,z)))
 	{
 		MSGBOX("Failed to Created CVIBuffer_Terrain");
 		Safe_Release(pInstance);

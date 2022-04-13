@@ -3,7 +3,8 @@
 #include "Component.h"
 
 BEGIN(Engine)
-
+class CHierarchyNode;
+class CAnimation;
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
@@ -53,11 +54,28 @@ private:
 	vector<MESHMATERIALDESC*>				mVectorMaterials;
 	typedef vector<MESHMATERIALDESC*>		MATERIALS;
 
-	// 계층 구조 생성
+	// 계층 노드 
+	vector<CHierarchyNode*>					mVectorHierarchyNodes;
+	typedef vector<CHierarchyNode*>			HIERARCHYNODES;
+
+	// 애니메이션 
+	_uint									miCurrentAnim=0;
+	_uint									mNumAnimations;
+	vector<CAnimation*>						mVectorAnimations;
+	typedef vector<CAnimation*>				ANIMATIONS;
+
 
 private:
+	// 모델 메시 준비
 	HRESULT Ready_MeshContainers();
 	HRESULT Ready_Materials(const char* pModelFilePath);
+
+	// 애니메이션 준비
+	HRESULT Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _uint iDepth);
+	HRESULT Ready_OffsetMatrices();
+	HRESULT Ready_Animation();
+
+	CHierarchyNode*		Find_HeirarchyNode(const char* name);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext,
