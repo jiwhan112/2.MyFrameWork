@@ -65,8 +65,8 @@ public: // For. Light
 
 public: // For. File
 	HRESULT FolderFinder(const wstring& FileFolder);
-	void SaveVectorToDat(const char* savetxtName = FILEPATH_TXT_RSOURCES);
-	list<MYFILEPATH*> Load_TexturePng(const char* txtfilepath);
+	void SaveVectorToDat(const wstring& savetxtName);
+	list<MYFILEPATH*> Load_ExtensionList(const wstring& txtfilepath, string exe);
 
 
 private:

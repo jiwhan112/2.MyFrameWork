@@ -2,9 +2,9 @@
 #include "FIleIO/ObjectIO.h"
 #include "GameObject/GameObject_2D.h"
 
-void CObjectIO::SaverObject(E_OBJECT_TYPE type, string FolderPath, string filename, CGameObject* obj)
+void CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject* obj)
 {
-	ofstream fWrite(FolderPath + "\\" + filename, ios::out | ios::binary);
+	ofstream fWrite(FolderPath + L"\\" + filename, ios::out | ios::binary);
 	if (fWrite.is_open() == false)
 	{
 		return;
@@ -60,9 +60,9 @@ void CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void * 
 
 }
 
-void CObjectIO::LoadObject(string FolderPath, string filename, CGameObject* obj)
+void CObjectIO::LoadObject(wstring FolderPath, wstring filename, CGameObject* obj)
 {
-	ifstream fRead(FolderPath + "\\" + filename, ios::in | ios::binary);
+	ifstream fRead(FolderPath + L"\\" + filename, ios::in | ios::binary);
 	if (fRead.is_open() == false)
 	{
 		return;
@@ -95,6 +95,7 @@ void CObjectIO::LoadObject(string FolderPath, string filename, CGameObject* obj)
 		memcpy(&texDesc, DataLoad, sizeof(TEXTUREDESC));
 
 		// 생성기에 넣어준다??
+		
 	}
 	break;
 	case OBJECT_TYPE_END:

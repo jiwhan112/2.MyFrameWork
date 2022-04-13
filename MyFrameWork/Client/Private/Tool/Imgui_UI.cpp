@@ -38,19 +38,32 @@ HRESULT CImgui_UI::Render_UI()
 			switch (item_current)
 			{
 			case 0:
-				if (ImGui::Button("PathFinderButton"))
+				if (ImGui::Button("Path_For_Sprite"))
 				{
 					// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-					Button_PathTxtSave();
+					Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L,L"SpritePath.txt");
 				}
+				if (ImGui::Button("Path_For_Dat"))
+				{
+					// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+					Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L,L"DatPath.txt");
+				}
+				if (ImGui::Button("Path_For_3D"))
+				{
+					// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+					Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L,L"3DPath.txt");
+				}
+
+
+
 				if (ImGui::Button("SaveTest"))
 				{
-					CObjectIO::SaverObject(OBJECT_TYPE_UI, STR_FILEPATH_DATA,"name.dat", mCurrentUIObject);
+					CObjectIO::SaverObject(OBJECT_TYPE_UI, STR_FILEPATH_RESOURCE_DAT_L,L"name.dat", mCurrentUIObject);
 
 				}
 				if (ImGui::Button("LoadTest"))
 				{
-					CObjectIO::LoadObject(STR_FILEPATH_DATA, "name.dat", mCurrentUIObject);
+					CObjectIO::LoadObject(STR_FILEPATH_RESOURCE_DAT_L, L"name.dat", mCurrentUIObject);
 				}
 
 				break;
@@ -73,14 +86,15 @@ HRESULT CImgui_UI::Render_UI()
 	return S_OK;
 }
 
-void CImgui_UI::Button_PathTxtSave()
+void CImgui_UI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname)
 {
 	// 텍스처 패스파인더
 
 	// 탐색
-	GetSingle(CGameInstance)->FolderFinder(STR_FILEPATH_RESOURCE_L);
+	GetSingle(CGameInstance)->FolderFinder(path);
+
 	// 탐색한 리스트 TXT 저장
-	GetSingle(CGameInstance)->SaveVectorToDat();
+	GetSingle(CGameInstance)->SaveVectorToDat(txtpath + L"\\" + txtname);
 }
 
 void CImgui_UI::Button_TextureLoader()

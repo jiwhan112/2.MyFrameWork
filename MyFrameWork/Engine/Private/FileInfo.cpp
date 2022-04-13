@@ -212,7 +212,7 @@ HRESULT CFileInfo::FolderFinder(const wstring& FileFolder)
 			Filename.assign(filename.begin(), filename.end());
 			SaveFilePathByVector(myFilePath, newFullPath + L"\\" + Filename, Filename);
 
-			mListAllFile.push_front(myFilePath);
+			mListFilePathData.push_front(myFilePath);
 		}
 			break;
 		case 2: // 불가능
@@ -250,16 +250,16 @@ void CFileInfo::SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstrin
 	path->FileCount = 1;
 }
 
-void CFileInfo::SaveVectorToDat(const char* savetxtName)
+void CFileInfo::SaveVectorToDat(wstring savetxtName)
 {
 	// txt파일에 전체 리소스 정보 저장
-	if (mListAllFile.empty())
+	if (mListFilePathData.empty())
 		return;
 
 	ofstream fWrite(savetxtName, ios::out);
 	if (fWrite.is_open())
 	{
-		for (auto pathdata : mListAllFile)
+		for (auto pathdata : mListFilePathData)
 		{
 			wstring Fullpath = pathdata->FullPath;
 			wstring FileName = pathdata->FileName;
@@ -279,12 +279,20 @@ void CFileInfo::SaveVectorToDat(const char* savetxtName)
 			// 문서 저장
 			string outText = to_utf8(filetxt);
 			fWrite << outText << "\n";
-		}		
+		}
+	}
+	if (mListFilePathData.empty() == false)
+	{
+		for (auto pathdata : mListFilePathData)
+		{
+			Safe_Delete(pathdata);
+		}
+		mListFilePathData.clear();
 	}
 	fWrite.close();
 }
 
-void CFileInfo::FileOpenTest(const char * savetxtName)
+void CFileInfo::FileOpenTest(wstring savetxtName)
 {
 	return;
 	//ofstream fWrite(savetxtName, ios::out);
@@ -300,7 +308,7 @@ void CFileInfo::FileOpenTest(const char * savetxtName)
 
 }
 
-list<MYFILEPATH*> CFileInfo::Load_TexturePng(const char * txtfilepath)
+list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
 {
 	list<MYFILEPATH*> pngPathList;
 
@@ -317,7 +325,7 @@ list<MYFILEPATH*> CFileInfo::Load_TexturePng(const char * txtfilepath)
 		if (vecStr.size() != 4)
 			continue;
 
-		if (vecStr[2] != "png")
+		if (vecStr[2] != exe)
 			continue;
 
 		MYFILEPATH* path = NEW MYFILEPATH;
@@ -348,13 +356,13 @@ list<MYFILEPATH*> CFileInfo::Load_TexturePng(const char * txtfilepath)
 
 void CFileInfo::Free()
 {
-	if (mListAllFile.empty() == false)
+	if (mListFilePathData.empty() == false)
 	{
-		for (auto pathdata :mListAllFile)
+		for (auto pathdata :mListFilePathData)
 		{
 			Safe_Delete(pathdata);
 		}
-		mListAllFile.clear();
+		mListFilePathData.clear();
 
 	}
 }

@@ -21,13 +21,13 @@ private:
 
 public:
 	// 오브젝트 타입별로 저장 수행
-	static void SaverObject(E_OBJECT_TYPE type, string FolderPath, string filename, CGameObject* obj);
+	static void SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject* obj);
 
 	// 연 파일을 넘겨받고 데이터 저장
 	static void SaverData(ofstream* fwrite, E_OBJECT_DATA_TYPE type, const void * desc);
 
 	// 데이터를 불러와서 생성기에 넘김
-	static void  LoadObject(string FolderPath, string filename, CGameObject* obj);
+	static void  LoadObject(wstring FolderPath, wstring filename, CGameObject* obj);
 //	static void* LoadData(ifstream* fRead, E_OBJECT_DATA_TYPE type, string FolderPath, string filename);
 //	static void* LoadData(ifstream* fRead, E_OBJECT_DATA_TYPE type, string FolderPath, string filename);
 

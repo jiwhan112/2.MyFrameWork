@@ -116,7 +116,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
 	
-	// 임의로 처리
+	// 지형 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
 
@@ -144,7 +144,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Filter.bmp"), 1)));
 
 	// 텍스처 맵 컴포넌트
-	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_TexturePng(FILEPATH_TXT_RSOURCES);
+	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(L"..\\Bin\\Resources\\PathTxT\\SpritePath.txt","png");
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
 		CTexture_map::Create(m_pDevice, m_pDeviceContext, listpngpath)));
@@ -176,11 +176,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 HRESULT CMainApp::Ready_Prototype_GameObject()
 {
-	// #Tag 오브젝트 원형 초기화
-
-	/* For.Prototype_GameObject_BackGround */
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_BACKGROUND),
-		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
+	// #Tag 수업용 오브젝트 원형 초기화
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA),
 		CCamera_Client::Create(m_pDevice, m_pDeviceContext)));
@@ -188,8 +184,8 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_SKY),
 		CGameObject_Skybox::Create(m_pDevice, m_pDeviceContext)));
 
-	 FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
-	 	CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
+		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
 	// 
 	// FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
 	// 	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
@@ -197,6 +193,15 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
 		CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
 
+	// #Tag 깡통 오브젝트들 초기화
+	// 깡통: 컴포넌트 기능으로 여러가지 오브젝트를 만들 수 있게 설계된 오브젝트를 뜻함
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_2D),
+		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
+
+	// Creater 클래스에서 데이터를 읽는다고 가정하고 2D 깡통 클래스를 가지는 
+	// 부모 / 자식이 완성된 프로토 오브젝트를 만든다.
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TEST),
+		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
 
 	return S_OK;
 }

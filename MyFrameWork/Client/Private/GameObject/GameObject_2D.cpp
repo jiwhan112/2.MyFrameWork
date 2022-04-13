@@ -100,7 +100,7 @@ HRESULT CGameObject_2D::Set_ConstantTable_UI()
 
 CGameObject_2D * CGameObject_2D::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CGameObject_2D*	pInstance = new CGameObject_2D(pDevice, pDeviceContext);
+	CGameObject_2D*	pInstance = NEW CGameObject_2D(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -112,7 +112,7 @@ CGameObject_2D * CGameObject_2D::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 }
 CGameObject_2D* CGameObject_2D::Clone(void* pArg)
 {
-	CGameObject_2D*	pInstance = new CGameObject_2D(*this);
+	CGameObject_2D*	pInstance = NEW CGameObject_2D(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

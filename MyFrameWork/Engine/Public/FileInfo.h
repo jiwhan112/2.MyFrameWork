@@ -25,16 +25,15 @@ public:
 	HRESULT			FolderFinder(const wstring& FileFolder);
 
 	// TXT 파일로 MYFILEPATH 정보 저장 // 경로 파일이름 확장자
-	void SaveVectorToDat(const char* savetxtName = FILEPATH_TXT_RSOURCES);
+	void SaveVectorToDat(wstring savetxtName );
 
-	// TXT 파일을 읽어서 PNG 파일 리스트 제작
-	list<MYFILEPATH*> Load_TexturePng(const char* txtfilepath);
-
+	// 해당 Txt파일을 읽어서 Path 리스트 제작
+	list<MYFILEPATH*> Load_ExtensionList(wstring txtfilepath,string exe);
 
 private:
 	void SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstring filename);
 	
-	void FileOpenTest(const char* savetxtName = FILEPATH_TXT_TEST);
+	void FileOpenTest(wstring savetxtName);
 
 	
 //	HRESULT Load_FBX(const char* txtfilepath);
@@ -44,7 +43,7 @@ private:
 
 
 private:
-	list<MYFILEPATH*>		mListAllFile;
+	list<MYFILEPATH*>		mListFilePathData;
 
 	// CBase을(를) 통해 상속됨
 	virtual void Free() override;

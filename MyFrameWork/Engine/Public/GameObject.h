@@ -41,6 +41,13 @@ public:
 			return mParrent;
 		return nullptr;
 	}
+	const list<CGameObject*>* Get_Children() const
+	{
+		if (mChildren)
+			return mChildren;
+		return nullptr;
+	}
+	_uint Get_Depth() const { return mDepth; }
 
 protected:
 	virtual HRESULT Set_Component()PURE;
@@ -56,7 +63,11 @@ protected:
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
 protected:
+	// 부모자식 관계 형성
 	CGameObject* mParrent = nullptr;
+	list<CGameObject*>* mChildren = nullptr;
+	_uint mDepth = 0;
+
 
 	class CTransform*		mComTransform = nullptr;
 	static const _tchar*	mComTag_Transform;

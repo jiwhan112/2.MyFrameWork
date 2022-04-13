@@ -240,16 +240,16 @@ HRESULT CGameInstance::FolderFinder(const wstring& FileFolder)
 	return m_pFileMgr->FolderFinder(FileFolder);
 }
 
-void CGameInstance::SaveVectorToDat(const char * savetxtName)
+void CGameInstance::SaveVectorToDat(const wstring&  savetxtName)
 {
 	NULL_CHECK_BREAK(m_pFileMgr);
 	m_pFileMgr->SaveVectorToDat(savetxtName);
 }
 
-list<MYFILEPATH*> CGameInstance::Load_TexturePng(const char * txtfilepath)
+list<MYFILEPATH*> CGameInstance::Load_ExtensionList(const wstring& txtfilepath, string exe)
 {
 	NULL_CHECK_BREAK(m_pFileMgr);
-	return m_pFileMgr->Load_TexturePng(txtfilepath);
+	return m_pFileMgr->Load_ExtensionList(txtfilepath,exe);
 }
 
 

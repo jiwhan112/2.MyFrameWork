@@ -51,7 +51,6 @@ HRESULT CGameObject_MyTerrain::Render()
 		return S_FALSE;
 	}
 
-
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Tex());
 	FAILED_CHECK(Set_ConstantTable_Light());
@@ -74,7 +73,7 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 
 CGameObject_MyTerrain * CGameObject_MyTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CGameObject_MyTerrain*	pInstance = new CGameObject_MyTerrain(pDevice, pDeviceContext);
+	CGameObject_MyTerrain*	pInstance = NEW CGameObject_MyTerrain(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -86,7 +85,7 @@ CGameObject_MyTerrain * CGameObject_MyTerrain::Create(ID3D11Device * pDevice, ID
 }
 CGameObject_MyTerrain* CGameObject_MyTerrain::Clone(void* pArg)
 {
-	CGameObject_MyTerrain*	pInstance = new CGameObject_MyTerrain(*this);
+	CGameObject_MyTerrain*	pInstance = NEW CGameObject_MyTerrain(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

@@ -78,7 +78,7 @@ HRESULT CGameObject_3D::Set_ConstantTable_Tex(_uint texid)
 
 CGameObject_3D * CGameObject_3D::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CGameObject_3D*	pInstance = new CGameObject_3D(pDevice, pDeviceContext);
+	CGameObject_3D*	pInstance = NEW CGameObject_3D(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
@@ -90,7 +90,7 @@ CGameObject_3D * CGameObject_3D::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 }
 CGameObject_3D* CGameObject_3D::Clone(void* pArg)
 {
-	CGameObject_3D*	pInstance = new CGameObject_3D(*this);
+	CGameObject_3D*	pInstance = NEW CGameObject_3D(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

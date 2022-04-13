@@ -28,7 +28,7 @@ public:
 
 
 private:
-	void Button_PathTxtSave();
+	void Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname);
 	void Button_TextureLoader();
 	HRESULT Edit_UIObject();
 	HRESULT Edit_Texture();

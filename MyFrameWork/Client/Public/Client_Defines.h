@@ -70,8 +70,8 @@ typedef struct tag_TEXTUREDESC
 
 
 
-#define  STR_FILEPATH_RESOURCE_L		L"..\\Bin\\Resources\\Sprite"
-#define  STR_FILEPATH_RESOURCE_			"..\\Bin\\Resources\\Sprite"
-
-#define  STR_FILEPATH_DATA_L		L"..\\Bin\\Resources\\Data"
-#define  STR_FILEPATH_DATA			"..\\Bin\\Resources\\Data"
+#define  STR_FILEPATH_RESOURCE_SPRITE_L			L"..\\Bin\\Resources\\Sprite"
+#define  STR_FILEPATH_RESOURCE_DAT_L			L"..\\Bin\\Resources\\data"
+#define  STR_FILEPATH_RESOURCE_3DMODEL_L		L"..\\Bin\\Resources\\TestFBX"
+#define  STR_FILEPATH_RESOURCE_PATH_L			L"..\\Bin\\Resources\\PathTxT"
+#define  STR_FILEPATH_RESOURCE_L				L"..\\Bin\\Resources"
