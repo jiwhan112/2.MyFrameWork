@@ -2,12 +2,21 @@
 #include "FIleIO/ObjectIO.h"
 #include "GameObject/GameObject_2D.h"
 
-void CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject* obj)
+HRESULT CObjectIO::NativeConstruct()
+{
+	ZeroMemory(&mObjectType,sizeof(E_OBJECT_TYPE));
+	ZeroMemory(&mUIDesc, sizeof(UIDESC));
+	ZeroMemory(&mTexDesc,sizeof(TEXTUREDESC));
+
+	return S_OK;
+}
+
+HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject* obj)
 {
 	ofstream fWrite(FolderPath + L"\\" + filename, ios::out | ios::binary);
 	if (fWrite.is_open() == false)
 	{
-		return;
+		return E_FAIL;
 	}
 
 
@@ -34,11 +43,13 @@ void CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring file
 
 	// 3. ÆÄÀÏ ´Ý±â
 	fWrite.close();
+
+	return S_OK;
 }
 
 
 
-void CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void * desc)
+HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void * desc)
 {
 
 	switch (type)
@@ -57,15 +68,17 @@ void CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void * 
 	default:
 		break;
 	}
+	return S_OK;
+
 
 }
 
-void CObjectIO::LoadObject(wstring FolderPath, wstring filename, CGameObject* obj)
+HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, CGameObject* obj)
 {
 	ifstream fRead(FolderPath + L"\\" + filename, ios::in | ios::binary);
 	if (fRead.is_open() == false)
 	{
-		return;
+		return E_FAIL;
 	}
 
 	char* objType  = NEW char[sizeof(E_OBJECT_DATA_TYPE)];
@@ -107,13 +120,14 @@ void CObjectIO::LoadObject(wstring FolderPath, wstring filename, CGameObject* ob
 	Safe_Delete_Array(objType);
 	Safe_Delete_Array(DataLoad);
 
+	return S_OK;
 
 }
 
 
 
 
-void CObjectIO::SaveOBJECT(ofstream * fwrite, E_OBJECT_TYPE* desc)
+HRESULT CObjectIO::SaveOBJECT(ofstream * fwrite, E_OBJECT_TYPE* desc)
 {
 	char * newdesc = NEW char[sizeof(E_OBJECT_TYPE)];
 
@@ -122,11 +136,12 @@ void CObjectIO::SaveOBJECT(ofstream * fwrite, E_OBJECT_TYPE* desc)
 	fwrite->write((char*)desc, sizeof(E_OBJECT_TYPE));
 	Safe_Delete_Array(newdesc);
 
+	return S_OK;
 
 
 }
 
-void CObjectIO::SaveUIDESC(ofstream * fwrite, UIDESC* desc)
+HRESULT CObjectIO::SaveUIDESC(ofstream * fwrite, UIDESC* desc)
 {
 	char * newdesc = NEW char[sizeof(UIDESC)];
 
@@ -137,9 +152,11 @@ void CObjectIO::SaveUIDESC(ofstream * fwrite, UIDESC* desc)
 	Safe_Delete_Array(newdesc);
 
 
+	return S_OK;
+
 }
 
-void CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTUREDESC* desc)
+HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTUREDESC* desc)
 {
 	char * newdesc = NEW char[sizeof(TEXTUREDESC)];
 
@@ -148,6 +165,25 @@ void CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTUREDESC* desc)
 	fwrite->write(newdesc, sizeof(TEXTUREDESC));
 	Safe_Delete_Array(newdesc);
 
+	return S_OK;
+
+
+}
+
+CObjectIO * CObjectIO::Create()
+{
+	CObjectIO*	pInstance = NEW CObjectIO();
+
+	if (FAILED(pInstance->NativeConstruct()))
+	{
+		MSGBOX("Failed to Creating CObjectIO");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CObjectIO::Free()
+{
 }
 
 

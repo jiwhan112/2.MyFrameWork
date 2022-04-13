@@ -58,12 +58,12 @@ HRESULT CImgui_UI::Render_UI()
 
 				if (ImGui::Button("SaveTest"))
 				{
-					CObjectIO::SaverObject(OBJECT_TYPE_UI, STR_FILEPATH_RESOURCE_DAT_L,L"name.dat", mCurrentUIObject);
+					mObjectIO->SaverObject(OBJECT_TYPE_UI, STR_FILEPATH_RESOURCE_DAT_L,L"name1.dat", mCurrentUIObject);
 
 				}
 				if (ImGui::Button("LoadTest"))
 				{
-					CObjectIO::LoadObject(STR_FILEPATH_RESOURCE_DAT_L, L"name.dat", mCurrentUIObject);
+					mObjectIO->LoadObject(STR_FILEPATH_RESOURCE_DAT_L, L"name1.dat", mCurrentUIObject);
 				}
 
 				break;
@@ -185,4 +185,5 @@ void CImgui_UI::Free()
 {
 	__super::Free();
 	Safe_Release(mCurrentUIObject);
+	Safe_Release(mObjectIO);
 }
