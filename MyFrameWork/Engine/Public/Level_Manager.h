@@ -19,6 +19,8 @@ public:
 	_int LateTick(_double TimeDelta);
 	HRESULT Render();
 
+	_uint Get_CurrentLevelIndex() const { return m_iCurrentLevelIndex; }
+
 private:
 	_uint					m_iCurrentLevelIndex = 0;
 	class CLevel*			m_pCurrentLevel = nullptr;

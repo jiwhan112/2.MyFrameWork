@@ -41,6 +41,7 @@ public: /* For.Timer_Manager */
 public: /* For.Level_Manager */
 	HRESULT OpenLevel(_uint iLevelIndex, class CLevel* pNextLevel);
 	HRESULT Render_Level();
+	_uint	Get_CurrentLevelIndex() const;
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
@@ -51,6 +52,7 @@ public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	CGameObject* Add_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pPrototypeTag, void* pArg = nullptr);
 	CGameObject* Create_GameObject(const _tchar* pPrototypeTag, void* pArg = nullptr);
+	HRESULT		 Push_Object(_uint levelindex, const _tchar* pLayerTag, CGameObject* obj);
 
 public: /* For. PipeLine Single*/
 	HRESULT SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);

@@ -10,6 +10,7 @@ CGameObject_2D::CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 
 CGameObject_2D::CGameObject_2D(const CGameObject_2D& rhs)
 	: CGameObject_Base(rhs)
+	,mUiDesc(rhs.mUiDesc)
 {
 
 }
@@ -24,9 +25,13 @@ HRESULT CGameObject_2D::NativeConstruct_Prototype()
 HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	string str("GUI_Menu_Main_Curtain.png");	
-	strcpy_s(mTexDESC.mTextureKey_Diffuse, str.c_str());
+	if (strlen(mTexDESC.mTextureKey_Diffuse) < 2)
+	{
+		string str("GUI_Menu_Main_Curtain.png");
+		strcpy_s(mTexDESC.mTextureKey_Diffuse, str.c_str());
 
+	}
+	
 	mComTexture->Set_TextureMap(mTexDESC.mTextureKey_Diffuse);
 
 
@@ -68,10 +73,18 @@ HRESULT CGameObject_2D::Render()
 
 HRESULT CGameObject_2D::Set_Component()
 {
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+	if (mComRenderer == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
+
+	if (mComShader == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
+
+	if (mComVIBuffer == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+
+	if (mComTexture == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+
 
 	return S_OK;
 }

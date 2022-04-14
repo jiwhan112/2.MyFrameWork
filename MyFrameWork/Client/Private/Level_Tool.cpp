@@ -11,8 +11,8 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 {
 	mLevelIndex = LEVEL_TOOL;
 
-	mDemo = nullptr;
-	mUI = nullptr;
+	mIMGUI_DEMO = nullptr;
+	mIMGUI_UI = nullptr;
 }
 
 HRESULT CLevel_Tool::NativeConstruct()
@@ -62,10 +62,10 @@ HRESULT CLevel_Tool::ReadyTools()
 {
 	// IMGUI 积己
 //	GetSingle(CImguiMgr)->Add_IMGUI(mDemo = CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
-	GetSingle(CImguiMgr)->Add_IMGUI(mUI = CImgui_UI::Create(m_pDevice, m_pDeviceContext));
+	GetSingle(CImguiMgr)->Add_IMGUI(mIMGUI_UI = CImgui_UI::Create(m_pDevice, m_pDeviceContext));
 
 //	Safe_AddRef(mDemo);
-	Safe_AddRef(mUI);
+	Safe_AddRef(mIMGUI_UI);
 
 	// 坷宏璃飘 积己
 
@@ -124,13 +124,13 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		_float2(0.5f, 0.5f),
 	};
 
-	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
-	CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);
-	uiobj->Set_LoadUIDesc(desc);
-	mUI->Set_UIObject(uiobj);
+//	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+//	CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);
+//	uiobj->Set_LoadUIDesc(desc);
+//	mIMGUI_UI->Set_UIObject(uiobj);
 
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MYTERRAIN)));
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MYTERRAIN)));
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_TEST)));
 
 
@@ -155,6 +155,6 @@ CLevel_Tool * CLevel_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 void CLevel_Tool::Free()
 {
 	__super::Free();
-	Safe_Release(mDemo);
-	Safe_Release(mUI);
+	Safe_Release(mIMGUI_DEMO);
+	Safe_Release(mIMGUI_UI);
 }

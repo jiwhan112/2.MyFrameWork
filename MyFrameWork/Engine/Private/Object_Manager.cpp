@@ -74,6 +74,36 @@ CGameObject* CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar * p
 	return pGameObject;
 }
 
+HRESULT  CObject_Manager::Push_GameObject(_uint iLevelIndex, const _tchar * pLayerTag,CGameObject* cloneObj)
+{
+	if (iLevelIndex >= m_iNumLevels)
+		return E_FAIL;
+
+	if (cloneObj == nullptr)
+		return E_FAIL;
+
+	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
+
+	if (nullptr == pLayer)
+	{
+		pLayer = CLayer::Create();
+		if (nullptr == pLayer)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(cloneObj)))
+			return E_FAIL;
+
+		m_pLayers[iLevelIndex].insert(LAYERS::value_type(pLayerTag, pLayer));
+	}
+	else
+	{
+		if (FAILED(pLayer->Add_GameObject(cloneObj)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 CGameObject * CObject_Manager::Create_GameObject(const _tchar * pPrototypeTag, void * pArg)
 {
 	CGameObject*	pPrototype = Find_Prototype(pPrototypeTag);

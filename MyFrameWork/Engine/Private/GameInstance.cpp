@@ -151,6 +151,12 @@ HRESULT CGameInstance::Render_Level()
 	return m_pLevel_Manager->Render();
 }
 
+_uint CGameInstance::Get_CurrentLevelIndex() const
+{
+	NULL_CHECK_HR(m_pLevel_Manager);
+	return m_pLevel_Manager->Get_CurrentLevelIndex();
+}
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
 {
 	NULL_CHECK_HR(m_pComponent_Manager);
@@ -189,6 +195,14 @@ CGameObject * CGameInstance::Create_GameObject(const _tchar * pPrototypeTag, voi
 		return nullptr;
 
 	return m_pObject_Manager->Create_GameObject(pPrototypeTag, pArg);
+}
+
+HRESULT CGameInstance::Push_Object(_uint levelindex, const _tchar * pLayerTag, CGameObject * obj)
+{
+	if (m_pObject_Manager == nullptr)
+		return E_FAIL;
+
+	return m_pObject_Manager->Push_GameObject(levelindex,pLayerTag,obj);
 }
 
 HRESULT CGameInstance::SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix)

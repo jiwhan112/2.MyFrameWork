@@ -38,13 +38,15 @@ public:
 	// dat파일로 저장된 데이터를 로드해서 깡통객체에 정보를 입력해 클론 객체 생성
 	HRESULT LoaderDatFile_For_PrototypeObject();
 
-	// 타입별로 클론 오브젝트 생성
+	// 불러온 데이터로 클론 오브젝트 생성하고 맵에 저장
 	HRESULT Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char* data, wstring protoname);
 
-
-	// 불러온 데이터를 프리펩화 해서 생성 / TODO
+	// 맵에 저장된 데이터로 씬에서 클론객체 생성해봄
+	HRESULT Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag);
 
 	
+private:
+	CGameObject* Find_MapObject(wstring key);
 
 private:	
 	// 데이터 로드

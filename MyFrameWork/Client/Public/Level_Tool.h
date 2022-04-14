@@ -23,10 +23,10 @@ public:
 	HRESULT ReadyTools();
 
 private:
-	class CImgui_MyDemo*	mDemo = nullptr;
-	class CImgui_UI*		mUI = nullptr;
+	class CImgui_MyDemo*	mIMGUI_DEMO = nullptr;
+	class CImgui_UI*		mIMGUI_UI = nullptr;
 
-	Mouse*					mMouse;
+//	Mouse*					mMouse;
 
 
 public:

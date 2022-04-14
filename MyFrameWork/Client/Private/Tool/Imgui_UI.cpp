@@ -62,9 +62,15 @@ HRESULT CImgui_UI::Render_UI()
 
 				}
 
-				if (ImGui::Button("LoadTest2"))
+				if (ImGui::Button("LoadTest"))
 				{
 					GetSingle(CGameObject_Creater)->LoaderDatFile_For_PrototypeObject();
+				}
+				if (ImGui::Button("CreateObject"))
+				{
+					_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+					GetSingle(CGameObject_Creater)->Create_ObjectClone_Prefab(idx, L"name1.dat", TAGLAY(LAY_BACKGROUND));
+
 				}
 
 				break;

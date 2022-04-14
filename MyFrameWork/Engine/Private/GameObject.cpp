@@ -26,6 +26,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	mParrent = nullptr;
 	mChildren = nullptr;
 
+
 }
 
 CComponent * CGameObject::Get_Component(const _tchar * pComponentTag)
