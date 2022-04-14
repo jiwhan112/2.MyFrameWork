@@ -35,11 +35,6 @@ private:
 	
 	void FileOpenTest(wstring savetxtName);
 
-	
-//	HRESULT Load_FBX(const char* txtfilepath);
-
-	HRESULT Get_();
-	HRESULT LoadMYPath();
 
 
 private:

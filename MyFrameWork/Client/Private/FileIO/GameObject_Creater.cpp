@@ -32,11 +32,6 @@ HRESULT CGameObject_Creater::Set_Device(ID3D11Device * d, ID3D11DeviceContext * 
 	return S_OK;
 }
 
-//HRESULT CGameObject_Creater::Creater2D(const char * datapath)
-//{
-//	return S_OK;
-//}
-
 HRESULT CGameObject_Creater::LoaderDatFile_For_PrototypeObject()
 {
 	if (mObjectIO == nullptr)

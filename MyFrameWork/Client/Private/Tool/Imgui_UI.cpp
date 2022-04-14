@@ -30,6 +30,15 @@ void CImgui_UI::Set_UIObject(CGameObject_2D * obj)
 
 HRESULT CImgui_UI::Render_UI()
 {
+
+	// #TODO: IMGUI 수정
+	
+	// 1. 현재 생성된 오브젝트 목록 출력
+	
+	// 2. 오브젝트 선택시 수정 가능하게
+	
+	// 3. 저장시 이름 수정 가능하게
+
 	if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_TEST)))
 	{
 		if (ImGui::CollapsingHeader("UI"))
@@ -54,8 +63,6 @@ HRESULT CImgui_UI::Render_UI()
 					Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L,L"3DPath.txt");
 				}
 
-
-
 				if (ImGui::Button("SaveTest"))
 				{
 					mObjectIO->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L,L"name1.dat", mCurrentUIObject);
@@ -75,7 +82,8 @@ HRESULT CImgui_UI::Render_UI()
 
 				break;
 			case 1:
-				// 2D 오브젝트 수정 함수
+				// 선택된 UI 오브젝트 수정
+
 				FAILED_CHECK(Edit_UIObject());
 				FAILED_CHECK(Edit_Texture());
 				break;

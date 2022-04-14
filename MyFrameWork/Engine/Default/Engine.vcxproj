@@ -207,6 +207,7 @@
     <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Manager.cpp" />
+    <ClCompile Include="..\Private\Engine_Function.cpp" />
     <ClCompile Include="..\Private\FileInfo.cpp" />
     <ClCompile Include="..\Private\HierarchyNode.cpp" />
     <ClCompile Include="..\Private\Light.cpp" />

@@ -216,6 +216,9 @@
     <ClCompile Include="..\Private\Animation.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Engine_Function.cpp">
+      <Filter>99.Defines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Graphic_Device.h">
