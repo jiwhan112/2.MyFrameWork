@@ -5,120 +5,111 @@ CAnimation::CAnimation()
 {
 }
 
-HRESULT CAnimation::NativeConstruct(const char * name, _double Duration, _double TickperSecond)
+HRESULT CAnimation::NativeConstruct(const char* pName, _double Duration, _double TickPerSecond)
 {
-	strcpy_s(mSzName,name);
-	mDuration = Duration;
-	mTickPerAniTimeScale = TickperSecond;
+	strcpy_s(m_szName, pName);
+
+	m_Duration = Duration;
+	m_TickPerSecond = TickPerSecond;
 
 	return S_OK;
 }
 
 HRESULT CAnimation::Update_TransformMatrices(_double TimeDelta)
 {
-	// 각 채널의 키프레임 정보로 애니메이션 정보 업데이트
-	// 키 프레임 정보 
+	/* 현재 내 애니메이션의 재생 위치. */
+	m_PlayTimeAcc += m_TickPerSecond * TimeDelta;
 
-	// 현재 애니메이션 시간 = 애니메이션 배속 * 시간
-	mPlayTimeAcc += mTickPerAniTimeScale * TimeDelta;
-
-	// 애니메이션 시간으로 Finish 체크
-	if (mPlayTimeAcc >= mDuration)
+	if (m_PlayTimeAcc >= m_Duration)
 	{
-		mPlayTimeAcc = 0;
-		misFinished = true;
+		m_PlayTimeAcc = 0.0;
+		m_isFinished = true;
 	}
-	
-	// 각 애니메이션의 키프레임 데이터 업데이트
-	_vector vScale, vRot, vPos;
+	else
+		m_isFinished = false;
 
-	// 가지고 있는 채널 개수 만큼 루프
-	for (_uint i = 0; i<mNumChannels; ++i)
+	_vector			vScale, vRotation, vPosition;
+
+	/* 현재 내 애니메이션 상태에서 재생된 시간에 따른 모든 뼈의 상태를 갱신한다.  */
+	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
-		// 각 채널의 키프레임 정보를 가져온다.
-		const vector<KEYFRAME*>* pVecKey = mVectorCheannels[i]->Get_VecKeyFrame();
-		if (pVecKey == nullptr)
+		if (true == m_isFinished)
+			m_Channels[i]->Set_CurrentKeyFrame(0);
+
+
+		/* 각각의 뼈들이 시간값에 따른 상태값을 표현한 키프레임들을 가져온다. */
+		const vector<KEYFRAME*>*	pKeyFrames = m_Channels[i]->Get_KeyFrames();
+		if (nullptr == pKeyFrames)
 			return E_FAIL;
 
-	
-		_uint NumKeyFrame = pVecKey->size();
-		_uint CurrentKeyFrameIndex = mVectorCheannels[i]->Get_CurrentKeyFrame();
 
-		// 마지막 키프레임 처리
-		if (mPlayTimeAcc >= (*pVecKey)[NumKeyFrame - 1]->Time)
+
+		_uint iNumKeyFrame = pKeyFrames->size();
+
+		_uint iCurrentKeyFrameIndex = m_Channels[i]->Get_CurrentKeyFrame();
+		
+		/* 마지막 키프레임을 넘어가면. */
+		if (m_PlayTimeAcc >= (*pKeyFrames)[iNumKeyFrame - 1]->Time)
 		{
-			vScale = XMLoadFloat3(&(*pVecKey)[NumKeyFrame - 1]->vScale);
-			vRot = XMLoadFloat4(&(*pVecKey)[NumKeyFrame - 1]->vRotation);
-			vPos = XMLoadFloat3(&(*pVecKey)[NumKeyFrame - 1]->vPosition);
+			vScale = XMLoadFloat3(&(*pKeyFrames)[iNumKeyFrame - 1]->vScale);
+			vRotation = XMLoadFloat4(&(*pKeyFrames)[iNumKeyFrame - 1]->vRotation);
+			vPosition = XMLoadFloat3(&(*pKeyFrames)[iNumKeyFrame - 1]->vPosition);			
 		}
-		else
+		/* 특정 키프레임 두개 사이에 존재할때?! */
+		else		
 		{
-			// 현재 프레임과 다음 프레임을 가져와서 현재 프레임을 알아오자
-
-			// 현재 시간이 다음프레임 보다 크다면 뼈의 프레임으로 맞춰주자.
-			// 시간이 크게 들어온다면 그 다음프레임으로까지 이동할 수 있음
-			while(mPlayTimeAcc >= (*pVecKey)[CurrentKeyFrameIndex + 1]->Time)
+			while (m_PlayTimeAcc >= (*pKeyFrames)[iCurrentKeyFrameIndex + 1]->Time)
 			{
-				mVectorCheannels[i]->Set_CurrentKeyFrame(++CurrentKeyFrameIndex);
+				m_Channels[i]->Set_CurrentKeyFrame(++iCurrentKeyFrameIndex);				
 			}
 
-			// 현재 애니메이션 진행 시간 비율 = (진행시간) / (총시간)
-			// 비율 = (현재 프레임시간) / (다음프레임시간 - 현재프레임시간)
-			_double Ratio = (mPlayTimeAcc -(*pVecKey)[CurrentKeyFrameIndex]->Time)
-				/ ((*pVecKey)[CurrentKeyFrameIndex+1]->Time - (*pVecKey)[CurrentKeyFrameIndex]->Time);
+			_double		Ratio = (m_PlayTimeAcc - (*pKeyFrames)[iCurrentKeyFrameIndex]->Time) 
+				/ ((*pKeyFrames)[iCurrentKeyFrameIndex + 1]->Time - (*pKeyFrames)[iCurrentKeyFrameIndex]->Time);
 
+			_vector		vSourScale, vDestScale;
+			_vector		vSourRotation, vDestRotation;
+			_vector		vSourPosition, vDestPosition;
 
-			_vector srcScale, srcRot, srcPos;
-			_vector dstScale, dstRot, dstPos;
+			vSourScale = XMLoadFloat3(&(*pKeyFrames)[iCurrentKeyFrameIndex]->vScale);
+			vSourRotation = XMLoadFloat4(&(*pKeyFrames)[iCurrentKeyFrameIndex]->vRotation);
+			vSourPosition = XMLoadFloat3(&(*pKeyFrames)[iCurrentKeyFrameIndex]->vPosition);
 
+			vDestScale = XMLoadFloat3(&(*pKeyFrames)[iCurrentKeyFrameIndex + 1]->vScale);
+			vDestRotation = XMLoadFloat4(&(*pKeyFrames)[iCurrentKeyFrameIndex + 1]->vRotation);
+			vDestPosition = XMLoadFloat3(&(*pKeyFrames)[iCurrentKeyFrameIndex + 1]->vPosition);
 
-			srcScale = XMLoadFloat3(&(*pVecKey)[CurrentKeyFrameIndex]->vScale);
-			srcRot = XMLoadFloat4(&(*pVecKey)[CurrentKeyFrameIndex]->vRotation);
-			srcPos = XMLoadFloat3(&(*pVecKey)[CurrentKeyFrameIndex]->vPosition);
-
-
-			dstScale = XMLoadFloat3(&(*pVecKey)[CurrentKeyFrameIndex + 1]->vScale);
-			dstRot = XMLoadFloat4(&(*pVecKey)[CurrentKeyFrameIndex + 1]->vRotation);
-			dstPos = XMLoadFloat3(&(*pVecKey)[CurrentKeyFrameIndex + 1]->vPosition);
-
-			// 현재 키프레임 위치 ~ 다음 키프레임 위치 보간한다.
-			// 회전은 쿼터니언 보간함수를 사용한다.
-			vScale = XMVectorLerp(srcScale, dstScale, Ratio);
-			vRot = XMQuaternionSlerp(srcScale, dstScale, Ratio);
-			vPos = XMVectorLerp(srcPos, dstPos, Ratio);
-
+			vScale = XMVectorLerp(vSourScale, vDestScale, _float(Ratio));
+			vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, _float(Ratio));
+			vPosition = XMVectorLerp(vSourPosition, vDestPosition, _float(Ratio));
 		}
 
-		// W 넣기
-		vPos = XMVectorSetW(vPos, 1.0f);
+		vPosition = XMVectorSetW(vPosition, 1.f);
 
-		// 아핀변환 행렬 세팅
-		// 채널에 위 변환의 크자이 상태행렬 세팅
-		_matrix TransformMat = XMMatrixAffineTransformation
-		(vScale, XMVectorSet(0, 0, 0, 1.0f),vRot, vPos);
+		_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
-		mVectorCheannels[i]->Set_TransformationMat(TransformMat);
-
-
-	}
-
+		m_Channels[i]->Set_TransformationMatrix(TransformationMatrix);
+	}	
 
 	return S_OK;
 }
 
-CAnimation * CAnimation::Create(const char * name, _double Duration, _double TickperSecond)
+CAnimation * CAnimation::Create(const char* pName, _double Duration, _double TickPerSecond)
 {
-	CAnimation*	pInstance = NEW CAnimation();
+	CAnimation*	pInstance = new CAnimation();
 
-	if (FAILED(pInstance->NativeConstruct(name, Duration,TickperSecond)))
+	if (FAILED(pInstance->NativeConstruct(pName, Duration, TickPerSecond)))
 	{
-		MSGBOX("Failed to Creating CAnimation");
+		MSGBOX("Failed to Created CAnimation");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 
 void CAnimation::Free()
 {
+	for (auto& pChannel : m_Channels)
+		Safe_Release(pChannel);
+
+	m_Channels.clear();
 }
+

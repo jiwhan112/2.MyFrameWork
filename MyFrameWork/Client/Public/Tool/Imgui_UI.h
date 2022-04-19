@@ -26,10 +26,14 @@ public:
 	HRESULT Render_UI();
 	//	void Render_Object(CGameObject* obj);
 
+private:
+	void UIMODE();
+	void PATHMODE();
 
 private:
 	void Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname);
 	void Button_TextureLoader();
+	HRESULT Edit_ProtoObjectList();
 	HRESULT Edit_UIObject();
 	HRESULT Edit_Texture();
 
@@ -39,6 +43,7 @@ private:
 
 	//// UI 정보 저장
 	//void Button_UISave();
+
 
 private:
 	int item_current = 0;

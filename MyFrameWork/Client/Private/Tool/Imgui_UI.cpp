@@ -3,6 +3,20 @@
 #include "GameObject/GameObject_2D.h"
 #include "FIleIO/ObjectIO.h"
 
+/* #TODO: IMGUI 수정
+
+	현재 생성된 오브젝트 목록 출력
+	오브젝트 선택및 선택된 오브젝트 수정하기
+	저장 불러오기 테스트
+	오브젝트 클론 테스트 
+	부모자식 오브젝트 만들기
+*/
+
+/*
+	#TODO: 맵툴만들기
+
+*/
+
 CImgui_UI::CImgui_UI(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
 {
@@ -31,13 +45,7 @@ void CImgui_UI::Set_UIObject(CGameObject_2D * obj)
 HRESULT CImgui_UI::Render_UI()
 {
 
-	// #TODO: IMGUI 수정
 	
-	// 1. 현재 생성된 오브젝트 목록 출력
-	
-	// 2. 오브젝트 선택시 수정 가능하게
-	
-	// 3. 저장시 이름 수정 가능하게
 
 	if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_TEST)))
 	{
@@ -47,50 +55,13 @@ HRESULT CImgui_UI::Render_UI()
 			switch (item_current)
 			{
 			case 0:
-				if (ImGui::Button("Path_For_Sprite"))
-				{
-					// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-					Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L,L"SpritePath.txt");
-				}
-				if (ImGui::Button("Path_For_Dat"))
-				{
-					// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-					Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L,L"DatPath.txt");
-				}
-				if (ImGui::Button("Path_For_3D"))
-				{
-					// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-					Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L,L"3DPath.txt");
-				}
-
-				if (ImGui::Button("SaveTest"))
-				{
-					mObjectIO->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L,L"name1.dat", mCurrentUIObject);
-
-				}
-
-				if (ImGui::Button("LoadTest"))
-				{
-					GetSingle(CGameObject_Creater)->LoaderDatFile_For_PrototypeObject();
-				}
-				if (ImGui::Button("CreateObject"))
-				{
-					_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-					GetSingle(CGameObject_Creater)->Create_ObjectClone_Prefab(idx, L"name1.dat", TAGLAY(LAY_BACKGROUND));
-
-				}
-
+				PATHMODE();
 				break;
+
 			case 1:
-				// 선택된 UI 오브젝트 수정
-
-				FAILED_CHECK(Edit_UIObject());
-				FAILED_CHECK(Edit_Texture());
+				UIMODE();
 				break;
-
-
 			}
-			// Load
 		}
 
 		//static bool bAppOveraly = false;
@@ -99,6 +70,89 @@ HRESULT CImgui_UI::Render_UI()
 		ImGui::End();
 	}
 	return S_OK;
+}
+
+void CImgui_UI::UIMODE()
+{
+	// 선택된 UI 오브젝트 수정
+	FAILED_CHECK_RETURN(Edit_ProtoObjectList());
+	FAILED_CHECK_RETURN(Edit_UIObject());
+	FAILED_CHECK_RETURN(Edit_Texture());
+
+
+}
+
+void CImgui_UI::PATHMODE()
+{
+	// 텍스트 저장
+	IMGUI_TREE_BEGIN("PathToSaver_txt")
+	{
+
+		if (ImGui::Button("Path_For_Sprite"))
+		{
+
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L, L"SpritePath.txt");
+		}
+		if (ImGui::Button("Path_For_Dat"))
+		{
+			// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L, L"DatPath.txt");
+		}
+		if (ImGui::Button("Path_For_3D"))
+		{
+			// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L, L"3DPath.txt");
+		}
+
+
+		IMGUI_TREE_END
+	}
+	
+
+	// 오브젝트 저장
+	IMGUI_TREE_BEGIN("ObjectSaver")
+	{
+		static char ObjectName[128] = "";
+		ImGui::InputTextWithHint("hint Text", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
+		if (ImGui::Button("SaveTest"))
+		{
+			// dat 파일 경로에 저장				
+			string namechar = ObjectName;
+			wstring namechar2;
+			namechar2.assign(namechar.begin(), namechar.end());
+			mObjectIO->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, namechar2 + L".dat", mCurrentUIObject);
+
+		}
+		IMGUI_TREE_END
+	}
+
+	// 테스트 중인 버튼 클론 오브젝트 생성
+	IMGUI_TREE_BEGIN("For_TestButton")
+	{
+
+		if (ImGui::Button("Load_And_CloneData"))
+		{
+			// 파일로 저장된 프로토 데이터 반환
+			GetSingle(CGameObject_Creater)->LoaderDatFile_For_PrototypeObject();
+			
+			// 오브젝트 트리로 현재 생성된 오브젝트 보여주기
+
+		}
+		if (ImGui::Button("Create_Clone"))
+		{
+			// 선택 오브젝트 클론
+			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+
+			GetSingle(CGameObject_Creater)->Create_ObjectClone_Prefab(idx, L"name1.dat", TAGLAY(LAY_BACKGROUND));
+		}
+		
+		if (ImGui::Button("CreateObject"))
+		{
+			// 새 오브젝트 생성
+			
+		}
+		IMGUI_TREE_END
+	}
 }
 
 void CImgui_UI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname)
@@ -117,6 +171,17 @@ void CImgui_UI::Button_TextureLoader()
 	// 텍스처 로드 툴
 
 	// 스레드로 텍스처 로드 예정
+}
+
+HRESULT CImgui_UI::Edit_ProtoObjectList()
+{
+	IMGUI_TREE_BEGIN("ProtoObject_List")
+	{
+		// 오브젝트 리스트
+
+		IMGUI_TREE_END
+	}
+	return S_OK;
 }
 
 HRESULT CImgui_UI::Edit_UIObject()
@@ -147,7 +212,6 @@ HRESULT CImgui_UI::Edit_UIObject()
 		IMGUI_TREE_END
 	}
 	mCurrentUIObject->Set_LoadUIDesc(myDesc);
-
 	return S_OK;
 }
 

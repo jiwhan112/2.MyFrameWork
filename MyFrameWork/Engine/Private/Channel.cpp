@@ -3,47 +3,56 @@
 
 CChannel::CChannel()
 {
-
 }
 
-HRESULT CChannel::NativeConstruct(const char * pName, CHierarchyNode * pNode)
+
+HRESULT CChannel::NativeConstruct(const char* pName/*, CHierarchyNode* pNode*/)
 {
-	strcpy_s(mSzName, pName);
-	mHierNode = pNode;
-	Safe_AddRef(mHierNode);
+	strcpy_s(m_szName, pName);
+
+	//m_pNode = pNode;
+
+	//Safe_AddRef(m_pNode);
 
 	return S_OK;
 }
 
-void CChannel::Set_TransformationMat(_fmatrix transform)
+void CChannel::Set_TransformationMatrix(_fmatrix TransformationMatrix)
 {
-	if (mHierNode == nullptr)
+	if (nullptr == m_pNode)
 		return;
 
-	mHierNode->Set_TransformMat(transform);
+	m_pNode->Set_TransformationMatrix(TransformationMatrix);
+}
+
+void CChannel::Set_HierarchyNodePtr(CHierarchyNode * pNode)
+{
+	m_pNode = pNode;
+
+	Safe_AddRef(m_pNode);
 }
 
 
-CChannel * CChannel::Create(const char * pName, CHierarchyNode * pNode)
-{
-	CChannel*	pInstance = NEW CChannel();
 
-	if (FAILED(pInstance->NativeConstruct(pName, pNode)))
+CChannel * CChannel::Create(const char* pName/*, CHierarchyNode* pNode*/)
+{
+	CChannel*	pInstance = new CChannel();
+
+	if (FAILED(pInstance->NativeConstruct(pName/*, pNode*/)))
 	{
-		MSGBOX("Failed to Creating CChannel");
+		MSGBOX("Failed to Created CChannel");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 
 void CChannel::Free()
 {
-	for (auto& pKey: mVectorKeyFrame)
-	{
-		Safe_Delete(pKey);
-	}
-	mVectorKeyFrame.clear();
-	Safe_Release(mHierNode);
+	for (auto& pKeyFrame : m_KeyFrames)
+		Safe_Delete(pKeyFrame);
 
+	m_KeyFrames.clear();
+
+	Safe_Release(m_pNode);
 }
+

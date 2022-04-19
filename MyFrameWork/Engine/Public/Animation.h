@@ -2,51 +2,59 @@
 
 #include "Base.h"
 
+/* 하나의 애니메이션 */
+
 BEGIN(Engine)
-class CChannel;
 
 class CAnimation final : public CBase
 {
-public:
+private:
 	CAnimation();
 	virtual ~CAnimation() = default;
 
 public:
-	virtual HRESULT NativeConstruct(const char* name, _double Duration, _double TickperSecond);
+	void Reserve(_uint iNumChannels) {
+		m_Channels.reserve(iNumChannels);
+		m_iNumChannels = iNumChannels;
+	}
+
+	const vector<class CChannel*>* Get_Channels() const {
+		return &m_Channels;
+	}
+public:
+	HRESULT NativeConstruct(const char* pName, _double Duration, _double TickPerSecond);
 	HRESULT Update_TransformMatrices(_double TimeDelta);
 
-public:
+	void Add_Channel(class CChannel* pChannel) {
+		m_Channels.push_back(pChannel);
+	}
 
-	void Add_Channel(CChannel* pChannel)
-	{
-		mVectorCheannels.push_back(pChannel);
-	}
-	void Reserve(_uint MaxChannel)
-	{
-		mVectorCheannels.reserve(MaxChannel);
-		mNumChannels = MaxChannel;
-	}
-	void Set_TickPerAniTimeScale(_double timer) { mTickPerAniTimeScale = timer; }
 
 private:
-	// 애니메이션 이름
-	char		mSzName[MAX_PATH] = "";
-	// 전체 시간
-	_double		mDuration = 0.0;
-	// 재생 속도
-	_double		mTickPerAniTimeScale = 0.0;
-	_double		mPlayTimeAcc = 0.0;
+	char		m_szName[MAX_PATH] = "";
 
-	// 영향 받는 뼈의 개수와 사용뼈 저장
-	_uint							mNumChannels = 0;
-	vector<CChannel*>				mVectorCheannels;
-	typedef vector<CChannel*>		CHANNELS;
-	// EndCheck
-	_bool		misFinished= false;
+	/* 전체재생시간. */
+	_double		m_Duration = 0.0;
+
+	/* 시간당 애니메이션 재생 속도. */
+	_double		m_TickPerSecond = 0.0;
+
+	_double		m_PlayTimeAcc = 0.0;
+
+	/* 이 애님에ㅣ션을 재생하는데 사용하는 뼈의 갯수. */
+	_uint		m_iNumChannels = 0;
+
+	/* 현재 애니메이션을 표현하기위해 사용하는 뼈들. */
+	vector<class CChannel*>			m_Channels;
+	typedef vector<class CChannel*>	CHANNELS;
+
+	_bool		m_isFinished = false;
+
+
 
 
 public:
-	static CAnimation* Create(const char* name,_double Duration, _double TickperSecond);
+	static CAnimation* Create(const char* pName, _double Duration, _double TickPerSecond);
 	virtual void Free() override;
 };
 

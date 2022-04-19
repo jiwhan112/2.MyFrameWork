@@ -46,12 +46,10 @@ CGameObject* CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar * p
 		return nullptr;
 
 	CGameObject*	pPrototype = Find_Prototype(pPrototypeTag);
-	if (nullptr == pPrototype)
-		return nullptr;
+	NULL_CHECK_BREAK(pPrototype);
 
 	CGameObject*	pGameObject = pPrototype->Clone(pArg);
-	if (nullptr == pGameObject)
-		return nullptr;
+	NULL_CHECK_BREAK(pGameObject);
 
 	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
 
@@ -61,15 +59,14 @@ CGameObject* CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar * p
 		if (nullptr == pLayer)
 			return nullptr;
 
-		if (FAILED(pLayer->Add_GameObject(pGameObject)))
-			return nullptr;
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(pGameObject),nullptr);
 
 		m_pLayers[iLevelIndex].insert(LAYERS::value_type(pLayerTag, pLayer));
 	}
 	else
 	{
-		if (FAILED(pLayer->Add_GameObject(pGameObject)))
-			return nullptr;
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(pGameObject), nullptr);
+
 	}
 	return pGameObject;
 }

@@ -124,12 +124,12 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		_float2(0.5f, 0.5f),
 	};
 
-//	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
-//	CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);
-//	uiobj->Set_LoadUIDesc(desc);
-//	mIMGUI_UI->Set_UIObject(uiobj);
+	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);
+	uiobj->Set_LoadUIDesc(desc);
+	mIMGUI_UI->Set_UIObject(uiobj);
 
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MYTERRAIN)));
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_TEST)));
 

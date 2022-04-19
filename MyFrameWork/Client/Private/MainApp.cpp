@@ -12,6 +12,7 @@
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
 #include "GameObject_FBX.h"
+#include "GameObject_FBX_Ani.h"
 
 
 CMainApp::CMainApp()
@@ -123,13 +124,15 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
 
-	// _matrix			TransformMatrix;
-	// TransformMatrix = XMMatrixIdentity();
-	// TransformMatrix = XMMatrixScaling(3, 3, 3) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	// 
-	// FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
-	// 	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", TransformMatrix)));
+	// 정적 오브젝트
+	_float4x4		DefaultTransform;	
+	DefaultTransform = _float4x4::CreateScale(3) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
+	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
 
+	// 동적 오브젝트
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
+	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
 
 
 	// 텍스처 컴포넌트
@@ -174,6 +177,10 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"),
 			VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements)));
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxAni.hlsl"),
+			VTXANIMODEL_DECLARATION::Elements, VTXANIMODEL_DECLARATION::iNumElements)));
+
 	Safe_AddRef(m_pRenderer);
 	return S_OK;
 }
@@ -190,12 +197,16 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
-	// 
-	// FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
+	 
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
 	// 	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
+	//
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST_ANI),
+	//	 CGameObject_FBX_Ani::Create(m_pDevice, m_pDeviceContext)));
+
 	
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
-		CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
+	//	CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
 
 	// #Tag 깡통 오브젝트들 초기화
 	// 깡통: 컴포넌트 기능으로 여러가지 오브젝트를 만들 수 있게 설계된 오브젝트를 뜻함

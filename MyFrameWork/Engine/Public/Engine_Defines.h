@@ -24,8 +24,9 @@
 #include <Direct_TK/DDSTextureLoader.h>
 #include <Direct_TK/WICTextureLoader.h>
 #include <Direct_TK/ScreenGrab.h>
+#include <Direct_TK/SimpleMath.h>
+#include <Direct_TK/SpriteFont.h>
 #include <Direct_TK/Mouse.h>
-//#include <Direct_TK/SimpleMath.h>
 
 //#include <Direct_TK/GeometricPrimitive.h>
 //#include <Direct_TK/SpriteFont.h>

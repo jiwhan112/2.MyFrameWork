@@ -34,12 +34,12 @@ _int CLevel_Logo::LateTick(_double TimeDelta)
 
 	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
 
-	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & DIS_Down)
 	{
 		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
 	{
 		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_TOOL)));
 	}

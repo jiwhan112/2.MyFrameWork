@@ -41,32 +41,43 @@ _int CGameObject_FBX_Ani::Tick(_double TimeDelta)
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	CGameInstance* pGameInstance = GetSingle(CGameInstance);
-	if (pGameInstance->Get_DIKeyState(DIK_UPARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_UPARROW) & DIS_Press)
 	{
 		mComTransform->GO_Straight(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_DOWNARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_DOWNARROW) & DIS_Press)
 	{
 		mComTransform->GO_Backward(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & DIS_Press)
 	{
 		mComTransform->Turn(XMVectorSet(0,1,0,0), TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & DIS_Press)
 	{
 		mComTransform->Turn(XMVectorSet(0, -1, 0, 0), TimeDelta);
 	}
+	static int Index = 0;
 
+	if (pGameInstance->Get_DIKeyState(DIK_F) & DIS_Down)
+	{
+		int max = mComModel->Get_NumAnimations();
+		Index++;
+		Index %= max;
+	}
+
+	mComModel->SetUp_AnimIndex(Index);
 	return UPDATENONE;
 }
 
 _int CGameObject_FBX_Ani::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return UPDATENONE;
 }
@@ -76,14 +87,16 @@ HRESULT CGameObject_FBX_Ani::Render()
 	FAILED_CHECK(__super::Render());
 	FAILED_CHECK(Set_ConstantTable());
 
-	_uint iNumMaterials = mComModel->Get_Materials();
+	_uint iNumMaterials = mComModel->Get_NumMaterials();
 
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{
+
 		mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
 	//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
-		mComModel->Render(mComShader, 0, i);
+		mComModel->Render(mComShader, 0, i,STR_BONES);
 	}
+
 
 	return S_OK;
 }
@@ -117,8 +130,8 @@ CGameObject_FBX_Ani* CGameObject_FBX_Ani::Clone(void* pArg)
 HRESULT CGameObject_FBX_Ani::Set_Component()
 {
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_MODEL), TEXT("Com_Model"), (CComponent**)&mComModel));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI), TEXT("Com_Model"), (CComponent**)&mComModel));
 	return S_OK;
 }
 
@@ -130,15 +143,15 @@ HRESULT CGameObject_FBX_Ani::Set_ConstantTable()
 	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_VIEW, &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_VIEW), sizeof(_float4x4)));
 	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_PROJ, &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_PROJ), sizeof(_float4x4)));
 
-	const LIGHTDESC* pLightDesc = pGameInstance->Get_LightDesc(0);
-	if (pLightDesc == nullptr)
-		return E_FAIL;
+	//const LIGHTDESC* pLightDesc = pGameInstance->Get_LightDesc(0);
+	//if (pLightDesc == nullptr)
+	//	return E_FAIL;
 
 	//	FAILED_CHECK(mComShader->Set_RawValue("g_vLightPos", &pLightDesc->vDiffuse, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_DIR, &pLightDesc->vDirection, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_DIFFUSE, &pLightDesc->vDiffuse, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_AMBIENT, &pLightDesc->vAmbient, sizeof(_float4)));
-	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_SPECULAR, &pLightDesc->vSpecular, sizeof(_float4)));
+	//FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_DIR, &pLightDesc->vDirection, sizeof(_float4)));
+	//FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_DIFFUSE, &pLightDesc->vDiffuse, sizeof(_float4)));
+	//FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_AMBIENT, &pLightDesc->vAmbient, sizeof(_float4)));
+	//FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_SPECULAR, &pLightDesc->vSpecular, sizeof(_float4)));
 
 
 	return S_OK;

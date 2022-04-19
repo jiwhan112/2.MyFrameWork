@@ -195,29 +195,29 @@
     <ClCompile Include="..\Private\LightMgr.cpp">
       <Filter>01.Utility\08.Light\Mgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Model.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MeshContainer.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\FileInfo.cpp">
       <Filter>01.Utility\09.FileInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Texture_map.cpp">
       <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\HierarchyNode.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\03.HierarchyNode</Filter>
+    <ClCompile Include="..\Private\Engine_Function.cpp">
+      <Filter>99.Defines</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Channel.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation\Channel</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\HierarchyNode.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\03.HierarchyNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MeshContainer.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Animation.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Engine_Function.cpp">
-      <Filter>99.Defines</Filter>
+    <ClCompile Include="..\Private\Model.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,26 +329,26 @@
     <ClInclude Include="..\Public\LightMgr.h">
       <Filter>01.Utility\08.Light\Mgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Model.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MeshContainer.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\FileInfo.h">
       <Filter>01.Utility\09.FileInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Texture_map.h">
       <Filter>01.Utility\06.ComponentMgr\04.Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HierarchyNode.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\03.HierarchyNode</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Channel.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HierarchyNode.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\03.HierarchyNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MeshContainer.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Animation.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

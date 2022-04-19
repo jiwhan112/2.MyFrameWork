@@ -29,22 +29,22 @@ _int CCamera_Client::Tick(_double TimeDelta)
 {
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 
-	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
 	{
 		mComTransform->GO_Straight(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
 	{
 		mComTransform->GO_Backward(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_A) & DIS_Press)
 	{
 		mComTransform->GO_Left(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_D) & DIS_Press)
 	{
 		mComTransform->GO_Right(TimeDelta);
 	}

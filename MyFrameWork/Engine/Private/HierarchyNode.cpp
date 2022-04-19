@@ -2,57 +2,49 @@
 
 CHierarchyNode::CHierarchyNode()
 {
-
 }
 
-
-
-HRESULT CHierarchyNode::NativeConstruct(const char* szName, _float4x4 mat, _uint depth , CHierarchyNode* parent)
+HRESULT CHierarchyNode::NativeConstruct(const char* pName, _float4x4 TransformationMatrix, _uint iDepth, CHierarchyNode* pParent)
 {
-	// 초기화
-	mParent = parent;
-	Safe_AddRef(mParent);
+	m_pParent = pParent;
+	Safe_AddRef(m_pParent);
 
-	strcpy_s(mszName, szName);
-	XMStoreFloat4x4(&mTransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&mat)));
-	XMStoreFloat4x4(&mCombinedTransformationMatrix, XMMatrixIdentity());
-	mDepth = depth;
+	strcpy_s(m_szName, pName);
+	XMStoreFloat4x4(&m_OffsetMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransformationMatrix)));
+	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
+	m_iDepth = iDepth;
+
 	return S_OK;
 }
 
-void CHierarchyNode::Update_CombinedTransformMatrix()
+void CHierarchyNode::Update_CombinedTransformationMatrix()
 {
-	// 최종 행렬을 구한다.
-	_matrix TransformMat = XMLoadFloat4x4(&mTransformationMatrix);
-	_matrix Combinedmat ;
+	_matrix TransformationMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
+	_matrix CombinedTransformationMatrix;
 
-	if (mParent == nullptr)
-	{
-		// 최종행렬 = 자기자신
-		Combinedmat = TransformMat;
-	}
+	if (nullptr == m_pParent)
+		CombinedTransformationMatrix = TransformationMatrix;
 	else
-	{
-		// 최종행렬 = 부모의 행렬을 곱한 값
-		Combinedmat = TransformMat * XMLoadFloat4x4(&mParent->mCombinedTransformationMatrix);
-	}
+		CombinedTransformationMatrix = TransformationMatrix * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix);
+
+	XMStoreFloat4x4(&m_CombinedTransformationMatrix, CombinedTransformationMatrix);
 }
 
-CHierarchyNode * CHierarchyNode::Create(const char* szName,_float4x4 mat, _uint depth , CHierarchyNode* p)
+CHierarchyNode * CHierarchyNode::Create(const char* pName, _float4x4 TransformationMatrix, _uint iDepth, CHierarchyNode* pParent)
 {
-	CHierarchyNode*	pInstance = NEW CHierarchyNode();
+	CHierarchyNode*	pInstance = new CHierarchyNode();
 
-	if (FAILED(pInstance->NativeConstruct(szName, mat, depth,p)))
+	if (FAILED(pInstance->NativeConstruct(pName, TransformationMatrix, iDepth, pParent)))
 	{
-		MSGBOX("Failed to Creating CHierarchyNode");
+		MSGBOX("Failed to Created CHierarchyNode");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 
 void CHierarchyNode::Free()
 {
-	Safe_Release(mParent);
+	Safe_Release(m_pParent);
 
 }

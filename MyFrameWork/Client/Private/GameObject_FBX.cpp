@@ -41,22 +41,22 @@ _int CGameObject_FBX::Tick(_double TimeDelta)
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	CGameInstance* pGameInstance = GetSingle(CGameInstance);
-	if (pGameInstance->Get_DIKeyState(DIK_UPARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_UPARROW) & DIS_Press)
 	{
 		mComTransform->GO_Straight(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_DOWNARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_DOWNARROW) & DIS_Press)
 	{
 		mComTransform->GO_Backward(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & DIS_Press)
 	{
 		mComTransform->Turn(XMVectorSet(0,1,0,0), TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & DIS_Press)
 	{
 		mComTransform->Turn(XMVectorSet(0, -1, 0, 0), TimeDelta);
 	}
@@ -76,7 +76,7 @@ HRESULT CGameObject_FBX::Render()
 	FAILED_CHECK(__super::Render());
 	FAILED_CHECK(Set_ConstantTable());
 
-	_uint iNumMaterials = mComModel->Get_Materials();
+	_uint iNumMaterials = mComModel->Get_NumMaterials();
 
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{

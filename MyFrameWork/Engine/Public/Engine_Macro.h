@@ -19,6 +19,11 @@
 
 #endif
 
+#define DIS_Up				0b00000001
+#define DIS_Down			0b00000110
+#define DIS_DoubleDown		0b00000100
+#define DIS_Press			0b11111111
+
 // »ö °ü·Ã
 #define D3D11COLOR_ARGB(a,r,g,b) \
     ((D3DCOLOR)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
@@ -52,6 +57,7 @@
 #define  MAX_STR			256
 #define  MAX_EXENAME		32
 
+#define  MAX_BONES			128
 
 #define DIS_Up				0b00000001
 #define DIS_Down			0b00000110
@@ -177,6 +183,10 @@ static const char* STR_LIGHT_AMBIENT = "g_vLightAmbient";
 static const char* STR_LIGHT_SPECULAR = "g_vLightSpecular";
 
 static const char* STR_CAMPOS = "g_CameraPosition";
+
+static const char* STR_BONES = "g_BoneMatrices";
+
+
 
 
 #pragma endregion

@@ -3,84 +3,73 @@
 #include "Component.h"
 
 BEGIN(Engine)
-class CHierarchyNode;
-class CAnimation;
+
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
-	enum E_MODEL_TYPE { MODEL_ANI,MODEL_NOANI,MODEL_END };
 
-public:
-	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	CModel(const CModel& rhs);
+	enum E_MODEL_TYPE { MODEL_NOANI, MODEL_ANI, MODEL_END };
+private:
+	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CModel(const CModel& rhs);
 	virtual ~CModel() = default;
 
 public:
-	virtual HRESULT NativeConstruct_Prototype(E_MODEL_TYPE type, const char* ModelPath, const char* ModelName, _fmatrix defaultMatrix);
+	_uint Get_NumMaterials() const;
+	_uint Get_NumAnimations()const { return m_iNumAnimations; }
+
+public:
+	virtual HRESULT NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);
 	virtual HRESULT NativeConstruct(void* pArg);
 
-	//	렌더링 전에 오브젝트 모델 컴포넌트에 사용할 텍스처 바인딩
-	HRESULT Bind_OnShader(class CShader * pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char * pValueName);
-	//	메시 컨테이너 랜더링
-	HRESULT Render(class CShader* shader,_uint pass, _uint iMaterialIndex);
-
 public:
-	_uint Get_Materials() const { return mNumMaterials; }
-	_uint Get_Meshs()const { return mNumMeshContainer; }
+	HRESULT SetUp_AnimIndex(_uint iAnimIndex);
+	HRESULT Update_CombinedTransformationMatrices(_double TimeDelta);
+	HRESULT Bind_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pValueName);
+	HRESULT Render(class CShader* pShader, _uint iPassIndex, _uint iMaterialIndex, const char* pBoneValueName = nullptr);
 
 private:
-	/*
-
-	메쉬에 접근하기 위한 aiScene 객체 assimp 지원 클래스이다.
-	mScene->mNumMeshes; // 재질 개수
-	mScene->mMeshes[0]->mNumVertices[]; // 메쉬 내부 접근예시
-	*/
-
-	const aiScene*				mScene = nullptr;
-	Importer					mImporter;
+	const aiScene*				m_pScene = nullptr;
+	Importer					m_Importer;
 
 private:
-	// 메쉬의 정보
-	_uint									mNumMeshContainer = 0;
-	// 메쉬 컨테이너의 집합
-	vector<class CMeshContainer*>*			mpVectorMeshContainers = nullptr;
+	_uint									m_iNumMeshContainers = 0;
+	vector<class CMeshContainer*>*			m_pMeshContainers = nullptr;
 	typedef vector<class CMeshContainer*>	MESHCONTAINERS;
+	E_MODEL_TYPE							m_eModelType = MODEL_END;
+	_float4x4								m_TransformMatrix;
 
-	E_MODEL_TYPE							meModelType = MODEL_END;
-	_float4x4								mTransformMatrix;
-
-	// 재질(텍스처)의 정보
-	_uint									mNumMaterials = 0;
-	vector<MESHMATERIALDESC*>				mVectorMaterials;
+private:
+	_uint									m_iNumMaterials = 0;
+	vector<MESHMATERIALDESC*>				m_Materials;
 	typedef vector<MESHMATERIALDESC*>		MATERIALS;
 
-	// 계층 노드 
-	vector<CHierarchyNode*>					mVectorHierarchyNodes;
-	typedef vector<CHierarchyNode*>			HIERARCHYNODES;
+private:
+	vector<class CHierarchyNode*>			m_HierarchyNodes;
+	typedef vector<class CHierarchyNode*>	HIERARCHYNODES;	
 
-	// 애니메이션 
-	_uint									miCurrentAnim=0;
-	_uint									mNumAnimations;
-	vector<CAnimation*>						mVectorAnimations;
-	typedef vector<CAnimation*>				ANIMATIONS;
-
+	
 
 private:
-	// 모델 메시 준비
+	_uint									m_iCurrentAnim = 0;
+	_uint									m_iNumAnimations;
+	vector<class CAnimation*>				m_Animations;
+	typedef vector<class CAnimation*>		ANIMATIONS;
+
+private:
 	HRESULT Ready_MeshContainers();
 	HRESULT Ready_Materials(const char* pModelFilePath);
-
-	// 애니메이션 준비
-	HRESULT Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _uint iDepth);
+	HRESULT Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _uint iDepth);	
 	HRESULT Ready_OffsetMatrices();
 	HRESULT Ready_Animation();
+	HRESULT Link_ChannelToNode();
 
-	CHierarchyNode*		Find_HeirarchyNode(const char* name);
+private:
+	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr);
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext,
-		E_MODEL_TYPE eModelType, const char* modelPath, const char* modelName, _fmatrix defaultMatrix);
-	virtual CModel* Clone(void* pArg) override;
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);
+	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

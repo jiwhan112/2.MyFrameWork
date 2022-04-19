@@ -8,6 +8,8 @@ class CModel;
 class CTexture;
 END
 
+// 애니메이션 모델 재생
+
 BEGIN(Client)
 class CGameObject_FBX_Ani final:
 	public CGameObject

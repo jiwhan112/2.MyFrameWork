@@ -44,6 +44,9 @@ public:
 	// 맵에 저장된 데이터로 씬에서 클론객체 생성해봄
 	HRESULT Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag);
 
+//	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
+
+
 	
 private:
 	CGameObject* Find_MapObject(wstring key);

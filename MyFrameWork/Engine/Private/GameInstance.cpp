@@ -31,7 +31,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 		return E_FAIL;
 
 	FAILED_CHECK(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinCX, GraphicDesc.iWinCY, ppDeviceOut, ppDeviceContextOut));
-	FAILED_CHECK(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd));
+	FAILED_CHECK(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd,0.3f));
 	FAILED_CHECK(m_pObject_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 
@@ -45,7 +45,7 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 		return -1;
 
 	// INPUT
-	FAILED_CHECK(m_pInput_Device->SetUp_InputDeviceState());
+	FAILED_CHECK(m_pInput_Device->SetUp_InputDeviceState(TimeDelta));
 
 	// Tick
 	FAILED_CHECK(m_pLevel_Manager->Tick(TimeDelta));

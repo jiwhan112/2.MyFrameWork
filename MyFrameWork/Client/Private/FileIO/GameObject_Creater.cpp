@@ -114,7 +114,6 @@ HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, c
 
 HRESULT CGameObject_Creater::Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag)
 {
-
 	// 복사된 오므젝트 레이어에 추가
 	CGameObject* findobject = Find_MapObject(cloneName);
 	if (findobject)
@@ -122,8 +121,13 @@ HRESULT CGameObject_Creater::Create_ObjectClone_Prefab(_uint levelindex, wstring
 		CGameObject* newObj = findobject->Clone(nullptr);
 		GetSingle(CGameInstance)->Push_Object(levelindex, layertag.c_str(), newObj);
 	}
-	return S_OK;
+	return S_OK; 
 }
+
+//HRESULT CGameObject_Creater::Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag)
+//{
+//	return E_NOTIMPL;
+//}
 
 CGameObject * CGameObject_Creater::Find_MapObject(wstring key)
 {

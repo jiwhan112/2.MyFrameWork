@@ -52,7 +52,7 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 	mComTransform->Scaled(XMVectorSet(mUiDesc.mSizeX, mUiDesc.mSizeY, 1.f, 0.0f));
 	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * mUiDesc.mPivot.x), -mUiDesc.mPosY + (g_iWinCY * mUiDesc.mPivot.y), 0, 1.f));
 
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_BLEND, this);
 	return _int();
 
 	return UPDATENONE;
@@ -64,7 +64,7 @@ HRESULT CGameObject_2D::Render()
 
 	FAILED_CHECK(Set_ConstantTable_UI());
 	FAILED_CHECK(Set_ConstantTable_Tex());
-	FAILED_CHECK(Set_ConstantTable_Light());
+//	FAILED_CHECK(Set_ConstantTable_Light());
 	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 	return S_OK;
 }

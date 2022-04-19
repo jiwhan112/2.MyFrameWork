@@ -29,7 +29,7 @@ private:
 	typedef vector<ID3D11ShaderResourceView*>		TEXTURES;
 
 public:
-	static CTexture* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar* pTexturePath, _uint iNumTextures);
+	static CTexture* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar* pTexturePath, _uint iNumTextures = 1);
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
 };

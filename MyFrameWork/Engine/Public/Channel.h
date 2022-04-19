@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Component.h"
+#include "Base.h"
 
+
+/* 특정 애님에ㅣ션에서 사용되는 뼈. */
 BEGIN(Engine)
-class CHierarchyNode;
 
-// 특정 애니메이션의 뼈의 키프레임 정보를 저장한다.
 class CChannel final : public CBase
 {
 public:
@@ -13,41 +13,49 @@ public:
 	virtual ~CChannel() = default;
 
 public:
-	HRESULT NativeConstruct(const char* pName, CHierarchyNode* pNode);
+	const vector<KEYFRAME*>* Get_KeyFrames() const {
+		return &m_KeyFrames;
+	}
+	_uint Get_CurrentKeyFrame() const {
+		return m_iCurrentKeyFrame;
+	}
+
+	const char* Get_Name() const {
+		return m_szName;
+	}
+
+	void Set_CurrentKeyFrame(_uint iKeyFrameIndex) {
+		m_iCurrentKeyFrame = iKeyFrameIndex;
+	}
+
+	void Set_TransformationMatrix(_fmatrix TransformationMatrix);
+
+	void Set_HierarchyNodePtr(class CHierarchyNode* pNode);
 
 public:
-	const	vector<KEYFRAME*>* Get_VecKeyFrame() const { return &mVectorKeyFrame; }
-	_uint	Get_CurrentKeyFrame()  const { return mCurrentKeyFrame; }
-	void	Set_CurrentKeyFrame(_uint value)
-	{
-		mCurrentKeyFrame = value;
+	void Reserve(_uint iNumKeyFrames) {
+		m_KeyFrames.reserve(iNumKeyFrames);
+		m_iNumKeyFrames = iNumKeyFrames;
+	}
+	void Add_KeyFrame(KEYFRAME* pKeyFrame) {
+		m_KeyFrames.push_back(pKeyFrame);
 	}
 
-	void	Set_TransformationMat(_fmatrix transform);
-
-public: // 벡터 인터페이스
-	
-	void Reserve(_uint iNumKeyFrames)
-	{
-		mVectorKeyFrame.reserve(iNumKeyFrames);
-		mNumKeyFrames = iNumKeyFrames;
-	}
-	void Add_KeyFrame(KEYFRAME* pKeyFrame)
-	{
-		mVectorKeyFrame.push_back(pKeyFrame);
-	}
+public:
+	HRESULT NativeConstruct(const char* pName/*, class CHierarchyNode* pNode*/);
 
 private:
-	char						mSzName[MAX_PATH] = "";
-	_uint						mCurrentKeyFrame = 0;
-	_uint						mNumKeyFrames = 0;
-	vector<KEYFRAME*>			mVectorKeyFrame;
-	typedef vector<KEYFRAME*>	KEYRANES;
+	char						m_szName[MAX_PATH] = "";
 
-	CHierarchyNode*				mHierNode = nullptr;
+	_uint						m_iCurrentKeyFrame = 0;
+	_uint						m_iNumKeyFrames = 0;
+	vector<KEYFRAME*>			m_KeyFrames;
+	typedef vector<KEYFRAME*>	KEYFRAME;
+
+	CHierarchyNode*				m_pNode = nullptr;
 
 public:
-	static CChannel* Create(const char* pName, class CHierarchyNode* pNode);
+	static CChannel* Create(const char* pName/*, class CHierarchyNode* pNode*/);
 	virtual void Free() override;
 };
 
