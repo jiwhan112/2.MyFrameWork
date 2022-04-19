@@ -15,6 +15,7 @@ public:
 	virtual ~CObject_Manager() = default;
 public:
 	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIndex);
+	const list<class CGameObject*>* Get_GameObjectLayerList(_uint iLevelIndex, const _tchar* pLayerTag);
 public:
 	HRESULT			Reserve_Container(_uint iNumLevels);
 	HRESULT			Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype); /* 원형객체를 추가한다. */
@@ -29,11 +30,11 @@ public:
 	_int Tick(_double TimeDelta);
 	_int LateTick(_double TimeDelta);
 private:
-	map<const _tchar*, class CGameObject*>			m_Prototypes;
-	typedef map<const _tchar*, class CGameObject*>	PROTOTYPES;
+	map<wstring, class CGameObject*>			m_Prototypes;
+	typedef map<wstring, class CGameObject*>	PROTOTYPES;
 private:
-	map<const _tchar*, class CLayer*>*			m_pLayers = nullptr;
-	typedef map<const _tchar*, class CLayer*>	LAYERS;
+	map<wstring, class CLayer*>*			m_pLayers = nullptr;
+	typedef map<wstring, class CLayer*>	LAYERS;
 
 	_uint			m_iNumLevels = 0;
 

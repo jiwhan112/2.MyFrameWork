@@ -31,7 +31,7 @@ HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 		strcpy_s(mTexDESC.mTextureKey_Diffuse, str.c_str());
 
 	}
-	
+	mCurrentShaderPass = 1;
 	mComTexture->Set_TextureMap(mTexDESC.mTextureKey_Diffuse);
 
 
@@ -46,14 +46,14 @@ _int CGameObject_2D::Tick(_double TimeDelta)
 
 _int CGameObject_2D::LateTick(_double TimeDelta)
 {
-	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
 
 	mComTransform->Scaled(XMVectorSet(mUiDesc.mSizeX, mUiDesc.mSizeY, 1.f, 0.0f));
 	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * mUiDesc.mPivot.x), -mUiDesc.mPosY + (g_iWinCY * mUiDesc.mPivot.y), 0, 1.f));
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_BLEND, this);
-	return _int();
+
+	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
 	return UPDATENONE;
 
@@ -65,7 +65,10 @@ HRESULT CGameObject_2D::Render()
 	FAILED_CHECK(Set_ConstantTable_UI());
 	FAILED_CHECK(Set_ConstantTable_Tex());
 //	FAILED_CHECK(Set_ConstantTable_Light());
+	
 	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
+
+	FAILED_CHECK(__super::Render());
 	return S_OK;
 }
 

@@ -41,13 +41,39 @@ public:
 			return mParrent;
 		return nullptr;
 	}
+
+	void Set_Parent(CGameObject* obj)
+	{
+		Safe_Release(mParrent);
+		mParrent = obj;
+		Safe_AddRef(mParrent);
+
+	}
+
 	const list<CGameObject*>* Get_Children() const
 	{
 		if (mChildren)
 			return mChildren;
 		return nullptr;
 	}
+
+	void Set_AddChild(CGameObject* obj,bool bAddDepth = true)
+	{
+		if (mChildren == nullptr)
+			mChildren = NEW list<CGameObject *>;
+
+		if (bAddDepth)
+			obj->Set_Depth(mDepth + 1);
+
+		else
+			obj->Set_Depth(mDepth);
+
+		mChildren->push_back(obj);
+		Safe_AddRef(obj);
+	}
+
 	_uint Get_Depth() const { return mDepth; }
+	void Set_Depth(_uint depth) { mDepth = depth; }
 
 protected:
 	virtual HRESULT Set_Component()PURE;

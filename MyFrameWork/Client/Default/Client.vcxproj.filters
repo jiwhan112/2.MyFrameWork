@@ -159,9 +159,6 @@
     <ClInclude Include="..\Public\Client_Includes.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="Client_Enum.h">
-      <Filter>99.Defines</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_Loader.h">
       <Filter>01.Level\00.Loader</Filter>
     </ClInclude>
@@ -230,6 +227,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_3D.h">
       <Filter>02.GameObject\02.3DObject\0.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Enum.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_DESC.h">
+      <Filter>99.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

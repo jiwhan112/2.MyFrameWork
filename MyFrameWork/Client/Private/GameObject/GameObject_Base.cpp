@@ -52,6 +52,7 @@ _int CGameObject_Base::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_Base::Render()
 {
+	FAILED_CHECK(__super::Render());
 	return S_OK;
 }
 

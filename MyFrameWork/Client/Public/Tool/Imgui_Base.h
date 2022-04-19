@@ -23,6 +23,7 @@ public:
 	enum E_IMGUI_CHANEL
 	{
 		IMGUI_CHANEL_TEST,
+		IMGUI_CHANEL_OBJECT,
 		IMGUI_CHANEL_MAP,
 		IMGUI_CHANEL_END,
 
@@ -30,6 +31,7 @@ public:
 	const char* IMGUI_MAIN[IMGUI_CHANEL_END] =
 	{
 		"TestBar",
+		"IMGUI_CHANEL_OBJECT",
 		"MapTool"
 
 	};

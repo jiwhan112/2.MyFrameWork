@@ -20,6 +20,15 @@ CComponent * CObject_Manager::Get_Component(_uint iLevelIndex, const _tchar * pL
 	return pLayer->Get_Component(pComponentTag, iIndex);
 }
 
+const list<class CGameObject*>* CObject_Manager::Get_GameObjectLayerList(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	const CLayer* layer = Find_Layer(iLevelIndex, pLayerTag);
+	if (layer != nullptr)
+		return layer->Get_GameObjectList();
+	
+	return nullptr;
+}
+
 HRESULT CObject_Manager::Reserve_Container(_uint iNumLevels)
 {
 	m_iNumLevels = iNumLevels;
@@ -156,7 +165,9 @@ _int CObject_Manager::LateTick(_double TimeDelta)
 
 CGameObject * CObject_Manager::Find_Prototype(const _tchar * pPrototypeTag)
 {
-	auto	iter = find_if(m_Prototypes.begin(), m_Prototypes.end(), CTagFinder(pPrototypeTag));
+//	auto	iter = find_if(m_Prototypes.begin(), m_Prototypes.end(), CTagFinder(pPrototypeTag));
+
+	auto	iter = m_Prototypes.find(pPrototypeTag);
 
 	if (iter == m_Prototypes.end())
 		return nullptr;
@@ -166,7 +177,9 @@ CGameObject * CObject_Manager::Find_Prototype(const _tchar * pPrototypeTag)
 
 CLayer * CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
-	auto	iter = find_if(m_pLayers[iLevelIndex].begin(), m_pLayers[iLevelIndex].end(), CTagFinder(pLayerTag));
+
+//	auto	iter = find_if(m_pLayers[iLevelIndex].begin(), m_pLayers[iLevelIndex].end(), CTagFinder(pLayerTag));
+	auto	iter = m_pLayers[iLevelIndex].find(pLayerTag);
 
 	if (iter == m_pLayers[iLevelIndex].end())
 		return nullptr;

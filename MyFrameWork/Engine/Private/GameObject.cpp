@@ -63,17 +63,29 @@ HRESULT CGameObject::NativeConstruct(void * pArg)
 _int CGameObject::Tick(_double TimeDelta)
 {
 	// 부모 움직임
+	for (auto child : *mChildren)
+	{
+		child->Tick(TimeDelta);
+	}
+
 	return _int();
 }
 
 _int CGameObject::LateTick(_double TimeDelta)
 {
+	for (auto child : *mChildren)
+	{
+		child->LateTick(TimeDelta);
+	}
 	return _int();
 }
 
 HRESULT CGameObject::Render()
 {
-
+	for (auto child : *mChildren)
+	{
+		child->Render();
+	}
 	return S_OK;
 }
 
@@ -117,6 +129,7 @@ void CGameObject::Free()
 	m_Components.clear();
 
 	Safe_Release(mParrent);
+
 	if (mChildren)
 	{
 		for (auto& c : *mChildren)

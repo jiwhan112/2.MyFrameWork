@@ -29,9 +29,14 @@ _int CLayer::Tick(_double TimeDelta)
 {
 	for (auto& pGameObject : m_Objects)
 	{
-		if (0 > pGameObject->Tick(TimeDelta))
+		if (pGameObject->Get_IsLife() == false)
+			continue;
+
+		if (pGameObject->Tick(TimeDelta) < 0)
 			return -1;
 	}
+
+
 	return 0;
 }
 
@@ -39,9 +44,15 @@ _int CLayer::LateTick(_double TimeDelta)
 {
 	for (auto& pGameObject : m_Objects)
 	{
-		if (0 > pGameObject->LateTick(TimeDelta))
+		if (pGameObject->Get_IsLife() == false)
+			continue;
+
+		if (pGameObject->LateTick(TimeDelta) < 0)
 			return -1;
 	}
+
+	// 죽은 오브젝트 실제 삭제
+	Release_DeadObejct();
 
 	return 0;
 }
@@ -60,3 +71,24 @@ void CLayer::Free()
 
 	m_Objects.clear();
 }
+
+HRESULT CLayer::Release_DeadObejct()
+{
+	// 죽은 오브젝트 리스트 삭제
+	OBJECTS::iterator iter_begin = m_Objects.begin();
+	OBJECTS::iterator iter_end = m_Objects.end();
+
+	for (OBJECTS::iterator iter = iter_begin; iter != m_Objects.end();)
+	{
+		if ((*iter)->Get_IsLife() == false)
+		{
+			Safe_Release(*iter);
+			iter = m_Objects.erase(iter);
+		}
+		else
+			iter++;
+	}
+
+	return S_OK;
+}
+

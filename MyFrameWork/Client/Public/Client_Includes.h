@@ -3,6 +3,7 @@
 // TODO: MY INCLUDES
 #include "GameInstance.h"
 #include "Client_Defines.h"
+#include "Client_DESC.h"
 #include "Client_Enum.h"
 
 #include "../Public/Imgui/imgui.h"

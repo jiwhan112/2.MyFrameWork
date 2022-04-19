@@ -42,10 +42,12 @@ public:
 	HRESULT Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char* data, wstring protoname);
 
 	// 맵에 저장된 데이터로 씬에서 클론객체 생성해봄
-	HRESULT Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag);
+	CGameObject* Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag);
 
 //	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
 
+	// 테스트 부모자식 객체
+	CGameObject* Create_Test_ParentChild(_uint levelindex, wstring cloneName, wstring layertag);
 
 	
 private:

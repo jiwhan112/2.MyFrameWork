@@ -166,6 +166,8 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp" />
     <ClInclude Include="..\Public\Camera_Client.h" />
+    <ClInclude Include="..\Public\Client_DESC.h" />
+    <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h" />
     <ClInclude Include="..\Public\FIleIO\ObjectIO.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
@@ -208,7 +210,6 @@
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h" />
     <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="Client_Enum.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

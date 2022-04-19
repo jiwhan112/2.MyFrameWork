@@ -205,6 +205,14 @@ HRESULT CGameInstance::Push_Object(_uint levelindex, const _tchar * pLayerTag, C
 	return m_pObject_Manager->Push_GameObject(levelindex,pLayerTag,obj);
 }
 
+const list<CGameObject*>* CGameInstance::Get_GameObjectLayerList(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	if (m_pObject_Manager == nullptr)
+		return nullptr;
+
+	return m_pObject_Manager->Get_GameObjectLayerList(iLevelIndex, pLayerTag);
+}
+
 HRESULT CGameInstance::SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix)
 {
 	NULL_CHECK_HR(m_pPipeLine);

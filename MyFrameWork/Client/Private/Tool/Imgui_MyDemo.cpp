@@ -31,6 +31,8 @@ HRESULT CImgui_MyDemo::Update(_double time)
 	// ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 	// ImGui::End();
 
+	
+
 
 
 	return S_OK;
@@ -549,6 +551,44 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 
 				IMGUI_TREE_END
 
+			}
+
+			IMGUI_TREE_BEGIN("LISTBOX")
+			{
+				const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
+				static int item_current_idx = 0; // Here we store our selection data as an index.
+				if (ImGui::BeginListBox("listbox 1"))
+				{
+					for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+					{
+						const bool is_selected = (item_current_idx == n);
+						if (ImGui::Selectable(items[n], is_selected))
+							item_current_idx = n;
+
+						// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndListBox();
+				}
+
+				// Custom size: use all width, 5 items tall
+				ImGui::Text("Full-width:");
+				if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+				{
+					for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+					{
+						const bool is_selected = (item_current_idx == n);
+						if (ImGui::Selectable(items[n], is_selected))
+							item_current_idx = n;
+
+						// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndListBox();
+				}
+				IMGUI_TREE_END
 			}
 
 			IMGUI_TREE_BEGIN("COMBO")

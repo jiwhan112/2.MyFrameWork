@@ -190,6 +190,49 @@ static const wchar_t* STR_TAYOBJ(E_TAYGAMEOBJECT obj)
 	}
 }
 
-#define  TAGLAY STR_TAYLAY
-#define  TAGCOM STR_TAYCOM
-#define  TAGOBJ STR_TAYOBJ
+// 데이터 타입 별 정보
+enum E_OBJECT_DATA_TYPE
+{
+	OBJECT_TYPE_DATA_OBJECT,
+	OBJECT_TYPE_DATA_UIDESC,
+	OBJECT_TYPE_DATA_TEXTUREDESC,
+	OBJECT_TYPE_DATA_END,
+};
+
+
+// 오브젝트 별 파일 정보
+// 로드로 만드는 오브젝트는 모두 깡통오브젝트이다.
+enum E_OBJECT_TYPE
+{
+	OBJECT_TYPE_2D,
+	OBJECT_TYPE_3D,
+	OBJECT_TYPE_TERRAIN,
+	OBJECT_TYPE_END,
+
+};
+
+static const char* STR_TAGOBJ_TYPE(E_OBJECT_TYPE type)
+{
+	switch (type)
+	{
+	
+	case OBJECT_TYPE_2D:
+		return "OBJECT_TYPE_2D";
+	case OBJECT_TYPE_3D:
+		return "OBJECT_TYPE_3D";
+	case OBJECT_TYPE_TERRAIN:
+		return "OBJECT_TYPE_TERRAIN";
+	case OBJECT_TYPE_END:
+		return "";
+	default:
+		return "";
+	}
+
+}
+
+
+#define  TAGLAY			STR_TAYLAY
+#define  TAGCOM			STR_TAYCOM
+#define  TAGOBJ			STR_TAYOBJ
+#define  TAGOBJTYPE		STR_TAGOBJ_TYPE
+

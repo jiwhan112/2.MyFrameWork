@@ -44,6 +44,7 @@ private:
 	//// UI 정보 저장
 	//void Button_UISave();
 
+	HRESULT Update_ObjectList();
 
 private:
 	int item_current = 0;
@@ -55,11 +56,13 @@ private:
 	// 여기에 저장된 UISet이 한 묶음의 형태로 저장된다.
 	// list<class CGameObject_2D*> mListUISet;
 
-	// 오브젝트 저장
-	class CObjectIO*		mObjectIO = nullptr;
+	// 오브젝트 저장기능
+	class CObjectIO*		mObjectSaverClass = nullptr;
 
 	// 오브젝트 생성 
 	// CGameObject_Creater*		mCreater = nullptr;
+
+	bool					mIsObjectList = false;
 
 
 public:
