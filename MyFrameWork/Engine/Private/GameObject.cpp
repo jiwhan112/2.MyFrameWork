@@ -9,8 +9,7 @@ CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
-	mParrent = nullptr;
-	mChildren = nullptr;
+
 }
 
 
@@ -23,8 +22,6 @@ CGameObject::CGameObject(const CGameObject & rhs)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
-	mParrent = nullptr;
-	mChildren = nullptr;
 
 
 }
@@ -62,30 +59,24 @@ HRESULT CGameObject::NativeConstruct(void * pArg)
 
 _int CGameObject::Tick(_double TimeDelta)
 {
-	// 부모 움직임
-	for (auto child : *mChildren)
-	{
-		child->Tick(TimeDelta);
-	}
 
-	return _int();
+
+
+	return UPDATENONE;
 }
 
 _int CGameObject::LateTick(_double TimeDelta)
 {
-	for (auto child : *mChildren)
-	{
-		child->LateTick(TimeDelta);
-	}
-	return _int();
+
+
+
+	return UPDATENONE;
 }
 
 HRESULT CGameObject::Render()
 {
-	for (auto child : *mChildren)
-	{
-		child->Render();
-	}
+
+
 	return S_OK;
 }
 
@@ -127,16 +118,4 @@ void CGameObject::Free()
 	for (auto& Pair : m_Components)
 		Safe_Release(Pair.second);
 	m_Components.clear();
-
-	Safe_Release(mParrent);
-
-	if (mChildren)
-	{
-		for (auto& c : *mChildren)
-		{
-			Safe_Release(c);
-		}
-		mChildren->clear();
-		Safe_Delete_Array(mChildren);
-	}
 }

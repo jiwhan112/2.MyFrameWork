@@ -162,7 +162,7 @@ void CImgui_UI::PATHMODE()
 		{
 
 			// 오브젝트 트리로 현재 생성된 오브젝트 보여주기
-			auto CreateCloneObject = GetSingle(CGameObject_Creater)->Get_Map_GameObjectClones();
+			auto CreateCloneObject = GetSingle(CGameObject_Creater)->Get_Map_GameObject2File_Proto();
 
 			static int selectObjectIndex = -1;
 
@@ -198,16 +198,7 @@ void CImgui_UI::PATHMODE()
 
 			IMGUI_TREE_END
 		}
-		
-	
 
-
-		//if (ImGui::Button("CreateObject"))
-		//{
-		//	// 새 오브젝트 생성	
-
-
-		//}
 		IMGUI_TREE_END
 	}
 }
@@ -311,27 +302,16 @@ HRESULT CImgui_UI::Update_ObjectList()
 	if (objList == nullptr)
 		return S_OK;
 
-	static _int selectIndex = -1;
-
 	if (ImGui::BeginListBox("ObjectListBox"))
 	{
+		static _int selectIndex = -1;
 		_uint cnt = 0;
+
 		for (auto& obj : *objList)
 		{
 			if (obj == nullptr)
 				continue;
-			E_OBJECT_TYPE objtype = (E_OBJECT_TYPE)obj->Get_ObjectTypeID();
-
-
-			char buf[128] = "";
-			sprintf_s(buf,"OBJ_%s_%d", TAGOBJTYPE(objtype), cnt);
-
-			if (ImGui::Selectable(buf, selectIndex == cnt))
-			{
-				selectIndex = cnt;
-				Set_UIObject(static_cast<CGameObject_2D*>(obj));
-			}
-			cnt++;
+			Update_ChildObject_ListBox(obj, &cnt,&selectIndex);
 		}
 		ImGui::EndListBox();
 	}
@@ -352,6 +332,38 @@ HRESULT CImgui_UI::Update_ObjectList()
 
 	return S_OK;
 }
+
+void CImgui_UI::Update_ChildObject_ListBox(CGameObject * parent, _uint* cnt,_int* selectindex)
+{
+	E_OBJECT_TYPE objtype = (E_OBJECT_TYPE)parent->Get_ObjectTypeID();
+
+	char buf[128] = "";
+	sprintf_s(buf, "OBJ_%s_%d", TAGOBJTYPE(objtype),*cnt);
+
+	if (ImGui::Selectable(buf, *selectindex == *cnt))
+	{
+		*selectindex = *cnt;
+		Set_UIObject(static_cast<CGameObject_2D*>(parent));
+	}
+	(*cnt)++;
+
+	//auto childlist = parent->Get_Children();
+	//if (childlist == nullptr)
+	//	return;
+
+	//char buf2[128] = "";
+	//sprintf_s(buf2, "Child%d", parent->Get_Depth());
+
+	//for (auto& obj : *childlist)
+	//{
+	//	IMGUI_TREE_BEGIN(buf2)
+	//	{
+	//		Update_ChildObject_ListBox(obj, cnt, selectindex);
+	//		IMGUI_TREE_END
+	//	}
+	//}
+}
+
 
 CImgui_UI * CImgui_UI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {

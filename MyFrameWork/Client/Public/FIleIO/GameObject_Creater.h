@@ -27,9 +27,9 @@ public:
 public:
 	HRESULT Set_Device(ID3D11Device* d, ID3D11DeviceContext* c);
 
-	const map<wstring, CGameObject*>& Get_Map_GameObjectClones() const
+	const map<wstring, CGameObject*>& Get_Map_GameObject2File_Proto() const
 	{
-		return mMap_GameObjectClones;
+		return mMap_GameObject2File_Proto;
 	}
 
 
@@ -37,6 +37,9 @@ public:
 public:
 	// dat파일로 저장된 데이터를 로드해서 깡통객체에 정보를 입력해 클론 객체 생성
 	HRESULT LoaderDatFile_For_PrototypeObject();
+
+	// 빈오브젝트 생성 ObjectManager 와 같은기능
+	CGameObject* CreateEmptyObject(const E_TAYGAMEOBJECT type);
 
 	// 불러온 데이터로 클론 오브젝트 생성하고 맵에 저장
 	HRESULT Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char* data, wstring protoname);
@@ -46,21 +49,19 @@ public:
 
 //	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
 
-	// 테스트 부모자식 객체
-	CGameObject* Create_Test_ParentChild(_uint levelindex, wstring cloneName, wstring layertag);
 
 	
 private:
 	CGameObject* Find_MapObject(wstring key);
+
 
 private:	
 	// 데이터 로드
 	class CObjectIO* mObjectIO = nullptr;
 
 	// 데이터 기반으로 생성된 깡통 오브젝트의 클론 정보를 보관한다.
-	map<wstring, CGameObject*> mMap_GameObjectClones;
+	map<wstring, CGameObject*> mMap_GameObject2File_Proto;
 
-	
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 

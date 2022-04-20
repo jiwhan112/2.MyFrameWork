@@ -38,13 +38,13 @@ HRESULT CGameObject_Creater::LoaderDatFile_For_PrototypeObject()
 		mObjectIO = CObjectIO::Create();
 	if (m_pDevice == nullptr || m_pDeviceContext == nullptr)
 		return E_FAIL;
-	if (mMap_GameObjectClones.empty() == false)
+	if (mMap_GameObject2File_Proto.empty() == false)
 	{
-		for (auto& obj : mMap_GameObjectClones)
+		for (auto& obj : mMap_GameObject2File_Proto)
 		{
 			Safe_Release(obj.second);
 		}
-		mMap_GameObjectClones.clear();
+		mMap_GameObject2File_Proto.clear();
 	}
 
 	// 모든 dat 파일 로드
@@ -74,6 +74,14 @@ HRESULT CGameObject_Creater::LoaderDatFile_For_PrototypeObject()
 	return S_OK;
 }
 
+CGameObject* CGameObject_Creater::CreateEmptyObject(const E_TAYGAMEOBJECT type)
+{
+	// 깡통 오브젝트로 빈오브젝트 생성
+	// 레이어 추가 X
+	CGameObject* EmptyObject = GetSingle(CGameInstance)->Create_GameObject(TAGOBJ(type));
+	return EmptyObject;
+}
+
 HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char * data, wstring protoname)
 {
 	_uint offset = 0;
@@ -93,7 +101,7 @@ HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, c
 		memcpy(&TexDesc, data + offset, sizeof(TEXTUREDESC));
 
 		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
-		obj = GameInstance->Create_GameObject(TAGOBJ(GAMEOBJECT_2D));
+		obj = CreateEmptyObject(GAMEOBJECT_2D);
 		CGameObject_2D* obj2D = static_cast<CGameObject_2D*>(obj);
 		obj2D->Set_LoadUIDesc(UIDesc);
 		obj2D->Set_LoadTexDesc(TexDesc);
@@ -107,7 +115,8 @@ HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, c
 		break;
 
 	}
-	mMap_GameObjectClones.emplace(protoname, obj);
+
+	mMap_GameObject2File_Proto.emplace(protoname, obj);
 	
 	return S_OK;
 }
@@ -126,23 +135,10 @@ CGameObject* CGameObject_Creater::Create_ObjectClone_Prefab(_uint levelindex, ws
 	return nullptr;
 }
 
-//HRESULT CGameObject_Creater::Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag)
-//{
-//	return E_NOTIMPL;
-//}
-
-CGameObject * CGameObject_Creater::Create_Test_ParentChild(_uint levelindex, wstring cloneName, wstring layertag)
-{
-	// #TODO : 부모자식 객체 생성 확인
-	// 이후 Transform 조정
-
-	return nullptr;
-}
-
 CGameObject * CGameObject_Creater::Find_MapObject(wstring key)
 {
-	auto iter =  mMap_GameObjectClones.find(key);
-	if (iter != mMap_GameObjectClones.end())
+	auto iter =  mMap_GameObject2File_Proto.find(key);
+	if (iter != mMap_GameObject2File_Proto.end())
 		return iter->second;
 	return nullptr;
 }
@@ -154,12 +150,12 @@ void CGameObject_Creater::Free()
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pDeviceContext);
 
-	if (mMap_GameObjectClones.empty() == false)
+	if (mMap_GameObject2File_Proto.empty() == false)
 	{
-		for (auto& obj : mMap_GameObjectClones)
+		for (auto& obj : mMap_GameObject2File_Proto)
 		{
 			Safe_Release(obj.second);
 		}
-		mMap_GameObjectClones.clear();
+		mMap_GameObject2File_Proto.clear();
 	}
 }

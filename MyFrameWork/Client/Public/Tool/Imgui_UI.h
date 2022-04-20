@@ -45,6 +45,7 @@ private:
 	//void Button_UISave();
 
 	HRESULT Update_ObjectList();
+	void Update_ChildObject_ListBox(CGameObject* parent, _uint* cnt, _int* selectindex);
 
 private:
 	int item_current = 0;
