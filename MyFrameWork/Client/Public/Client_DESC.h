@@ -4,12 +4,21 @@
 // UI Á¤º¸
 typedef struct tag_UIDESC
 {
-	_int mPosX = g_iWinCX * 0.5f;
-	_int mPosY = g_iWinCY *0.5f;
+	tag_UIDESC()
+	{
+		mPosX = g_iWinCX * 0.5f;
+		mPosY = g_iWinCY * 0.5f;
+		mSizeX = g_iWinCX;
+		mSizeY = g_iWinCY;
+		mDepth = 0;
+		mPivot = { 0.5f,0.5f };
+	};
 
-	_int mSizeX = g_iWinCX;
-	_int mSizeY = g_iWinCY;
-	_int mDepth = 0;
+	_int	mPosX = g_iWinCX * 0.5f;
+	_int	mPosY = g_iWinCY *0.5f;
+	_int	mSizeX = g_iWinCX;
+	_int	mSizeY = g_iWinCY;
+	_int	mDepth = 0;
 	_float2 mPivot = {0.5f,0.5f};
 
 }UIDESC;

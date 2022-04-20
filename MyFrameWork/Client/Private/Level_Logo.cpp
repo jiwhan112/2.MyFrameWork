@@ -17,14 +17,12 @@ HRESULT CLevel_Logo::NativeConstruct()
 
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
-
 	return S_OK;
 }
 
 _int CLevel_Logo::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
 	return 0;
 }
 
@@ -88,7 +86,7 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 
-	UIDESC desc;
+	UIDESC desc;;
 	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
 	static_cast<CGameObject_2D*>(obj)->Set_LoadUIDesc(desc);
 	return S_OK;

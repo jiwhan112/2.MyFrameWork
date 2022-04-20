@@ -22,24 +22,32 @@ public:
 	// 메인 창이름 정의
 	enum E_IMGUI_CHANEL
 	{
-		IMGUI_CHANEL_TEST,
-		IMGUI_CHANEL_OBJECT,
-		IMGUI_CHANEL_MAP,
-		IMGUI_CHANEL_END,
-
-	};
-	const char* IMGUI_MAIN[IMGUI_CHANEL_END] =
-	{
-		"TestBar",
-		"IMGUI_CHANEL_OBJECT",
-		"MapTool"
+		IMGUI_TITLE_TEST,
+		IMGUI_TITLE_UI,
+		IMGUI_TITLE_OBJECT,
+		IMGUI_TITLE_FBX,
+		IMGUI_TITLE_END,
 
 	};
 
-	const char* TAG_IMGUI(E_IMGUI_CHANEL e)
+	const char* STR_IMGUITITLE(E_IMGUI_CHANEL e)
 	{
-		return IMGUI_MAIN[e];
-	}
+		switch (e)
+		{
+		case IMGUI_TITLE_TEST:
+			return "IMGUI_TITLE_TEST";
+		case IMGUI_TITLE_UI:
+			return "IMGUI_TITLE_UI";
+		case IMGUI_TITLE_OBJECT:
+			return "IMGUI_TITLE_OBJECT";
+		case IMGUI_TITLE_FBX:
+			return "IMGUI_TITLE_FBX";
+		case IMGUI_TITLE_END:
+			return "IMGUI_TITLE_END";
+		default:
+			return "IMGUI_TITLE_END";
+		}
+	};
 
 protected:
 	explicit CImgui_Base(ID3D11Device* device , ID3D11DeviceContext* context);

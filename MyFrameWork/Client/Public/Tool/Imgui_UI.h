@@ -7,8 +7,6 @@ BEGIN(Client)
 class CImgui_UI final:
 	public CImgui_Base
 {
-public:
-	const char* mUIItems[2] = { "PathFinder", "UIEdit",};
 
 private:
 	explicit CImgui_UI(ID3D11Device* device, ID3D11DeviceContext* context);
@@ -48,7 +46,6 @@ private:
 	void Update_ChildObject_ListBox(CGameObject* parent, _uint* cnt, _int* selectindex);
 
 private:
-	int item_current = 0;
 	// UI 오브젝트 1개에대한 정보 저장코드 만들어보기
 	class CGameObject_2D*	mCurrentUIObject = nullptr;
 	list<string>*			mListTextureKey = nullptr;
@@ -64,6 +61,7 @@ private:
 	// CGameObject_Creater*		mCreater = nullptr;
 
 	bool					mIsObjectList = false;
+	bool					mIsDataSetting = false;
 
 
 public:

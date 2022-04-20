@@ -55,21 +55,11 @@ HRESULT CImgui_UI::Render_UI()
 
 	
 
-	if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_TEST)))
+	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
-		if (ImGui::CollapsingHeader("UI"))
+		if (ImGui::CollapsingHeader("PATH"))
 		{
-			ImGui::Combo("Mode", &item_current, mUIItems, IM_ARRAYSIZE(mUIItems));
-			switch (item_current)
-			{
-			case 0:
-				PATHMODE();
-				break;
-
-			case 1:
-				UIMODE();
-				break;
-			}
+			PATHMODE();	
 		}
 
 		//static bool bAppOveraly = false;
@@ -79,9 +69,20 @@ HRESULT CImgui_UI::Render_UI()
 
 		if (mIsObjectList)
 		{
-			if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_OBJECT)))
+			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_OBJECT)))
 			{
 				FAILED_CHECK(Update_ObjectList());
+				ImGui::End();
+			}
+		}
+
+		ImGui::Checkbox("UISettingWindow", &mIsDataSetting);
+
+		if (mIsDataSetting)
+		{
+			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_UI)))
+			{
+				UIMODE();
 				ImGui::End();
 			}
 		}
@@ -188,6 +189,24 @@ void CImgui_UI::PATHMODE()
 				// 선택 오브젝트 클론
 				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 				CGameObject* createobj =  GetSingle(CGameObject_Creater)->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
+				if (mCurrentUIObject == nullptr)
+				{
+					mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
+					Safe_AddRef(mCurrentUIObject);
+				}
+
+			}
+
+			// 빈 오브젝트 클론
+			if (ImGui::Button("Create_Empty"))
+			{
+				// 선택 오브젝트 클론
+				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+				CGameObject* createobj = GetSingle(CGameObject_Creater)->CreateEmptyObject(GAMEOBJECT_2D);
+				UIDESC desc;
+				static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(desc);
+				GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_BACKGROUND), createobj);
+
 				if (mCurrentUIObject == nullptr)
 				{
 					mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);

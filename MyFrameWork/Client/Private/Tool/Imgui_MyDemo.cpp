@@ -149,7 +149,7 @@ void CImgui_MyDemo::IMGUI_TEST_MyDemo()
 
 	// 중복창 가능
 	// 텍스트 출력 테스트
-	if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_TEST)))
+	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
 		if (ImGui::CollapsingHeader("Text"))
 		{
@@ -166,7 +166,7 @@ void CImgui_MyDemo::IMGUI_TEST_MyDemo()
 	}
 
 	// My TestUI
-	if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_TEST)))
+	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
 		if (ImGui::CollapsingHeader("MyDemo"))
 		{
@@ -188,7 +188,7 @@ void CImgui_MyDemo::IMGUI_TEST_MyDemo()
 }
 void CImgui_MyDemo::IMGUI_TEST_Basic()
 {
-	if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_TEST)))
+	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
 
 		IMGUI_TREE_BEGIN("Basic Button")
@@ -450,7 +450,7 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 
 	// 각 기능의 세부기능 모음 
 	// 쓸만한 기능만 추리기
-	if (ImGui::Begin(TAG_IMGUI(CImgui_Base::IMGUI_CHANEL_TEST)))
+	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
 
 		IMGUI_TREE_BEGIN("Details")
