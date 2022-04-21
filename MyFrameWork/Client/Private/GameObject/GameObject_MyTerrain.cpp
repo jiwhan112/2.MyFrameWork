@@ -24,15 +24,16 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	string str("GUI_Menu_Main_Curtain.png");
-	strcpy_s(mTexDESC.mTextureKey_Diffuse, str.c_str());
+	strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str.c_str());
 
-	mComTexture->Set_TextureMap(mTexDESC.mTextureKey_Diffuse);
+	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 	return S_OK;
 }
 
 _int CGameObject_MyTerrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+
 	return UPDATENONE;
 }
 

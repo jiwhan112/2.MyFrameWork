@@ -26,8 +26,6 @@ private:
 	class CImgui_MyDemo*	mIMGUI_DEMO = nullptr;
 	class CImgui_UI*		mIMGUI_UI = nullptr;
 
-//	Mouse*					mMouse;
-
 
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

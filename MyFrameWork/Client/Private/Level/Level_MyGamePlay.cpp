@@ -1,55 +1,55 @@
 #include "stdafx.h"
-#include "Level_GamePlay.h"
+#include "Level/Level_MyGamePlay.h"
 #include "Camera.h"
 
-CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+CLevel_MyGamePlay::CLevel_MyGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice, pDeviceContext)
 {
-	mLevelIndex = LEVEL_GAMEPLAY;
+	mLevelIndex = LEVEL_MYGAMEPLAY;
 }
 
-HRESULT CLevel_GamePlay::NativeConstruct()
+HRESULT CLevel_MyGamePlay::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
 
-	FAILED_CHECK(Ready_Light());
-
+	FAILED_CHECK(Ready_Light());	
+	FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 
 	return S_OK;
 }
 
-_int CLevel_GamePlay::Tick(_double TimeDelta)
+_int CLevel_MyGamePlay::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	return UPDATENONE;
 }
 
-_int CLevel_GamePlay::LateTick(_double TimeDelta)
+_int CLevel_MyGamePlay::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 	return UPDATENONE;
 }
 
-HRESULT CLevel_GamePlay::Render()
+HRESULT CLevel_MyGamePlay::Render()
 {
 	FAILED_CHECK(__super::Render());
 
 #ifdef  _DEBUG
-	SetWindowText(g_hWnd, TEXT("Game Level"));
+	SetWindowText(g_hWnd, TEXT("MyGame Level"));
 
 #endif //  _DEBUG
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Prototype_GameObject()
+HRESULT CLevel_MyGamePlay::Ready_Prototype_GameObject()
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Light()
+HRESULT CLevel_MyGamePlay::Ready_Light()
 {
 	// 빛 세팅
 	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
@@ -67,44 +67,42 @@ HRESULT CLevel_GamePlay::Ready_Light()
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDeviceContext, LightDesc)))
 		return E_FAIL;
 
-	/*ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-
-	LightDesc.eLightType = LIGHTDESC::TYPE_POINT;
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vPosition = _float4(5.f, 3.f, 5.f, 1.f);
-
-	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDeviceContext, LightDesc)))
-		return E_FAIL;*/
-
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
+HRESULT CLevel_MyGamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
+	// 고정 카메라 방식으로 변경
+
 	CCamera::CAMERADESC		CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CameraDesc));
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -5.f);
+	CameraDesc.vEye = _float3(-5, 10.f, -5.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
-	CameraDesc.fNear = 0.2f;
+	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 300.f;
 
 	CameraDesc.TransformDesc.SpeedPersec = 10.f;
 	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
 
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA_GAME), &CameraDesc));
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
+HRESULT CLevel_MyGamePlay::Ready_Layer_Mouse(const _tchar * pLayerTag)
 {
-	//FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_BACKGROUND)));
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MOUSE)));
+
+	return S_OK;
+}
+
+HRESULT CLevel_MyGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
+{
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_TERRAIN)));
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST)));
@@ -113,30 +111,30 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
+HRESULT CLevel_MyGamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CLevel_MyGamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	return S_OK;
 }
 
-CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CLevel_MyGamePlay * CLevel_MyGamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	CLevel_GamePlay*	pInstance = NEW CLevel_GamePlay(pDevice, pDeviceContext);
+	CLevel_MyGamePlay*	pInstance = NEW CLevel_MyGamePlay(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{
-		MSGBOX("Failed to Creating CLevel_GamePlay");
+		MSGBOX("Failed to Creating CLevel_MyGamePlay");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CLevel_GamePlay::Free()
+void CLevel_MyGamePlay::Free()
 {
 	__super::Free();
 }

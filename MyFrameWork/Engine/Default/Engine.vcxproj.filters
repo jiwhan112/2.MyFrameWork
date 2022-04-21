@@ -112,6 +112,9 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation\Channel">
       <UniqueIdentifier>{50620e33-99be-4faf-8282-0dfd63f7af76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\10.Picking">
+      <UniqueIdentifier>{55213806-70a7-4e30-b2c8-91f83eb04ab6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -218,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Model.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Picking.cpp">
+      <Filter>01.Utility\10.Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -349,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Model.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Picking.h">
+      <Filter>01.Utility\10.Picking</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

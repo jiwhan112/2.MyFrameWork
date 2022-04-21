@@ -35,6 +35,8 @@ public:
 		return mObjectTypeid;
 	}
 
+	virtual const _int& Get_Depth() { return 0; };
+
 	//CGameObject* Get_Parent()const
 	//{
 	//	if (mParrent)

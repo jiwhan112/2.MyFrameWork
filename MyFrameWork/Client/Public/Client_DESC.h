@@ -39,3 +39,18 @@ typedef struct tag_TEXTUREDESC
 }TEXTUREDESC;
 
 
+typedef struct tag_MODEL_STATIC_DESC
+{
+
+
+}MODEL_STATIC_DESC;
+
+
+typedef struct tag_MODEL_DYNAMIC_DESC
+{
+
+
+}MODEL_DYNAMIC_DESC;
+
+
+

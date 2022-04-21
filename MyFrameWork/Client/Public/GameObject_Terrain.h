@@ -32,6 +32,7 @@ public:
 protected:
 	virtual HRESULT Set_Component() override;
 	HRESULT Set_ConstantTable();
+	bool PickObject();
 
 private:
 	CShader*			mComShader = nullptr;

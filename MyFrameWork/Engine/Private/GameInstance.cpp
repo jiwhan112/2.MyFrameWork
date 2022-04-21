@@ -12,6 +12,7 @@ CGameInstance::CGameInstance()
 	, m_pPipeLine(CPipeLine::GetInstance())
 	, m_pLightMgr(CLightMgr::GetInstance())
 	, m_pFileMgr(CFileInfo::GetInstance())
+	, m_pPickMgr(CPicking::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -22,6 +23,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pLightMgr);
 	Safe_AddRef(m_pFileMgr);
+	Safe_AddRef(m_pPickMgr);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -34,7 +36,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	FAILED_CHECK(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd,0.3f));
 	FAILED_CHECK(m_pObject_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
-
+	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
 	return S_OK;
 }
 
@@ -44,8 +46,12 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 		nullptr == m_pObject_Manager)
 		return -1;
 
+
 	// INPUT
 	FAILED_CHECK(m_pInput_Device->SetUp_InputDeviceState(TimeDelta));
+
+	// Pick
+	FAILED_CHECK(m_pPickMgr->Transform_ToWorldSpace());
 
 	// Tick
 	FAILED_CHECK(m_pLevel_Manager->Tick(TimeDelta));
@@ -282,6 +288,21 @@ list<MYFILEPATH*> CGameInstance::Load_ExtensionList(const wstring& txtfilepath, 
 	return m_pFileMgr->Load_ExtensionList(txtfilepath,exe);
 }
 
+HRESULT CGameInstance::Transform_ToLocalSpace(_fmatrix WorldMatrixinverse)
+{
+	NULL_CHECK_BREAK(m_pPickMgr);
+
+	FAILED_CHECK(m_pPickMgr->Transform_ToLocalSpace(WorldMatrixinverse));
+	return S_OK;
+}
+
+_bool CGameInstance::isPick(_float3 * pLocalPoint, _float3 * pOut)
+{
+	NULL_CHECK_BREAK(m_pPickMgr);
+
+	return m_pPickMgr->isPick(pLocalPoint,pOut);
+}
+
 
 void CGameInstance::Release_Engine()
 {
@@ -309,11 +330,15 @@ void CGameInstance::Release_Engine()
 	if (0 != CFileInfo::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CFileInfo");
 
+	if (0 != CPicking::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CPicking");
+
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
 
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");
+
 }
 
 void CGameInstance::Free()
@@ -327,4 +352,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pLightMgr);
 	Safe_Release(m_pFileMgr);
+	Safe_Release(m_pPickMgr);
+
 }

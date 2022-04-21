@@ -33,6 +33,9 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
+
+
+
 public: // 컴포넌트 반환
 	CShader*		Get_ComShader() { return mComShader; }
 	CRenderer*		Get_ComRenderer() { return mComRenderer; }
@@ -49,7 +52,7 @@ public:
 		return mComTexture;
 	}
 
-	const TEXTUREDESC& Get_TextureDesc() const { return mTexDESC; }
+	const TEXTUREDESC& Get_TextureDesc() const { return mTexStrDESC; }
 
 protected:
 	// 월드와 텍스처 빛 정보 셰이더 기본 세팅
@@ -57,11 +60,9 @@ protected:
 	virtual HRESULT Set_ConstantTable_Tex();
 	virtual HRESULT Set_ConstantTable_Light(_uint lightid = 0);
 
+	bool PickObject_3D();
 
 protected:
-	// 기본 데이터
-	TEXTUREDESC		mTexDESC;
-
 	_uint			mCurrentShaderPass = 0;
 
 	// 기본 컴포넌트
@@ -69,7 +70,10 @@ protected:
 	CRenderer*		mComRenderer	= nullptr;
 	CVIBuffer*		mComVIBuffer	= nullptr;
 	CTexture_map*	mComTexture		= nullptr;
-//	CTexture*		mComTexture		= nullptr;
+
+protected: // DESC
+	TEXTUREDESC		mTexStrDESC;
+
 
 
 public:

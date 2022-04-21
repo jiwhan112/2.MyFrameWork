@@ -88,10 +88,10 @@ HRESULT CRenderer::Render_NonAlpha()
 
 HRESULT CRenderer::Render_Alpha()
 {
-	/*m_RenderObjects[RENDER_ALPHA].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
-	{
-		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
-	});*/
+	//mRenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	//{
+	//	return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+	//});
 
 	for (auto& pRenderObject : mRenderObjects[RENDER_BLEND])
 	{
@@ -116,6 +116,13 @@ HRESULT CRenderer::Render_UI()
 	if (nullptr == m_pDevice ||
 		nullptr == m_pDeviceContext)
 		return E_FAIL;
+
+	mRenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	{
+
+		return pSour->Get_Depth() < pDest->Get_Depth();
+	});
+
 
 	for (auto& pRenderObject : mRenderObjects[RENDER_UI])
 	{

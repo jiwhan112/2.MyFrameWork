@@ -10,7 +10,7 @@ CGameObject_Base::CGameObject_Base(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 CGameObject_Base::CGameObject_Base(const CGameObject_Base& rhs)
 	: CGameObject(rhs)
-	, mTexDESC(rhs.mTexDESC)
+	, mTexStrDESC(rhs.mTexStrDESC)
 {
 	mComShader = rhs.mComShader;
 	mComRenderer = rhs.mComRenderer;
@@ -58,8 +58,8 @@ HRESULT CGameObject_Base::Render()
 
 void CGameObject_Base::Set_LoadTexDesc(const TEXTUREDESC & desc)
 {
-	memcpy(&mTexDESC, &desc, sizeof(TEXTUREDESC));
-	mComTexture->Set_TextureMap(mTexDESC.mTextureKey_Diffuse);
+	memcpy(&mTexStrDESC, &desc, sizeof(TEXTUREDESC));
+	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 }
 
 HRESULT CGameObject_Base::Set_ConstantTable_World()
@@ -96,6 +96,19 @@ HRESULT CGameObject_Base::Set_ConstantTable_Light(_uint lightid)
 	FAILED_CHECK(mComShader->Set_RawValue(STR_CAMPOS, &pGameInstance->GetCameraPosition_vec(), sizeof(_float4)));
 
 	return S_OK;
+}
+
+bool CGameObject_Base::PickObject_3D()
+{
+	if (mComVIBuffer == nullptr)
+		return false;
+
+	_float3 pout;
+
+	if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pout))
+		return true;
+
+	return false;
 }
 
 void CGameObject_Base::Free()

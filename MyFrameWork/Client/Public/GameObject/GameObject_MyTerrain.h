@@ -4,7 +4,7 @@
 
 BEGIN(Client)
 
-// 3D 오브젝트용 부모클래스
+// 3D 오브젝트 
 class CGameObject_MyTerrain final :
 	public CGameObject_Base
 {
@@ -26,6 +26,7 @@ public:
 protected:
 	virtual HRESULT Set_Component()override;
 
+private:
 
 
 public:

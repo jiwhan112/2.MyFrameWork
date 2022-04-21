@@ -8,6 +8,10 @@ class ENGINE_DLL CTransform final : public CComponent
 {
 public:
 	enum E_STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
+	enum E_ROTTYPE
+	{
+		ROTTYPE_X, ROTTYPE_Y, ROTTYPE_Z, ROTTYPE_END
+	};
 
 public:
 	typedef struct tag_TransformDESC
@@ -52,6 +56,10 @@ public:
 	HRESULT GO_Left(_double deltatime);
 	HRESULT GO_Right(_double deltatime);
 	HRESULT GO_Backward(_double deltatime);
+	HRESULT GO_Up(_double deltatime);
+	HRESULT GO_Down(_double deltatime);
+	HRESULT GO_WorldVec(_float3 vec, _double deltatime);
+	HRESULT GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _double deltatime);
 
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);

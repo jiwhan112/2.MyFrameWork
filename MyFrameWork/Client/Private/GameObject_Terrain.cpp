@@ -36,6 +36,11 @@ _int CGameObject_Terrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
+	if (PickObject())
+	{
+		int a = 5;
+	}
+
 	return _int();
 }
 
@@ -46,6 +51,16 @@ _int CGameObject_Terrain::LateTick(_double TimeDelta)
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return _int();
 }
+
+bool CGameObject_Terrain::PickObject()
+{
+	_float3 pick;
+	if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
+		return true;
+
+	return false;
+}
+
 
 HRESULT CGameObject_Terrain::Render()
 {

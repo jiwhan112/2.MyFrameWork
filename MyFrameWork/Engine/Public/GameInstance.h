@@ -9,6 +9,7 @@
 #include "PipeLine.h"
 #include "LightMgr.h"
 #include "FileInfo.h"
+#include "Picking.h"
 
 BEGIN(Engine)
 
@@ -72,6 +73,11 @@ public: // For. File
 	void SaveVectorToDat(const wstring& savetxtName);
 	list<MYFILEPATH*> Load_ExtensionList(const wstring& txtfilepath, string exe);
 
+public: // For. Picking
+	HRESULT Transform_ToLocalSpace(_fmatrix WorldMatrixinverse);
+	_bool isPick(_float3 * pLocalPoint, _float3 * pOut);
+
+
 
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;
@@ -83,6 +89,7 @@ private:
 	CPipeLine*					m_pPipeLine = nullptr;
 	CLightMgr*					m_pLightMgr = nullptr;
 	CFileInfo*					m_pFileMgr = nullptr;
+	CPicking*					m_pPickMgr = nullptr;
 
 public:
 	static void Release_Engine();

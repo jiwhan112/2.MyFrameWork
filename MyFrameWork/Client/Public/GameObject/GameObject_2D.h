@@ -5,7 +5,7 @@
 BEGIN(Client)
 
 // 2D 오브젝트용 부모클래스
-class CGameObject_2D final:
+class CGameObject_2D :
 	public CGameObject_Base
 {
 protected:
@@ -29,14 +29,16 @@ public:
 	}
 	const UIDESC& Get_UIDesc() const { return mUiDesc; }
 
+	// 오름차순으로 정렬 큰값을 나중에 그린다.
+	virtual const _int& Get_Depth() override { return mUiDesc.mDepth; }
+
+
 protected:
 	virtual HRESULT Set_Component()override;
-
-private:
 	virtual HRESULT Set_ConstantTable_UI();
 
 
-private:
+protected: // DESC
 	UIDESC			mUiDesc;
 
 public:

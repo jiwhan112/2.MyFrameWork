@@ -92,6 +92,30 @@ HRESULT CTransform::GO_Backward(_double deltatime)
 	return S_OK;
 }
 
+HRESULT CTransform::GO_Up(_double deltatime)
+{
+
+	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector		vUp = GetState(CTransform::STATE_UP);
+
+	vPosition += XMVector3Normalize(vUp) * mDesc.SpeedPersec * (_float)deltatime;
+
+	SetState(CTransform::STATE_POSITION, vPosition);
+	return S_OK;
+}
+
+HRESULT CTransform::GO_Down(_double deltatime)
+{
+
+	_vector		vPosition = GetState(CTransform::STATE_POSITION);
+	_vector		vUp = GetState(CTransform::STATE_UP);
+
+	vPosition -= XMVector3Normalize(vUp) * mDesc.SpeedPersec * (_float)deltatime;
+
+	SetState(CTransform::STATE_POSITION, vPosition);
+	return S_OK;
+}
+
 HRESULT CTransform::GO_Right(_double deltatime)
 {
 	_vector		vPosition = GetState(CTransform::STATE_POSITION);
@@ -113,6 +137,57 @@ HRESULT CTransform::GO_Left(_double deltatime)
 	SetState(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
+
+HRESULT CTransform::GO_WorldVec(_float3 vec, _double deltatime)
+{
+
+	_float3		vPosition = GetState(CTransform::STATE_POSITION);
+
+	vec.Normalize();
+	vPosition += vec * mDesc.SpeedPersec *(_float)deltatime;
+
+	_float4 vPos = _float4(vPosition, 1.f);
+
+	SetState(CTransform::STATE_POSITION, vPos);
+
+	return S_OK;
+}
+
+HRESULT CTransform::GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _double deltatime)
+{
+
+	_float3		vPosition = GetState(CTransform::STATE_POSITION);
+	vec.Normalize();
+
+	_float4x4 RotMat;
+
+	switch (type)
+	{
+	case CTransform::ROTTYPE_X:
+		RotMat = _float4x4::CreateRotationX(XMConvertToRadians(Angle));
+		break;
+	case CTransform::ROTTYPE_Y:
+		RotMat = _float4x4::CreateRotationY(XMConvertToRadians(Angle));
+		break;
+	case CTransform::ROTTYPE_Z:
+		RotMat = _float4x4::CreateRotationZ(XMConvertToRadians(Angle));
+		break;
+	default:
+		break;
+
+	}
+
+	_float4 newVec = _float4(vec,1.f); 
+	_float4::Transform(newVec, RotMat, newVec);
+
+	vPosition += newVec.Get_Float3() * mDesc.SpeedPersec *(_float)deltatime;
+
+
+	SetState(CTransform::STATE_POSITION, _float4(vPosition, 1.f));
+
+	return S_OK;
+}
+
 
 HRESULT CTransform::Turn(_fvector vAxis, _double time)
 {

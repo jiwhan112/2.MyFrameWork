@@ -25,14 +25,14 @@ HRESULT CGameObject_2D::NativeConstruct_Prototype()
 HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	if (strlen(mTexDESC.mTextureKey_Diffuse) < 2)
+	if (strlen(mTexStrDESC.mTextureKey_Diffuse) < 2)
 	{
 		string str("GUI_Menu_Main_Curtain.png");
-		strcpy_s(mTexDESC.mTextureKey_Diffuse, str.c_str());
+		strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str.c_str());
 
 	}
 	mCurrentShaderPass = 1;
-	mComTexture->Set_TextureMap(mTexDESC.mTextureKey_Diffuse);
+	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 
 
 	return S_OK;
@@ -41,6 +41,11 @@ HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 _int CGameObject_2D::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+
+	mComTransform->Scaled(XMVectorSet(mUiDesc.mSizeX, mUiDesc.mSizeY, 1.f, 0.0f));
+	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * mUiDesc.mPivot.x), -mUiDesc.mPosY + (g_iWinCY * mUiDesc.mPivot.y), 0, 1.f));
+
+
 	return UPDATENONE;
 }
 
@@ -49,10 +54,8 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	mComTransform->Scaled(XMVectorSet(mUiDesc.mSizeX, mUiDesc.mSizeY, 1.f, 0.0f));
-	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * mUiDesc.mPivot.x), -mUiDesc.mPosY + (g_iWinCY * mUiDesc.mPivot.y), 0, 1.f));
 
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_BLEND, this);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 
 	return UPDATENONE;
@@ -76,6 +79,7 @@ HRESULT CGameObject_2D::Render()
 
 HRESULT CGameObject_2D::Set_Component()
 {
+
 	if (mComRenderer == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 

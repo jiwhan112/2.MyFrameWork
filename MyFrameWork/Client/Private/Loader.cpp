@@ -25,6 +25,8 @@ unsigned int APIENTRY ThreadFunction(void* pArg)
 		break;
 	case LEVEL_TOOL:
 		pLoader->Loading_ForTool();
+	case LEVEL_MYGAMEPLAY:
+		pLoader->Loading_ForMyGamePlay();
 		break;
 	}
 
@@ -109,6 +111,12 @@ HRESULT CLoader::Loading_ForGamePlay()
 }
 
 HRESULT CLoader::Loading_ForTool()
+{
+	m_isFinished = true;
+
+	return S_OK;
+}
+HRESULT CLoader::Loading_ForMyGamePlay()
 {
 	m_isFinished = true;
 

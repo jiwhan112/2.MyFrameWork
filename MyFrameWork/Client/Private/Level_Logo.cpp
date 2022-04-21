@@ -42,6 +42,11 @@ _int CLevel_Logo::LateTick(_double TimeDelta)
 		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_TOOL)));
 	}
 
+	if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
+	{
+		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_MYGAMEPLAY)));
+	}
+
 	return 0;
 }
 

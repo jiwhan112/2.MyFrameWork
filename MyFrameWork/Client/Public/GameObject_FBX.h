@@ -36,12 +36,11 @@ private:
 	CShader*			mComShader = nullptr;
 	CRenderer*			mComRenderer = nullptr;
 	CModel*				mComModel = nullptr;
-
+	
 public:
 	static CGameObject_FBX* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
 	virtual CGameObject_FBX* Clone(void* pArg);
 	virtual void Free() override;
-
 
 };
 

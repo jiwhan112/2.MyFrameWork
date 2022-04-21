@@ -170,9 +170,12 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h" />
     <ClInclude Include="..\Public\FIleIO\ObjectIO.h" />
+    <ClInclude Include="..\Public\GameObject\Camera_Game.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
-    <ClInclude Include="..\Public\GameObject\GameObject_3D.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Base.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -188,6 +191,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\Level\Level_MyGamePlay.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loader.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -208,6 +212,7 @@
     <ClInclude Include="..\Public\Tool\ImguiMgr.h" />
     <ClInclude Include="..\Public\Tool\Imgui_Base.h" />
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h" />
+    <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h" />
     <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -217,9 +222,12 @@
     <ClCompile Include="..\Private\Camera_Client.cpp" />
     <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp" />
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp" />
+    <ClCompile Include="..\Private\GameObject\Camera_Game.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
-    <ClCompile Include="..\Private\GameObject\GameObject_3D.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -235,6 +243,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\Level\Level_MyGamePlay.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loader.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
@@ -248,6 +257,7 @@
     <ClCompile Include="..\Private\Tool\ImguiMgr.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_Base.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp" />
+    <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_UI.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_demo.cpp" />

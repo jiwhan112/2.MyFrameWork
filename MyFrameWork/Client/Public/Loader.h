@@ -33,6 +33,7 @@ public:
 	HRESULT NativeConstruct(E_LEVEL eNextLevel);
 	HRESULT Loading_ForGamePlay();
 	HRESULT Loading_ForTool();
+	HRESULT Loading_ForMyGamePlay();
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

@@ -70,6 +70,7 @@ _int CGameObject_FBX_Ani::Tick(_double TimeDelta)
 	}
 
 	mComModel->SetUp_AnimIndex(Index);
+
 	return UPDATENONE;
 }
 

@@ -19,6 +19,14 @@
 */
 
 /*
+	UI툴에서는 UI 관련 내용만 처리
+	ㅇㅇㅇㅇ
+	ㅇㅇㅇㅇ
+
+
+*/
+
+/*
 	#TODO: 맵툴만들기
 
 */
@@ -52,8 +60,6 @@ void CImgui_UI::Set_UIObject(CGameObject_2D * obj)
 
 HRESULT CImgui_UI::Render_UI()
 {
-
-	
 
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
@@ -150,12 +156,13 @@ void CImgui_UI::PATHMODE()
 		IMGUI_TREE_END
 	}
 
+
 	// 테스트 중인 버튼 클론 오브젝트 생성
 	IMGUI_TREE_BEGIN("For_TestButton")
 	{
 		if (ImGui::Button("Load_And_CloneData"))
 		{
-			// 파일로 저장된 프로토 데이터 반환
+			// 파일로 저장된 프로토 데이터 불러오기
 			GetSingle(CGameObject_Creater)->LoaderDatFile_For_PrototypeObject();	
 		}
 
@@ -212,12 +219,9 @@ void CImgui_UI::PATHMODE()
 					mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
 					Safe_AddRef(mCurrentUIObject);
 				}
-
 			}
-
 			IMGUI_TREE_END
 		}
-
 		IMGUI_TREE_END
 	}
 }
@@ -235,19 +239,17 @@ void CImgui_UI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtnam
 
 void CImgui_UI::Button_TextureLoader()
 {
-	// 텍스처 로드 툴
 
-	// 스레드로 텍스처 로드 예정
 }
 
 HRESULT CImgui_UI::Edit_ProtoObjectList()
 {
-	IMGUI_TREE_BEGIN("ProtoObject_List")
-	{
-		// 오브젝트 리스트
+	//IMGUI_TREE_BEGIN("ProtoObject_List")
+	//{
+	//	// 오브젝트 리스트
 
-		IMGUI_TREE_END
-	}
+	//	IMGUI_TREE_END
+	//}
 	return S_OK;
 }
 
@@ -261,21 +263,21 @@ HRESULT CImgui_UI::Edit_UIObject()
 
 	IMGUI_TREE_BEGIN("Position")
 	{
-		ImGui::SliderInt("PosX", &myDesc.mPosX, 0, g_iWinCX, "PosX = %d");
-		ImGui::SliderInt("PosY", &myDesc.mPosY, 0, g_iWinCY, "PosY= %d");
+		ImGui::DragInt("PosX", &myDesc.mPosX, 1.0f,0, g_iWinCX, "PosX = %d");
+		ImGui::DragInt("PosY", &myDesc.mPosY, 1.0f, 0, g_iWinCY, "PosY= %d");
 		IMGUI_TREE_END
 	}
 
 	IMGUI_TREE_BEGIN("Size")
 	{
-		ImGui::SliderInt("sizex", &myDesc.mSizeX, 1, g_iWinCX, "sizex = %d");
-		ImGui::SliderInt("sizey", &myDesc.mSizeY, 1, g_iWinCY, "sizey = %d");
+		ImGui::DragInt("sizeX", &myDesc.mSizeX,1, 1, g_iWinCX, "sizex = %d");
+		ImGui::DragInt("sizeY", &myDesc.mSizeY,1, 1, g_iWinCY, "sizey = %d");
 		IMGUI_TREE_END
 	}
 
 	IMGUI_TREE_BEGIN("Pivot")
 	{
-		ImGui::SliderFloat2("PivotXY", (float*)&myDesc.mPivot, 0.0f, 1.0f);
+		ImGui::DragFloat2("PivotXY", (float*)&myDesc.mPivot,0.1f, 0.0f, 1.0f);
 		IMGUI_TREE_END
 	}
 	mCurrentUIObject->Set_LoadUIDesc(myDesc);
@@ -390,7 +392,7 @@ CImgui_UI * CImgui_UI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{
-		MSGBOX("Failed to Creating CImgui_Base");
+		MSGBOX("Failed to Creating CImgui_UI");
 		Safe_Release(pInstance);
 	}
 

@@ -9,6 +9,9 @@
 #include "Camera_Client.h"
 #include "GameObject/GameObject_2D.h"
 #include "GameObject/GameObject_MyTerrain.h"
+#include "GameObject/Camera_Game.h"
+#include "GameObject/GameObject_Mouse.h"
+
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
 #include "GameObject_FBX.h"
@@ -126,13 +129,13 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	// 정적 오브젝트
 	_float4x4		DefaultTransform;	
-	DefaultTransform = _float4x4::CreateScale(3) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
 	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
 
 	// 동적 오브젝트
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
-	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
+		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
 
 
 	// 텍스처 컴포넌트
@@ -188,9 +191,10 @@ HRESULT CMainApp::Ready_Prototype_Components()
 HRESULT CMainApp::Ready_Prototype_GameObject()
 {
 	// #Tag 수업용 오브젝트 원형 초기화
-
+	//==================================================================================================================
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA),
 		CCamera_Client::Create(m_pDevice, m_pDeviceContext)));
+
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_SKY),
 		CGameObject_Skybox::Create(m_pDevice, m_pDeviceContext)));
@@ -200,11 +204,15 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
 	// 	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
-	//
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST_ANI),
-	//	 CGameObject_FBX_Ani::Create(m_pDevice, m_pDeviceContext)));
-
 	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST_ANI),
+		 CGameObject_FBX_Ani::Create(m_pDevice, m_pDeviceContext)));
+
+	//==================================================================================================================
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA_GAME),
+		CCamera_Game::Create(m_pDevice, m_pDeviceContext)));
+
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
 	//	CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
 
@@ -217,6 +225,13 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	// 부모 / 자식이 완성된 프로토 오브젝트를 만든다.
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TEST),
 		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
+
+
+	// 마우스
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MOUSE),
+		CGameObject_Mouse::Create(m_pDevice, m_pDeviceContext)));
+
+	
 
 	return S_OK;
 }

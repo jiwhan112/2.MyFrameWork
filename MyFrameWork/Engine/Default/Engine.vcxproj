@@ -168,6 +168,7 @@
     <ClInclude Include="..\Public\LightMgr.h" />
     <ClInclude Include="..\Public\MeshContainer.h" />
     <ClInclude Include="..\Public\Model.h" />
+    <ClInclude Include="..\Public\Picking.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\d3dx11effect.h" />
     <ClInclude Include="..\Public\d3dxGlobal.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="..\Private\LightMgr.cpp" />
     <ClCompile Include="..\Private\MeshContainer.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
+    <ClCompile Include="..\Private\Picking.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\EasingMgr.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />

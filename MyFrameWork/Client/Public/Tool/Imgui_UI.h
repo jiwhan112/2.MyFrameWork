@@ -57,8 +57,6 @@ private:
 	// 오브젝트 저장기능
 	class CObjectIO*		mObjectSaverClass = nullptr;
 
-	// 오브젝트 생성 
-	// CGameObject_Creater*		mCreater = nullptr;
 
 	bool					mIsObjectList = false;
 	bool					mIsDataSetting = false;

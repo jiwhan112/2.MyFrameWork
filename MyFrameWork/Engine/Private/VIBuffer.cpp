@@ -1,5 +1,6 @@
 #include "..\Public\VIBuffer.h"
 #include "Shader.h"
+#include "Picking.h"
 
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -84,6 +85,51 @@ HRESULT CVIBuffer::Create_IndexBuffer()
 
 	// DESC의 정보로 DESC를 설정한다.
 	return m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubResourceData, &m_pIB);
+}
+
+_bool CVIBuffer::Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut)
+{
+	CPicking*		pPicking = GetSingle(CPicking);
+
+	pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
+
+	_uint		iIndexByte = 0;
+
+	if (m_eIndexFormat == DXGI_FORMAT_R16_UINT)
+		iIndexByte = 2;
+	else
+		iIndexByte = 4;
+
+	_bool		isPick = false;
+
+	for (_uint i = 0; i < m_iNumPrimitive; ++i)
+	{
+		_uint	iIndices[3] = { 0 };
+
+		/* void*를 _byte*로 캐스팅한 이유 : 주소에 상수를 더했을때 그 상수바이트크기만큼 이동할 수 있도록 만들어주기위해. */
+		/* _short*포인터형변수에 1을더하면 2byte씩 이동한다.  */
+		/* _uint*포인터형변수에 1을더하면 4byte씩 이동한다.  */
+		/* _byte*포인터형변수에 1을더하면 1byte씩 이동한다.  */
+
+		for (_uint j = 0; j < 3; ++j)
+			memcpy(&iIndices[j], (((_byte*)m_IBSubResourceData.pSysMem + sizeof(m_eIndexFormat) * i) + iIndexByte * j), iIndexByte);
+
+		_float3		vPoint[3] = {
+			*(_float3*)(((_byte*)mpVertexPos) + m_VBDesc.StructureByteStride * iIndices[0]),
+			*(_float3*)(((_byte*)mpVertexPos) + m_VBDesc.StructureByteStride * iIndices[1]),
+			*(_float3*)(((_byte*)mpVertexPos) + m_VBDesc.StructureByteStride * iIndices[2])
+		};
+
+		if (isPick = pPicking->isPick(vPoint, pOut))
+		{
+			_float4x4		WorldMatrix;
+			WorldMatrix = WorldMatrixInverse.Invert();
+			_float3::Transform(*pOut, WorldMatrix, *pOut);
+			break;
+		}
+	}
+
+	return isPick;
 }
 
 void CVIBuffer::Free()

@@ -64,20 +64,8 @@
     <Filter Include="02.GameObject\02.Camera">
       <UniqueIdentifier>{bc388d12-b47d-405c-817c-c4e00817d90f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\03.Objects">
-      <UniqueIdentifier>{406589d9-036d-4593-9891-8471faacaede}</UniqueIdentifier>
-    </Filter>
     <Filter Include="10.Imgui\02.Tools\00.BaseTool\MyDemo">
       <UniqueIdentifier>{2f184d08-8e0e-43cc-a829-b894015705e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\03.Objects\01.Mouse">
-      <UniqueIdentifier>{f45b738c-082d-4f08-ae7b-86c8ba42290b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\03.Objects\02.UI">
-      <UniqueIdentifier>{988341a4-7b8c-478b-9668-336da51672c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\03.Objects\03FBX">
-      <UniqueIdentifier>{429dd477-b728-42af-94b7-e55a37d15af3}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\01.2DObject">
       <UniqueIdentifier>{b83ff735-73f2-4cf5-9a01-c76e93931aed}</UniqueIdentifier>
@@ -114,6 +102,36 @@
     </Filter>
     <Filter Include="02.GameObject\02.3DObject\2.Animation">
       <UniqueIdentifier>{fe15df71-1d17-4bf5-bda0-ab386de44fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\02.3DTool">
+      <UniqueIdentifier>{cbce0002-c5dd-4ad8-8d33-9bc93b74d7bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\02.3DTool\02.Animation">
+      <UniqueIdentifier>{79a65c65-0741-4c2b-988b-bc4a7e56ce1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\02.3DTool\01.MapTool">
+      <UniqueIdentifier>{fa1f126c-d604-445e-85b9-e28124bbf4b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.2DObject\0.Bsase">
+      <UniqueIdentifier>{23ee4eab-d0d2-4bcc-a44e-f338ac6f4b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\01.GamePlay\01.StudyGameScene">
+      <UniqueIdentifier>{ce868117-e645-4748-b91f-d984e3a80ecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\01.GamePlay\02.MyGameScene">
+      <UniqueIdentifier>{c6f1a3aa-82a3-474b-bf9a-695c46362170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\3.FBX_Study">
+      <UniqueIdentifier>{429dd477-b728-42af-94b7-e55a37d15af3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.2DObject\1.Mouse">
+      <UniqueIdentifier>{115695f8-f861-4788-a0fc-55117f281519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.Camera\1.BaseCam">
+      <UniqueIdentifier>{c680008a-144e-4771-803e-da9a7b0a2dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.Camera\2.GameCam">
+      <UniqueIdentifier>{2007639c-901d-495a-8dfe-4b51c79e2f9f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +183,6 @@
     <ClInclude Include="..\Public\Level_Logo.h">
       <Filter>01.Level\01.Logo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Level\01.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_Tool.h">
       <Filter>01.Level\05.Tool</Filter>
     </ClInclude>
@@ -179,9 +194,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_BackGround.h">
       <Filter>02.GameObject\99.BackGround</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Camera_Client.h">
-      <Filter>02.GameObject\02.Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_Skybox.h">
       <Filter>02.GameObject\99.BackGround\2.Sky</Filter>
@@ -202,13 +214,10 @@
       <Filter>10.Imgui\02.Tools\01.UITool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_FBX.h">
-      <Filter>02.GameObject\03.Objects\03FBX</Filter>
+      <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h">
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_2D.h">
-      <Filter>02.GameObject\01.2DObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FIleIO\ObjectIO.h">
       <Filter>03.Creater\01.ObjectIO</Filter>
@@ -217,7 +226,7 @@
       <Filter>03.Creater\02.Creater</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_FBX_Ani.h">
-      <Filter>02.GameObject\03.Objects\03FBX</Filter>
+      <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
       <Filter>02.GameObject\02.3DObject\1.Terrain</Filter>
@@ -225,14 +234,38 @@
     <ClInclude Include="..\Public\GameObject\GameObject_Base.h">
       <Filter>02.GameObject\00.ObjectBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_3D.h">
-      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_DESC.h">
       <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h">
+      <Filter>10.Imgui\02.Tools\02.3DTool\01.MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_2D.h">
+      <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h">
+      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h">
+      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Level\01.GamePlay\01.StudyGameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level\Level_MyGamePlay.h">
+      <Filter>01.Level\01.GamePlay\02.MyGameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Client.h">
+      <Filter>02.GameObject\02.Camera\1.BaseCam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\Camera_Game.h">
+      <Filter>02.GameObject\02.Camera\2.GameCam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h">
+      <Filter>02.GameObject\01.2DObject\1.Mouse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +302,6 @@
     <ClCompile Include="..\private\Level_Logo.cpp">
       <Filter>01.Level\01.Logo</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01.Level\01.GamePlay</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_Tool.cpp">
       <Filter>01.Level\05.Tool</Filter>
     </ClCompile>
@@ -283,9 +313,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_BackGround.cpp">
       <Filter>02.GameObject\99.BackGround</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Camera_Client.cpp">
-      <Filter>02.GameObject\02.Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_Skybox.cpp">
       <Filter>02.GameObject\99.BackGround\2.Sky</Filter>
@@ -303,13 +330,10 @@
       <Filter>10.Imgui\02.Tools\01.UITool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_FBX.cpp">
-      <Filter>02.GameObject\03.Objects\03FBX</Filter>
+      <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp">
       <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp">
-      <Filter>02.GameObject\01.2DObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp">
       <Filter>03.Creater\01.ObjectIO</Filter>
@@ -318,7 +342,7 @@
       <Filter>03.Creater\02.Creater</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_FBX_Ani.cpp">
-      <Filter>02.GameObject\03.Objects\03FBX</Filter>
+      <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
       <Filter>02.GameObject\02.3DObject\1.Terrain</Filter>
@@ -326,8 +350,32 @@
     <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp">
       <Filter>02.GameObject\00.ObjectBase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_3D.cpp">
+    <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp">
+      <Filter>10.Imgui\02.Tools\02.3DTool\01.MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp">
+      <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>01.Level\01.GamePlay\01.StudyGameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level\Level_MyGamePlay.cpp">
+      <Filter>01.Level\01.GamePlay\02.MyGameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Client.cpp">
+      <Filter>02.GameObject\02.Camera\1.BaseCam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\Camera_Game.cpp">
+      <Filter>02.GameObject\02.Camera\2.GameCam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp">
+      <Filter>02.GameObject\01.2DObject\1.Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,8 @@ public:
 public:
 	HRESULT Render(class CShader* shader, _uint passindex);
 
+	_bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);	
+
 protected:
 	// DX11¿ë VB »ý¼º
 	ID3D11Buffer*				m_pVB = nullptr;
