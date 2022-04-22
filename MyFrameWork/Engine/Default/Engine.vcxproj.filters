@@ -115,6 +115,12 @@
     <Filter Include="01.Utility\10.Picking">
       <UniqueIdentifier>{55213806-70a7-4e30-b2c8-91f83eb04ab6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\06.Collider">
+      <UniqueIdentifier>{83ea0d43-202e-4154-9492-60a1a5c618ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\06.Collider\DebugDraw">
+      <UniqueIdentifier>{f7f8f27c-9f8b-4d9e-ba8a-f5376a832447}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -224,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Picking.cpp">
       <Filter>01.Utility\10.Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider.cpp">
+      <Filter>01.Utility\06.ComponentMgr\06.Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>01.Utility\06.ComponentMgr\06.Collider\DebugDraw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +370,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Picking.h">
       <Filter>01.Utility\10.Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider.h">
+      <Filter>01.Utility\06.ComponentMgr\06.Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>01.Utility\06.ComponentMgr\06.Collider\DebugDraw</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@
 #include <d3dcompiler.h>
 #include <d3dx11effect.h>
 
-#include <DirectXCollision.h>
+#include <DirectXCollision.h> // 충돌관련 구현
 
 
 // 텍스처 로드 관련 Include
@@ -21,15 +21,23 @@
 // DDS가 가장 빠르다.
 
 // 도큐먼트: https://github.com/microsoft/DirectXTK12/wiki/DirectXTK
-#include <Direct_TK/DDSTextureLoader.h>
+#include <Direct_TK/DDSTextureLoader.h> // 텍스처 로드
 #include <Direct_TK/WICTextureLoader.h>
-#include <Direct_TK/ScreenGrab.h>
-#include <Direct_TK/SimpleMath.h>
-#include <Direct_TK/SpriteFont.h>
-#include <Direct_TK/Mouse.h>
 
-//#include <Direct_TK/GeometricPrimitive.h>
-//#include <Direct_TK/SpriteFont.h>
+#include <Direct_TK/ScreenGrab.h> // CreateTexture
+#include <Direct_TK/SimpleMath.h> // 수학관련 함수
+// #include <Direct_TK/Mouse.h> // 마우스
+
+
+#include <Direct_TK/SpriteFont.h>
+#include <Direct_TK/SpriteBatch.h>
+
+#include <Direct_TK/Effects.h> // 기본 셰이더 제공
+#include <Direct_TK/GeometricPrimitive.h> // 기본 도형
+
+#include <Direct_TK/PrimitiveBatch.h> // 기본 도형 DrawCall 
+#include <Direct_TK/VertexTypes.h> // 가장 많이 쓰는 정점 타입 정의
+
 
 #include <wincodec.h>
 
@@ -41,8 +49,8 @@
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
-using namespace Assimp;
 
+using namespace Assimp;
 using namespace DirectX;
 //using namespace DirectX::SimpleMath;
 
