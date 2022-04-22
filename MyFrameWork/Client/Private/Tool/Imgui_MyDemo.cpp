@@ -18,23 +18,10 @@ HRESULT CImgui_MyDemo::NativeConstruct()
 
 HRESULT CImgui_MyDemo::Update(_double time)
 {
-	 DemoTest();
+	DemoTest();
 
 	// TestUI
-	IMGUI_TEST_MyDemo();
-
-	// 프레TestUI3();임 테스트
-	// FraTestUI4();meUI(time);
-	// ImGui::Begin("Hello, world!");
-	// ImGui::Text("aaa");
-	// 
-	// ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-	// ImGui::End();
-
-	
-
-
-
+	IMGUI_TEST_MyDemo(time);
 	return S_OK;
 }
 
@@ -50,7 +37,6 @@ void CImgui_MyDemo::DemoTest()
 
 void CImgui_MyDemo::FrameUI(_double time)
 {
-
 	dClock += time;
 	mFrameCount++;
 
@@ -67,6 +53,47 @@ void CImgui_MyDemo::FrameUI(_double time)
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
 		/ ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
+}
+
+void CImgui_MyDemo::FrameUI_Overaly(_double time)
+{
+	static int corner = 0;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+	if (corner != -1)
+	{
+		const float PAD = 10.0f;
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImVec2 work_pos = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
+		ImVec2 work_size = viewport->WorkSize;
+		ImVec2 window_pos, window_pos_pivot;
+		window_pos.x = (corner & 1) ? (work_pos.x + work_size.x - PAD) : (work_pos.x + PAD);
+		window_pos.y = (corner & 2) ? (work_pos.y + work_size.y - PAD) : (work_pos.y + PAD);
+		window_pos_pivot.x = (corner & 1) ? 1.0f : 0.0f;
+		window_pos_pivot.y = (corner & 2) ? 1.0f : 0.0f;
+		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+		window_flags |= ImGuiWindowFlags_NoMove;
+	}
+	ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+	bool t = true;
+	if (ImGui::Begin("Example: Simple overlay", &t, window_flags))
+	{
+		dClock += time;
+		mFrameCount++;
+
+		if (dClock >= 1)
+		{
+			mCurrentFrame = mFrameCount;
+			dClock = 0;
+			mFrameCount = 0;
+		}
+
+		ImGui::Text("Frame: %d", mCurrentFrame);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f
+			/ ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	}
+	ImGui::End();
+
 }
 
 static void HelpMarker(const char* desc)
@@ -143,7 +170,7 @@ void CImgui_MyDemo::IMGUI_TEST_Window()
 
 }
 
-void CImgui_MyDemo::IMGUI_TEST_MyDemo()
+void CImgui_MyDemo::IMGUI_TEST_MyDemo(_double timer)
 {
 	// 이 함수 이외의 기능은 투머치 일단 이걸로 툴을 제작하고 필요한 기능은 찾아보자
 
@@ -176,10 +203,13 @@ void CImgui_MyDemo::IMGUI_TEST_MyDemo()
 			// 각 UI 세부 기능 정리
 			IMGUI_TEST_Details();
 
-			// Overaly
-			static bool bAppOveraly = false;
-			ImGui::Checkbox("over", &bAppOveraly);
-			AppSimpleOverlay(&bAppOveraly);
+			// 프레임 테스트 오버레이
+			static bool bAppOveraly = true;
+			ImGui::Checkbox("FrameOver", &bAppOveraly);
+			if (bAppOveraly)
+			{
+				FrameUI_Overaly(timer);
+			}
 
 		}
 

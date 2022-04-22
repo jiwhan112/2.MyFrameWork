@@ -31,11 +31,16 @@ protected:
 	virtual HRESULT Set_Component() override;
 	HRESULT Set_ConstantTable();
 
+	// 지형 타기 
+	HRESULT Set_Height();
+
 private:
 	// 모델 텍스처
 	CShader*			mComShader = nullptr;
 	CRenderer*			mComRenderer = nullptr;
 	CModel*				mComModel = nullptr;
+
+	class CGameObject_Terrain* mTerrain = nullptr;
 	
 public:
 	static CGameObject_FBX* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

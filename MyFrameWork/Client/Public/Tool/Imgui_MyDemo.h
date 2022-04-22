@@ -20,11 +20,13 @@ public:
 public:
 	void DemoTest();
 	void FrameUI(_double time);
+	void FrameUI_Overaly(_double time);
+
 
 private:
 	// 데모에 나오는 기능 정리
 	void IMGUI_TEST_Window();
-	void IMGUI_TEST_MyDemo();
+	void IMGUI_TEST_MyDemo(_double timer);
 	void IMGUI_TEST_Basic();
 	void IMGUI_TEST_Details();	
 	void AppSimpleOverlay(bool* p_open);

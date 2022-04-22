@@ -68,8 +68,8 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
 
-	if (mComModel == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_MODEL), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+	if (mComModel == nullptr){}
+	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, mModelDesc.prtoName, TEXT("Com_Model"), (CComponent**)&mComModel));
 
 	if (mComVIBuffer == nullptr)
 		mComVIBuffer = nullptr;

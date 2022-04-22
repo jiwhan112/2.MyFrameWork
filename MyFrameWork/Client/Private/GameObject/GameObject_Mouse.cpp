@@ -54,12 +54,12 @@ _int CGameObject_Mouse::Tick(_double TimeDelta)
 	mComTransform->SetState(CTransform::STATE_POSITION,
 		XMVectorSet(mMousePos.x, mMousePos.y, 0.0f, 1.f));
 
+
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
 	{
-		_float3 dist;
-		GetSingle(CGameInstance)->isPick(nullptr, &dist);
+		_float3 f = GetSingle(CGameInstance)->Get_PickPos();
+		int a = 5;		
 	}
-
 
 	return UPDATENONE;
 }

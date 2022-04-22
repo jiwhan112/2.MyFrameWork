@@ -38,6 +38,7 @@ protected:
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;					//
 
 	_float3*		mpVertexPos = nullptr;
+	void*			mIndeces = nullptr;
 
 protected:
 	HRESULT Create_VertexBuffer();

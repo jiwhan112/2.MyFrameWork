@@ -24,9 +24,10 @@ public:
 	virtual _int LateTick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
-
-
 public: // Get Set
+
+
+
 
 
 protected: // DESC

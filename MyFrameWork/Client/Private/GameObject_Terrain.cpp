@@ -36,10 +36,10 @@ _int CGameObject_Terrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-	if (PickObject())
+	/*if (PickObject())
 	{
 		int a = 5;
-	}
+	}*/
 
 	return _int();
 }
@@ -56,7 +56,10 @@ bool CGameObject_Terrain::PickObject()
 {
 	_float3 pick;
 	if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
+	{
+		int a = 5;
 		return true;
+	}
 
 	return false;
 }

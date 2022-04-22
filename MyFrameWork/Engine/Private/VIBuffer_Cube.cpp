@@ -112,12 +112,13 @@ HRESULT CVIBuffer_Cube::NativeConstruct_Prototype()
 	// DX11에서는 버퍼정보를 모두 서브 데이터 넣어 세팅해준다.
 	ZeroMemory(&m_IBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_IBSubResourceData.pSysMem = pIndices;
+	mIndeces = pIndices;
 
 	if (FAILED(Create_IndexBuffer()))
 		return E_FAIL;
 
 	// m_pIB에 인덱스 버퍼 세팅
-	Safe_Delete_Array(pIndices);
+//	Safe_Delete_Array(pIndices);
 #pragma endregion
 	return S_OK;
 }

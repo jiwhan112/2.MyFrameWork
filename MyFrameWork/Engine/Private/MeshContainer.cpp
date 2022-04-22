@@ -69,11 +69,13 @@ HRESULT CMeshContainer::Ready_VertexIndexBuffer(CModel::E_MODEL_TYPE eMeshtype, 
 
 	ZeroMemory(&m_IBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_IBSubResourceData.pSysMem = pIndices;
+	mIndeces = pIndices;
 
 	if (FAILED(Create_IndexBuffer()))
 		return E_FAIL;
 
-	Safe_Delete_Array(pIndices);
+//	Safe_Delete_Array(pIndices);
+
 #pragma endregion
 
 	return S_OK;

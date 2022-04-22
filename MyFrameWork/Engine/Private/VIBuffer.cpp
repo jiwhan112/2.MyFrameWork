@@ -22,6 +22,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
 	, mpVertexPos(rhs.mpVertexPos)
+	, mIndeces(rhs.mIndeces)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
@@ -94,14 +95,24 @@ _bool CVIBuffer::Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut)
 	pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
 
 	_uint		iIndexByte = 0;
+	_uint		iIndexSize = 0;
 
 	if (m_eIndexFormat == DXGI_FORMAT_R16_UINT)
+	{
 		iIndexByte = 2;
+		iIndexSize = sizeof(FACEINDICES16);
+	}
 	else
+	{
 		iIndexByte = 4;
+		iIndexSize = sizeof(FACEINDICES32);
 
+	}
 	_bool		isPick = false;
 
+	_uint	iIndices[3] = { 0 };
+
+	
 	for (_uint i = 0; i < m_iNumPrimitive; ++i)
 	{
 		_uint	iIndices[3] = { 0 };
@@ -112,12 +123,13 @@ _bool CVIBuffer::Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut)
 		/* _byte*포인터형변수에 1을더하면 1byte씩 이동한다.  */
 
 		for (_uint j = 0; j < 3; ++j)
-			memcpy(&iIndices[j], (((_byte*)m_IBSubResourceData.pSysMem + sizeof(m_eIndexFormat) * i) + iIndexByte * j), iIndexByte);
+			memcpy(&iIndices[j], (((_byte*)mIndeces + iIndexSize * i) + iIndexByte * j), iIndexByte);
 
 		_float3		vPoint[3] = {
-			*(_float3*)(((_byte*)mpVertexPos) + m_VBDesc.StructureByteStride * iIndices[0]),
-			*(_float3*)(((_byte*)mpVertexPos) + m_VBDesc.StructureByteStride * iIndices[1]),
-			*(_float3*)(((_byte*)mpVertexPos) + m_VBDesc.StructureByteStride * iIndices[2])
+			mpVertexPos[iIndices[0]],
+			mpVertexPos[iIndices[1]],
+			mpVertexPos[iIndices[2]]
+
 		};
 
 		if (isPick = pPicking->isPick(vPoint, pOut))
@@ -125,7 +137,7 @@ _bool CVIBuffer::Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut)
 			_float4x4		WorldMatrix;
 			WorldMatrix = WorldMatrixInverse.Invert();
 			_float3::Transform(*pOut, WorldMatrix, *pOut);
-			break;
+			return isPick;
 		}
 	}
 
@@ -137,7 +149,15 @@ void CVIBuffer::Free()
 	__super::Free();
 
 	if (m_isCloned == false)
+	{
 		Safe_Delete_Array(mpVertexPos);
+		Safe_Delete_Array(mIndeces);
+
+	}
+
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
+
+
+
 }

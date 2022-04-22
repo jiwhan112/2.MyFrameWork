@@ -11,6 +11,7 @@ enum E_TAYLAY
 {
 	LAY_NONE,
 	LAY_BACKGROUND,
+	LAY_TERRAIN,
 	LAY_CAMERA,
 	LAY_MOUSE,
 	LAY_PLAYER,
@@ -31,6 +32,8 @@ static const wchar_t* STR_TAYLAY(E_TAYLAY lay)
 		return L"LAY_NONE";
 	case LAY_BACKGROUND:
 		return L"LAY_BACKGROUND";
+	case LAY_TERRAIN:
+		return L"LAY_TERRAIN";
 	case LAY_CAMERA:
 		return L"LAY_CAMERA";
 	case LAY_MOUSE:
@@ -57,8 +60,10 @@ enum E_TAYCOMPONENT
 	COMPONENT_NONE,
 	// Transform
 	COMPONENT_TRANSFORM,
+
 	// Renderer
 	COMPONENT_RENDERER,
+
 	// Model
 	COMPONENT_MODEL,
 	COMPONENT_MODEL_ANI,

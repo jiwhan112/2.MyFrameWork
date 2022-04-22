@@ -102,9 +102,9 @@ HRESULT CImgui_UI::Render_UI()
 void CImgui_UI::UIMODE()
 {
 	// 선택된 UI 오브젝트 수정
-	FAILED_CHECK_RETURN(Edit_ProtoObjectList());
-	FAILED_CHECK_RETURN(Edit_UIObject());
-	FAILED_CHECK_RETURN(Edit_Texture());
+	FAILED_CHECK_NONERETURN(Edit_ProtoObjectList());
+	FAILED_CHECK_NONERETURN(Edit_UIObject());
+	FAILED_CHECK_NONERETURN(Edit_Texture());
 
 
 }
@@ -220,6 +220,7 @@ void CImgui_UI::PATHMODE()
 					Safe_AddRef(mCurrentUIObject);
 				}
 			}
+
 			IMGUI_TREE_END
 		}
 		IMGUI_TREE_END
@@ -277,7 +278,12 @@ HRESULT CImgui_UI::Edit_UIObject()
 
 	IMGUI_TREE_BEGIN("Pivot")
 	{
-		ImGui::DragFloat2("PivotXY", (float*)&myDesc.mPivot,0.1f, 0.0f, 1.0f);
+		ImGui::DragFloat2("PivotXY", (float*)&myDesc.mPivot,0.01f, 0.0f, 1.0f);
+		IMGUI_TREE_END
+	}
+	IMGUI_TREE_BEGIN("Depth")
+	{
+		ImGui::DragInt("DepthINT", (int*)&myDesc.mDepth, 1, 0, 50);
 		IMGUI_TREE_END
 	}
 	mCurrentUIObject->Set_LoadUIDesc(myDesc);
@@ -295,19 +301,27 @@ HRESULT CImgui_UI::Edit_Texture()
 
 		_uint cnt = 0;
 		string selectTeture = "";
+		static ImGuiTextFilter filter;
+		filter.Draw();
+
 		for (auto iter = mListTextureKey->begin(); iter != mListTextureKey->end(); ++cnt, iter++)
 		{
-			if (ImGui::Selectable(iter->c_str(), selectedTex == cnt))
+			if (filter.PassFilter(iter->c_str()))
 			{
-				selectedTex = cnt;
-				selectTeture = *iter;
+				if (ImGui::Selectable(iter->c_str(), selectedTex == cnt))
+				{
+					selectedTex = cnt;
+					selectTeture = *iter;
 
-			//	mUIObject->Get_TextureMap()->Set_TextureMap(selectTeture);
+					//	mUIObject->Get_TextureMap()->Set_TextureMap(selectTeture);
 
-				TEXTUREDESC tex;
-				strcpy_s(tex.mTextureKey_Diffuse, selectTeture.c_str());
-				mCurrentUIObject->Set_LoadTexDesc(tex);
+					TEXTUREDESC tex;
+					strcpy_s(tex.mTextureKey_Diffuse, selectTeture.c_str());
+					mCurrentUIObject->Set_LoadTexDesc(tex);
+				}
 			}
+
+			
 		}
 
 		IMGUI_TREE_END

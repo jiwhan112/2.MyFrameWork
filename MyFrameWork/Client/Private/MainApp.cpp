@@ -40,6 +40,8 @@ HRESULT CMainApp::NativeConstruct()
 _int CMainApp::Tick(_double TimeDelta)
 {
 	m_pGameInstance->Tick_Engine(TimeDelta);
+	GetSingle(CImguiMgr)->Update(TimeDelta);
+
 	return _int();
 }
 
@@ -54,6 +56,8 @@ HRESULT CMainApp::Render()
 
 	m_pRenderer->Render();
 	m_pGameInstance->Render_Level();
+
+	GetSingle(CImguiMgr)->Render();
 	// 스왑체인
 	m_pGameInstance->Present();
 
@@ -108,6 +112,8 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER),
 		m_pRenderer = CRenderer::Create(m_pDevice, m_pDeviceContext)));
+	Safe_AddRef(m_pRenderer);
+
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TRANSFORM),
 		CTransform::Create(m_pDevice, m_pDeviceContext)));
 
@@ -130,12 +136,14 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	// 정적 오브젝트
 	_float4x4		DefaultTransform;	
 	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
-	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
+		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
 
 	// 동적 오브젝트
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
-		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
+	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
+
+
 
 
 	// 텍스처 컴포넌트
@@ -154,7 +162,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	// 텍스처 맵 컴포넌트
 	
-	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(L"..\\Bin\\Resources\\PathTxT\\SpritePath.txt","png");
+	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_SPRITETXT_L,"png");
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
 		CTexture_map::Create(m_pDevice, m_pDeviceContext, listpngpath)));
@@ -184,7 +192,22 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxAni.hlsl"),
 			VTXANIMODEL_DECLARATION::Elements, VTXANIMODEL_DECLARATION::iNumElements)));
 
-	Safe_AddRef(m_pRenderer);
+
+	// 모델 컴포넌트 생성
+
+	// FBX 파일 이름으로 모델 생성
+	// list<MYFILEPATH*> listFBXpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_3DPATHTXT_L, "fbx");
+	// 
+	// _float4x4		DefaultTransform2;
+	// DefaultTransform2 = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	// 
+	// for (auto& path : listFBXpath)
+	// {
+	// 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
+	// 	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, path->FullPath, path->FileName, DefaultTransform)));	
+	// }
+
+
 	return S_OK;
 }
 
@@ -202,11 +225,11 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
 	 
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
-	// 	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
+		CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
 	
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST_ANI),
-		 CGameObject_FBX_Ani::Create(m_pDevice, m_pDeviceContext)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST_ANI),
+	//	 CGameObject_FBX_Ani::Create(m_pDevice, m_pDeviceContext)));
 
 	//==================================================================================================================
 
@@ -223,8 +246,8 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 
 	// Creater 클래스에서 데이터를 읽는다고 가정하고 2D 깡통 클래스를 가지는 
 	// 부모 / 자식이 완성된 프로토 오브젝트를 만든다.
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TEST),
-		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TEST),
+	//	CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
 
 
 	// 마우스

@@ -303,6 +303,20 @@ _bool CGameInstance::isPick(_float3 * pLocalPoint, _float3 * pOut)
 	return m_pPickMgr->isPick(pLocalPoint,pOut);
 }
 
+_float3 CGameInstance::Get_PickPos() const
+{
+	NULL_CHECK_BREAK(m_pPickMgr);
+
+	return m_pPickMgr->Get_PickPos();
+}
+_bool CGameInstance::Get_isPick() const
+{
+	NULL_CHECK_BREAK(m_pPickMgr);
+
+	return m_pPickMgr->Get_isPick();
+}
+
+
 
 void CGameInstance::Release_Engine()
 {

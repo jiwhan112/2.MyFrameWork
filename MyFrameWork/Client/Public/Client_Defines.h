@@ -32,3 +32,5 @@ using namespace Client;
 #define  STR_FILEPATH_RESOURCE_L				L"..\\Bin\\Resources"
 
 #define  STR_FILEPATH_RESOURCE_DATPATHTXT_L		L"..\\Bin\\Resources\\PathTxT\\DatPath.txt"
+#define  STR_FILEPATH_RESOURCE_SPRITETXT_L		L"..\\Bin\\Resources\\PathTxT\\SpritePath.txt"
+#define  STR_FILEPATH_RESOURCE_3DPATHTXT_L		L"..\\Bin\\Resources\\PathTxT\\3DPath.txt"

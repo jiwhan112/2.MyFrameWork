@@ -17,6 +17,8 @@ public:
 	virtual HRESULT Render();
 
 private:
+	HRESULT Ready_IMGUI();
+
 	HRESULT Ready_Light();
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Mouse(const _tchar* pLayerTag);

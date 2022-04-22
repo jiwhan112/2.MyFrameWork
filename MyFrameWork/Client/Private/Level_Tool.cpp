@@ -31,7 +31,7 @@ _int CLevel_Tool::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-	GetSingle(CImguiMgr)->Update(TimeDelta);
+
 
 
 	return UPDATENONE;
@@ -47,7 +47,6 @@ HRESULT CLevel_Tool::Render()
 {
 	FAILED_CHECK(__super::Render());
 
-	GetSingle(CImguiMgr)->Render();
 	
 
 

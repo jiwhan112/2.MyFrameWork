@@ -147,7 +147,7 @@ _byte CInput_Device::Get_DIMouseButtonState(MOUSEBUTTONSTATE eMouseButtonState)
 }
 
 
-HRESULT CInput_Device::SetUp_InputDeviceState(_float fDeltaTime)
+HRESULT CInput_Device::SetUp_InputDeviceState(_double fDeltaTime)
 {
 	if (nullptr == m_pKeyboard ||
 		nullptr == m_pMouse)

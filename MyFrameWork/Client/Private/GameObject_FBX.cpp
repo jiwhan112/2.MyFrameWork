@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject_FBX.h"
+#include "GameObject_Terrain.h"
 
 CGameObject_FBX::CGameObject_FBX(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
@@ -33,6 +34,8 @@ HRESULT CGameObject_FBX::NativeConstruct(void* pArg)
 	desc.SpeedPersec = 5.0f;
 
 	mComTransform->SetTransformDesc(desc);
+
+
 	return S_OK;
 }
 
@@ -61,12 +64,14 @@ _int CGameObject_FBX::Tick(_double TimeDelta)
 		mComTransform->Turn(XMVectorSet(0, -1, 0, 0), TimeDelta);
 	}
 
+
 	return UPDATENONE;
 }
 
 _int CGameObject_FBX::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	Set_Height();
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return UPDATENONE;
 }
@@ -140,6 +145,48 @@ HRESULT CGameObject_FBX::Set_ConstantTable()
 	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_AMBIENT, &pLightDesc->vAmbient, sizeof(_float4)));
 	FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_SPECULAR, &pLightDesc->vSpecular, sizeof(_float4)));
 
+	FAILED_CHECK(mComShader->Set_RawValue(STR_CAMPOS, &pGameInstance->GetCameraPosition_vec(), sizeof(_float4)));
+
+
+	return S_OK;
+}
+
+HRESULT CGameObject_FBX::Set_Height()
+{
+	// 1. 각 컴포넌트 구하기
+	if (mTerrain == nullptr)
+	{
+		int index = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		auto listdata = GetSingle(CGameInstance)->Get_GameObjectLayerList(index, TAGLAY(LAY_TERRAIN));
+		
+		NULL_CHECK_BREAK(listdata);
+
+		mTerrain = (CGameObject_Terrain*)*listdata->begin();
+
+		NULL_CHECK_BREAK(mTerrain);
+	}
+
+	CVIBuffer_Terrain*		pVIBuffer = (CVIBuffer_Terrain*)mTerrain->Get_Component(TEXT("Com_VIBuffer"));
+	if (nullptr == pVIBuffer)
+		return E_FAIL;
+
+	// 2.위치 가져오기
+	_vector		vPos = mComTransform->GetState(CTransform::STATE_POSITION);
+	_float4x4	WorldMatrix = mComTransform->GetWorldFloat4x4();
+	_float4x4	WorldMatrixInverse = WorldMatrix.Invert();
+
+	_float4 vPosition;
+	XMStoreFloat4(&vPosition, vPos);
+
+	// 3.공간 맞춰서 연산하고 다시 공간 변환
+	// 월드 -> 로컬 -> 연산 -> 로컬 -> 월드
+	_float4::Transform(vPosition, WorldMatrixInverse, vPosition);
+	vPosition = pVIBuffer->Get_Height(vPosition);	
+	_float4::Transform(vPosition, WorldMatrix, vPosition); 
+
+	vPosition.y = 5;
+	// 세팅
+	mComTransform->SetState(CTransform::STATE_POSITION, vPosition);
 
 	return S_OK;
 }

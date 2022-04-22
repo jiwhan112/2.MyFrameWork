@@ -84,11 +84,13 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype()
 	ZeroMemory(&m_IBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_IBSubResourceData.pSysMem = pIndices;
 
+	mIndeces = pIndices;
+
 	if (FAILED(Create_IndexBuffer()))
 		return E_FAIL;
 
 	// m_pIB에 인덱스 버퍼 세팅
-	Safe_Delete_Array(pIndices);
+//	Safe_Delete_Array(pIndices);
 #pragma endregion
 
 	return S_OK;

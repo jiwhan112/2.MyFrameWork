@@ -44,6 +44,7 @@ private:
 	ID3D11ShaderResourceView*	mRSV = nullptr;
 
 public:
+	// #Tag 텍스처 파일 만들기
 	HRESULT Create_FilterTexture();
 
 

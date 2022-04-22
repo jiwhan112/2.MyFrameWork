@@ -14,6 +14,8 @@ HRESULT CPicking::Initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
+	mPickPos = _float3::Zero;
+	misPick = false;
 
 	return S_OK;
 }
@@ -22,6 +24,8 @@ HRESULT CPicking::Initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 
 HRESULT	CPicking::Transform_ToWorldSpace()
 {
+	misPick = false;
+
 	POINT ptMouse;
 	GetCursorPos(&ptMouse);
 	ClientToScreen(m_hWnd, &ptMouse);
@@ -96,25 +100,28 @@ HRESULT	CPicking::Transform_ToWorldSpace()
 
 HRESULT CPicking::Transform_ToLocalSpace(_fmatrix WorldMatrixInverse)
 {
-	_float3::TransformNormal(mRayLocal.direction, WorldMatrixInverse, mRayLocal.direction);
+
+	_float3::TransformNormal(mRayWorld.direction, WorldMatrixInverse, mRayLocal.direction);
 	mRayLocal.direction.Normalize();
 
-	_float3::Transform(mRayLocal.position, WorldMatrixInverse, mRayLocal.position);
+	_float3::Transform(mRayWorld.position, WorldMatrixInverse, mRayLocal.position);
 
 	return S_OK;
 }
 
 _bool CPicking::isPick(_float3* pLocalPoint, _float3 *pOut)
 {
+
 	_float fDist;
 	if (mRayLocal.Intersects(pLocalPoint[0], pLocalPoint[1], pLocalPoint[2], fDist))
 	{
 		*pOut = mRayLocal.position + mRayLocal.direction * fDist;
+		mPickPos = *pOut;
+		misPick = true;
 		return true;
 	}
 	else
 	{
-
 		return false;
 	}
 }

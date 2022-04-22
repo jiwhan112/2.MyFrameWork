@@ -76,8 +76,8 @@ public: // For. File
 public: // For. Picking
 	HRESULT Transform_ToLocalSpace(_fmatrix WorldMatrixinverse);
 	_bool isPick(_float3 * pLocalPoint, _float3 * pOut);
-
-
+	_float3 Get_PickPos() const;
+	_bool	 Get_isPick() const;
 
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;

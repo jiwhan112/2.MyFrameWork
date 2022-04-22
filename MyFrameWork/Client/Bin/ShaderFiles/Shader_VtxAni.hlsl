@@ -1,6 +1,8 @@
 
 #include "Shader_Defines.hpp" 
 
+// µ¿Àû ¸ğµ¨ ¼ÎÀÌ´õ
+
 struct BoneMatrixArray
 {
 	matrix				BoneMatrices[128];

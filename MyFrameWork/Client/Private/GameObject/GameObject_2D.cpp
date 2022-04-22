@@ -34,7 +34,6 @@ HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 	mCurrentShaderPass = 1;
 	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 
-
 	return S_OK;
 }
 

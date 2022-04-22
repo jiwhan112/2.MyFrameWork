@@ -283,6 +283,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(_uint x, _uint z)
 	// DX11에서는 버퍼정보를 모두 서브 데이터 넣어 세팅해준다.
 	ZeroMemory(&m_IBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_IBSubResourceData.pSysMem = pIndices;
+	mIndeces = pIndices;
 
 	if (FAILED(Create_VertexBuffer()))
 		return E_FAIL;
@@ -292,7 +293,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(_uint x, _uint z)
 	if (FAILED(Create_IndexBuffer()))
 		return E_FAIL;
 
-	Safe_Delete_Array(pIndices);
+//	Safe_Delete_Array(pIndices);
 
 #pragma endregion
 
@@ -302,6 +303,46 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(_uint x, _uint z)
 HRESULT CVIBuffer_Terrain::NativeConstruct(void * pArg)
 {
 	return S_OK;
+}
+
+_float4 CVIBuffer_Terrain::Get_Height(_float4 TargetPos)
+{
+	_float4 vPos = TargetPos;
+
+	// 현재 위치 찾기 z * width + x
+	_uint iIndex = vPos.z * miNumX + vPos.x;
+
+	_uint Indeces[] = {
+		iIndex + miNumX,
+		iIndex + miNumX + 1,
+		iIndex + 1 ,
+		iIndex
+	};
+
+	_float fWidth = vPos.x - mpVertexPos[Indeces[0]].x;
+	_float fDeoth = mpVertexPos[Indeces[0]].z - vPos.z;
+
+	_float fY = 0.f;
+	_plane plane;
+
+
+	// Width가 더 크면 위쪽 삼각형
+	if (fWidth > fDeoth)
+	{
+		// 점 3개로 평면을 만든다.
+		plane = _plane(mpVertexPos[Indeces[0]], mpVertexPos[Indeces[1]], mpVertexPos[Indeces[2]]);
+	}
+	// 아래쪽
+	else
+	{
+		plane = _plane(mpVertexPos[Indeces[0]], mpVertexPos[Indeces[2]], mpVertexPos[Indeces[3]]);
+	}
+
+	// y = (-ax - cz - d) / b;
+	fY = ((-plane.x * vPos.x) - (plane.z * vPos.z) - plane.D()) / plane.y;
+
+	vPos.y = fY;
+	return vPos;
 }
 
 CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * HeightMap)

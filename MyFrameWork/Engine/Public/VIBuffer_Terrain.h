@@ -16,6 +16,10 @@ public:
 	virtual HRESULT NativeConstruct_Prototype(_uint x,_uint z);
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
+	// #Tag 지형타기
+	_float4 Get_Height(_float4 TargetPos);
+
+
 private:
 	_uint			miNumX = 0;
 	_uint			miNumZ = 0;

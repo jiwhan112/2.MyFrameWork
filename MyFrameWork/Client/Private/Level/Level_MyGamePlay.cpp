@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Level/Level_MyGamePlay.h"
+#include "Tool/Imgui_MyDemo.h"
 #include "Camera.h"
 
 CLevel_MyGamePlay::CLevel_MyGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -11,6 +12,7 @@ CLevel_MyGamePlay::CLevel_MyGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext*
 HRESULT CLevel_MyGamePlay::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
+	Ready_IMGUI();
 
 	FAILED_CHECK(Ready_Light());	
 	FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
@@ -49,6 +51,13 @@ HRESULT CLevel_MyGamePlay::Ready_Prototype_GameObject()
 	return S_OK;
 }
 
+HRESULT CLevel_MyGamePlay::Ready_IMGUI()
+{
+	// IMGUI »ý¼º
+	GetSingle(CImguiMgr)->Add_IMGUI(CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
+	return S_OK;
+}
+
 HRESULT CLevel_MyGamePlay::Ready_Light()
 {
 	// ºû ¼¼ÆÃ
@@ -62,7 +71,7 @@ HRESULT CLevel_MyGamePlay::Ready_Light()
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	LightDesc.vDirection = _float4(0, -1.f, 0, 0.f);
+	LightDesc.vDirection = _float4(1, -1.f, 1, 0.f);
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDeviceContext, LightDesc)))
 		return E_FAIL;
@@ -104,12 +113,13 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_TERRAIN)));
-//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST_ANI)));
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_TERRAIN), TAGOBJ(GAMEOBJECT_TERRAIN)));
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST)));
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST_ANI)));
 
 	return S_OK;
 }
+
 
 HRESULT CLevel_MyGamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
 {

@@ -117,10 +117,10 @@ HRESULT CRenderer::Render_UI()
 		nullptr == m_pDeviceContext)
 		return E_FAIL;
 
-	mRenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	mRenderObjects[RENDER_UI].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 	{
 
-		return pSour->Get_Depth() < pDest->Get_Depth();
+		return pSour->Get_Depth() > pDest->Get_Depth();
 	});
 
 

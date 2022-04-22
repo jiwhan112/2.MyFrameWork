@@ -26,7 +26,7 @@ public:
 
 public:
 	HRESULT Ready_Input_Device(HINSTANCE hInst, HWND hWnd, _float fDoubleTimeInterver);
-	HRESULT SetUp_InputDeviceState(_float fDeltaTime);
+	HRESULT SetUp_InputDeviceState(_double fDeltaTime);
 
 private:
 	LPDIRECTINPUT8				m_pInput = nullptr;

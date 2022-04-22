@@ -26,6 +26,7 @@ public:
 	virtual HRESULT Render();
 
 public:
+	CModel*		Get_ComModel() const { return mComModel; }
 
 protected:
 	virtual HRESULT Set_Component()override;
@@ -38,7 +39,10 @@ private:
 	CModel*						mComModel = nullptr;
 
 protected: // DESC
+
+	// 모델 컴포넌트는 FBX 모델 이름으로 생성
 //	MODUEL_STATIC_DESC			mModelDesc;
+
 
 
 public:

@@ -16,6 +16,9 @@ public:
 	// HRESULT Transform_ToWorldSpace(POINT mousePos);
 	 HRESULT Transform_ToLocalSpace(_fmatrix WorldMatrixinverse);
 	 _bool isPick(_float3 * pLocalPoint, _float3 * pOut);
+	 _float3 Get_PickPos() const { return mPickPos; }
+	 _bool	 Get_isPick() const { return misPick; }
+
 //	 _bool	is_On_Rect(const _rect* TargetRect);
 
 private:
@@ -23,10 +26,14 @@ private:
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 	HWND					m_hWnd;
 
-public:
+private:
 	_ray					mRayWorld;
 	_ray					mRayLocal;
+	_float3					mPickPos;
 
+	bool					misPick = false;
+
+public:
 	virtual void Free() override;
 
 };
