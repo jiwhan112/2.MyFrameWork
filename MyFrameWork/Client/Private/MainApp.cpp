@@ -18,6 +18,7 @@
 #include "GameObject_FBX_Ani.h"
 
 
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -203,16 +204,31 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	// 모델 컴포넌트 생성
 
 	// FBX 파일 이름으로 모델 생성
-	// list<MYFILEPATH*> listFBXpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_3DPATHTXT_L, "fbx");
-	// 
-	// _float4x4		DefaultTransform2;
-	// DefaultTransform2 = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
-	// 
-	// for (auto& path : listFBXpath)
-	// {
-	// 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
-	// 	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, path->FullPath, path->FileName, DefaultTransform)));	
-	// }
+	list<MYFILEPATH*> listFBXpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_3DPATHTXT_L, "fbx");
+
+	MYFILEPATH* TestPathData = (*listFBXpath.begin());
+	wstring wpath = GetSingle(CGameInstance)->Get_PathData(TestPathData->FullPath);
+	wstring wName = TestPathData->FileName;
+
+	string pathstr;
+	string namestr;
+	CHelperClass::Convert_string_wstring(wpath, pathstr, true);
+	CHelperClass::Convert_string_wstring(wName, namestr, true);
+
+	_float4x4		DefaultTransform2;
+	DefaultTransform2 = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+
+	
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TestPathData->FileName,
+		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, pathstr.c_str(), namestr.c_str(), DefaultTransform)));
+
+	
+	//for (auto& path : listFBXpath)
+	//{
+	//	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
+	//		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, path->FullPath, path->FileName, DefaultTransform)));
+	//}
 
 
 	return S_OK;

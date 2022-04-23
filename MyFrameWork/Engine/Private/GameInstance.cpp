@@ -288,6 +288,12 @@ list<MYFILEPATH*> CGameInstance::Load_ExtensionList(const wstring& txtfilepath, 
 	return m_pFileMgr->Load_ExtensionList(txtfilepath,exe);
 }
 
+wstring CGameInstance::Get_PathData(wstring Fullpath)
+{
+	NULL_CHECK_BREAK(m_pFileMgr);
+	return m_pFileMgr->Get_PathData(Fullpath);
+}
+
 HRESULT CGameInstance::Transform_ToLocalSpace(_fmatrix WorldMatrixinverse)
 {
 	NULL_CHECK_BREAK(m_pPickMgr);

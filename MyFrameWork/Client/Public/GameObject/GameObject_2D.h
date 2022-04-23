@@ -23,25 +23,39 @@ public:
 	virtual HRESULT Render();
 
 public:
+	CTexture_map* Get_TextureMap() const { return mComTexture; }	
+	CVIBuffer* Get_VIBuffer() const { return mComVIBuffer; }
+
 	void Set_LoadUIDesc(const UIDESC& desc)
 	{
 		memcpy(&mUiDesc, &desc, sizeof(UIDESC));
 	}
 	const UIDESC& Get_UIDesc() const { return mUiDesc; }
 
+	void Set_LoadTexDesc(const TEXTUREDESC& desc);	
+	const TEXTUREDESC& Get_TextureDesc() const { return mTexStrDESC; }
+
 	// 오름차순으로 정렬 큰값을 나중에 그린다.
 	virtual const _int& Get_Depth() override { return mUiDesc.mDepth; }
 
-
 protected:
 	virtual HRESULT Set_Component()override;
-	virtual HRESULT Set_ConstantTable_UI();
+
+	// 셰이더 넘기기
+	virtual HRESULT Set_ConstantTable_UI(); // UI Cam
+	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처 설정
 
 
-protected: // DESC
+protected: // UI에서 Com / DESC 추가
+
+	CVIBuffer*		mComVIBuffer = nullptr;
+	CTexture_map*	mComTexture = nullptr;
+
 	UIDESC			mUiDesc;
+	TEXTUREDESC		mTexStrDESC;
 
 public:
+
 	static CGameObject_2D* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
 	virtual CGameObject_2D* Clone(void* pArg);
 	virtual void Free() override;

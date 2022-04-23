@@ -41,16 +41,18 @@ typedef struct tag_TEXTUREDESC
 
 typedef struct tag_MODEL_STATIC_DESC
 {
-
+	char mModelName[MAX_STR] = "";
 
 }MODEL_STATIC_DESC;
 
 
 typedef struct tag_MODEL_DYNAMIC_DESC
 {
-
+	char mModelName[MAX_STR] = "";
 
 }MODEL_DYNAMIC_DESC;
+
+
 
 
 

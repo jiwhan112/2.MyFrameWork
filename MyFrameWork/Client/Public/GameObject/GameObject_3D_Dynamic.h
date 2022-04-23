@@ -31,15 +31,12 @@ public:
 protected:
 	virtual HRESULT Set_Component()override;
 
-private:
-	HRESULT Set_ConstantTable_World();
-	HRESULT Set_ConstantTable_Tex(_uint texid = 0);
 
-private:
+
+
+protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
-
-protected: // DESC
-
+	MODEL_STATIC_DESC			mModelDesc;
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

@@ -26,10 +26,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	string str("GUI_Menu_Main_Curtain.png");	
-	strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str.c_str());
-	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
-
 	return S_OK;
 }
 
@@ -49,10 +45,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_3D_Dynamic::Render()
 {
-	
 
-	FAILED_CHECK(Set_ConstantTable_Tex());
-	FAILED_CHECK(mComVIBuffer->Render(mComShader, 0));
 	return S_OK;
 }
 
@@ -64,29 +57,12 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 
 	
 	// 모델 타입에 따라 정적모델 동적모델 처리
-	if (mComModel == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
-	if (mComShader == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
+	//if (mComVIBuffer == nullptr)
+	//	mComVIBuffer = nullptr;
 
-	if (mComVIBuffer == nullptr)
-		mComVIBuffer = nullptr;
-
-	if (mComTexture == nullptr)
-		mComTexture = nullptr;
-	return S_OK;
-}
-
-HRESULT CGameObject_3D_Dynamic::Set_ConstantTable_World()
-{
-	return S_OK;
-}
-
-HRESULT CGameObject_3D_Dynamic::Set_ConstantTable_Tex(_uint texid)
-{
-	// 텍스처 넘기기
-	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
+	//if (mComTexture == nullptr)
+	//	mComTexture = nullptr;
 	return S_OK;
 }
 

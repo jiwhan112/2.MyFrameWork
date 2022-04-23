@@ -34,9 +34,7 @@ HRESULT CGameObject_FBX::NativeConstruct(void* pArg)
 	CTransform::TRANSFORMDESC desc;
 	desc.RotPersec = XMConvertToRadians(180);
 	desc.SpeedPersec = 5.0f;
-
 	mComTransform->SetTransformDesc(desc);
-
 
 	return S_OK;
 }

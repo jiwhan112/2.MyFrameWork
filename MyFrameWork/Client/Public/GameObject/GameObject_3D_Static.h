@@ -26,22 +26,25 @@ public:
 	virtual HRESULT Render();
 
 public:
+
 	CModel*		Get_ComModel() const { return mComModel; }
+
+	void		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc)
+	{
+		memcpy(&mModelDesc, &desc, sizeof(MODEL_STATIC_DESC));
+	}
 
 protected:
 	virtual HRESULT Set_Component()override;
 
-private:
-	HRESULT Set_ConstantTable_World();
-	HRESULT Set_ConstantTable_Tex(_uint texid=0);
+	virtual HRESULT Set_ConstantTable_Model(); // 모델 설정
+//	virtual HRESULT Set_ConstantTable_Light(_uint lightid = 0); // 라이팅
 
-private:
+
+
+protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
-
-protected: // DESC
-
-	// 모델 컴포넌트는 FBX 모델 이름으로 생성
-//	MODUEL_STATIC_DESC			mModelDesc;
+	MODEL_STATIC_DESC			mModelDesc;
 
 
 

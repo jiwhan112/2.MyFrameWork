@@ -130,8 +130,6 @@ void CImgui_UI::PATHMODE()
 			// Resoure에 있는 모든 리소스 데이터 TXT로 저장
 			Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L, L"3DPath.txt");
 		}
-
-
 		IMGUI_TREE_END
 	}
 	

@@ -26,10 +26,6 @@ public:
 
 public: // Get Set
 
-
-
-
-
 protected: // DESC
 	_float2 mMousePos;
 	_viewport mViewPort;

@@ -69,6 +69,23 @@ namespace Engine
 	}
 
 
+	// wstr <-> str º¯È¯
+
+	class CHelperClass
+	{
+	public:
+		static const void Convert_string_wstring(wstring& wstr, string& str, bool wstr2str)
+		{
+			if (wstr2str)
+			{
+				str.assign(wstr.begin(), wstr.end());
+			}
+			else
+			{
+				wstr.assign(str.begin(), str.end());
+			}
+		}
+	};
 
 
 }

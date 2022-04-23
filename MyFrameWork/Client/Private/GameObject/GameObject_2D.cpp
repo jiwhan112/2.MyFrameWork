@@ -11,8 +11,14 @@ CGameObject_2D::CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 CGameObject_2D::CGameObject_2D(const CGameObject_2D& rhs)
 	: CGameObject_Base(rhs)
 	,mUiDesc(rhs.mUiDesc)
+	,mTexStrDESC(rhs.mTexStrDESC)
 {
 
+	mComVIBuffer = rhs.mComVIBuffer;
+	mComTexture = rhs.mComTexture;
+
+	Safe_AddRef(mComVIBuffer);
+	Safe_AddRef(mComTexture);
 }
 
 HRESULT CGameObject_2D::NativeConstruct_Prototype()
@@ -67,7 +73,7 @@ HRESULT CGameObject_2D::Render()
 
 	FAILED_CHECK(Set_ConstantTable_UI());
 	FAILED_CHECK(Set_ConstantTable_Tex());
-//	FAILED_CHECK(Set_ConstantTable_Light());
+
 	
 	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 
@@ -75,6 +81,11 @@ HRESULT CGameObject_2D::Render()
 }
 
 
+void CGameObject_2D::Set_LoadTexDesc(const TEXTUREDESC & desc)
+{
+	memcpy(&mTexStrDESC, &desc, sizeof(TEXTUREDESC));
+	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
+}
 
 HRESULT CGameObject_2D::Set_Component()
 {
@@ -101,16 +112,23 @@ HRESULT CGameObject_2D::Set_ConstantTable_UI()
 	_float4x4 view;
 	XMStoreFloat4x4(&view, XMMatrixIdentity());
 
-
-
-//	_float4x4 projori = GetSingle(CGameInstance)->GetTransformFloat4x4_TP(CPipeLine::D3DTS_PROJ_ORI);
-	_float4x4 projori;// = GetSingle(CGameInstance)->GetTransformFloat4x4_TP(CPipeLine::D3DTS_PROJ_ORI);
+	_float4x4 projori;
 	XMStoreFloat4x4(&projori, XMMatrixTranspose(XMMatrixOrthographicLH(g_iWinCX, g_iWinCY, 0, 1)));
 
 	// WVP
 	mComTransform->Bind_OnShader(mComShader, STR_MAT_WORLD);
 	mComShader->Set_RawValue(STR_MAT_VIEW, &view, sizeof(_float4x4));
 	mComShader->Set_RawValue(STR_MAT_PROJ, &projori, sizeof(_float4x4));
+	return S_OK;
+}
+
+
+
+HRESULT CGameObject_2D::Set_ConstantTable_Tex()
+{
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+
+	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
 	return S_OK;
 }
 
@@ -143,6 +161,7 @@ CGameObject_2D* CGameObject_2D::Clone(void* pArg)
 void CGameObject_2D::Free()
 {
 	__super::Free();
-
+	Safe_Release(mComVIBuffer);;
+	Safe_Release(mComTexture);;
 
 }

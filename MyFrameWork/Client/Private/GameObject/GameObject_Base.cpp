@@ -10,17 +10,12 @@ CGameObject_Base::CGameObject_Base(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 CGameObject_Base::CGameObject_Base(const CGameObject_Base& rhs)
 	: CGameObject(rhs)
-	, mTexStrDESC(rhs.mTexStrDESC)
 {
 	mComShader = rhs.mComShader;
 	mComRenderer = rhs.mComRenderer;
-	mComVIBuffer = rhs.mComVIBuffer;
-	mComTexture = rhs.mComTexture;
 
 	Safe_AddRef(mComShader);
 	Safe_AddRef(mComRenderer);
-	Safe_AddRef(mComVIBuffer);
-	Safe_AddRef(mComTexture);
 
 }
 
@@ -56,11 +51,7 @@ HRESULT CGameObject_Base::Render()
 	return S_OK;
 }
 
-void CGameObject_Base::Set_LoadTexDesc(const TEXTUREDESC & desc)
-{
-	memcpy(&mTexStrDESC, &desc, sizeof(TEXTUREDESC));
-	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
-}
+
 
 HRESULT CGameObject_Base::Set_ConstantTable_World()
 {
@@ -69,14 +60,6 @@ HRESULT CGameObject_Base::Set_ConstantTable_World()
 	FAILED_CHECK(mComTransform->Bind_OnShader(mComShader, STR_MAT_WORLD));
 	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_VIEW, &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_VIEW), sizeof(_float4x4)));
 	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_PROJ, &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_PROJ), sizeof(_float4x4)));
-	return S_OK;
-}
-
-HRESULT CGameObject_Base::Set_ConstantTable_Tex()
-{
-	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
-
-	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
 	return S_OK;
 }
 
@@ -98,25 +81,24 @@ HRESULT CGameObject_Base::Set_ConstantTable_Light(_uint lightid)
 	return S_OK;
 }
 
-bool CGameObject_Base::PickObject_3D()
-{
-	if (mComVIBuffer == nullptr)
-		return false;
 
-	_float3 pout;
-
-	if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pout))
-		return true;
-
-	return false;
-}
+//bool CGameObject_Base::PickObject_3D()
+//{
+//	if (mComVIBuffer == nullptr)
+//		return false;
+//
+//	_float3 pout;
+//
+//	if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pout))
+//		return true;
+//
+//	return false;
+//}
 
 void CGameObject_Base::Free()
 {
 	__super::Free();
 	Safe_Release(mComShader);
 	Safe_Release(mComRenderer);
-	Safe_Release(mComVIBuffer);
-	Safe_Release(mComTexture);
 
 }

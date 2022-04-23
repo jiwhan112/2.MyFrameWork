@@ -34,49 +34,28 @@ public:
 	virtual HRESULT Render();
 
 
-
-
 public: // 컴포넌트 반환
 	CShader*		Get_ComShader() { return mComShader; }
 	CRenderer*		Get_ComRenderer() { return mComRenderer; }
-	CVIBuffer*		Get_ComVIBuffer() { return mComVIBuffer; }
-	CTexture_map*	Get_ComTexture() { return mComTexture; }
-
-
-public:
-
-	void Set_LoadTexDesc(const TEXTUREDESC& desc);
-
-	CTexture_map* Get_TextureMap() const
-	{
-		return mComTexture;
-	}
-
-	const TEXTUREDESC& Get_TextureDesc() const { return mTexStrDESC; }
 
 protected:
-	// 월드와 텍스처 빛 정보 셰이더 기본 세팅
+	// 월드 셰이더 세팅
 	virtual HRESULT Set_ConstantTable_World();
-	virtual HRESULT Set_ConstantTable_Tex();
-	virtual HRESULT Set_ConstantTable_Light(_uint lightid = 0);
+	virtual HRESULT Set_ConstantTable_Light(_uint lightid=0);
+	
 
-	bool PickObject_3D();
+//	bool PickObject_3D();
 
 protected:
 	_uint			mCurrentShaderPass = 0;
 
-	// 기본 컴포넌트
+	// 모든 클라이언트 오브젝트 기본 컴포넌트
 	CShader*		mComShader		= nullptr;
 	CRenderer*		mComRenderer	= nullptr;
-	CVIBuffer*		mComVIBuffer	= nullptr;
-	CTexture_map*	mComTexture		= nullptr;
-
-protected: // DESC
-	TEXTUREDESC		mTexStrDESC;
-
 
 
 public:
+	virtual CGameObject_Base* Clone(void* pArg)PURE;
 	virtual void Free() override;
 };
 

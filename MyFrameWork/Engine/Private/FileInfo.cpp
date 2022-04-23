@@ -354,6 +354,28 @@ list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
 
 }
 
+wstring CFileInfo::Get_PathData(wstring Fullpath)
+{
+	wstring returnPath = L"";
+	wstring::iterator endIter = Fullpath.end();
+	endIter--;
+	_uint cnt = Fullpath.length();
+
+	for (; endIter != Fullpath.begin(); endIter--)
+	{
+		if (Fullpath[cnt--] == '\\')
+		{
+			endIter++;
+			break;
+		}
+	}
+
+	returnPath.assign(Fullpath.begin(), endIter);
+	returnPath += '\\';
+
+	return returnPath;
+}
+
 void CFileInfo::Free()
 {
 	if (mListFilePathData.empty() == false)

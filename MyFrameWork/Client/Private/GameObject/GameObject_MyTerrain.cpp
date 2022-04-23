@@ -10,6 +10,7 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11Device
 
 CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	: CGameObject_Base(rhs)
+	, mComVIBuffer(rhs.mComVIBuffer)
 {
 }
 
@@ -23,10 +24,10 @@ HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
 HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	string str("GUI_Menu_Main_Curtain.png");
-	strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str.c_str());
+	//string str("GUI_Menu_Main_Curtain.png");
+	//strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str.c_str());
 
-	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
+	//mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 	return S_OK;
 }
 
@@ -55,18 +56,23 @@ HRESULT CGameObject_MyTerrain::Render()
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Tex());
 	FAILED_CHECK(Set_ConstantTable_Light());
-	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
+//	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 	return S_OK;
 }
 
 
 HRESULT CGameObject_MyTerrain::Set_Component()
 {
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
+//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
+//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
+	return S_OK;
+}
+
+HRESULT CGameObject_MyTerrain::Set_ConstantTable_Tex()
+{
 	return S_OK;
 }
 
@@ -100,5 +106,6 @@ CGameObject_MyTerrain* CGameObject_MyTerrain::Clone(void* pArg)
 void CGameObject_MyTerrain::Free()
 {
 	__super::Free();
+	Safe_Release(mComVIBuffer);
 
 }

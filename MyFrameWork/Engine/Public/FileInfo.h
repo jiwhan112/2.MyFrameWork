@@ -30,6 +30,9 @@ public:
 	// 해당 Txt파일을 읽어서 Path 리스트 제작
 	list<MYFILEPATH*> Load_ExtensionList(wstring txtfilepath,string exe);
 
+	// Full 패스의 경로만 리턴
+	wstring Get_PathData(wstring Fullpath);
+
 private:
 	void SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstring filename);
 	
