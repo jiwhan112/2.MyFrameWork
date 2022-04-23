@@ -6,6 +6,7 @@ class CShader;
 class CRenderer;
 class CModel;
 class CTexture;
+class CCollider;
 END
 
 BEGIN(Client)
@@ -39,6 +40,7 @@ private:
 	CShader*			mComShader = nullptr;
 	CRenderer*			mComRenderer = nullptr;
 	CModel*				mComModel = nullptr;
+	CCollider*			mComCollider = nullptr;
 
 	class CGameObject_Terrain* mTerrain = nullptr;
 	

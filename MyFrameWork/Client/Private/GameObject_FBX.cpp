@@ -13,10 +13,12 @@ CGameObject_FBX::CGameObject_FBX(const CGameObject_FBX& rhs)
 	, mComShader(rhs.mComShader)
 	, mComRenderer(rhs.mComRenderer)
 	, mComModel(rhs.mComModel)
+	, mComCollider(rhs.mComCollider)
 {
 	Safe_AddRef(mComShader);
 	Safe_AddRef(mComRenderer);
 	Safe_AddRef(mComModel);
+	Safe_AddRef(mComCollider);
 }
 
 HRESULT CGameObject_FBX::NativeConstruct_Prototype()
@@ -90,6 +92,8 @@ HRESULT CGameObject_FBX::Render()
 		mComModel->Render(mComShader, 0, i);
 	}
 
+	// 해당 위치에 충돌체 렌더링
+	mComCollider->Render(mComTransform);
 	return S_OK;
 }
 
@@ -124,6 +128,7 @@ HRESULT CGameObject_FBX::Set_Component()
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_MODEL), TEXT("Com_Model"), (CComponent**)&mComModel));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
 	return S_OK;
 }
 
@@ -197,7 +202,8 @@ void CGameObject_FBX::Free()
 	Safe_Release(mComShader);
 	Safe_Release(mComRenderer);
 	Safe_Release(mComModel);
-
+	Safe_Release(mComCollider);
+	
 	__super::Free();
 
 }

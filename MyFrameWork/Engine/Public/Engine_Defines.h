@@ -33,7 +33,7 @@
 #include <Direct_TK/SpriteBatch.h>
 
 #include <Direct_TK/Effects.h> // 기본 셰이더 제공
-#include <Direct_TK/GeometricPrimitive.h> // 기본 도형
+//#include <Direct_TK/GeometricPrimitive.h> // 도형 그리기 처리 #include "DebugDraw.h" 이걸로 사용
 
 #include <Direct_TK/PrimitiveBatch.h> // 기본 도형 DrawCall 
 #include <Direct_TK/VertexTypes.h> // 가장 많이 쓰는 정점 타입 정의

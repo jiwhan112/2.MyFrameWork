@@ -1,6 +1,9 @@
 #include "..\Public\Collider.h"
+#include "Transform.h"
+
 #include "DebugDraw.h"
 #include "PipeLine.h"
+#include "DebugDraw.h"
 
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -10,58 +13,58 @@ CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContex
 
 CCollider::CCollider(const CCollider & rhs)
 	: CComponent(rhs)
-	, m_pBasicEffect(rhs.m_pBasicEffect)
-	, m_pBatch(rhs.m_pBatch)
-	, m_eType(rhs.m_eType)	
-	, m_pInputLayout(rhs.m_pInputLayout)
+	, mBaseEffect(rhs.mBaseEffect)
+	, mBatch(rhs.mBatch)
+	, meType(rhs.meType)
+	, mInputLayout(rhs.mInputLayout)
 {
-	if (nullptr != rhs.m_pAABB)
-		m_pAABB = new BoundingBox(*rhs.m_pAABB);
-	if (nullptr != rhs.m_pOBB)
-		m_pOBB = new BoundingOrientedBox(*rhs.m_pOBB);
-	if (nullptr != rhs.m_pSphere)
-		m_pSphere = new BoundingSphere(*rhs.m_pSphere);
+	// 복사시 새로 만들어지고 위치를 설정해준다.
+	if (nullptr != rhs.mAABB)
+		mAABB = new BoundingBox(*rhs.mAABB);
+	if (nullptr != rhs.mOBB)
+		mOBB = new BoundingOrientedBox(*rhs.mOBB);
+	if (nullptr != rhs.mSphere)
+		mSphere = new BoundingSphere(*rhs.mSphere);
 
-	Safe_AddRef(m_pInputLayout);
+	Safe_AddRef(mInputLayout);
 	
 }
 
-HRESULT CCollider::NativeConstruct_Prototype(TYPE eType)
+HRESULT CCollider::NativeConstruct_Prototype(E_COLLIDER_TYPE eType)
 {
 	if (FAILED(__super::NativeConstruct_Prototype()))
 		return E_FAIL;
 
-	m_eType = eType;
-
-	/* 중심점은 원점. 모든 사이즈는 1로. */
-
-	switch (m_eType)
+	// 각 타입별로 크기 1인 충돌체 생성
+	meType = eType;
+	
+	switch (meType)
 	{
-	case TYPE_AABB:
-		m_pAABB = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(1.f, 1.f, 1.f));
+	case COL_AABB: 
+		mAABB = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(1.f, 1.f, 1.f));
 		break;
-	case TYPE_OBB:
-		m_pOBB = new BoundingOrientedBox(_float3(0.f, 0.f, 0.f), _float3(1.f, 1.f, 1.f), _float4(0.f, 0.f, 0.f, 1.f));
+	case COL_OBB:
+		mOBB = new BoundingOrientedBox(_float3(0.f, 0.f, 0.f), _float3(1.f, 1.f, 1.f), _float4(0.f, 0.f, 0.f, 1.f));
 		break;
-	case TYPE_SPHERE:
-		m_pSphere = new BoundingSphere(_float3(0.f, 0.f, 0.f), 1.f);
+	case COL_SPHERE:
+		mSphere = new BoundingSphere(_float3(0.f, 0.f, 0.f), 1.f);
 		break;
 	}
 
+	// 기본 셰이더와 Layout / Batch 생성
 #ifdef _DEBUG
-	m_pBasicEffect = new BasicEffect(m_pDevice);
-	m_pBasicEffect->SetVertexColorEnabled(true);
+	mBaseEffect = new BasicEffect(m_pDevice);
+	mBaseEffect->SetVertexColorEnabled(true);
 
 	const void* pShaderByteCode = nullptr;
 	size_t		iShaderByteCodeLength = 0;
 
-	m_pBasicEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeLength);
+	mBaseEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeLength);
 
-	if (FAILED(m_pDevice->CreateInputLayout(DirectX::VertexPositionColor::InputElements, DirectX::VertexPositionColor::InputElementCount,
-		pShaderByteCode, iShaderByteCodeLength, &m_pInputLayout)))
-		return E_FAIL;
+	FAILED_CHECK(m_pDevice->CreateInputLayout(DirectX::VertexPositionColor::InputElements, DirectX::VertexPositionColor::InputElementCount,
+		pShaderByteCode, iShaderByteCodeLength, &mInputLayout));
 
-	m_pBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
+	mBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
 	
 #endif // _DEBUG
 
@@ -78,56 +81,71 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 
 	if (nullptr != pArg)
 	{
-		memcpy(&m_ColliderDesc, pArg, sizeof(COLLIDERDESC));
-		TransformMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&m_ColliderDesc.vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat4(&m_ColliderDesc.vRotation), XMLoadFloat4(&m_ColliderDesc.vTranslation));
+		memcpy(&mColliderDesc, pArg, sizeof(COLLIDERDESC));
+		TransformMatrix = XMMatrixAffineTransformation(
+			XMLoadFloat3(&mColliderDesc.vScale), 
+			XMVectorSet(0.f, 0.f, 0.f, 1.f),
+			XMLoadFloat4(&mColliderDesc.vRotation),
+			XMLoadFloat4(&mColliderDesc.vTranslation));
 	}
 	else
 		TransformMatrix = XMMatrixIdentity();
 
-	 
-
-	if (nullptr != m_pAABB)
-		m_pAABB->Transform(*m_pAABB, TransformMatrix);
-	if (nullptr != m_pOBB)
-		m_pOBB->Transform(*m_pOBB, TransformMatrix);
-	if (nullptr != m_pSphere)
-		m_pSphere->Transform(*m_pSphere, TransformMatrix);
+	// 위치 설정
+	if (nullptr != mAABB)
+		mAABB->Transform(*mAABB, TransformMatrix);
+	if (nullptr != mOBB)
+		mOBB->Transform(*mOBB, TransformMatrix);
+	if (nullptr != mSphere)
+		mSphere->Transform(*mSphere, TransformMatrix);
 
 	return S_OK;
 }
+void CCollider::SetScale(_float3 size)
+{
+	// 일단 대입방식
+	if (nullptr != mAABB)
+		mAABB->Extents = size;
+	if (nullptr != mOBB)
+		mOBB->Extents = size;
+	if (nullptr != mSphere)
+		mSphere->Radius = size.x;
+
+}
+
 #ifdef _DEBUG
 
-HRESULT CCollider::Render()
+HRESULT CCollider::Render(CTransform* trans)
 {
-	m_pDeviceContext->IASetInputLayout(m_pInputLayout);
 
-	m_pBasicEffect->SetWorld(XMMatrixIdentity());
+	// 랜더링시 처리
+	m_pDeviceContext->IASetInputLayout(mInputLayout);
+	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
 
-	CPipeLine*		pPipeLine = GET_INSTANCE(CPipeLine);
+	CPipeLine*		pPipeLine = GetSingle(CPipeLine);
 
-	m_pBasicEffect->SetView(XMLoadFloat4x4(&pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
-	m_pBasicEffect->SetProjection(XMLoadFloat4x4(&pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	mBaseEffect->SetView(XMLoadFloat4x4(&pPipeLine->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	mBaseEffect->SetProjection(XMLoadFloat4x4(&pPipeLine->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
-	RELEASE_INSTANCE(CPipeLine);
+	mBaseEffect->Apply(m_pDeviceContext);
 
-	m_pBasicEffect->Apply(m_pDeviceContext);
+	// 배치 클래스의 Begin ~ End 까지 물체를 그린다.
+	mBatch->Begin();
 
-	m_pBatch->Begin();
+	if(nullptr != mAABB)
+		DX::Draw(mBatch, *mAABB);
+	if (nullptr != mOBB)
+		DX::Draw(mBatch, *mOBB);
+	if (nullptr != mSphere)		
+		DX::Draw(mBatch, *mSphere);
 
-	if(nullptr != m_pAABB)
-		DX::Draw(m_pBatch, *m_pAABB);
-	if (nullptr != m_pOBB)
-		DX::Draw(m_pBatch, *m_pOBB);
-	if (nullptr != m_pSphere)		
-		DX::Draw(m_pBatch, *m_pSphere);
-
-	m_pBatch->End();
+	mBatch->End();
 
 	return S_OK;
 }
 #endif // _DEBUG
 
-CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, TYPE eType)
+CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_COLLIDER_TYPE eType)
 {
 	CCollider*	pInstance = new CCollider(pDevice, pDeviceContext);
 
@@ -157,17 +175,17 @@ void CCollider::Free()
 {
 	__super::Free();
 
-	Safe_Delete(m_pAABB);
-	Safe_Delete(m_pOBB);
-	Safe_Delete(m_pSphere);
+	Safe_Delete(mAABB);
+	Safe_Delete(mOBB);
+	Safe_Delete(mSphere);
 
-	Safe_Release(m_pInputLayout);
+	Safe_Release(mInputLayout);
 
 #ifdef _DEBUG
 	if (false == m_isCloned)
 	{
-		Safe_Delete(m_pBasicEffect);
-		Safe_Delete(m_pBatch);
+		Safe_Delete(mBaseEffect);
+		Safe_Delete(mBatch);
 	}	
 #endif // _DEBUG
 }

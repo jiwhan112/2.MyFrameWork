@@ -7,6 +7,8 @@
 #include "Texture_map.h"
 #include "Shader.h"
 #include "Model.h"
+#include "Collider.h"
+
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
