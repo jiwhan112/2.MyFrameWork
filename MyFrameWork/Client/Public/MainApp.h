@@ -40,6 +40,14 @@ private:
 	HRESULT Ready_Prototype_Components();
 	HRESULT Ready_Prototype_GameObject();
 
+
+	HRESULT Ready_Prototype_Components_Model();
+	HRESULT Ready_Prototype_Components_Texture();
+	HRESULT Ready_Prototype_Components_Shader();
+
+	HRESULT Ready_Prototype_GameObject_Emptyobject();
+
+
 public:
 	static CMainApp* Create();
 	virtual void Free() override;
