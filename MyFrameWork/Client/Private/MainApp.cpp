@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\MainApp.h"
 
-#include "Tool/ImguiMgr.h"
 
 #include "Level_Logo.h"
 #include "Level_Loader.h"
@@ -11,6 +10,9 @@
 #include "GameObject/GameObject_MyTerrain.h"
 #include "GameObject/Camera_Game.h"
 #include "GameObject/GameObject_Mouse.h"
+#include "GameObject/GameObject_3D_Static.h"
+#include "GameObject/GameObject_3D_Dynamic.h"
+
 
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
@@ -22,16 +24,15 @@
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
-	GetSingle(CImguiMgr)->GetInstance();
-	GetSingle(CGameObject_Creater)->GetInstance();
-
+	m_pGameManager =  GetSingle(CGameManager)->GetInstance();
 	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CMainApp::NativeConstruct()
 {
 	FAILED_CHECK(Ready_Initialize());
-	GetSingle(CGameObject_Creater)->Set_Device(m_pDevice,m_pDeviceContext);
+	m_pGameManager->Initialize(m_pDevice, m_pDeviceContext);
+
 	FAILED_CHECK(Ready_Prototype_Components());
 	FAILED_CHECK(Ready_Prototype_GameObject());
 	FAILED_CHECK(Open_Level(LEVEL_LOGO));	
@@ -41,8 +42,8 @@ HRESULT CMainApp::NativeConstruct()
 _int CMainApp::Tick(_double TimeDelta)
 {
 	m_pGameInstance->Tick_Engine(TimeDelta);
-	GetSingle(CImguiMgr)->Update(TimeDelta);
 
+	m_pGameManager->Update(TimeDelta);
 	return _int();
 }
 
@@ -58,7 +59,8 @@ HRESULT CMainApp::Render()
 	m_pRenderer->Render();
 	m_pGameInstance->Render_Level();
 
-	GetSingle(CImguiMgr)->Render();
+	m_pGameManager->Render();
+
 	// 스왑체인
 	m_pGameInstance->Present();
 
@@ -101,9 +103,6 @@ HRESULT CMainApp::Ready_Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
 		return E_FAIL;
 
-	// IMGUI INIT
-	GetSingle(CImguiMgr)->InitImGUI(GraphicDesc.hWnd, m_pDevice, m_pDeviceContext);
-
 	return S_OK;
 }
 
@@ -142,10 +141,10 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
 
 	// 정적 오브젝트
-	_float4x4		DefaultTransform;	
-	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
-		CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
+	// _float4x4		DefaultTransform;	
+	// DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
+	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
 
 	// 동적 오브젝트
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
@@ -167,7 +166,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Filter.bmp"), 1)));
 
 	// 모델 / 텍스처 맵 / 셰이더 / 
-	FAILED_CHECK(Ready_Prototype_Components_Model());
+	// FAILED_CHECK(Ready_Prototype_Components_Model());
 	FAILED_CHECK(Ready_Prototype_Components_Texture());
 	FAILED_CHECK(Ready_Prototype_Components_Shader());
 
@@ -187,9 +186,16 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 		CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
 	 
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
-		CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
-	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA_GAME),
+		CCamera_Game::Create(m_pDevice, m_pDeviceContext)));
+
+	// 마우스
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MOUSE),
+		CGameObject_Mouse::Create(m_pDevice, m_pDeviceContext)));
+
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
+	//	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
+	//
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST_ANI),
 	//	 CGameObject_FBX_Ani::Create(m_pDevice, m_pDeviceContext)));
 
@@ -216,11 +222,10 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 		string pathstr;
 		string namestr;
 		CHelperClass::Convert_string_wstring(wpath, pathstr, true);
-		CHelperClass::Convert_string_wstring(wName, namestr, true);
-
-		
+		CHelperClass::Convert_string_wstring(wName, namestr, true);		
 		FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
 			CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, pathstr.c_str(), namestr.c_str(), DefaultTransform)));
+		
 	}
 
 	for (auto s : listFBXpath)
@@ -234,7 +239,7 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 
 HRESULT CMainApp::Ready_Prototype_Components_Texture()
 {
-	// 텍스처 맵 컴포넌트
+	// 2D텍스처 맵 컴포넌트
 	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_SPRITETXT_L, "png");
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
@@ -246,6 +251,21 @@ HRESULT CMainApp::Ready_Prototype_Components_Texture()
 		Safe_Delete(s);
 	}
 	listpngpath.clear();
+
+
+	// 모델 텍스처 맵
+	// list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_3DPATHTXT_L, "png");
+	// 
+	// FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
+	// 	CTexture_map::Create(m_pDevice, m_pDeviceContext, listpngpath)));
+	// 
+	// // Path 데이터 삭제
+	// for (auto s : listpngpath)
+	// {
+	// 	Safe_Delete(s);
+	// }
+	// listpngpath.clear();
+
 
 	return S_OK;
 }
@@ -265,7 +285,6 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"),
 			VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements)));
-
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxAni.hlsl"),
 			VTXANIMODEL_DECLARATION::Elements, VTXANIMODEL_DECLARATION::iNumElements)));
@@ -276,26 +295,24 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 {
 	//==================================================================================================================
-
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA_GAME),
-		CCamera_Game::Create(m_pDevice, m_pDeviceContext)));
-
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
 	//	CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
 
 	// #Tag 깡통 오브젝트들 초기화
+
 	// 깡통: 컴포넌트 기능으로 여러가지 오브젝트를 만들 수 있게 설계된 오브젝트를 뜻함
+	
+	// 2D 깡통
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_2D),
 		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
 
-	// 마우스
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MOUSE),
-		CGameObject_Mouse::Create(m_pDevice, m_pDeviceContext)));
+	// 3D 깡통
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_STATIC),
+		CGameObject_3D_Static::Create(m_pDevice, m_pDeviceContext)));
 
-	// Creater 클래스에서 데이터를 읽는다고 가정하고 2D 깡통 클래스를 가지는 
-	// 부모 / 자식이 완성된 프로토 오브젝트를 만든다.
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TEST),
-	//	CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC),
+		CGameObject_3D_Dynamic::Create(m_pDevice, m_pDeviceContext)));
+
 
 	return S_OK;
 }
@@ -319,8 +336,10 @@ void CMainApp::Free()
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pGameInstance);
 
-	GetSingle(CImguiMgr)->DestroyInstance();
-	GetSingle(CGameObject_Creater)->DestroyInstance();
+	m_pGameManager->DestroyInstance();
+	Safe_Release(m_pGameManager);
+
+	GetSingle(CGameInstance)->DestroyInstance();
 
 	
 	CGameInstance::Release_Engine();

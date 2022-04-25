@@ -8,16 +8,15 @@ BEGIN(Client)
 
 class CImguiMgr :public CBase
 {
-	DECLARE_SINGLETON(CImguiMgr);
 
 private:
-	explicit CImguiMgr();
+	explicit CImguiMgr() = default;
 	virtual ~CImguiMgr() = default;
 
 	void DestroyIMGUI();
 
 public:
-	void InitImGUI(HWND hwnd, ID3D11Device* ppDeviceOut, ID3D11DeviceContext* ppDeviceContextOut);
+	HRESULT NativeConstruct(HWND hwnd, ID3D11Device* pDeviceOut, ID3D11DeviceContext* pDeviceContextOut);
 
 	HRESULT Add_IMGUI(class CImgui_Base* imgui);
 	HRESULT Remove_IMGUI(_uint idx);
@@ -32,6 +31,8 @@ private:
 	bool misUpdate = false;
 
 public:
+	static CImguiMgr* Create(HWND hwnd,ID3D11Device* d, ID3D11DeviceContext* c);
+
 	virtual void Free() override;
 };
 

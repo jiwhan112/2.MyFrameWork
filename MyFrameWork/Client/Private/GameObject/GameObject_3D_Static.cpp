@@ -116,6 +116,4 @@ void CGameObject_3D_Static::Free()
 	__super::Free();
 
 	Safe_Release(mComModel);
-
-
 }

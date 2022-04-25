@@ -133,6 +133,9 @@
     <Filter Include="02.GameObject\02.Camera\2.GameCam">
       <UniqueIdentifier>{2007639c-901d-495a-8dfe-4b51c79e2f9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.GameManager">
+      <UniqueIdentifier>{4fdfa3e7-578f-438a-843d-467f150b0ce0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -267,6 +270,9 @@
     <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h">
       <Filter>02.GameObject\01.2DObject\1.Mouse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameManager.h">
+      <Filter>00.GameManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -376,6 +382,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp">
       <Filter>02.GameObject\01.2DObject\1.Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameManager.cpp">
+      <Filter>00.GameManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

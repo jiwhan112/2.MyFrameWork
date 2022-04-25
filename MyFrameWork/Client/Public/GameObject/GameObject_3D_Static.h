@@ -46,8 +46,6 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
 	MODEL_STATIC_DESC			mModelDesc;
 
-
-
 public:
 	static CGameObject_3D_Static* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
 	virtual CGameObject_3D_Static* Clone(void* pArg);

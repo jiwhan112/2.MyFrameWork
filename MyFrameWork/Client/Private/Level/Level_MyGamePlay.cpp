@@ -54,7 +54,8 @@ HRESULT CLevel_MyGamePlay::Ready_Prototype_GameObject()
 HRESULT CLevel_MyGamePlay::Ready_IMGUI()
 {
 	// IMGUI »ý¼º
-	GetSingle(CImguiMgr)->Add_IMGUI(CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
+
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
 	return S_OK;
 }
 
@@ -105,7 +106,6 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 HRESULT CLevel_MyGamePlay::Ready_Layer_Mouse(const _tchar * pLayerTag)
 {
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MOUSE)));
-
 	return S_OK;
 }
 
@@ -114,7 +114,7 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_TERRAIN), TAGOBJ(GAMEOBJECT_TERRAIN)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST)));
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST)));
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST_ANI)));
 
 	return S_OK;

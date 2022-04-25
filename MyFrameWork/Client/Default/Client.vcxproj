@@ -170,6 +170,7 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h" />
     <ClInclude Include="..\Public\FIleIO\ObjectIO.h" />
+    <ClInclude Include="..\Public\GameManager.h" />
     <ClInclude Include="..\Public\GameObject\Camera_Game.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="..\Private\Camera_Client.cpp" />
     <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp" />
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp" />
+    <ClCompile Include="..\Private\GameManager.cpp" />
     <ClCompile Include="..\Private\GameObject\Camera_Game.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp" />

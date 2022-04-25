@@ -54,12 +54,17 @@ private:
 	// 여기에 저장된 UISet이 한 묶음의 형태로 저장된다.
 	// list<class CGameObject_2D*> mListUISet;
 
-	// 오브젝트 저장기능
-	class CObjectIO*		mObjectSaverClass = nullptr;
 
 
 	bool					mIsObjectList = false;
 	bool					mIsDataSetting = false;
+
+	// 오브젝트 생성
+	class CGameObject_Creater* mCreaterManager;
+
+	// 오브젝트 저장기능
+	class CObjectIO*		mObjectIoManager = nullptr;
+
 
 
 public:

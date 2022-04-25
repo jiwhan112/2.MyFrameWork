@@ -11,7 +11,6 @@ CIMGUI_Terrain::CIMGUI_Terrain(ID3D11Device * device, ID3D11DeviceContext * cont
 HRESULT CIMGUI_Terrain::NativeConstruct()
 {
 
-	mObjectSaverClass = CObjectIO::Create();
 
 	return S_OK;
 }

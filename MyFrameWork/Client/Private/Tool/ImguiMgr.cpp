@@ -4,13 +4,7 @@
 #include "Tool/Imgui_MyDemo.h"
 
 
-IMPLEMENT_SINGLETON(CImguiMgr)
-
-CImguiMgr::CImguiMgr()
-{
-}
-
-void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+HRESULT CImguiMgr::NativeConstruct(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
 	// IMGUI ÃÊ±âÈ­
 	 // Setup Dear ImGui context
@@ -27,6 +21,7 @@ void CImguiMgr::InitImGUI(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext*
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+	return S_OK;
 }
 
 HRESULT CImguiMgr::Add_IMGUI(CImgui_Base * imgui)
@@ -182,6 +177,19 @@ void CImguiMgr::DestroyIMGUI()
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+}
+
+CImguiMgr * CImguiMgr::Create(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+{
+	CImguiMgr*	pInstance = NEW CImguiMgr();
+
+	if (FAILED(pInstance->NativeConstruct(hwnd, pDevice, pDeviceContext)))
+	{
+		MSGBOX("Failed to Creating CImguiMgr");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CImguiMgr::Free()

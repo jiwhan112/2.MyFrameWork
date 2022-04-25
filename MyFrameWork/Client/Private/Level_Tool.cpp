@@ -60,10 +60,8 @@ HRESULT CLevel_Tool::Render()
 HRESULT CLevel_Tool::ReadyTools()
 {
 	// IMGUI 积己
-//	GetSingle(CImguiMgr)->Add_IMGUI(mIMGUI_DEMO = CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
-	GetSingle(CImguiMgr)->Add_IMGUI(mIMGUI_UI = CImgui_UI::Create(m_pDevice, m_pDeviceContext));
-
-//	Safe_AddRef(mIMGUI_DEMO);
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(mIMGUI_UI =
+		CImgui_UI::Create(m_pDevice, m_pDeviceContext));
 	Safe_AddRef(mIMGUI_UI);
 
 	// 坷宏璃飘 积己

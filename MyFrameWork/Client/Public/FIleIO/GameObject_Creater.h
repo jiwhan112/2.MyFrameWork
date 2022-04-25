@@ -15,17 +15,15 @@ class CGameObject_Creater final
 	:public CBase
 {
 
-	DECLARE_SINGLETON(CGameObject_Creater);
 
 private:
 	explicit	CGameObject_Creater();
 	virtual		~CGameObject_Creater() = default;
 
 public:
-	HRESULT NativeConstruct();
+	HRESULT NativeConstruct(ID3D11Device* d, ID3D11DeviceContext* c);
 
 public:
-	HRESULT Set_Device(ID3D11Device* d, ID3D11DeviceContext* c);
 
 	const map<wstring, CGameObject*>& Get_Map_GameObject2File_Proto() const
 	{
@@ -65,7 +63,8 @@ private:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
-	// CBase을(를) 통해 상속됨
+public:
+	static CGameObject_Creater* Create(ID3D11Device* d, ID3D11DeviceContext* c);
 	virtual void Free() override;
 
 };

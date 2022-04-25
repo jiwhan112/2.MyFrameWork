@@ -2,6 +2,7 @@
 #include "Tool/Imgui_UI.h"
 #include "GameObject/GameObject_2D.h"
 #include "FIleIO/ObjectIO.h"
+#include "FIleIO/GameObject_Creater.h"
 
 /* #TODO: IMGUI 수정
 
@@ -39,7 +40,12 @@ CImgui_UI::CImgui_UI(ID3D11Device * device, ID3D11DeviceContext * context)
 HRESULT CImgui_UI::NativeConstruct()
 {
 	mCurrentUIObject = nullptr;
-	mObjectSaverClass = CObjectIO::Create();
+
+	mObjectIoManager = GetSingle(CGameManager)->Get_ObjectIOManager();
+	Safe_AddRef(mObjectIoManager);
+
+	mCreaterManager = GetSingle(CGameManager)->Get_CreaterManager();
+	Safe_AddRef(mCreaterManager);
 
 	return S_OK;
 }
@@ -147,7 +153,7 @@ void CImgui_UI::PATHMODE()
 				string namechar = ObjectName;
 				wstring namechar2;
 				namechar2.assign(namechar.begin(), namechar.end());
-				mObjectSaverClass->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, namechar2 + L".dat", mCurrentUIObject);
+				mObjectIoManager->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, namechar2 + L".dat", mCurrentUIObject);
 
 			}
 		}
@@ -161,14 +167,14 @@ void CImgui_UI::PATHMODE()
 		if (ImGui::Button("Load_And_CloneData"))
 		{
 			// 파일로 저장된 프로토 데이터 불러오기
-			GetSingle(CGameObject_Creater)->LoaderDatFile_For_PrototypeObject();	
+			mCreaterManager->LoaderDatFile_For_PrototypeObject();	
 		}
 
 		IMGUI_TREE_BEGIN("ProtoObject")
 		{
 
 			// 오브젝트 트리로 현재 생성된 오브젝트 보여주기
-			auto CreateCloneObject = GetSingle(CGameObject_Creater)->Get_Map_GameObject2File_Proto();
+			auto CreateCloneObject =mCreaterManager->Get_Map_GameObject2File_Proto();
 
 			static int selectObjectIndex = -1;
 
@@ -193,7 +199,7 @@ void CImgui_UI::PATHMODE()
 			{
 				// 선택 오브젝트 클론
 				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-				CGameObject* createobj =  GetSingle(CGameObject_Creater)->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
+				CGameObject* createobj = mCreaterManager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
 				if (mCurrentUIObject == nullptr)
 				{
 					mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
@@ -207,7 +213,7 @@ void CImgui_UI::PATHMODE()
 			{
 				// 선택 오브젝트 클론
 				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-				CGameObject* createobj = GetSingle(CGameObject_Creater)->CreateEmptyObject(GAMEOBJECT_2D);
+				CGameObject* createobj =mCreaterManager->CreateEmptyObject(GAMEOBJECT_2D);
 				UIDESC desc;
 				static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(desc);
 				GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_BACKGROUND), createobj);
@@ -366,12 +372,12 @@ HRESULT CImgui_UI::Update_ObjectList()
 	return S_OK;
 }
 
-void CImgui_UI::Update_ChildObject_ListBox(CGameObject * parent, _uint* cnt,_int* selectindex)
+void CImgui_UI::Update_ChildObject_ListBox(CGameObject * parent, _uint* cnt, _int* selectindex)
 {
 	E_OBJECT_TYPE objtype = (E_OBJECT_TYPE)parent->Get_ObjectTypeID();
 
 	char buf[128] = "";
-	sprintf_s(buf, "OBJ_%s_%d", TAGOBJTYPE(objtype),*cnt);
+	sprintf_s(buf, "OBJ_%s_%d", TAGOBJTYPE(objtype), *cnt);
 
 	if (ImGui::Selectable(buf, *selectindex == *cnt))
 	{
@@ -415,5 +421,7 @@ void CImgui_UI::Free()
 {
 	__super::Free();
 	Safe_Release(mCurrentUIObject);
-	Safe_Release(mObjectSaverClass);
+	Safe_Release(mObjectIoManager);
+	Safe_Release(mCreaterManager);
+
 }
