@@ -21,19 +21,17 @@ public:
 	virtual HRESULT Update(_double time) override;
 
 public:
-	void Set_UIObject(class CGameObject_2D* obj);
+//	void Set_UIObject(class CGameObject_2D* obj);
+	//	void Render_Object(CGameObject* obj);
 
 	HRESULT Render_UI();
-	//	void Render_Object(CGameObject* obj);
 
 private:
 	void UIMODE();
-	void PATHMODE();
+	void TESTMODE();
 
 private:
-	void Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname);
-	void Button_TextureLoader();
-	HRESULT Edit_ProtoObjectList();
+	HRESULT Edit_ProtoObjectList() { return S_OK; }
 	HRESULT Edit_UIObject();
 	HRESULT Edit_Texture();
 
@@ -44,9 +42,6 @@ private:
 	//// UI 정보 저장
 	//void Button_UISave();
 
-	HRESULT Update_ObjectList();
-	void Update_ChildObject_ListBox(CGameObject* parent, _uint* cnt, _int* selectindex);
-
 private:
 	// UI 오브젝트 1개에대한 정보 저장코드 만들어보기
 	class CGameObject_2D*	mCurrentUIObject = nullptr;
@@ -56,16 +51,7 @@ private:
 	// 여기에 저장된 UISet이 한 묶음의 형태로 저장된다.
 	// list<class CGameObject_2D*> mListUISet;
 
-
-
-	bool					mIsObjectList = false;
 	bool					mIsDataSetting = false;
-
-	// 오브젝트 생성
-	class CGameObject_Creater* mCreaterManager;
-
-	// 오브젝트 저장기능
-	class CObjectIO*		mObjectIoManager = nullptr;
 
 
 

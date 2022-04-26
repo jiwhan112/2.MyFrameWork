@@ -20,7 +20,7 @@ HRESULT CLevel_Tool::NativeConstruct()
 	FAILED_CHECK(__super::NativeConstruct());
 	
 	FAILED_CHECK(Ready_Light());
-	FAILED_CHECK(ReadyTools());
+	FAILED_CHECK(Ready_Tools());
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 
@@ -30,10 +30,6 @@ HRESULT CLevel_Tool::NativeConstruct()
 _int CLevel_Tool::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
-
-
-
 	return UPDATENONE;
 }
 
@@ -47,17 +43,15 @@ HRESULT CLevel_Tool::Render()
 {
 	FAILED_CHECK(__super::Render());
 
-	
-
 
 #ifdef _DEBUG
-	SetWindowText(g_hWnd, TEXT("Toll Level"));
+	SetWindowText(g_hWnd, TEXT("Tool Level"));
 #endif
 
 	return S_OK;
 }
 
-HRESULT CLevel_Tool::ReadyTools()
+HRESULT CLevel_Tool::Ready_Tools()
 {
 	// IMGUI »ý¼º
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(mIMGUI_UI =
@@ -116,7 +110,7 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 HRESULT CLevel_Tool::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 
-	UIDESC desc;
+//	UIDESC desc;
 
 	// CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
 	// CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);

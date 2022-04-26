@@ -14,63 +14,44 @@ CImgui_UI::CImgui_UI(ID3D11Device * device, ID3D11DeviceContext * context)
 HRESULT CImgui_UI::NativeConstruct()
 {
 	mCurrentUIObject = nullptr;
-
-	mObjectIoManager = GetSingle(CGameManager)->Get_ObjectIOManager();
-	Safe_AddRef(mObjectIoManager);
-
-	mCreaterManager = GetSingle(CGameManager)->Get_CreaterManager();
-	Safe_AddRef(mCreaterManager);
-
 	return S_OK;
 }
 
 HRESULT CImgui_UI::Update(_double time)
 {
+	CGameObject* SelectObject = GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
+	
+	if (SelectObject != nullptr)
+	{
+		mCurrentUIObject = static_cast<CGameObject_2D*>(SelectObject);
+	}
+	else
+		mCurrentUIObject = nullptr;
+
 	FAILED_CHECK(Render_UI());
 
 	return S_OK;
 }
 
-void CImgui_UI::Set_UIObject(CGameObject_2D * obj)
-{
-	Safe_Release(mCurrentUIObject);
-	mCurrentUIObject = obj;
-	Safe_AddRef(mCurrentUIObject);
-}
-
 HRESULT CImgui_UI::Render_UI()
 {
 
-	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
+	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_MAIN)))
 	{
-		if (ImGui::CollapsingHeader("PATH"))
+		if (ImGui::CollapsingHeader("UI_SAVER"))
 		{
-			PATHMODE();	
-		}
 
-		//static bool bAppOveraly = false;
-		//ImGui::Checkbox("Check", &bAppOveraly);
+			ImGui::Checkbox("UISettingWindow", &mIsDataSetting);
 
-		ImGui::Checkbox("ObjectListWindow", &mIsObjectList);
-
-		if (mIsObjectList)
-		{
-			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_OBJECTLIST)))
+			if (mIsDataSetting)
 			{
-				FAILED_CHECK(Update_ObjectList());
-				ImGui::End();
+				if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_UI)))
+				{
+					UIMODE();
+					ImGui::End();
+				}
 			}
-		}
-
-		ImGui::Checkbox("UISettingWindow", &mIsDataSetting);
-
-		if (mIsDataSetting)
-		{
-			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_UI)))
-			{
-				UIMODE();
-				ImGui::End();
-			}
+			TESTMODE();
 		}
 
 		ImGui::End();
@@ -87,32 +68,14 @@ void CImgui_UI::UIMODE()
 	FAILED_CHECK_NONERETURN(Edit_Texture());
 }
 
-void CImgui_UI::PATHMODE()
+void CImgui_UI::TESTMODE()
 {
-	// 텍스트 저장
-	IMGUI_TREE_BEGIN("PathToSaver_txt")
-	{
+	// 저장
+	CObjectIO* Object_IO_Manager = GetSingle(CGameManager)->Get_ObjectIOManager();
+	// 생성
+	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
-		if (ImGui::Button("Path_For_Sprite"))
-		{
-
-			Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L, L"SpritePath.txt");
-		}
-		if (ImGui::Button("Path_For_Dat"))
-		{
-			// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-			Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L, L"DatPath.txt");
-		}
-		if (ImGui::Button("Path_For_3D"))
-		{
-			// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-			Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L, L"3DPath.txt");
-		}
-		IMGUI_TREE_END
-	}
-	
-
-	// 오브젝트 저장
+	// UI 저장
 	IMGUI_TREE_BEGIN("ObjectSaver")
 	{
 		if (mCurrentUIObject != nullptr)
@@ -125,7 +88,7 @@ void CImgui_UI::PATHMODE()
 				string namechar = ObjectName;
 				wstring namechar2;
 				namechar2.assign(namechar.begin(), namechar.end());
-				mObjectIoManager->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, namechar2 + L".dat", mCurrentUIObject);
+				Object_IO_Manager->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, namechar2 + L".dat", mCurrentUIObject);
 
 			}
 		}
@@ -139,14 +102,14 @@ void CImgui_UI::PATHMODE()
 		if (ImGui::Button("Load_And_CloneData"))
 		{
 			// 파일로 저장된 프로토 데이터 불러오기
-			mCreaterManager->LoaderDatFile_For_PrototypeObject();	
+			Create_Manager->LoaderDatFile_For_PrototypeObject();	
 		}
 
 		IMGUI_TREE_BEGIN("ProtoObject")
 		{
 
 			// 오브젝트 트리로 현재 생성된 오브젝트 보여주기
-			auto CreateCloneObject =mCreaterManager->Get_Map_GameObject2File_Proto();
+			auto CreateCloneObject =Create_Manager->Get_Map_GameObject2File_Proto();
 
 			static int selectObjectIndex = -1;
 
@@ -171,7 +134,7 @@ void CImgui_UI::PATHMODE()
 			{
 				// 선택 오브젝트 클론
 				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-				CGameObject* createobj = mCreaterManager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
+				CGameObject* createobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
 				if (mCurrentUIObject == nullptr)
 				{
 					mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
@@ -185,7 +148,7 @@ void CImgui_UI::PATHMODE()
 			{
 				// 선택 오브젝트 클론
 				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-				CGameObject* createobj =mCreaterManager->CreateEmptyObject(GAMEOBJECT_2D);
+				CGameObject* createobj =Create_Manager->CreateEmptyObject(GAMEOBJECT_2D);
 				UIDESC desc;
 				static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(desc);
 				GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_BACKGROUND), createobj);
@@ -203,35 +166,13 @@ void CImgui_UI::PATHMODE()
 	}
 }
 
-void CImgui_UI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname)
-{
-	// 텍스처 패스파인더
 
-	// 탐색
-	GetSingle(CGameInstance)->FolderFinder(path);
 
-	// 탐색한 리스트 TXT 저장
-	GetSingle(CGameInstance)->SaveVectorToDat(txtpath + L"\\" + txtname);
-}
-
-void CImgui_UI::Button_TextureLoader()
-{
-
-}
-
-HRESULT CImgui_UI::Edit_ProtoObjectList()
-{
-	//IMGUI_TREE_BEGIN("ProtoObject_List")
-	//{
-	//	// 오브젝트 리스트
-
-	//	IMGUI_TREE_END
-	//}
-	return S_OK;
-}
 
 HRESULT CImgui_UI::Edit_UIObject()
 {
+	// UI 세팅 화면
+
 	if (mCurrentUIObject == nullptr)
 		return S_FALSE;
 
@@ -269,7 +210,6 @@ HRESULT CImgui_UI::Edit_UIObject()
 HRESULT CImgui_UI::Edit_Texture()
 {
 	// 텍스처 선택 화면
-
 	if (mSpritepathList == nullptr)
 	{
 		const list<MYFILEPATH*>* spritepathList = GetSingle(CGameManager)->Get_PathList(CGameManager::PATHTYPE_SPRITE);
@@ -322,75 +262,8 @@ HRESULT CImgui_UI::Edit_Texture()
 	return S_OK;
 }
 
-HRESULT CImgui_UI::Update_ObjectList()
-{
-	_uint CurrentLevelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	const list<CGameObject*>*  objList = GetSingle(CGameInstance)->Get_GameObjectLayerList(CurrentLevelIndex, TAGLAY(LAY_BACKGROUND));
 
-	if (objList == nullptr)
-		return S_OK;
 
-	if (ImGui::BeginListBox("ObjectListBox"))
-	{
-		static _int selectIndex = -1;
-		_uint cnt = 0;
-
-		for (auto& obj : *objList)
-		{
-			if (obj == nullptr)
-				continue;
-			Update_ChildObject_ListBox(obj, &cnt,&selectIndex);
-		}
-		ImGui::EndListBox();
-	}
-	
-
-	//if (ImGui::Button("Create New Object"))
-	//{
-	//	
-	//}
-	//ImGui::SameLine(50);
-	if (ImGui::Button("Delect Object"))
-	{
-		mCurrentUIObject->Set_Dead();
-		Safe_Release(mCurrentUIObject);
-	}
-
-	
-
-	return S_OK;
-}
-
-void CImgui_UI::Update_ChildObject_ListBox(CGameObject * parent, _uint* cnt, _int* selectindex)
-{
-	E_OBJECT_TYPE objtype = (E_OBJECT_TYPE)parent->Get_ObjectTypeID();
-
-	char buf[128] = "";
-	sprintf_s(buf, "OBJ_%s_%d", TAGOBJTYPE(objtype), *cnt);
-
-	if (ImGui::Selectable(buf, *selectindex == *cnt))
-	{
-		*selectindex = *cnt;
-		Set_UIObject(static_cast<CGameObject_2D*>(parent));
-	}
-	(*cnt)++;
-
-	//auto childlist = parent->Get_Children();
-	//if (childlist == nullptr)
-	//	return;
-
-	//char buf2[128] = "";
-	//sprintf_s(buf2, "Child%d", parent->Get_Depth());
-
-	//for (auto& obj : *childlist)
-	//{
-	//	IMGUI_TREE_BEGIN(buf2)
-	//	{
-	//		Update_ChildObject_ListBox(obj, cnt, selectindex);
-	//		IMGUI_TREE_END
-	//	}
-	//}
-}
 
 
 CImgui_UI * CImgui_UI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
@@ -409,10 +282,7 @@ CImgui_UI * CImgui_UI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context
 void CImgui_UI::Free()
 {
 	__super::Free();
-	Safe_Delete(mSpritepathList);
-
 	Safe_Release(mCurrentUIObject);
-	Safe_Release(mObjectIoManager);
-	Safe_Release(mCreaterManager);
+	Safe_Delete(mSpritepathList);
 
 }

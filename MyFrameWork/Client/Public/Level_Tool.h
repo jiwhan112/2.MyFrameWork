@@ -20,7 +20,7 @@ public:
 	HRESULT Ready_Light();
 	HRESULT Ready_Layer_Camera(const _tchar * pLayerTag);
 	HRESULT	Ready_Layer_BackGround(const _tchar * pLayerTag);
-	HRESULT ReadyTools();
+	HRESULT Ready_Tools();
 
 private:
 	class CImgui_MyDemo*	mIMGUI_DEMO = nullptr;

@@ -23,6 +23,7 @@ public:
 	enum E_IMGUI_CHANEL
 	{
 		IMGUI_TITLE_TEST,
+		IMGUI_TITLE_MAIN,
 		IMGUI_TITLE_OBJECTLIST, // 오브젝트 리스트 출력
 		IMGUI_TITLE_UI, // UI 세팅창
 		IMGUI_TITLE_FBX, // FBX 세팅창
@@ -39,6 +40,8 @@ public:
 		{
 		case IMGUI_TITLE_TEST:
 			return "IMGUI_TITLE_TEST";
+		case IMGUI_TITLE_MAIN:
+			return "IMGUI_TITLE_MAIN";			
 		case IMGUI_TITLE_UI:
 			return "IMGUI_TITLE_UI";
 		case IMGUI_TITLE_OBJECTLIST:
@@ -64,6 +67,8 @@ protected:
 public:
 	virtual HRESULT NativeConstruct()PURE;
 	virtual HRESULT Update(_double time)PURE;
+
+
 
 protected:
 	ID3D11Device*			mDevice = nullptr;

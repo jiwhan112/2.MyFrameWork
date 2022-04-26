@@ -58,14 +58,8 @@
     <Filter Include="10.Imgui\02.Tools\00.BaseTool">
       <UniqueIdentifier>{84f726a0-0677-4385-9aba-6ee4f5c75cfb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10.Imgui\02.Tools\01.UITool">
-      <UniqueIdentifier>{c21e93ea-bc53-4dd0-8468-6d52bf0a8ed1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\02.Camera">
       <UniqueIdentifier>{bc388d12-b47d-405c-817c-c4e00817d90f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="10.Imgui\02.Tools\00.BaseTool\MyDemo">
-      <UniqueIdentifier>{2f184d08-8e0e-43cc-a829-b894015705e8}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\01.2DObject">
       <UniqueIdentifier>{b83ff735-73f2-4cf5-9a01-c76e93931aed}</UniqueIdentifier>
@@ -103,9 +97,6 @@
     <Filter Include="02.GameObject\02.3DObject\2.Animation">
       <UniqueIdentifier>{fe15df71-1d17-4bf5-bda0-ab386de44fec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10.Imgui\02.Tools\02.3DTool">
-      <UniqueIdentifier>{cbce0002-c5dd-4ad8-8d33-9bc93b74d7bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\01.2DObject\0.Bsase">
       <UniqueIdentifier>{23ee4eab-d0d2-4bcc-a44e-f338ac6f4b97}</UniqueIdentifier>
     </Filter>
@@ -130,16 +121,31 @@
     <Filter Include="00.GameManager">
       <UniqueIdentifier>{4fdfa3e7-578f-438a-843d-467f150b0ce0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10.Imgui\02.Tools\02.3DTool\01.ModelTool">
+    <Filter Include="10.Imgui\02.Tools\00.BaseTool\1.CommonUI">
+      <UniqueIdentifier>{f57a0f80-fded-4475-8778-c67ac8f97a17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\00.BaseTool\0.BaseUI">
+      <UniqueIdentifier>{32f55e59-adc3-4a15-9120-5fae09b52752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\01.MyDemo">
+      <UniqueIdentifier>{2f184d08-8e0e-43cc-a829-b894015705e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\02.UITool">
+      <UniqueIdentifier>{c21e93ea-bc53-4dd0-8468-6d52bf0a8ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\03.3DTool">
+      <UniqueIdentifier>{cbce0002-c5dd-4ad8-8d33-9bc93b74d7bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Imgui\02.Tools\03.3DTool\01.ModelTool">
       <UniqueIdentifier>{d116e78e-4a6c-4a24-9e74-e44dde9140ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10.Imgui\02.Tools\02.3DTool\02.AniModelTool">
+    <Filter Include="10.Imgui\02.Tools\03.3DTool\02.AniModelTool">
       <UniqueIdentifier>{79a65c65-0741-4c2b-988b-bc4a7e56ce1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10.Imgui\02.Tools\02.3DTool\03.MapTool">
+    <Filter Include="10.Imgui\02.Tools\03.3DTool\03.MapTool">
       <UniqueIdentifier>{fa1f126c-d604-445e-85b9-e28124bbf4b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10.Imgui\02.Tools\03.InGameTool">
+    <Filter Include="10.Imgui\02.Tools\04.InGameTool">
       <UniqueIdentifier>{bd0f7125-304d-40f7-be6c-2a3727589cb0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -216,17 +222,14 @@
     <ClInclude Include="..\Public\Tool\ImguiMgr.h">
       <Filter>10.Imgui\01.Mgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Tool\Imgui_Base.h">
-      <Filter>10.Imgui\02.Tools\00.BaseTool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_UI.h">
-      <Filter>10.Imgui\02.Tools\01.UITool</Filter>
+      <Filter>10.Imgui\02.Tools\02.UITool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_FBX.h">
       <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h">
-      <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
+      <Filter>10.Imgui\02.Tools\01.MyDemo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FIleIO\ObjectIO.h">
       <Filter>03.Creater\01.ObjectIO</Filter>
@@ -250,7 +253,7 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h">
-      <Filter>10.Imgui\02.Tools\02.3DTool\03.MapTool</Filter>
+      <Filter>10.Imgui\02.Tools\03.3DTool\03.MapTool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
@@ -280,7 +283,13 @@
       <Filter>00.GameManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_Model.h">
-      <Filter>10.Imgui\02.Tools\02.3DTool\01.ModelTool</Filter>
+      <Filter>10.Imgui\02.Tools\03.3DTool\01.ModelTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_CommonUI.h">
+      <Filter>10.Imgui\02.Tools\00.BaseTool\1.CommonUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_Base.h">
+      <Filter>10.Imgui\02.Tools\00.BaseTool\0.BaseUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -338,17 +347,14 @@
     <ClCompile Include="..\Private\Tool\ImguiMgr.cpp">
       <Filter>10.Imgui\01.Mgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Tool\Imgui_Base.cpp">
-      <Filter>10.Imgui\02.Tools\00.BaseTool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_UI.cpp">
-      <Filter>10.Imgui\02.Tools\01.UITool</Filter>
+      <Filter>10.Imgui\02.Tools\02.UITool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_FBX.cpp">
       <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp">
-      <Filter>10.Imgui\02.Tools\00.BaseTool\MyDemo</Filter>
+      <Filter>10.Imgui\02.Tools\01.MyDemo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp">
       <Filter>03.Creater\01.ObjectIO</Filter>
@@ -366,7 +372,7 @@
       <Filter>02.GameObject\00.ObjectBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp">
-      <Filter>10.Imgui\02.Tools\02.3DTool\03.MapTool</Filter>
+      <Filter>10.Imgui\02.Tools\03.3DTool\03.MapTool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
@@ -396,7 +402,13 @@
       <Filter>00.GameManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_Model.cpp">
-      <Filter>10.Imgui\02.Tools\02.3DTool\01.ModelTool</Filter>
+      <Filter>10.Imgui\02.Tools\03.3DTool\01.ModelTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_CommonUI.cpp">
+      <Filter>10.Imgui\02.Tools\00.BaseTool\1.CommonUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_Base.cpp">
+      <Filter>10.Imgui\02.Tools\00.BaseTool\0.BaseUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

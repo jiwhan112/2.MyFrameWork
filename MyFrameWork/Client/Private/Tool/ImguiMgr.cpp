@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Tool/ImguiMgr.h"
-#include "Tool/Imgui_UI.h"
-#include "Tool/Imgui_MyDemo.h"
+#include "Tool/Imgui_CommonUI.h"
 
 
 HRESULT CImguiMgr::NativeConstruct(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -21,6 +20,11 @@ HRESULT CImguiMgr::NativeConstruct(HWND hwnd, ID3D11Device* pDevice, ID3D11Devic
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+
+
+	Add_IMGUI(mCommonUI = CImgui_CommonUI::Create(pDevice,pDeviceContext));
+	Safe_AddRef(mCommonUI);
+
 	return S_OK;
 }
 
@@ -170,6 +174,13 @@ CImgui_Base * CImguiMgr::Get_IMGUI(_uint index)
 	return mVecIMGUI[index];
 }
 
+CGameObject * CImguiMgr::Get_SelectObject() const
+{
+	if (mCommonUI)
+		return mCommonUI->Get_SelectObject();
+	return nullptr;
+}
+
 void CImguiMgr::DestroyIMGUI()
 {
 	// IMGUI ªË¡¶
@@ -194,6 +205,8 @@ CImguiMgr * CImguiMgr::Create(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceCont
 
 void CImguiMgr::Free()
 {
+	Safe_Release(mCommonUI);
+
 	for (auto& gui : mVecIMGUI)
 	{
 		Safe_Release(gui);

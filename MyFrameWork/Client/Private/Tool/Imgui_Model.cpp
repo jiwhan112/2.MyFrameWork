@@ -33,40 +33,40 @@ HRESULT CImgui_Model::Update(_double time)
 HRESULT CImgui_Model::Render_UI()
 {
 
-	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
-	{
-		if (ImGui::CollapsingHeader("PATH"))
-		{
-			PATHMODE();	
-		}
+	//if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
+	//{
+	//	if (ImGui::CollapsingHeader("PATH"))
+	//	{
+	//		PATHMODE();	
+	//	}
 
-		//static bool bAppOveraly = false;
-		//ImGui::Checkbox("Check", &bAppOveraly);
+	//	//static bool bAppOveraly = false;
+	//	//ImGui::Checkbox("Check", &bAppOveraly);
 
-		ImGui::Checkbox("ObjectListWindow", &mIsObjectList);
+	//	ImGui::Checkbox("ObjectListWindow", &mIsObjectList);
 
-		if (mIsObjectList)
-		{
-			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_OBJECT)))
-			{
-				FAILED_CHECK(Update_ObjectList());
-				ImGui::End();
-			}
-		}
+	//	if (mIsObjectList)
+	//	{
+	//		if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_OBJECT)))
+	//		{
+	//			FAILED_CHECK(Update_ObjectList());
+	//			ImGui::End();
+	//		}
+	//	}
 
-		ImGui::Checkbox("UISettingWindow", &mIsDataSetting);
+	//	ImGui::Checkbox("UISettingWindow", &mIsDataSetting);
 
-		if (mIsDataSetting)
-		{
-			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_UI)))
-			{
-				UIMODE();
-				ImGui::End();
-			}
-		}
+	//	if (mIsDataSetting)
+	//	{
+	//		if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_UI)))
+	//		{
+	//			UIMODE();
+	//			ImGui::End();
+	//		}
+	//	}
 
-		ImGui::End();
-	}
+	//	ImGui::End();
+	//}
 
 	return S_OK;
 }

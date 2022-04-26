@@ -24,11 +24,18 @@ public:
 	HRESULT Update(_double time);
 	HRESULT Render();
 
+public:
 	class CImgui_Base* Get_IMGUI(_uint index);
+	CGameObject* Get_SelectObject() const;
 
 private:
 	vector<class CImgui_Base*> mVecIMGUI;
 	bool misUpdate = false;
+
+private:
+	// 기본 UI 저장해놓음
+	class CImgui_CommonUI*		mCommonUI = nullptr;
+	
 
 public:
 	static CImguiMgr* Create(HWND hwnd,ID3D11Device* d, ID3D11DeviceContext* c);
