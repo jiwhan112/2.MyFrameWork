@@ -1,13 +1,12 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Static.h"
 
-// #TODO 3D깡통오브젝트 생성
-// 
+// #TODO 3D 오브젝트 생성 // 모델 컴포넌트컴포넌트 
 
 CGameObject_3D_Static::CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
-	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D;
+	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_STATIC;
 
 }
 
@@ -22,6 +21,14 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
+	// 데이터 디폴트 세팅
+	if (strlen(mModelDesc.mModelName) < 2)
+	{
+		string str("crea_Snot_a.fbx");
+		strcpy_s(mModelDesc.mModelName, str.c_str());
+	}
+
+	mCurrentShaderPass = 0;
 	return S_OK;
 }
 
@@ -48,10 +55,25 @@ _int CGameObject_3D_Static::LateTick(_double TimeDelta)
 HRESULT CGameObject_3D_Static::Render()
 {
 
-	for (int i = 0; i < 1; ++i)
+	FAILED_CHECK(Set_ConstantTable_World());
+	FAILED_CHECK(Set_ConstantTable_Light());
+	FAILED_CHECK(Set_ConstantTable_Model());
+
+	if (mComModel != nullptr)
 	{
-		FAILED_CHECK(mComModel->Render(mComShader, 0, 0));
-	}
+		_uint iNumMaterials = mComModel->Get_NumMaterials();
+
+		// 재질 개수만큼 루프
+		for (int i = 0; i < iNumMaterials; ++i)
+		{
+			// 1. 텍스처 설정
+			mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+			// 2. 랜더링
+			// 여기서 뼈를 넘긴다.
+			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
+		}
+	}	
+	
 	return S_OK;
 }
 
@@ -71,7 +93,7 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	ModelName.assign(strModel.begin(), strModel.end());
 
 	if (mComModel == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Shader"), (CComponent**)&mComShader));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 
 	return S_OK;
 }
@@ -81,10 +103,6 @@ HRESULT CGameObject_3D_Static::Set_ConstantTable_Model()
 	return S_OK;
 }
 
-//HRESULT CGameObject_3D_Static::Set_ConstantTable_Light(_uint lightid)
-//{
-//	return S_OK;
-//}
 
 CGameObject_3D_Static * CGameObject_3D_Static::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

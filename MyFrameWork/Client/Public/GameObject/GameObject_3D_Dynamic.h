@@ -29,9 +29,7 @@ public:
 public:
 
 protected:
-	virtual HRESULT Set_Component()override;
-
-
+	virtual HRESULT Set_Component() override;
 
 
 protected: // 3D¸ðµ¨ Com / DESC Ãß°¡

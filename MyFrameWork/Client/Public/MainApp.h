@@ -24,14 +24,10 @@ public:
 public:
 	HRESULT Open_Level(E_LEVEL eLevelIndex);
 
-
-
-
 private:
 	HRESULT Ready_Initialize();
 	HRESULT Ready_Prototype_Components();
 	HRESULT Ready_Prototype_GameObject();
-
 
 	HRESULT Ready_Prototype_Components_Model();
 	HRESULT Ready_Prototype_Components_Texture();
@@ -45,9 +41,6 @@ private:
 	CRenderer*				m_pRenderer = nullptr;
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
-
-
-
 
 public:
 	static CMainApp* Create();

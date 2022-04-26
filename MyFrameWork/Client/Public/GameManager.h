@@ -23,7 +23,7 @@ class CGameManager final : public CBase
 public:
 	enum E_PATHTYPE
 	{
-		PATHTYPE_SPRITE, PATHTYPE_FBX, PATHTYPE_FBXTEX, PATHTYPE_END
+		PATHTYPE_SPRITE, PATHTYPE_FBX, PATHTYPE_FBXTEX, PATHTYPE_DATA, PATHTYPE_END
 	};
 
 private:
@@ -40,9 +40,16 @@ public:
 	CImguiMgr*					Get_ImGuiManager();
 	CObjectIO*					Get_ObjectIOManager();
 
-	list<MYFILEPATH*>* Get_PathList(E_PATHTYPE type);
+	const list<MYFILEPATH*>* Get_PathList(E_PATHTYPE type) const;
 
+	// 경로데이터 업데이트
+	HRESULT Set_ReListPath(E_PATHTYPE type);
 
+private:
+	// 경로 저장
+	HRESULT Initialize_PathData();
+	HRESULT Set_PathData(list<MYFILEPATH*>* outData,wstring str, const char* filetype);
+	HRESULT Safe_Delete_Path(list<MYFILEPATH*>* outData);
 
 
 private:
@@ -50,7 +57,7 @@ private:
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
 	// 클라이언트 전용 매니저들
-//	class CGameInstance*		mGameImstance = nullptr;
+	CGameInstance*				mGameInstance = nullptr;
 	CGameObject_Creater*		mCreaterManager = nullptr;
 	CImguiMgr*					mIMGUIManager = nullptr;
 	CObjectIO*					mObjectIoManager = nullptr;

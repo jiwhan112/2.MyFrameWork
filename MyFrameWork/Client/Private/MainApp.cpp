@@ -209,12 +209,13 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 	// 모델 컴포넌트 생성
 	// FBX 파일로 모델 컴포넌트 생성
 
-	list<MYFILEPATH*> listFBXpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_3DPATHTXT_L, "fbx");
+	const list<MYFILEPATH*>* listFBXpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX);
+
 
 	_float4x4		DefaultTransform;
 	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
-	for (auto& path : listFBXpath)
+	for (auto& path : *listFBXpath)
 	{
 		wstring wpath = GetSingle(CGameInstance)->Get_PathData(path->FullPath);
 		wstring wName = path->FileName;
@@ -228,44 +229,21 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 		
 	}
 
-	for (auto s : listFBXpath)
-	{
-		Safe_Delete(s);
-	}
-	listFBXpath.clear();
-
 	return S_OK;
 }
 
 HRESULT CMainApp::Ready_Prototype_Components_Texture()
 {
 	// 2D텍스처 맵 컴포넌트
-	list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_SPRITETXT_L, "png");
-
+	const list<MYFILEPATH*>* listpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_SPRITE);
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
-		CTexture_map::Create(m_pDevice, m_pDeviceContext, listpngpath)));
-
-	// Path 데이터 삭제
-	for (auto s : listpngpath)
-	{
-		Safe_Delete(s);
-	}
-	listpngpath.clear();
+		CTexture_map::Create(m_pDevice, m_pDeviceContext, *listpngpath)));
 
 
 	// 모델 텍스처 맵
-	// list<MYFILEPATH*> listpngpath = m_pGameInstance->Load_ExtensionList(STR_FILEPATH_RESOURCE_3DPATHTXT_L, "png");
-	// 
-	// FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
-	// 	CTexture_map::Create(m_pDevice, m_pDeviceContext, listpngpath)));
-	// 
-	// // Path 데이터 삭제
-	// for (auto s : listpngpath)
-	// {
-	// 	Safe_Delete(s);
-	// }
-	// listpngpath.clear();
-
+	const list<MYFILEPATH*>* listFBXpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBXTEX);
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX),
+		CTexture_map::Create(m_pDevice, m_pDeviceContext, *listFBXpngpath)));
 
 	return S_OK;
 }

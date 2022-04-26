@@ -4,7 +4,7 @@
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
-	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D;
+	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_ANI;
 
 }
 
@@ -45,6 +45,18 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_3D_Dynamic::Render()
 {
+	if (mComModel != nullptr)
+	{
+		_uint iNumMaterials = mComModel->Get_NumMaterials();
+
+		// 재질 개수만큼 루프
+		for (int i = 0; i < iNumMaterials; ++i)
+		{
+			mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+			mComModel->Render(mComShader, 0, i);
+			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
+		}
+	}
 
 	return S_OK;
 }
@@ -55,9 +67,8 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 	if (mComRenderer == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
-	
-	// 모델 타입에 따라 정적모델 동적모델 처리
 
+	// 모델 타입에 따라 정적모델 동적모델 처리
 	//if (mComVIBuffer == nullptr)
 	//	mComVIBuffer = nullptr;
 

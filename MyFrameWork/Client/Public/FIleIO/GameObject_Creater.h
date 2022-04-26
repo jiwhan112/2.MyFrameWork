@@ -55,7 +55,7 @@ private:
 
 private:	
 	// 데이터 로드
-	class CObjectIO* mObjectIO = nullptr;
+	class CObjectIO* mObjectIoManager = nullptr;
 
 	// 데이터 기반으로 생성된 깡통 오브젝트의 클론 정보를 보관한다.
 	map<wstring, CGameObject*> mMap_GameObject2File_Proto;

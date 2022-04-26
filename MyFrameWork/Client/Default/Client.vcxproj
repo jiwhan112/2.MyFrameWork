@@ -212,6 +212,7 @@
     <ClInclude Include="..\Public\stdafx.h" />
     <ClInclude Include="..\Public\Tool\ImguiMgr.h" />
     <ClInclude Include="..\Public\Tool\Imgui_Base.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_Model.h" />
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h" />
     <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h" />
     <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
@@ -258,6 +259,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tool\ImguiMgr.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_Base.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_Model.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp" />
     <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_UI.cpp" />

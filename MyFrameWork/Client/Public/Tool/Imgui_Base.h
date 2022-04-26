@@ -23,10 +23,13 @@ public:
 	enum E_IMGUI_CHANEL
 	{
 		IMGUI_TITLE_TEST,
-		IMGUI_TITLE_UI,
-		IMGUI_TITLE_OBJECT,
-		IMGUI_TITLE_FBX,
-		IMGUI_TITLE_END,
+		IMGUI_TITLE_OBJECTLIST, // 오브젝트 리스트 출력
+		IMGUI_TITLE_UI, // UI 세팅창
+		IMGUI_TITLE_FBX, // FBX 세팅창
+		IMGUI_TITLE_FBX_ANI, // FBX_ANI 세팅창
+		IMGUI_TITLE_TERRAIN, // TERRAIAN 세팅창
+		IMGUI_TITLE_INGAME, // INGAME 세팅창
+		IMGUI_TITLE_END, // 
 
 	};
 
@@ -38,10 +41,14 @@ public:
 			return "IMGUI_TITLE_TEST";
 		case IMGUI_TITLE_UI:
 			return "IMGUI_TITLE_UI";
-		case IMGUI_TITLE_OBJECT:
-			return "IMGUI_TITLE_OBJECT";
+		case IMGUI_TITLE_OBJECTLIST:
+			return "IMGUI_TITLE_OBJECTLIST";
 		case IMGUI_TITLE_FBX:
 			return "IMGUI_TITLE_FBX";
+		case IMGUI_TITLE_FBX_ANI:
+			return "IMGUI_TITLE_FBX_ANI";
+		case IMGUI_TITLE_TERRAIN:
+			return "IMGUI_TITLE_TERRAIN";
 		case IMGUI_TITLE_END:
 			return "IMGUI_TITLE_END";
 		default:
@@ -62,7 +69,8 @@ protected:
 	ID3D11Device*			mDevice = nullptr;
 	ID3D11DeviceContext*	mDeviceContext = nullptr;
 
-	
+
+
 public:
 
 	virtual void Free() override;

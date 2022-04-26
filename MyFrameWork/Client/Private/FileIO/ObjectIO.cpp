@@ -74,6 +74,8 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void
 
 HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData, E_OBJECT_TYPE* type)
 {
+	// #INIT 추가되는 오브젝트에 따라 해석
+
 	ifstream fRead(FolderPath + L"\\" + filename, ios::in | ios::binary);
 	if (fRead.is_open() == false)
 	{
@@ -107,8 +109,34 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 
 		fRead.read(*pData + offset, sizeof(TEXTUREDESC));
 		memcpy(&texDesc, *pData+ offset, sizeof(TEXTUREDESC));
-		int a = 0;
 		
+	}
+	break;
+
+	case OBJECT_TYPE_3D_STATIC:
+	{
+		bufsize = sizeof(MODEL_STATIC_DESC);
+		*pData = NEW char[bufsize];
+		MODEL_STATIC_DESC ModelDesc;
+
+
+		fRead.read(*pData, sizeof(MODEL_STATIC_DESC));
+		memcpy(&ModelDesc, *pData, sizeof(MODEL_STATIC_DESC));
+		int a = 5;
+
+	}
+	break;
+	case OBJECT_TYPE_3D_ANI:
+	{
+
+		bufsize = sizeof(MODEL_DYNAMIC_DESC);
+		*pData = NEW char[bufsize];
+		MODEL_DYNAMIC_DESC ModelDesc;
+
+
+		fRead.read(*pData, sizeof(MODEL_DYNAMIC_DESC));
+		memcpy(&ModelDesc, *pData, sizeof(MODEL_DYNAMIC_DESC));
+
 	}
 	break;
 	case OBJECT_TYPE_END:

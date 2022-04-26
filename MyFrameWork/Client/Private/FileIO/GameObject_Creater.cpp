@@ -6,7 +6,7 @@
 
 CGameObject_Creater::CGameObject_Creater()
 {
-	mObjectIO = nullptr;
+	mObjectIoManager = nullptr;
 	m_pDevice = nullptr;
 	m_pDeviceContext = nullptr;
 }
@@ -27,10 +27,15 @@ HRESULT CGameObject_Creater::NativeConstruct(ID3D11Device * d, ID3D11DeviceConte
 
 HRESULT CGameObject_Creater::LoaderDatFile_For_PrototypeObject()
 {
-	if (mObjectIO == nullptr)
-		mObjectIO = CObjectIO::Create();
+	if (mObjectIoManager == nullptr)
+	{
+		mObjectIoManager = GetSingle(CGameManager)->Get_ObjectIOManager();
+		Safe_AddRef(mObjectIoManager);
+	}
+
 	if (m_pDevice == nullptr || m_pDeviceContext == nullptr)
 		return E_FAIL;
+
 	if (mMap_GameObject2File_Proto.empty() == false)
 	{
 		for (auto& obj : mMap_GameObject2File_Proto)
@@ -41,28 +46,23 @@ HRESULT CGameObject_Creater::LoaderDatFile_For_PrototypeObject()
 	}
 
 	// 모든 dat 파일 로드
-	list<MYFILEPATH*> listpngpath = GetSingle(CGameInstance)->Load_ExtensionList(STR_FILEPATH_RESOURCE_DATPATHTXT_L, "dat");
+	GetSingle(CGameManager)->Set_ReListPath(CGameManager::PATHTYPE_DATA);
 
+	const list<MYFILEPATH*>* listDatpath = GetSingle(CGameManager)->Get_PathList(CGameManager::PATHTYPE_DATA);
 
-	for (auto& path :listpngpath)
+	// Dat 파일 정보로 원형 생성
+	for (auto& path :*listDatpath)
 	{
 		E_OBJECT_TYPE type = OBJECT_TYPE_END;
 		char* buf = nullptr;
 
 		// buf에서 데이터가 넘어온다. / type정보로 오브젝트 원형제작
-		mObjectIO->LoadObject(STR_FILEPATH_RESOURCE_DAT_L, path->FileName, &buf,&type);
+		mObjectIoManager->LoadObject(STR_FILEPATH_RESOURCE_DAT_L, path->FileName, &buf,&type);
 
+		// 원형추가
 		FAILED_CHECK(Create_ObjectProto_Type(type, buf, path->FileName));
-
 		Safe_Delete_Array(buf);
-		Safe_Delete(path);
 	}
-	listpngpath.clear();
-
-
-	// 오브젝트에 따라 원형 객체 생성
-
-	// 파일이름으로 원형오브젝트 이름저장
 
 	return S_OK;
 }
@@ -152,7 +152,7 @@ CGameObject_Creater * CGameObject_Creater::Create(ID3D11Device * d, ID3D11Device
 void CGameObject_Creater::Free()
 {
 
-	Safe_Release(mObjectIO);
+	Safe_Release(mObjectIoManager);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pDeviceContext);
 

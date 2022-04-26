@@ -4,33 +4,7 @@
 #include "FIleIO/ObjectIO.h"
 #include "FIleIO/GameObject_Creater.h"
 
-/* #TODO: IMGUI 수정
 
-	현재 불러온 원형 오브젝트 목록 출력 // ㅇ
-	오브젝트 클론 생성 테스트 // ㅇ
-
-	오브젝트 선택및 선택된 오브젝트 수정하기 // ㅇ	
-	저장 불러오기 테스트 // ㅇ
-
-	UI 설정하는 것 따로 띄어놓기 //
-	Input 방식으로 변경 // 
-
-	부모자식 오브젝트 만들기 // 
-	랜더링 순서 // 
-*/
-
-/*
-	UI툴에서는 UI 관련 내용만 처리
-	ㅇㅇㅇㅇ
-	ㅇㅇㅇㅇ
-
-
-*/
-
-/*
-	#TODO: 맵툴만들기
-
-*/
 
 CImgui_UI::CImgui_UI(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -81,7 +55,7 @@ HRESULT CImgui_UI::Render_UI()
 
 		if (mIsObjectList)
 		{
-			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_OBJECT)))
+			if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_OBJECTLIST)))
 			{
 				FAILED_CHECK(Update_ObjectList());
 				ImGui::End();
@@ -111,8 +85,6 @@ void CImgui_UI::UIMODE()
 	FAILED_CHECK_NONERETURN(Edit_ProtoObjectList());
 	FAILED_CHECK_NONERETURN(Edit_UIObject());
 	FAILED_CHECK_NONERETURN(Edit_Texture());
-
-
 }
 
 void CImgui_UI::PATHMODE()
@@ -297,35 +269,52 @@ HRESULT CImgui_UI::Edit_UIObject()
 HRESULT CImgui_UI::Edit_Texture()
 {
 	// 텍스처 선택 화면
+
+	if (mSpritepathList == nullptr)
+	{
+		const list<MYFILEPATH*>* spritepathList = GetSingle(CGameManager)->Get_PathList(CGameManager::PATHTYPE_SPRITE);
+		if (spritepathList == nullptr)
+			return S_FALSE;
+
+		mSpritepathList = NEW list<string>;
+
+		wstring wstr;
+		for (auto& path : *spritepathList)
+		{
+			wstr = path->FileName;
+			string str = CHelperClass::Convert_Wstr2str(wstr);
+			mSpritepathList->push_front(str);
+		}
+
+	}
+
+	if (mSpritepathList->empty())
+		return E_FAIL;
+
 	IMGUI_TREE_BEGIN("Textures")
 	{
 		static int selectedTex = -1;
-		if (mListTextureKey == nullptr)
-			mListTextureKey = (mCurrentUIObject->Get_TextureMap()->Get_MapKeyList());
 
 		_uint cnt = 0;
 		string selectTeture = "";
 		static ImGuiTextFilter filter;
 		filter.Draw();
 
-		for (auto iter = mListTextureKey->begin(); iter != mListTextureKey->end(); ++cnt, iter++)
-		{
+		for (auto iter = mSpritepathList->begin(); iter != mSpritepathList->end(); ++cnt, iter++)
+		{	
 			if (filter.PassFilter(iter->c_str()))
 			{
 				if (ImGui::Selectable(iter->c_str(), selectedTex == cnt))
 				{
 					selectedTex = cnt;
 					selectTeture = *iter;
-
 					//	mUIObject->Get_TextureMap()->Set_TextureMap(selectTeture);
 
 					TEXTUREDESC tex;
 					strcpy_s(tex.mTextureKey_Diffuse, selectTeture.c_str());
 					mCurrentUIObject->Set_LoadTexDesc(tex);
-				}
+				}			
 			}
-
-			
 		}
 
 		IMGUI_TREE_END
@@ -420,6 +409,8 @@ CImgui_UI * CImgui_UI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context
 void CImgui_UI::Free()
 {
 	__super::Free();
+	Safe_Delete(mSpritepathList);
+
 	Safe_Release(mCurrentUIObject);
 	Safe_Release(mObjectIoManager);
 	Safe_Release(mCreaterManager);

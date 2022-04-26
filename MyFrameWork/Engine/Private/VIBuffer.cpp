@@ -129,7 +129,6 @@ _bool CVIBuffer::Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut)
 			mpVertexPos[iIndices[0]],
 			mpVertexPos[iIndices[1]],
 			mpVertexPos[iIndices[2]]
-
 		};
 
 		if (isPick = pPicking->isPick(vPoint, pOut))
