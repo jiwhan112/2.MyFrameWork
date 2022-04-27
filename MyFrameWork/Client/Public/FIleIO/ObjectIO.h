@@ -40,6 +40,8 @@ private:
 	HRESULT SaveOBJECT(ofstream* fwrite, E_OBJECT_TYPE* desc);
 	HRESULT SaveUIDESC(ofstream* fwrite, UIDESC* desc);
 	HRESULT SaveTEXTUREDESC(ofstream* fwrite, TEXTUREDESC* desc);
+	HRESULT SaveMODELSTATICDESC(ofstream* fwrite, MODEL_STATIC_DESC* desc);
+	HRESULT SaveMODELDYNAMICDESC(ofstream* fwrite, MODEL_DYNAMIC_DESC* desc);
 
 private:
 	// 임의 데이터 맴버 저장

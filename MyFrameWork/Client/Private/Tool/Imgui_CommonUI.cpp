@@ -38,6 +38,8 @@ HRESULT CImgui_CommonUI::Render_UI()
 			ImGui::End();
 		}
 
+		
+
 		// Frame
 
 
@@ -49,6 +51,8 @@ HRESULT CImgui_CommonUI::Render_UI()
 
 void CImgui_CommonUI::PATHMODE()
 {
+	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	
 	// 경로 저장용
 
 	// 텍스트 저장
@@ -71,6 +75,18 @@ void CImgui_CommonUI::PATHMODE()
 		}
 		IMGUI_TREE_END
 	}
+
+	// Dat 파일로 원본 생성해서 CreateManager맵에 넣어놓기
+	IMGUI_TREE_BEGIN("Load_Data_Proto")
+	{
+		if (ImGui::Button("Load_AllDatFile"))
+		{
+			Create_Manager->LoaderDatFile_For_PrototypeObject();
+		}
+		IMGUI_TREE_END
+	}
+
+	
 }
 
 

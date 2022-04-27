@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "FIleIO/ObjectIO.h"
 #include "GameObject/GameObject_2D.h"
+#include "GameObject/GameObject_3D_Dynamic.h"
+#include "GameObject/GameObject_3D_Static.h"
+#include "GameObject/GameObject_MyTerrain.h"
 
 HRESULT CObjectIO::NativeConstruct()
 {
@@ -13,6 +16,7 @@ HRESULT CObjectIO::NativeConstruct()
 
 HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject* obj)
 {
+	// #INIT ObjectSave 추가
 	ofstream fWrite(FolderPath + L"\\" + filename, ios::out | ios::binary);
 	if (fWrite.is_open() == false)
 	{
@@ -33,6 +37,28 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 
 	}
 		break;
+	case OBJECT_TYPE_3D_STATIC:
+	{
+		CGameObject_3D_Static* oobj = static_cast<CGameObject_3D_Static*>(obj);
+		SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
+		SaverData(&fWrite, OBJECT_TYPE_DATA_MODEL_STATICDESC, &(oobj->Get_ModelDESC()));
+
+	}
+	case OBJECT_TYPE_3D_ANI:
+	{
+		CGameObject_3D_Dynamic* oobj = static_cast<CGameObject_3D_Dynamic*>(obj);
+		//SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
+		//SaverData(&fWrite, OBJECT_TYPE_DATA_MODEL_DYNAMICDESC, &(oobj->Get_UIDesc()));
+
+	}
+	case OBJECT_TYPE_TERRAIN:
+	{
+		//CGameObject_MyTerrain* oobj = static_cast<CGameObject_2D*>(obj);
+		//SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
+		//SaverData(&fWrite, OBJECT_TYPE_DATA_UIDESC, &(oobj->Get_UIDesc()));
+		//SaverData(&fWrite, OBJECT_TYPE_DATA_TEXTUREDESC, &(oobj->Get_TextureDesc()));
+
+	}
 	case OBJECT_TYPE_END:
 
 		break;
@@ -62,6 +88,13 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void
 	case OBJECT_TYPE_DATA_TEXTUREDESC:
 		SaveTEXTUREDESC(fwrite,(TEXTUREDESC*)desc);
 		break;
+	case OBJECT_TYPE_DATA_MODEL_STATICDESC:
+		SaveMODELSTATICDESC(fwrite, (MODEL_STATIC_DESC*)desc);
+		break;
+	case OBJECT_TYPE_DATA_MODEL_DYNAMICDESC:
+		SaveMODELDYNAMICDESC(fwrite, (MODEL_DYNAMIC_DESC*)desc);
+		break;
+		
 	case OBJECT_TYPE_DATA_END:
 		break;
 	default:
@@ -73,8 +106,8 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void
 }
 
 HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData, E_OBJECT_TYPE* type)
-{
-	// #INIT 추가되는 오브젝트에 따라 해석
+{ 
+	// #INIT ObjectLoad 추가
 
 	ifstream fRead(FolderPath + L"\\" + filename, ios::in | ios::binary);
 	if (fRead.is_open() == false)
@@ -191,6 +224,32 @@ HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTUREDESC* desc)
 	memcpy(newdesc, desc, sizeof(TEXTUREDESC));
 
 	fwrite->write(newdesc, sizeof(TEXTUREDESC));
+	Safe_Delete_Array(newdesc);
+
+	return S_OK;
+
+
+}
+HRESULT CObjectIO::SaveMODELSTATICDESC(ofstream * fwrite, MODEL_STATIC_DESC* desc)
+{
+	char * newdesc = NEW char[sizeof(MODEL_STATIC_DESC)];
+
+	memcpy(newdesc, desc, sizeof(MODEL_STATIC_DESC));
+
+	fwrite->write(newdesc, sizeof(MODEL_STATIC_DESC));
+	Safe_Delete_Array(newdesc);
+
+	return S_OK;
+
+
+}
+HRESULT CObjectIO::SaveMODELDYNAMICDESC(ofstream * fwrite, MODEL_DYNAMIC_DESC* desc)
+{
+	char * newdesc = NEW char[sizeof(MODEL_DYNAMIC_DESC)];
+
+	memcpy(newdesc, desc, sizeof(MODEL_DYNAMIC_DESC));
+
+	fwrite->write(newdesc, sizeof(MODEL_DYNAMIC_DESC));
 	Safe_Delete_Array(newdesc);
 
 	return S_OK;

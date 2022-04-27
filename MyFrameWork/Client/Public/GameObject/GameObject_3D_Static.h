@@ -28,6 +28,7 @@ public:
 public:
 
 	CModel*		Get_ComModel() const { return mComModel; }
+	const MODEL_STATIC_DESC& Get_ModelDESC() const { return mModelDesc; }
 
 	HRESULT		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc);
 

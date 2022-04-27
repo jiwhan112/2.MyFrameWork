@@ -118,13 +118,6 @@ void CImgui_UI::UI_CREATEMODE()
 		IMGUI_TREE_END
 	}
 
-	if (ImGui::Button("Load_UIdata_Proto"))
-	{
-		// Dat 파일에 저장된 오브젝트 불어오기
-		// Create_Manager Map에 원본 생성
-		Create_Manager->LoaderDatFile_For_PrototypeObject();
-	}
-
 	IMGUI_TREE_BEGIN("ProtoObject")
 	{
 		auto CreateCloneObject = Create_Manager->Get_Map_GameObject2File_Proto();

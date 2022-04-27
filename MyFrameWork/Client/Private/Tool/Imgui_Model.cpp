@@ -98,24 +98,22 @@ void CImgui_Model::FBX_CREATEMODE()
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
 	// MODEL 저장
-	//IMGUI_TREE_BEGIN("ObjectSaver")
-	//{
-	//	if (mCurrentModelObject != nullptr)
-	//	{
-	//		static char ObjectName[128] = "";
-	//		ImGui::InputTextWithHint("hint Text", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
-	//		if (ImGui::Button("SaveTest"))
-	//		{
-	//			// dat 파일 경로에 저장				
-	//			string namechar = ObjectName;
-	//			wstring namechar2;
-	//			namechar2.assign(namechar.begin(), namechar.end());
-	//			Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC, STR_FILEPATH_RESOURCE_DAT_L, namechar2 + L".dat", mCurrentModelObject);
-
-	//		}
-	//	}
-	//	IMGUI_TREE_END
-	//}
+	IMGUI_TREE_BEGIN("ObjectSaver")
+	{
+		if (mCurrentModelObject != nullptr)
+		{
+			static char ObjectName[128] = "";
+			ImGui::InputTextWithHint("hint Text", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
+			if (ImGui::Button("SaveTest"))
+			{
+				// dat 파일 경로에 저장	
+				string str = ObjectName;
+				wstring wstr = CHelperClass::Convert_str2wstr(str);
+				Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrentModelObject);
+			}
+		}
+		IMGUI_TREE_END
+	}
 
 	IMGUI_TREE_BEGIN("Create Empty Object")
 	{
@@ -132,48 +130,35 @@ void CImgui_Model::FBX_CREATEMODE()
 		}
 		IMGUI_TREE_END
 	}
+	
+	IMGUI_TREE_BEGIN("ProtoObject")
+	{
+		if (mProtoModelList == nullptr)
+			mProtoModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC);
 
-	//if (ImGui::Button("Load_UIdata_Proto"))
-	//{
-	//	// Dat 파일에 저장된 오브젝트 불어오기
-	//	// Create_Manager Map에 원본 생성
-	//	Create_Manager->LoaderDatFile_For_PrototypeObject();
-	//}
+		static int selectObjectIndex = -1;
+		_uint cnt = 0;
+		static wstring selectObjectStr = L"";
+		for (auto& protoString : *mProtoModelList)
+		{
+			cnt++;
 
-	//IMGUI_TREE_BEGIN("ProtoObject")
-	//{
-	//	auto CreateCloneObject = Create_Manager->Get_Map_GameObject2File_Proto();
+			if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
+			{
+				selectObjectIndex = cnt;
+				selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
+			}
+		}
 
-	//	static int selectObjectIndex = -1;
+		// 선택 원형 오브젝트 클론
+		if (ImGui::Button("Create_Clone"))
+		{
+			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_OBJECT));
+		}
 
-	//	_uint cnt = 0;
-	//	static wstring selectObjectStr = L"";
-	//	for (auto& pObj : *CreateCloneObject)
-	//	{
-	//		string cnvertString = "";
-	//		cnt++;
-	//		cnvertString.assign(pObj.first.begin(), pObj.first.end());
-
-	//		if (ImGui::Selectable(cnvertString.c_str(), selectObjectIndex == cnt))
-	//		{
-	//			selectObjectIndex = cnt;
-	//			selectObjectStr = pObj.first;
-	//		}
-	//	}
-
-	//	// 선택 원형 오브젝트 클론
-	//	if (ImGui::Button("Create_Clone"))
-	//	{
-	//		_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	//		CGameObject* createobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
-	//		if (mCurrentUIObject == nullptr)
-	//		{
-	//			mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
-	//			Safe_AddRef(mCurrentUIObject);
-	//		}
-	//	}
-	//	IMGUI_TREE_END
-	//}
+		IMGUI_TREE_END
+	}
 }
 
 HRESULT CImgui_Model::Edit_FBX()
@@ -262,6 +247,8 @@ void CImgui_Model::Free()
 	__super::Free();
 	Safe_Release(mCameraClient);
 	Safe_Delete(mFBXpathList);
+	Safe_Delete(mProtoModelList);
+	
 
 
 }

@@ -37,6 +37,8 @@ private:
 	class CGameObject_3D_Static*	mCurrentModelObject = nullptr;
 
 	list<string>*					mFBXpathList = nullptr;
+	list<string>*					mProtoModelList = nullptr;
+
 
 private:
 	bool							mIsModelSetting = false;

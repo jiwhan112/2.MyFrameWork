@@ -30,6 +30,9 @@ public:
 		return &mMap_GameObject2File_Proto;
 	}
 
+	// 타입별로 키 리스트 반환
+	list<string>* Get_MapObject_Type(E_OBJECT_TYPE type);
+
 
 	// 기능 테스트용으로 public 시킴
 public:
@@ -47,6 +50,7 @@ public:
 
 //	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
 
+	
 
 	
 private:
