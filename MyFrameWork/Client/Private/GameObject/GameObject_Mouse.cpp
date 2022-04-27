@@ -51,7 +51,7 @@ _int CGameObject_Mouse::Tick(_double TimeDelta)
 
 	mComTransform->Scaled(XMVectorSet(50, 50, 1, 0.0f));
 
-	mComTransform->SetState(CTransform::STATE_POSITION,
+	mComTransform->Set_State(CTransform::STATE_POSITION,
 		XMVectorSet(mMousePos.x, mMousePos.y, 0.0f, 1.f));
 
 

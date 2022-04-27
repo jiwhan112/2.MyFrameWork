@@ -104,6 +104,33 @@ HRESULT CGameManager::Set_ReListPath(E_PATHTYPE type)
 
 	return S_OK;
 }
+CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _uint index)
+{
+	_uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	auto GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(levelIndex,layerTag);
+	if (GameObjectList == nullptr)
+		return nullptr;
+
+	auto iter = GameObjectList->begin();
+	if (index == 0)
+		return  *iter;
+
+	int count = 0;
+
+	while (iter != GameObjectList->end())
+	{
+		if (index == count)
+			break;
+		++count;
+		++iter;
+	}
+
+	if (iter == GameObjectList->end())
+		return nullptr;
+
+	return (*iter);
+}
+
 HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, const char * filetype)
 {
 	if (outPathList->empty())

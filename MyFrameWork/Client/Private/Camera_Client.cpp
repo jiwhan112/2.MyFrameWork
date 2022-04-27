@@ -8,6 +8,9 @@ CCamera_Client::CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 
 CCamera_Client::CCamera_Client(const CCamera_Client & rhs)
 	: CCamera(rhs)
+	, meCameraMode(rhs.meCameraMode)
+	, mTargetObject(nullptr)
+
 {
 }
 
@@ -22,10 +25,75 @@ HRESULT CCamera_Client::NativeConstruct(void* pArg)
 
 	// 직교 투영 행렬 초기화 
 	FAILED_CHECK(GetSingle(CGameInstance)->SetTransform(CPipeLine::D3DTS_PROJ_ORI, XMMatrixOrthographicLH((float)g_iWinCX, (float)g_iWinCY, 0.f, 1.f)));
+	
+	mStartWorlMat = mComTransform->GetWorldFloat4x4();
+	meCameraMode = CCamera_Client::CAMERA_MODE_DEFAULT;
+
 	return S_OK;
 }
 
 _int CCamera_Client::Tick(_double TimeDelta)
+{
+
+	switch (meCameraMode)
+	{
+	case CCamera_Client::CAMERA_MODE_DEFAULT:
+		Update_Default(TimeDelta);
+		break;
+
+	case CCamera_Client::CAMERA_MODE_RETURN:
+		mComTransform->Set_WorldMat(mStartWorlMat);
+		meCameraMode = CAMERA_MODE_DEFAULT;
+		break;
+
+	case CCamera_Client::CAMERA_MODE_TARGET:
+		if (mTargetObject)
+		{
+			FAILED_CHECK_NONERETURN(Update_Target(TimeDelta));
+		}
+		break;
+	case CCamera_Client::CAMERA_MODE_MAP:
+		meCameraMode = CAMERA_MODE_DEFAULT;
+
+		break;		
+	case CCamera_Client::CAMERA_MODE_END:
+		meCameraMode = CAMERA_MODE_DEFAULT;
+		break;
+
+
+	}
+	
+
+	// View Proj 행렬세팅
+	return __super::Tick(TimeDelta);
+
+	
+
+
+}
+
+_int CCamera_Client::LateTick(_double TimeDelta)
+{
+	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	return UPDATENONE;
+}
+
+HRESULT CCamera_Client::Render()
+{
+	FAILED_CHECK(__super::Render());
+	return S_OK;
+}
+
+void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, CGameObject * target)
+{
+	meCameraMode = e;
+	Safe_Release(mTargetObject);
+	mTargetObject = target;
+	Safe_AddRef(mTargetObject);
+
+}
+
+HRESULT CCamera_Client::Update_Default(_double TimeDelta)
 {
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 
@@ -62,22 +130,43 @@ _int CCamera_Client::Tick(_double TimeDelta)
 		mComTransform->Turn(mComTransform->GetState(CTransform::STATE_RIGHT), TimeDelta * MouseMove *MouseSpeed);
 	}
 
-	return __super::Tick(TimeDelta);
-
-	
-
-
+	return S_OK;
 }
 
-_int CCamera_Client::LateTick(_double TimeDelta)
+HRESULT CCamera_Client::Update_Target(_double TimeDelta)
 {
-	FAILED_UPDATE(__super::LateTick(TimeDelta));
-	return UPDATENONE;
+	// 타겟을 돌려가면서 랜더링
+	if (mTargetObject == nullptr)
+		return E_FAIL;
+
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+
+	CTransform* targetTrans = mTargetObject->Get_TransformCom();
+
+	DirectX::SimpleMath::Vector4  look = targetTrans->GetState(CTransform::STATE_LOOK);
+	DirectX::SimpleMath::Vector4  newPosition = targetTrans->GetState(CTransform::STATE_POSITION);
+	newPosition += (look * -1) * 5.0f;
+
+	mComTransform->Set_WorldMat(targetTrans->GetWorldFloat4x4());
+
+	mComTransform->Set_State(CTransform::STATE_POSITION, newPosition);
+
+	/*if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & DIS_Press)
+	{
+
+		mComTransform->GO_Left(TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & DIS_Press)
+	{
+		mComTransform->GO_Right(TimeDelta);
+	}*/
+
+	return S_OK;
 }
 
-HRESULT CCamera_Client::Render()
+HRESULT CCamera_Client::Update_Map(_double TimeDelta)
 {
-	FAILED_CHECK(__super::Render());
 	return S_OK;
 }
 
@@ -109,4 +198,6 @@ CCamera_Client * CCamera_Client::Clone(void * pArg)
 void CCamera_Client::Free()
 {
 	__super::Free();
+	Safe_Release(mTargetObject);
+
 }

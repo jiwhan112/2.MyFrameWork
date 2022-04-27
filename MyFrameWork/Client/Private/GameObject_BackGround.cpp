@@ -50,7 +50,7 @@ _int CGameObject_BackGround::LateTick(_double TimeDelta)
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
 	mComTransform->Scaled(XMVectorSet(mSize.x, mSize.y, 1.f, 0.0f));
-	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mPos.x - (g_iWinCX * 0.5f), -mPos.y + (g_iWinCY * 0.5f), 0.f, 1.f));
+	mComTransform->Set_State(CTransform::STATE_POSITION, XMVectorSet(mPos.x - (g_iWinCX * 0.5f), -mPos.y + (g_iWinCY * 0.5f), 0.f, 1.f));
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return _int();

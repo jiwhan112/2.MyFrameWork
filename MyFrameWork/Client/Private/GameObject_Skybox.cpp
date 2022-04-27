@@ -45,7 +45,7 @@ _int CGameObject_Skybox::LateTick(_double TimeDelta)
 
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 
-	mComTransform->SetState(CTransform::STATE_POSITION, pGameInstance->GetCameraPosition_vec());
+	mComTransform->Set_State(CTransform::STATE_POSITION, pGameInstance->GetCameraPosition_vec());
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
 	return UPDATENONE;

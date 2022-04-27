@@ -100,6 +100,17 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTa
 	return S_OK;
 }
 
+HRESULT CGameObject::Release_Component(const _tchar * pComponentTag)
+{
+	CComponent* releasecom = Find_Component(pComponentTag);
+	if (releasecom != nullptr)
+	{
+		m_Components.erase(pComponentTag);
+		Safe_Release(releasecom);
+	}
+	return S_OK;
+}
+
 CComponent * CGameObject::Find_Component(const _tchar * pComponentTag)
 {
 	auto	iter = find_if(m_Components.begin(), m_Components.end(), CTagFinder(pComponentTag));

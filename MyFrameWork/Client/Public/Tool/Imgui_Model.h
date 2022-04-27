@@ -33,12 +33,13 @@ private:
 	HRESULT Edit_Texture();
 
 private:
+	class CCamera_Client*			mCameraClient = nullptr;
 	class CGameObject_3D_Static*	mCurrentModelObject = nullptr;
+
 	list<string>*					mFBXpathList = nullptr;
 
-
-
-	bool					mIsModelSetting = false;
+private:
+	bool							mIsModelSetting = false;
 
 
 public:

@@ -43,11 +43,11 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 	_vector		vUp = XMVector3Cross(vLook, vRight);
 	vUp = XMVector3Normalize(vUp);
 
-	mComTransform->SetState(CTransform::STATE_UP, vUp);
-	mComTransform->SetState(CTransform::STATE_RIGHT, vRight);
-	mComTransform->SetState(CTransform::STATE_LOOK, vLook);
+	mComTransform->Set_State(CTransform::STATE_UP, vUp);
+	mComTransform->Set_State(CTransform::STATE_RIGHT, vRight);
+	mComTransform->Set_State(CTransform::STATE_LOOK, vLook);
 	// float3 형을 4의 vecotr로 바꿔서 넣어준다. &는 주소를 넘겨야하기 때문에
-	mComTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat4(&_float4(mCameraDesc.vEye, 1.f)));
+	mComTransform->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&_float4(mCameraDesc.vEye, 1.f)));
 
 	return S_OK;
 }

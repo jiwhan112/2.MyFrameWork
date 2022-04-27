@@ -48,7 +48,7 @@ _int CGameObject_2D::Tick(_double TimeDelta)
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	mComTransform->Scaled(XMVectorSet(mUiDesc.mSizeX, mUiDesc.mSizeY, 1.f, 0.0f));
-	mComTransform->SetState(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * mUiDesc.mPivot.x), -mUiDesc.mPosY + (g_iWinCY * mUiDesc.mPivot.y), 0, 1.f));
+	mComTransform->Set_State(CTransform::STATE_POSITION, XMVectorSet(mUiDesc.mPosX - (g_iWinCX * mUiDesc.mPivot.x), -mUiDesc.mPosY + (g_iWinCY * mUiDesc.mPivot.y), 0, 1.f));
 
 
 	return UPDATENONE;

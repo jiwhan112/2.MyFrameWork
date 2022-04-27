@@ -45,6 +45,11 @@ public:
 	// 경로데이터 업데이트
 	HRESULT Set_ReListPath(E_PATHTYPE type);
 
+	// 카메라나 플레이어 가져올때 좀더 편하게 가져옴
+	CGameObject* Get_LevelObject_LayerTag(const wchar_t* layerTag,_uint index=0);
+
+
+
 private:
 	// 경로 저장
 	HRESULT Initialize_PathData();

@@ -85,10 +85,15 @@ HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
 
 	// 해당 모델 컴포넌트로 변경
 	if (mComModel != nullptr)
+	{
 		Safe_Release(mComModel);
+		mComModel = nullptr;
+	}
 
 	string strModel = mModelDesc.mModelName;
 	wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
+
+	FAILED_CHECK(__super::Release_Component(TEXT("Com_Model")));
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 

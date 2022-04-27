@@ -33,7 +33,7 @@ _float3 CTransform::GetScaleXYZ() const
 	return _float3(fSizeX.x, fSizeY.x, fSizeZ.x);
 }
 
-void CTransform::SetState(E_STATE state, _fvector vec)
+void CTransform::Set_State(E_STATE state, _fvector vec)
 {
 	XMStoreFloat4((_float4*)&mWorldMatrix.m[state][0], vec);
 }
@@ -77,7 +77,7 @@ HRESULT CTransform::GO_Straight(_double deltatime)
 
 	vPosition += XMVector3Normalize(vLook) * mDesc.SpeedPersec * (_float)deltatime;
 
-	SetState(CTransform::STATE_POSITION, vPosition);
+	Set_State(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
@@ -88,7 +88,7 @@ HRESULT CTransform::GO_Backward(_double deltatime)
 
 	vPosition -= XMVector3Normalize(vLook) * mDesc.SpeedPersec * (_float)deltatime;
 
-	SetState(CTransform::STATE_POSITION, vPosition);
+	Set_State(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
@@ -100,7 +100,7 @@ HRESULT CTransform::GO_Up(_double deltatime)
 
 	vPosition += XMVector3Normalize(vUp) * mDesc.SpeedPersec * (_float)deltatime;
 
-	SetState(CTransform::STATE_POSITION, vPosition);
+	Set_State(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
@@ -112,7 +112,7 @@ HRESULT CTransform::GO_Down(_double deltatime)
 
 	vPosition -= XMVector3Normalize(vUp) * mDesc.SpeedPersec * (_float)deltatime;
 
-	SetState(CTransform::STATE_POSITION, vPosition);
+	Set_State(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
@@ -123,7 +123,7 @@ HRESULT CTransform::GO_Right(_double deltatime)
 
 	vPosition += XMVector3Normalize(vRight) * mDesc.SpeedPersec * (_float)deltatime;
 
-	SetState(CTransform::STATE_POSITION, vPosition);
+	Set_State(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
@@ -134,7 +134,7 @@ HRESULT CTransform::GO_Left(_double deltatime)
 
 	vPosition -= XMVector3Normalize(vLeft) * mDesc.SpeedPersec * (_float)deltatime;
 
-	SetState(CTransform::STATE_POSITION, vPosition);
+	Set_State(CTransform::STATE_POSITION, vPosition);
 	return S_OK;
 }
 
@@ -148,7 +148,7 @@ HRESULT CTransform::GO_WorldVec(_float3 vec, _double deltatime)
 
 	_float4 vPos = _float4(vPosition, 1.f);
 
-	SetState(CTransform::STATE_POSITION, vPos);
+	Set_State(CTransform::STATE_POSITION, vPos);
 
 	return S_OK;
 }
@@ -183,7 +183,7 @@ HRESULT CTransform::GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _doub
 	vPosition += newVec.Get_Float3() * mDesc.SpeedPersec *(_float)deltatime;
 
 
-	SetState(CTransform::STATE_POSITION, _float4(vPosition, 1.f));
+	Set_State(CTransform::STATE_POSITION, _float4(vPosition, 1.f));
 
 	return S_OK;
 }
@@ -203,9 +203,9 @@ HRESULT CTransform::Turn(_fvector vAxis, _double time)
 	vUp = XMVector4Transform(vUp, RotationMatrix);
 	vLook = XMVector4Transform(vLook, RotationMatrix);
 
-	SetState(CTransform::STATE_RIGHT, vRight);
-	SetState(CTransform::STATE_UP, vUp);
-	SetState(CTransform::STATE_LOOK, vLook);
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);
 	return S_OK;
 }
 
@@ -221,9 +221,9 @@ HRESULT CTransform::Rotation(_fvector vAxis, _float fRadian)
 	vUp = XMVector4Transform(vUp, RotationMatrix);
 	vLook = XMVector4Transform(vLook, RotationMatrix);
 
-	SetState(CTransform::STATE_RIGHT, vRight);
-	SetState(CTransform::STATE_UP, vUp);
-	SetState(CTransform::STATE_LOOK, vLook);
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);
 
 	return S_OK;
 }
@@ -249,9 +249,9 @@ HRESULT CTransform::Scaled(_fvector scale)
 	vUp = XMVector3Normalize(vUp)* XMVectorGetY(scale);
 	vLook = XMVector3Normalize(vLook)* XMVectorGetZ(scale);
 
-	SetState(STATE_RIGHT, vRight);
-	SetState(STATE_UP, vUp);
-	SetState(STATE_LOOK, vLook);
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
 	return S_OK;
 }
 

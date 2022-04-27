@@ -82,6 +82,7 @@ protected:
 
 public:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	HRESULT Release_Component(const _tchar* pComponentTag);
 
 private:
 //	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);

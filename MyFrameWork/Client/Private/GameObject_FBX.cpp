@@ -189,7 +189,7 @@ HRESULT CGameObject_FBX::Set_Height()
 
 	vPosition.y = 5;
 	// ¼¼ÆÃ
-	mComTransform->SetState(CTransform::STATE_POSITION, vPosition);
+	mComTransform->Set_State(CTransform::STATE_POSITION, vPosition);
 
 	return S_OK;
 }

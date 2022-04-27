@@ -38,7 +38,13 @@ public:
 
 public:
 	// 인자로 들어올때의 타입 1~3 fvecotr
-	void SetState(E_STATE state, _fvector vec);
+	void Set_State(E_STATE state, _fvector vec);
+
+	void Set_WorldMat(_fmatrix worldmat)
+	{
+		mWorldMatrix = worldmat;
+	}
+
 
 public:
 	virtual HRESULT NativeConstruct_Prototype() override;

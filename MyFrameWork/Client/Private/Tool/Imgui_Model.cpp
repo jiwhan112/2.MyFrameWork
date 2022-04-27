@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Tool/Imgui_Model.h"
+#include "Camera_Client.h"
 #include "GameObject/GameObject_3D_Static.h"
 #include "FIleIO/ObjectIO.h"
 #include "FIleIO/GameObject_Creater.h"
@@ -14,20 +15,36 @@ HRESULT CImgui_Model::NativeConstruct()
 {
 	mCurrentModelObject = nullptr;
 
+	mCameraClient = nullptr;
+
 	return S_OK;
 }
 
 HRESULT CImgui_Model::Update(_double time)
 {
+	if (mCameraClient == nullptr)
+	{
+		mCameraClient = static_cast<CCamera_Client*>(GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA)));
+		Safe_AddRef(mCameraClient);
+	}
+
 	CGameObject* SelectObject = GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
 
 	if (SelectObject != nullptr)
 	{
 		mCurrentModelObject = static_cast<CGameObject_3D_Static*>(SelectObject);
+		if (mCameraClient)
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, mCurrentModelObject);
+
+
+		// 3D 툴 카메라 세팅
+
+
 	}
 	else
+	{
 		mCurrentModelObject = nullptr;
-	
+	}
 
 	FAILED_CHECK(Render_UI());
 
@@ -243,5 +260,8 @@ CImgui_Model * CImgui_Model::Create(ID3D11Device* deviec, ID3D11DeviceContext* c
 void CImgui_Model::Free()
 {
 	__super::Free();
+	Safe_Release(mCameraClient);
+	Safe_Delete(mFBXpathList);
+
 
 }
