@@ -23,8 +23,8 @@ public:
 	HRESULT Ready_Tools();
 
 private:
-	class CImgui_MyDemo*	mIMGUI_DEMO = nullptr;
-	class CImgui_UI*		mIMGUI_UI = nullptr;
+//	class CImgui_MyDemo*	mIMGUI_DEMO = nullptr;
+//	class CImgui_UI*		mIMGUI_UI = nullptr;
 
 
 public:

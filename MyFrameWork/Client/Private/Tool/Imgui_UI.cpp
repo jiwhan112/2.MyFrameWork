@@ -4,6 +4,7 @@
 #include "FIleIO/ObjectIO.h"
 #include "FIleIO/GameObject_Creater.h"
 
+// #TODO 3D툴이랑 애니메이션 지형툴 제작 // ~수
 
 
 CImgui_UI::CImgui_UI(ID3D11Device * device, ID3D11DeviceContext * context)
@@ -35,11 +36,13 @@ HRESULT CImgui_UI::Update(_double time)
 
 HRESULT CImgui_UI::Render_UI()
 {
-
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_MAIN)))
 	{
+
 		if (ImGui::CollapsingHeader("UI_SAVER"))
 		{
+			UI_CREATEMODE();
+
 
 			ImGui::Checkbox("UISettingWindow", &mIsDataSetting);
 
@@ -47,11 +50,11 @@ HRESULT CImgui_UI::Render_UI()
 			{
 				if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_UI)))
 				{
-					UIMODE();
+					UI_SETTINGMODE();
 					ImGui::End();
 				}
 			}
-			TESTMODE();
+		
 		}
 
 		ImGui::End();
@@ -60,18 +63,21 @@ HRESULT CImgui_UI::Render_UI()
 	return S_OK;
 }
 
-void CImgui_UI::UIMODE()
+void CImgui_UI::UI_SETTINGMODE()
 {
+	if (mCurrentUIObject == nullptr)
+		return;
+
 	// 선택된 UI 오브젝트 수정
-	FAILED_CHECK_NONERETURN(Edit_ProtoObjectList());
 	FAILED_CHECK_NONERETURN(Edit_UIObject());
 	FAILED_CHECK_NONERETURN(Edit_Texture());
 }
 
-void CImgui_UI::TESTMODE()
+void CImgui_UI::UI_CREATEMODE()
 {
 	// 저장
 	CObjectIO* Object_IO_Manager = GetSingle(CGameManager)->Get_ObjectIOManager();
+
 	// 생성
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
@@ -95,72 +101,61 @@ void CImgui_UI::TESTMODE()
 		IMGUI_TREE_END
 	}
 
-
-	// 테스트 중인 버튼 클론 오브젝트 생성
-	IMGUI_TREE_BEGIN("For_TestButton")
+	IMGUI_TREE_BEGIN("Create Empty Object")
 	{
-		if (ImGui::Button("Load_And_CloneData"))
+		// 빈 오브젝트 클론
+		if (ImGui::Button("Create_Empty_GAMEOBJECT_2D"))
 		{
-			// 파일로 저장된 프로토 데이터 불러오기
-			Create_Manager->LoaderDatFile_For_PrototypeObject();	
+			// UI 타입별로 빈 오브젝트 생성
+			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_2D);
+			UIDESC emptyDesc;
+			static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(emptyDesc);
+
+			// 이미 만들어진 오브젝트 추가
+			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_BACKGROUND), createobj);
+		}
+		IMGUI_TREE_END
+	}
+
+	if (ImGui::Button("Load_UIdata_Proto"))
+	{
+		// Dat 파일에 저장된 오브젝트 불어오기
+		// Create_Manager Map에 원본 생성
+		Create_Manager->LoaderDatFile_For_PrototypeObject();
+	}
+
+	IMGUI_TREE_BEGIN("ProtoObject")
+	{
+		auto CreateCloneObject = Create_Manager->Get_Map_GameObject2File_Proto();
+
+		static int selectObjectIndex = -1;
+
+		_uint cnt = 0;
+		static wstring selectObjectStr = L"";
+		for (auto& pObj : *CreateCloneObject)
+		{
+			string cnvertString = "";
+			cnt++;
+			cnvertString.assign(pObj.first.begin(), pObj.first.end());
+
+			if (ImGui::Selectable(cnvertString.c_str(), selectObjectIndex == cnt))
+			{
+				selectObjectIndex = cnt;
+				selectObjectStr = pObj.first;
+			}
 		}
 
-		IMGUI_TREE_BEGIN("ProtoObject")
+		// 선택 원형 오브젝트 클론
+		if (ImGui::Button("Create_Clone"))
 		{
-
-			// 오브젝트 트리로 현재 생성된 오브젝트 보여주기
-			auto CreateCloneObject =Create_Manager->Get_Map_GameObject2File_Proto();
-
-			static int selectObjectIndex = -1;
-
-			_uint cnt = 0;
-			static wstring selectObjectStr = L"";
-			for (auto& pObj : CreateCloneObject)
+			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			CGameObject* createobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
+			if (mCurrentUIObject == nullptr)
 			{
-				string cnvertString = "";
-				cnt++;
-				cnvertString.assign(pObj.first.begin(), pObj.first.end());
-
-				if (ImGui::Selectable(cnvertString.c_str(), selectObjectIndex == cnt))
-				{
-					selectObjectIndex = cnt;
-					selectObjectStr = pObj.first;
-				}
-
+				mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
+				Safe_AddRef(mCurrentUIObject);
 			}
-
-			// 선택 오브젝트 클론
-			if (ImGui::Button("Create_Clone"))
-			{
-				// 선택 오브젝트 클론
-				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-				CGameObject* createobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
-				if (mCurrentUIObject == nullptr)
-				{
-					mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
-					Safe_AddRef(mCurrentUIObject);
-				}
-
-			}
-
-			// 빈 오브젝트 클론
-			if (ImGui::Button("Create_Empty"))
-			{
-				// 선택 오브젝트 클론
-				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-				CGameObject* createobj =Create_Manager->CreateEmptyObject(GAMEOBJECT_2D);
-				UIDESC desc;
-				static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(desc);
-				GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_BACKGROUND), createobj);
-
-				if (mCurrentUIObject == nullptr)
-				{
-					mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
-					Safe_AddRef(mCurrentUIObject);
-				}
-			}
-
-			IMGUI_TREE_END
 		}
 		IMGUI_TREE_END
 	}
@@ -173,8 +168,6 @@ HRESULT CImgui_UI::Edit_UIObject()
 {
 	// UI 세팅 화면
 
-	if (mCurrentUIObject == nullptr)
-		return S_FALSE;
 
 	// UIDesc 정보만 변경해주면 알아서 오브젝트 업데이트 시에 수정된다.
 	UIDESC myDesc = mCurrentUIObject->Get_UIDesc();

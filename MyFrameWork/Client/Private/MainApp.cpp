@@ -166,7 +166,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Filter.bmp"), 1)));
 
 	// ¸ðµ¨ / ÅØ½ºÃ³ ¸Ê / ¼ÎÀÌ´õ / 
-	// FAILED_CHECK(Ready_Prototype_Components_Model());
+	FAILED_CHECK(Ready_Prototype_Components_Model());
 	FAILED_CHECK(Ready_Prototype_Components_Texture());
 	FAILED_CHECK(Ready_Prototype_Components_Shader());
 
@@ -241,9 +241,9 @@ HRESULT CMainApp::Ready_Prototype_Components_Texture()
 
 
 	// ¸ðµ¨ ÅØ½ºÃ³ ¸Ê
-	const list<MYFILEPATH*>* listFBXpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBXTEX);
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX),
-		CTexture_map::Create(m_pDevice, m_pDeviceContext, *listFBXpngpath)));
+	//const list<MYFILEPATH*>* listFBXpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBXTEX);
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX),
+	//	CTexture_map::Create(m_pDevice, m_pDeviceContext, *listFBXpngpath)));
 
 	return S_OK;
 }

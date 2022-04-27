@@ -85,6 +85,20 @@ namespace Engine
 				wstr.assign(str.begin(), str.end());
 			}
 		}
+		static const string Convert_Wstr2str(wstring& wstr)
+		{
+			string str;
+			str.assign(wstr.begin(), wstr.end());
+			return str;
+		}
+
+		static const wstring Convert_str2wstr(string& str)
+		{
+			wstring wstr;
+			wstr.assign(str.begin(), str.end());
+			return wstr;
+
+		}
 	};
 
 

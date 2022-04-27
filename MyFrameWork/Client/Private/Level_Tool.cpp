@@ -2,8 +2,13 @@
 #include "Level_Tool.h"
 #include "Camera_Client.h"
 #include "GameObject/GameObject_2D.h"
+
 #include "Tool/Imgui_MyDemo.h"
+#include "Tool/Imgui_CommonUI.h"
 #include "Tool/Imgui_UI.h"
+#include "Tool/Imgui_Model.h"
+#include "Tool/IMGUI_Terrain.h"
+
 
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -11,8 +16,8 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 {
 	mLevelIndex = LEVEL_TOOL;
 
-	mIMGUI_DEMO = nullptr;
-	mIMGUI_UI = nullptr;
+	//mIMGUI_DEMO = nullptr;
+	//mIMGUI_UI = nullptr;
 }
 
 HRESULT CLevel_Tool::NativeConstruct()
@@ -36,6 +41,8 @@ _int CLevel_Tool::Tick(_double TimeDelta)
 _int CLevel_Tool::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+
+	
 	return UPDATENONE;
 }
 
@@ -54,9 +61,8 @@ HRESULT CLevel_Tool::Render()
 HRESULT CLevel_Tool::Ready_Tools()
 {
 	// IMGUI 积己
-	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(mIMGUI_UI =
-		CImgui_UI::Create(m_pDevice, m_pDeviceContext));
-	Safe_AddRef(mIMGUI_UI);
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_UI::Create(m_pDevice, m_pDeviceContext));
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Model::Create(m_pDevice, m_pDeviceContext));
 
 	// 坷宏璃飘 积己
 
@@ -100,9 +106,8 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.TransformDesc.SpeedPersec = 10.f;
 	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
-
-
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
+
 	return S_OK;
 
 }
@@ -143,6 +148,6 @@ CLevel_Tool * CLevel_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 void CLevel_Tool::Free()
 {
 	__super::Free();
-	Safe_Release(mIMGUI_DEMO);
-	Safe_Release(mIMGUI_UI);
+//	Safe_Release(mIMGUI_DEMO);
+//	Safe_Release(mIMGUI_UI);
 }

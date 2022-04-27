@@ -25,9 +25,9 @@ public:
 
 public:
 
-	const map<wstring, CGameObject*>& Get_Map_GameObject2File_Proto() const
+	const map<wstring, CGameObject*>* Get_Map_GameObject2File_Proto() const
 	{
-		return mMap_GameObject2File_Proto;
+		return &mMap_GameObject2File_Proto;
 	}
 
 

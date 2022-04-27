@@ -21,26 +21,15 @@ public:
 	virtual HRESULT Update(_double time) override;
 
 public:
-//	void Set_UIObject(class CGameObject_2D* obj);
-	//	void Render_Object(CGameObject* obj);
-
 	HRESULT Render_UI();
 
 private:
-	void UIMODE();
-	void TESTMODE();
+	void UI_SETTINGMODE();
+	void UI_CREATEMODE();
 
 private:
-	HRESULT Edit_ProtoObjectList() { return S_OK; }
 	HRESULT Edit_UIObject();
 	HRESULT Edit_Texture();
-
-	//void Button_Create2DBuffer();
-	//void Texturebb();
-
-
-	//// UI 정보 저장
-	//void Button_UISave();
 
 private:
 	// UI 오브젝트 1개에대한 정보 저장코드 만들어보기

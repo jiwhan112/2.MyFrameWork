@@ -29,10 +29,7 @@ public:
 
 	CModel*		Get_ComModel() const { return mComModel; }
 
-	void		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc)
-	{
-		memcpy(&mModelDesc, &desc, sizeof(MODEL_STATIC_DESC));
-	}
+	HRESULT		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc);
 
 protected:
 	virtual HRESULT Set_Component()override;

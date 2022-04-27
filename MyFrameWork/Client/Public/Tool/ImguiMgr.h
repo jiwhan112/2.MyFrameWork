@@ -2,9 +2,13 @@
 #include "Base.h"
 
 
+
+
 BEGIN(Client)
 
 // IMGUI 사용할 것만 업데이트
+// #Tag IMGUI 헤더 추가
+
 
 class CImguiMgr :public CBase
 {

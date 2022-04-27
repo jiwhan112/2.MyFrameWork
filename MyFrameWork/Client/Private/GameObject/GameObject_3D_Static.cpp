@@ -13,6 +13,7 @@ CGameObject_3D_Static::CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11Device
 CGameObject_3D_Static::CGameObject_3D_Static(const CGameObject_3D_Static& rhs)
 	: CGameObject_Base(rhs)
 	, mComModel(rhs.mComModel)
+	, mModelDesc(rhs.mModelDesc)
 {
 	Safe_AddRef(mComModel);
 }
@@ -78,6 +79,22 @@ HRESULT CGameObject_3D_Static::Render()
 }
 
 
+HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
+{
+	memcpy(&mModelDesc, &desc, sizeof(MODEL_STATIC_DESC));
+
+	// 해당 모델 컴포넌트로 변경
+	if (mComModel != nullptr)
+		Safe_Release(mComModel);
+
+	string strModel = mModelDesc.mModelName;
+	wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
+
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Static::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -88,13 +105,14 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
 
-	string strModel = mModelDesc.mModelName;
-	wstring ModelName;
-	ModelName.assign(strModel.begin(), strModel.end());
+	
 
 	if (mComModel == nullptr)
+	{
+		string strModel = mModelDesc.mModelName;
+		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
-
+	}
 	return S_OK;
 }
 
