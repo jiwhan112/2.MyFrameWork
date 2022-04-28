@@ -163,6 +163,15 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 		ImGui::EndListBox();
 	}
 
+	if (ImGui::Button("Delect Object"))
+	{
+		if (mSelectObject)
+		{
+			mSelectObject->Set_Dead();
+			Safe_Release(mSelectObject);
+			mSelectObject = nullptr;
+		}
+	}
 	
 	/*if (ImGui::BeginListBox("ObjectListBox"))
 	{
@@ -179,11 +188,7 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 		ImGui::EndListBox();
 	}
 
-	if (ImGui::Button("Delect Object"))
-	{
-		mSelectObject->Set_Dead();
-		Safe_Release(mSelectObject);
-	}*/
+	*/
 	return S_OK;
 
 }

@@ -27,6 +27,11 @@ public:
 	virtual HRESULT Render();
 
 public:
+	CModel*		Get_ComModel() const { return mComModel; }
+	const MODEL_DYNAMIC_DESC& Get_ModelDESC() const { return mModelDesc; }
+
+	HRESULT		Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC& desc);
+
 
 protected:
 	virtual HRESULT Set_Component() override;
@@ -34,7 +39,7 @@ protected:
 
 protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
-	MODEL_STATIC_DESC			mModelDesc;
+	MODEL_DYNAMIC_DESC			mModelDesc;
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

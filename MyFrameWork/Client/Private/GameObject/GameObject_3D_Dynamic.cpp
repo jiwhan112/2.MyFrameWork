@@ -11,6 +11,8 @@ CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11Devi
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs)
 	: CGameObject_Base(rhs)
 	, mComModel(rhs.mComModel)
+	, mModelDesc(rhs.mModelDesc)
+
 {
 	Safe_AddRef(mComModel);
 }
@@ -35,12 +37,28 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
+	
+
 	return S_OK;
 }
 
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+
+	CGameInstance* pGameInstance = GetSingle(CGameInstance);
+	static int aniIndex = 0;
+
+	if (pGameInstance->Get_DIKeyState(DIK_F) & DIS_Down)
+	{
+		int max = mComModel->Get_NumAnimations();
+
+		aniIndex++;
+		aniIndex %= max;
+	}
+
+	mComModel->SetUp_AnimIndex(aniIndex);
+
 	return UPDATENONE;
 }
 
@@ -48,6 +66,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
+	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return UPDATENONE;
 }
@@ -69,7 +88,7 @@ HRESULT CGameObject_3D_Dynamic::Render()
 			mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
 			// 2. 랜더링
 			// 여기서 뼈를 넘긴다.
-			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
+			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, i, STR_BONES));
 		}
 	}
 
@@ -77,19 +96,37 @@ HRESULT CGameObject_3D_Dynamic::Render()
 }
 
 
+HRESULT CGameObject_3D_Dynamic::Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC & desc)
+{
+	memcpy(&mModelDesc, &desc, sizeof(MODEL_DYNAMIC_DESC));
+
+	// 해당 모델 컴포넌트로 변경
+	if (mComModel != nullptr)
+	{
+		Safe_Release(mComModel);
+		mComModel = nullptr;
+	}
+
+	string strModel = mModelDesc.mModelName;
+	wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
+
+	FAILED_CHECK(__super::Release_Component(TEXT("Com_Model")));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+
+
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Dynamic::Set_Component()
 {
 	if (mComRenderer == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
-
-	if (mComRenderer == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
-
-	// 모델 타입에 따라 정적모델 동적모델 처리
-
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
+
+	// 모델 타입에 따라 정적모델 동적모델 처리
 
 	if (mComModel == nullptr)
 	{

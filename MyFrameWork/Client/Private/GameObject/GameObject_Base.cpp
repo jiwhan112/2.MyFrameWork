@@ -10,6 +10,7 @@ CGameObject_Base::CGameObject_Base(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 CGameObject_Base::CGameObject_Base(const CGameObject_Base& rhs)
 	: CGameObject(rhs)
+	, mCurrentShaderPass(rhs.mCurrentShaderPass)
 {
 	mComShader = rhs.mComShader;
 	mComRenderer = rhs.mComRenderer;

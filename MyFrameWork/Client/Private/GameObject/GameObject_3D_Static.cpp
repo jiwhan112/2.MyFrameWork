@@ -29,6 +29,7 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 		strcpy_s(mModelDesc.mModelName, str.c_str());
 	}
 
+
 	mCurrentShaderPass = 0;
 	return S_OK;
 }
@@ -36,6 +37,8 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
+
+	
 	return S_OK;
 }
 

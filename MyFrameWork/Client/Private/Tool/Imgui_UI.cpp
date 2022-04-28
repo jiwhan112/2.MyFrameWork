@@ -21,16 +21,20 @@ HRESULT CImgui_UI::NativeConstruct()
 HRESULT CImgui_UI::Update(_double time)
 {
 	CGameObject_Base* SelectObject = (CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
-	
 	if (SelectObject != nullptr)
 	{
-		if (OBJECT_TYPE_2D == SelectObject->Get_ObjectTypeID_Client())
+		E_OBJECT_TYPE type = SelectObject->Get_ObjectTypeID_Client();
+		if (type == OBJECT_TYPE_2D)
+		{
 			mCurrentUIObject = static_cast<CGameObject_2D*>(SelectObject);
+		}
+			
 	}
 	else
 		mCurrentUIObject = nullptr;
 
 	FAILED_CHECK(Render_UI());
+
 
 	return S_OK;
 }
