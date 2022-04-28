@@ -284,10 +284,10 @@ HRESULT CGameInstance::FolderFinder(const wstring& FileFolder)
 	return m_pFileMgr->FolderFinder(FileFolder);
 }
 
-void CGameInstance::SaveVectorToDat(const wstring&  savetxtName)
+void CGameInstance::SaveVectorToDat(const wstring&  savetxtName, wstring exename)
 {
 	NULL_CHECK_BREAK(m_pFileMgr);
-	m_pFileMgr->SaveVectorToDat(savetxtName);
+	m_pFileMgr->SaveVectorToDat(savetxtName, exename);
 }
 
 list<MYFILEPATH*> CGameInstance::Load_ExtensionList(const wstring& txtfilepath, string exe)

@@ -4,7 +4,7 @@
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
-	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_ANI;
+	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_DYNAMIC;
 
 }
 

@@ -66,20 +66,42 @@ void CImgui_CommonUI::PATHMODE()
 	IMGUI_TREE_BEGIN("PathToSaver_txt")
 	{
 		// PathFinder
-		if (ImGui::Button("Path_For_Sprite"))
+		if (ImGui::Button("PATH_ALL"))
 		{
-			Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L, L"SpritePath.txt");
+			// 경로 / 저장위치 / 파일이름
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_SPRITE_TXT);
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_DATA_TXT);
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DSPRITE_TXT,L"png");
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_STATIC_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DSTATIC_TXT, L"fbx");
+			Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_DYNAMIC_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DDYNAMIC_TXT, L"fbx");
+
 		}
-		if (ImGui::Button("Path_For_Dat"))
-		{
-			// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-			Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L, L"DatPath.txt");
-		}
-		if (ImGui::Button("Path_For_3D"))
-		{
-			// Resoure에 있는 모든 리소스 데이터 TXT로 저장
-			Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L, L"3DPath.txt");
-		}
+
+		//	if (ImGui::Button("Path_For_Sprite"))
+		//	{
+		//		Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_SPRITE_TXT);
+		//	}
+		//	if (ImGui::Button("Path_For_Dat"))
+		//	{
+		//		// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+		//		Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_DATA_TXT);
+		//	}
+		//	if (ImGui::Button("Path_For_3D"))
+		//	{
+		//		// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+		//		Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3D_TXT);
+		//	}
+		//
+		//	if (ImGui::Button("Path_For_3D_STATIC"))
+		//	{
+		//		// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+		//		Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DPATHTXT_STATIC_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DSTATIC_TXT);
+		//	}
+		//	if (ImGui::Button("Path_For_3D_DYNAMIC"))
+		//	{
+		//		// Resoure에 있는 모든 리소스 데이터 TXT로 저장
+		//		Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DPATHTXT_DYNAMIC_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DDYNAMIC_TXT);
+		//	}
 		IMGUI_TREE_END
 	}
 
@@ -97,13 +119,13 @@ void CImgui_CommonUI::PATHMODE()
 }
 
 
-void CImgui_CommonUI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname)
+void CImgui_CommonUI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname,wstring exeName)
 {
 	// 탐색
 	GetSingle(CGameInstance)->FolderFinder(path);
 
 	// 탐색한 리스트 TXT 저장
-	GetSingle(CGameInstance)->SaveVectorToDat(txtpath + L"\\" + txtname);
+	GetSingle(CGameInstance)->SaveVectorToDat(txtpath + L"\\" + txtname, exeName);
 }
 
 HRESULT CImgui_CommonUI::Update_ObjectList()

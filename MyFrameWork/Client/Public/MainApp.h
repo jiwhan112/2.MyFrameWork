@@ -30,6 +30,7 @@ private:
 	HRESULT Ready_Prototype_GameObject();
 
 	HRESULT Ready_Prototype_Components_Model();
+	HRESULT Ready_Prototype_Components_AniModel();
 	HRESULT Ready_Prototype_Components_Texture();
 	HRESULT Ready_Prototype_Components_Shader();
 

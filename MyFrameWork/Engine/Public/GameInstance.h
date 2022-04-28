@@ -72,7 +72,7 @@ public: // For. Light
 
 public: // For. File
 	HRESULT FolderFinder(const wstring& FileFolder);
-	void SaveVectorToDat(const wstring& savetxtName);
+	void SaveVectorToDat(const wstring& savetxtName, wstring exename = L"");
 	list<MYFILEPATH*> Load_ExtensionList(const wstring& txtfilepath, string exe);
 	wstring Get_PathData(wstring Fullpath);
 

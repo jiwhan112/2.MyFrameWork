@@ -177,7 +177,7 @@ HRESULT CImgui_Model::Edit_Texture()
 	// 텍스처 선택 화면
 	if (mFBXpathList == nullptr)
 	{
-		const list<MYFILEPATH*>* FBXPathList = GetSingle(CGameManager)->Get_PathList(CGameManager::PATHTYPE_FBX);
+		const list<MYFILEPATH*>* FBXPathList = GetSingle(CGameManager)->Get_PathList(CGameManager::PATHTYPE_FBX_STATIC);
 		if (FBXPathList == nullptr)
 			return S_FALSE;
 

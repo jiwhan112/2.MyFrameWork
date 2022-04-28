@@ -250,8 +250,12 @@ void CFileInfo::SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstrin
 	path->FileCount = 1;
 }
 
-void CFileInfo::SaveVectorToDat(wstring savetxtName)
+void CFileInfo::SaveVectorToDat(wstring savetxtName, wstring ExtensionName)
 {
+	bool isAllFile = true;
+	if(ExtensionName.size() > 2)
+		isAllFile = false;
+
 	// txt파일에 전체 리소스 정보 저장
 	if (mListFilePathData.empty())
 		return;
@@ -264,6 +268,9 @@ void CFileInfo::SaveVectorToDat(wstring savetxtName)
 			wstring Fullpath = pathdata->FullPath;
 			wstring FileName = pathdata->FileName;
 			wstring Extension = pathdata->Extension;
+
+			if(isAllFile == false && Extension != ExtensionName)
+				continue;
 
 			_tchar buf[16] = L"";
 			_itow_s(pathdata->FileCount, buf, 10);

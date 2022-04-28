@@ -167,6 +167,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	// ¸ðµ¨ / ÅØ½ºÃ³ ¸Ê / ¼ÎÀÌ´õ / 
 	FAILED_CHECK(Ready_Prototype_Components_Model());
+	FAILED_CHECK(Ready_Prototype_Components_AniModel());
 	FAILED_CHECK(Ready_Prototype_Components_Texture());
 	FAILED_CHECK(Ready_Prototype_Components_Shader());
 
@@ -206,16 +207,15 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 
 HRESULT CMainApp::Ready_Prototype_Components_Model()
 {
-	// ¸ðµ¨ ÄÄÆ÷³ÍÆ® »ý¼º
-	// FBX ÆÄÀÏ·Î ¸ðµ¨ ÄÄÆ÷³ÍÆ® »ý¼º
+	// Á¤Àû ¸ðµ¨ ÄÄÆ÷³ÍÆ® »ý¼º
 
-	const list<MYFILEPATH*>* listFBXpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX);
+	const list<MYFILEPATH*>* listFBXpath_Static = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX_STATIC);
 
 
 	_float4x4		DefaultTransform;
 	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
-	for (auto& path : *listFBXpath)
+	for (auto& path : *listFBXpath_Static)
 	{
 		wstring wpath = GetSingle(CGameInstance)->Get_PathData(path->FullPath);
 		wstring wName = path->FileName;
@@ -231,6 +231,35 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 
 	return S_OK;
 }
+HRESULT CMainApp::Ready_Prototype_Components_AniModel()
+{
+	// ¾Ö´Ï¸ÞÀÌ¼Ç ¸ðµ¨ ÄÄÆ÷³ÍÆ® »ý¼º
+
+	const list<MYFILEPATH*>* listFBXpath_Dynamic = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX_DYNAMIC);
+
+
+	_float4x4		DefaultTransform;
+	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+
+	for (auto& path : *listFBXpath_Dynamic)
+	{
+		wstring wpath = GetSingle(CGameInstance)->Get_PathData(path->FullPath);
+		wstring wName = path->FileName;
+
+		string pathstr;
+		string namestr;
+		CHelperClass::Convert_string_wstring(wpath, pathstr, true);
+		CHelperClass::Convert_string_wstring(wName, namestr, true);
+		FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
+			CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, pathstr.c_str(), namestr.c_str(), DefaultTransform)));
+
+	}
+
+	return S_OK;
+}
+
+
+
 
 HRESULT CMainApp::Ready_Prototype_Components_Texture()
 {
@@ -241,9 +270,9 @@ HRESULT CMainApp::Ready_Prototype_Components_Texture()
 
 
 	// ¸ðµ¨ ÅØ½ºÃ³ ¸Ê
-	//const list<MYFILEPATH*>* listFBXpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBXTEX);
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX),
-	//	CTexture_map::Create(m_pDevice, m_pDeviceContext, *listFBXpngpath)));
+//	const list<MYFILEPATH*>* listFBXpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBXTEX);
+//	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX),
+//		CTexture_map::Create(m_pDevice, m_pDeviceContext, *listFBXpngpath)));
 
 	return S_OK;
 }

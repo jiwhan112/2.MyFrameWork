@@ -44,7 +44,7 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		SaverData(&fWrite, OBJECT_TYPE_DATA_MODEL_STATICDESC, &(oobj->Get_ModelDESC()));
 
 	}
-	case OBJECT_TYPE_3D_ANI:
+	case OBJECT_TYPE_3D_DYNAMIC:
 	{
 		CGameObject_3D_Dynamic* oobj = static_cast<CGameObject_3D_Dynamic*>(obj);
 		//SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
@@ -159,7 +159,7 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 
 	}
 	break;
-	case OBJECT_TYPE_3D_ANI:
+	case OBJECT_TYPE_3D_DYNAMIC:
 	{
 
 		bufsize = sizeof(MODEL_DYNAMIC_DESC);
