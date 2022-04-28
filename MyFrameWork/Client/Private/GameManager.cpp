@@ -88,17 +88,22 @@ HRESULT CGameManager::Set_ReListPath(E_PATHTYPE type)
 	case Client::CGameManager::PATHTYPE_SPRITE:
 		Set_PathData(&mListPath[PATHTYPE_SPRITE], STR_FILEPATH_RESOURCE_SPRITETXT_L, "png");
 		break;
+
 	case Client::CGameManager::PATHTYPE_FBX_STATIC:
 		Set_PathData(&mListPath[PATHTYPE_FBX_STATIC], STR_FILEPATH_RESOURCE_3DPATHTXT_STATIC_L, "fbx");
+
 	case Client::CGameManager::PATHTYPE_FBX_DYNAMIC:
 		Set_PathData(&mListPath[PATHTYPE_FBX_DYNAMIC], STR_FILEPATH_RESOURCE_3DPATHTXT_DYNAMIC_L, "fbx");
 		break;
+
 	case Client::CGameManager::PATHTYPE_FBXTEX:
 		Set_PathData(&mListPath[PATHTYPE_FBXTEX], STR_FILEPATH_RESOURCE_3DTEXPATHHTXT_L, "png");
 		break;
+
 	case Client::CGameManager::PATHTYPE_DATA:
 		Set_PathData(&mListPath[PATHTYPE_DATA], STR_FILEPATH_RESOURCE_DATPATHTXT_L, "dat");
 		break;
+
 	case Client::CGameManager::PATHTYPE_END:
 		break;
 	default:

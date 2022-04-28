@@ -25,7 +25,7 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 	// 데이터 디폴트 세팅
 	if (strlen(mModelDesc.mModelName) < 2)
 	{
-		string str("crea_Snot_a.fbx");
+		string str("room_Prison_FloorTile.fbx");
 		strcpy_s(mModelDesc.mModelName, str.c_str());
 	}
 

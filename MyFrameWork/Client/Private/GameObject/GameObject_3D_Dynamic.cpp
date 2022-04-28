@@ -19,6 +19,15 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
+	// 데이터 디폴트 세팅
+	if (strlen(mModelDesc.mModelName) < 2)
+	{
+		string str("crea_Snot_a.fbx");
+		strcpy_s(mModelDesc.mModelName, str.c_str());
+	}
+
+	mCurrentShaderPass = 0;
+
 	return S_OK;
 }
 
@@ -45,6 +54,10 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_3D_Dynamic::Render()
 {
+
+	FAILED_CHECK(Set_ConstantTable_World());
+	FAILED_CHECK(Set_ConstantTable_Light());
+
 	if (mComModel != nullptr)
 	{
 		_uint iNumMaterials = mComModel->Get_NumMaterials();
@@ -52,8 +65,10 @@ HRESULT CGameObject_3D_Dynamic::Render()
 		// 재질 개수만큼 루프
 		for (int i = 0; i < iNumMaterials; ++i)
 		{
+			// 1. 텍스처 설정
 			mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
-			mComModel->Render(mComShader, 0, i);
+			// 2. 랜더링
+			// 여기서 뼈를 넘긴다.
 			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
 		}
 	}
@@ -68,12 +83,22 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
 
-	// 모델 타입에 따라 정적모델 동적모델 처리
-	//if (mComVIBuffer == nullptr)
-	//	mComVIBuffer = nullptr;
+	if (mComRenderer == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
-	//if (mComTexture == nullptr)
-	//	mComTexture = nullptr;
+	// 모델 타입에 따라 정적모델 동적모델 처리
+
+	if (mComShader == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
+
+	if (mComModel == nullptr)
+	{
+		// 동적 모델은 자동으로 동적으로 컴포넌트가 적용된다.
+		string strModel = mModelDesc.mModelName;
+		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+	}
+
 	return S_OK;
 }
 

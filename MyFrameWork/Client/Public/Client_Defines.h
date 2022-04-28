@@ -28,8 +28,8 @@ using namespace Client;
 #define  STR_FILEPATH_RESOURCE_SPRITE_L				L"..\\Bin\\Resources\\Sprite"
 #define  STR_FILEPATH_RESOURCE_DAT_L				L"..\\Bin\\Resources\\data"
 #define  STR_FILEPATH_RESOURCE_3DMODEL_L			L"..\\Bin\\Resources\\Game"
-#define  STR_FILEPATH_RESOURCE_3DMODEL_STATIC_L		L"..\\Bin\\Resources\\Game\\DynamicModel"
-#define  STR_FILEPATH_RESOURCE_3DMODEL_DYNAMIC_L	L"..\\Bin\\Resources\\Game\\StaticModel"
+#define  STR_FILEPATH_RESOURCE_3DMODEL_STATIC_L		L"..\\Bin\\Resources\\Game\\StaticModel"
+#define  STR_FILEPATH_RESOURCE_3DMODEL_DYNAMIC_L	L"..\\Bin\\Resources\\Game\\DynamicModel"
 #define  STR_FILEPATH_RESOURCE_PATH_L				L"..\\Bin\\Resources\\PathTxT"
 #define  STR_FILEPATH_RESOURCE_L					L"..\\Bin\\Resources"
 

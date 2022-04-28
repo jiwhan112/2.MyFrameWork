@@ -236,8 +236,6 @@ HRESULT CMainApp::Ready_Prototype_Components_AniModel()
 	// 애니메이션 모델 컴포넌트 생성
 
 	const list<MYFILEPATH*>* listFBXpath_Dynamic = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX_DYNAMIC);
-
-
 	_float4x4		DefaultTransform;
 	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
@@ -320,6 +318,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC),
 		CGameObject_3D_Dynamic::Create(m_pDevice, m_pDeviceContext)));
 
+	// 지형 깡통
 
 	return S_OK;
 }
