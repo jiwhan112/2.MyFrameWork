@@ -35,6 +35,7 @@ private:
 	// UI 오브젝트 1개에대한 정보 저장코드 만들어보기
 	class CGameObject_2D*	mCurrentUIObject = nullptr;
 	list<string>*			mSpritepathList = nullptr;
+	list<string>*			mProtoUIList = nullptr;
 
 	// UI 오브젝트 리스트
 	// 여기에 저장된 UISet이 한 묶음의 형태로 저장된다.

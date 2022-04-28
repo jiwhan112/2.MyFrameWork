@@ -29,6 +29,14 @@ const list<class CGameObject*>* CObject_Manager::Get_GameObjectLayerList(_uint i
 	return nullptr;
 }
 
+const map<wstring, class CLayer*>* CObject_Manager::Get_All_GameObjectLayerMap(_uint iLevelIndex)
+{
+	if (iLevelIndex >= m_iNumLevels)
+		return nullptr;
+
+	return &m_pLayers[iLevelIndex];
+}
+
 HRESULT CObject_Manager::Reserve_Container(_uint iNumLevels)
 {
 	m_iNumLevels = iNumLevels;

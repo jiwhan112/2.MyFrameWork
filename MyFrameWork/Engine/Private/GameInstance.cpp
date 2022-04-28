@@ -219,6 +219,14 @@ const list<CGameObject*>* CGameInstance::Get_GameObjectLayerList(_uint iLevelInd
 	return m_pObject_Manager->Get_GameObjectLayerList(iLevelIndex, pLayerTag);
 }
 
+const map<wstring, class CLayer*>* CGameInstance::Get_All_GameObjectLayerMap(_uint iLevelIndex)
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	if (m_pObject_Manager == nullptr)
+		return nullptr;
+	return m_pObject_Manager->Get_All_GameObjectLayerMap(iLevelIndex);
+}
+
 HRESULT CGameInstance::SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix)
 {
 	NULL_CHECK_HR(m_pPipeLine);

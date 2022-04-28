@@ -2,14 +2,12 @@
 
 #include "Base.h"
 
-BEGIN(Engine)
-class CGameObject;
-END
 
 BEGIN(Client)
 
 // 클라이언트의 DESC 정보 저장 불러오기 클래스
 // 바이너리로 DESC파일 저장 및 불러오기 수행
+class CGameObject_Base;
 
 class CObjectIO final
 	:public CBase
@@ -25,7 +23,7 @@ public:
 
 public:
 	// 오브젝트 타입별로 저장 수행
-	HRESULT SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject* obj);
+	HRESULT SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject_Base* obj);
 
 	// 연 파일을 넘겨받고 데이터 저장
 	HRESULT SaverData(ofstream* fwrite, E_OBJECT_DATA_TYPE type, const void * desc);

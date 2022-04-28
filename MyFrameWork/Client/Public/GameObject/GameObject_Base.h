@@ -37,6 +37,7 @@ public:
 public: // 컴포넌트 반환
 	CShader*		Get_ComShader() { return mComShader; }
 	CRenderer*		Get_ComRenderer() { return mComRenderer; }
+	E_OBJECT_TYPE	Get_ObjectTypeID_Client() { return (E_OBJECT_TYPE)mObjectTypeid; }
 
 protected:
 	// 월드 셰이더 세팅

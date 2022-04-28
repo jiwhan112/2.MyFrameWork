@@ -55,6 +55,8 @@ public: /* For.Object_Manager */
 	CGameObject* Create_GameObject(const _tchar* pPrototypeTag, void* pArg = nullptr);
 	HRESULT		 Push_Object(_uint levelindex, const _tchar* pLayerTag, CGameObject* obj);
 	const list<CGameObject*>* Get_GameObjectLayerList(_uint iLevelIndex, const _tchar* pLayerTag);
+	const map<wstring, class CLayer*>* Get_All_GameObjectLayerMap(_uint iLevelIndex);
+
 
 public: /* For. PipeLine Single*/
 	HRESULT SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);

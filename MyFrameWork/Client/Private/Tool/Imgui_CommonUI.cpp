@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Tool/Imgui_CommonUI.h"
 #include "GameObject.h"
+#include "Layer.h"
 
 CImgui_CommonUI::CImgui_CommonUI(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -9,6 +10,10 @@ CImgui_CommonUI::CImgui_CommonUI(ID3D11Device * device, ID3D11DeviceContext * co
 
 HRESULT CImgui_CommonUI::NativeConstruct()
 {
+	dClock=0;
+	mFrameCount=0;
+	mCurrentFrame=0;
+
 	mSelectObject = nullptr;
 	return S_OK;
 }
@@ -16,6 +21,7 @@ HRESULT CImgui_CommonUI::NativeConstruct()
 HRESULT CImgui_CommonUI::Update(_double time)
 {
 	FAILED_CHECK(Render_UI());
+	FrameUI_Overaly(time);
 
 	return S_OK;
 }
@@ -38,13 +44,14 @@ HRESULT CImgui_CommonUI::Render_UI()
 			ImGui::End();
 		}
 
-		
-
 		// Frame
 
 
 		ImGui::End();
 	}
+
+
+
 
 	return S_OK;
 }
@@ -102,12 +109,40 @@ void CImgui_CommonUI::Button_PathTxtSave(wstring path, wstring txtpath, wstring 
 HRESULT CImgui_CommonUI::Update_ObjectList()
 {
 	_uint CurrentLevelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	const list<CGameObject*>*  objList = GetSingle(CGameInstance)->Get_GameObjectLayerList(CurrentLevelIndex, TAGLAY(LAY_BACKGROUND));
 
-	if (objList == nullptr)
+	auto objmap = GetSingle(CGameInstance)->Get_All_GameObjectLayerMap(CurrentLevelIndex);
+
+	// 각 레이어 별로 생성
+
+	if (objmap == nullptr)
 		return S_OK;
 
-	if (ImGui::BeginListBox("ObjectListBox"))
+	if(ImGui::BeginListBox("ObjectListBox"))
+	{
+		static _int selectIndex = -1;
+		_uint cnt = 0;
+
+		for (auto& map : *objmap)
+		{
+			wstring wstr = map.first;
+			string str = CHelperClass::Convert_Wstr2str(wstr);
+			auto objectList = map.second->Get_GameObjectList();
+			if (objectList == nullptr)
+				continue;
+
+			for (auto& obj : *objectList)
+			{
+				if (obj == nullptr)
+					continue;
+				Update_ListBox(obj, str, cnt, &selectIndex);
+				cnt++;
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	
+	/*if (ImGui::BeginListBox("ObjectListBox"))
 	{
 		static _int selectIndex = -1;
 		_uint cnt = 0;
@@ -126,7 +161,7 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 	{
 		mSelectObject->Set_Dead();
 		Safe_Release(mSelectObject);
-	}
+	}*/
 	return S_OK;
 
 }
@@ -168,6 +203,82 @@ void CImgui_CommonUI::Update_ListBox(CGameObject * obj, _uint cnt, _int* selecti
 	//	}
 	//}
 }
+
+void CImgui_CommonUI::Update_ListBox(CGameObject * obj, string layerstr, _uint cnt, _int* selectindex)
+{
+	E_OBJECT_TYPE objtype = (E_OBJECT_TYPE)obj->Get_ObjectTypeID();
+
+	char buf[128] = "";
+	sprintf_s(buf, "%s_%s_%d", layerstr.c_str(), TAGOBJTYPE(objtype), cnt);
+
+	if (ImGui::Selectable(buf, *selectindex == cnt))
+	{
+		*selectindex = cnt;
+		Set_SelectObject(obj);
+	}
+}
+
+//void CImgui_CommonUI::FrameUI(_double time)
+//{
+//	dClock += time;
+//	mFrameCount++;
+//
+//
+//	if (dClock >= 1)
+//	{
+//		mCurrentFrame = mFrameCount;
+//		dClock = 0;
+//		mFrameCount = 0;
+//	}
+//
+//	ImGui::Begin("Frame");
+//	ImGui::Text("Frame: %d", mCurrentFrame);
+//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f
+//		/ ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+//	ImGui::End();
+//}
+
+void CImgui_CommonUI::FrameUI_Overaly(_double time)
+{
+	static int corner = 0;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+	if (corner != -1)
+	{
+		const float PAD = 10.0f;
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImVec2 work_pos = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
+		ImVec2 work_size = viewport->WorkSize;
+		ImVec2 window_pos, window_pos_pivot;
+		window_pos.x = (corner & 1) ? (work_pos.x + work_size.x - PAD) : (work_pos.x + PAD);
+		window_pos.y = (corner & 2) ? (work_pos.y + work_size.y - PAD) : (work_pos.y + PAD);
+		window_pos_pivot.x = (corner & 1) ? 1.0f : 0.0f;
+		window_pos_pivot.y = (corner & 2) ? 1.0f : 0.0f;
+		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+		window_flags |= ImGuiWindowFlags_NoMove;
+	}
+	ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+	bool t = true;
+	if (ImGui::Begin("Example: Simple overlay", &t, window_flags))
+	{
+		dClock += time;
+		mFrameCount++;
+
+		if (dClock >= 1)
+		{
+			mCurrentFrame = mFrameCount;
+			dClock = 0;
+			mFrameCount = 0;
+		}
+
+		ImGui::Text("Frame: %d", mCurrentFrame);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f
+			/ ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	}
+	ImGui::End();
+}
+
+
 
 
 CImgui_CommonUI * CImgui_CommonUI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)

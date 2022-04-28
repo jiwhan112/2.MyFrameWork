@@ -16,6 +16,11 @@ public:
 public:
 	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIndex);
 	const list<class CGameObject*>* Get_GameObjectLayerList(_uint iLevelIndex, const _tchar* pLayerTag);
+	const map<wstring, class CLayer*>* Get_All_GameObjectLayerMap(_uint iLevelIndex);
+
+
+
+
 public:
 	HRESULT			Reserve_Container(_uint iNumLevels);
 	HRESULT			Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype); /* 원형객체를 추가한다. */

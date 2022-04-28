@@ -59,6 +59,43 @@ public:
 		}
 	};
 
+	string STR_IMGUITITLE_MINI(E_IMGUI_CHANEL e)
+	{
+		switch (e)
+		{
+		case IMGUI_TITLE_TEST:
+			return "TEST";
+		case IMGUI_TITLE_MAIN:
+			return "MAIN";
+		case IMGUI_TITLE_UI:
+			return "UI";
+		case IMGUI_TITLE_OBJECTLIST:
+			return "OBJECTLIST";
+		case IMGUI_TITLE_FBX:
+			return "FBX";
+		case IMGUI_TITLE_FBX_ANI:
+			return "ANI";
+		case IMGUI_TITLE_TERRAIN:
+			return "TERRAIN";
+		case IMGUI_TITLE_END:
+			return "ERROR";
+		default:
+			return "ERROR";
+		}
+	};
+
+
+	// 같은 기능 ID 구분을 위함
+	const char* STR_IMGUI_IDSTR(E_IMGUI_CHANEL type, const char* str)
+	{
+		mTestStr= STR_IMGUITITLE_MINI(type);
+		mTestStr += '_';
+		mTestStr += str;
+
+		return mTestStr.c_str();
+	}
+
+
 protected:
 	explicit CImgui_Base(ID3D11Device* device , ID3D11DeviceContext* context);
 	explicit CImgui_Base(const CImgui_Base& rhs) = default;
@@ -73,6 +110,8 @@ public:
 protected:
 	ID3D11Device*			mDevice = nullptr;
 	ID3D11DeviceContext*	mDeviceContext = nullptr;
+
+	string					mTestStr = "";
 
 
 

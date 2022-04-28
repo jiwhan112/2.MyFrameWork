@@ -30,6 +30,8 @@ public:
 	}
 
 
+
+
 protected: 
 	virtual HRESULT Update_ObjectList();
 	virtual HRESULT Set_SelectObject(CGameObject* obj);
@@ -37,13 +39,23 @@ protected:
 
 private:
 	void Update_ListBox(CGameObject * parent, _uint cnt, _int* selectindex);
+	void Update_ListBox(CGameObject * obj,string Layer, _uint cnt, _int* selectindex);
 	void PATHMODE();
 
 	void Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname);
 
+	void CImgui_CommonUI::FrameUI_Overaly(_double time);
+
 
 private:
 	CGameObject*			mSelectObject = nullptr;
+
+	_double dClock;
+	_uint	mFrameCount;
+	_uint	mCurrentFrame;
+	
+
+
 
 public:
 	static CImgui_CommonUI* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);

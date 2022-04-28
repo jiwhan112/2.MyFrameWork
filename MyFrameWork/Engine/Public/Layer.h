@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CLayer final : public CBase
+class ENGINE_DLL CLayer final : public CBase
 {
 public:
 	CLayer();

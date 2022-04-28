@@ -14,7 +14,7 @@ HRESULT CObjectIO::NativeConstruct()
 	return S_OK;
 }
 
-HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject* obj)
+HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject_Base* obj)
 {
 	// #INIT ObjectSave Ãß°¡
 	ofstream fWrite(FolderPath + L"\\" + filename, ios::out | ios::binary);

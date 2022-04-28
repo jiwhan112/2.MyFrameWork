@@ -5,7 +5,8 @@ BEGIN(Client)
 
 // Model툴
 // 정적 모델의 모델 FBX 이름으로 Dat 파일을 만든다.
-// 충돌 모델설정
+// 충돌체 설정 / 애니메이션 설정 넣기 
+
 class CImgui_Model final:
 	public CImgui_Base
 {

@@ -215,7 +215,10 @@
     <ClInclude Include="..\Public\Tool\Imgui_CommonUI.h" />
     <ClInclude Include="..\Public\Tool\Imgui_Model.h" />
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h" />
-    <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h" />
+    <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -263,7 +266,10 @@
     <ClCompile Include="..\Private\Tool\Imgui_CommonUI.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_Model.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp" />
-    <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp" />
+    <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_UI.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_demo.cpp" />

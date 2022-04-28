@@ -28,17 +28,19 @@ HRESULT CImgui_Model::Update(_double time)
 		Safe_AddRef(mCameraClient);
 	}
 
-	CGameObject* SelectObject = GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
+	CGameObject_Base* SelectObject = (CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
 
 	if (SelectObject != nullptr)
 	{
-		mCurrentModelObject = static_cast<CGameObject_3D_Static*>(SelectObject);
-		if (mCameraClient)
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, mCurrentModelObject);
+		if (OBJECT_TYPE_3D_STATIC == SelectObject->Get_ObjectTypeID_Client())
+			mCurrentModelObject = static_cast<CGameObject_3D_Static*>(SelectObject);
 
-
-		// 3D 툴 카메라 세팅
-
+		if (mCurrentModelObject)
+		{
+			// 3D 툴 카메라 세팅
+			if (mCameraClient)
+				mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, mCurrentModelObject);
+		}
 
 	}
 	else
@@ -55,7 +57,7 @@ HRESULT CImgui_Model::Render_UI()
 {
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_MAIN)))
 	{
-		if (ImGui::CollapsingHeader("MODEL_SAVER"))
+		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Saver")))
 		{
 			FBX_CREATEMODE();
 
@@ -98,7 +100,8 @@ void CImgui_Model::FBX_CREATEMODE()
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
 	// MODEL 저장
-	IMGUI_TREE_BEGIN("ObjectSaver")
+
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX,"ObjectSaver"))
 	{
 		if (mCurrentModelObject != nullptr)
 		{
@@ -114,8 +117,7 @@ void CImgui_Model::FBX_CREATEMODE()
 		}
 		IMGUI_TREE_END
 	}
-
-	IMGUI_TREE_BEGIN("Create Empty Object")
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Create_Empty"))
 	{
 		// 빈 오브젝트 클론
 		if (ImGui::Button("Create_Empty_GAMEOBJECT3D_STATIC"))
@@ -126,12 +128,12 @@ void CImgui_Model::FBX_CREATEMODE()
 			//	static_cast<CGameObject_3D_Static*>(createobj)->Set_LoadModelDESC(emptyDesc);
 
 			// 이미 만들어진 오브젝트 추가
-			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_BACKGROUND), createobj);
+			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_OBJECT), createobj);
 		}
 		IMGUI_TREE_END
 	}
-	
-	IMGUI_TREE_BEGIN("ProtoObject")
+
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "ProtoObject"))
 	{
 		if (mProtoModelList == nullptr)
 			mProtoModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC);
@@ -151,7 +153,8 @@ void CImgui_Model::FBX_CREATEMODE()
 		}
 
 		// 선택 원형 오브젝트 클론
-		if (ImGui::Button("Create_Clone"))
+
+		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Create_Clone")))
 		{
 			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_OBJECT));

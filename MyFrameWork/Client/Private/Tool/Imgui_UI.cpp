@@ -20,11 +20,12 @@ HRESULT CImgui_UI::NativeConstruct()
 
 HRESULT CImgui_UI::Update(_double time)
 {
-	CGameObject* SelectObject = GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
+	CGameObject_Base* SelectObject = (CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
 	
 	if (SelectObject != nullptr)
 	{
-		mCurrentUIObject = static_cast<CGameObject_2D*>(SelectObject);
+		if (OBJECT_TYPE_2D == SelectObject->Get_ObjectTypeID_Client())
+			mCurrentUIObject = static_cast<CGameObject_2D*>(SelectObject);
 	}
 	else
 		mCurrentUIObject = nullptr;
@@ -39,7 +40,7 @@ HRESULT CImgui_UI::Render_UI()
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_MAIN)))
 	{
 
-		if (ImGui::CollapsingHeader("UI_SAVER"))
+		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI,"Saver")))
 		{
 			UI_CREATEMODE();
 
@@ -82,7 +83,7 @@ void CImgui_UI::UI_CREATEMODE()
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
 	// UI 저장
-	IMGUI_TREE_BEGIN("ObjectSaver")
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI,"ObjectSaver"))
 	{
 		if (mCurrentUIObject != nullptr)
 		{
@@ -91,20 +92,19 @@ void CImgui_UI::UI_CREATEMODE()
 			if (ImGui::Button("SaveTest"))
 			{
 				// dat 파일 경로에 저장				
-				string namechar = ObjectName;
-				wstring namechar2;
-				namechar2.assign(namechar.begin(), namechar.end());
-				Object_IO_Manager->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, namechar2 + L".dat", mCurrentUIObject);
+				string str = ObjectName;
+				wstring wstr = CHelperClass::Convert_str2wstr(str);
+				Object_IO_Manager->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrentUIObject);
 
 			}
 		}
 		IMGUI_TREE_END
 	}
 
-	IMGUI_TREE_BEGIN("Create Empty Object")
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "CreateObject"))
 	{
 		// 빈 오브젝트 클론
-		if (ImGui::Button("Create_Empty_GAMEOBJECT_2D"))
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI,"Create_Empty")))
 		{
 			// UI 타입별로 빈 오브젝트 생성
 			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
@@ -113,45 +113,41 @@ void CImgui_UI::UI_CREATEMODE()
 			static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(emptyDesc);
 
 			// 이미 만들어진 오브젝트 추가
-			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_BACKGROUND), createobj);
+			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_UI), createobj);
 		}
-		IMGUI_TREE_END
-	}
 
-	IMGUI_TREE_BEGIN("ProtoObject")
-	{
-		auto CreateCloneObject = Create_Manager->Get_Map_GameObject2File_Proto();
+		// 이미 만들어진 오브젝트 클론
+
+		if (mProtoUIList == nullptr)
+			mProtoUIList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_2D);
 
 		static int selectObjectIndex = -1;
-
 		_uint cnt = 0;
 		static wstring selectObjectStr = L"";
-		for (auto& pObj : *CreateCloneObject)
-		{
-			string cnvertString = "";
-			cnt++;
-			cnvertString.assign(pObj.first.begin(), pObj.first.end());
 
-			if (ImGui::Selectable(cnvertString.c_str(), selectObjectIndex == cnt))
+		for (auto& protoString : *mProtoUIList)
+		{
+			cnt++;
+
+			if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
 			{
 				selectObjectIndex = cnt;
-				selectObjectStr = pObj.first;
+				selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
 			}
 		}
 
 		// 선택 원형 오브젝트 클론
-		if (ImGui::Button("Create_Clone"))
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Create_ProtoObject")))
 		{
 			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-			CGameObject* createobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_BACKGROUND));
-			if (mCurrentUIObject == nullptr)
-			{
-				mCurrentUIObject = static_cast<CGameObject_2D*>(createobj);
-				Safe_AddRef(mCurrentUIObject);
-			}
+			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_UI));
 		}
+
+
 		IMGUI_TREE_END
 	}
+
+	
 }
 
 
@@ -270,5 +266,6 @@ void CImgui_UI::Free()
 	__super::Free();
 	Safe_Release(mCurrentUIObject);
 	Safe_Delete(mSpritepathList);
+	Safe_Delete(mProtoUIList);
 
 }

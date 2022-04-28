@@ -74,7 +74,6 @@ HRESULT CGameObject_2D::Render()
 	FAILED_CHECK(Set_ConstantTable_UI());
 	FAILED_CHECK(Set_ConstantTable_Tex());
 
-	
 	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 
 	return S_OK;
