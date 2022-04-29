@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Static.h"
 
-// #TODO 3D 오브젝트 생성 // 모델 컴포넌트컴포넌트 
 
 CGameObject_3D_Static::CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)

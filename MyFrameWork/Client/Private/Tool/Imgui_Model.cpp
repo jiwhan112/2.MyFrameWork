@@ -4,6 +4,10 @@
 #include "GameObject/GameObject_3D_Static.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 
+// #TODO: 모델 애니메이션 툴 제작
+// 모델은 충돌체 씌울 수 있게
+// 애니메이션은 각 애니메이션 재생할 수 있게.
+
 
 CImgui_Model::CImgui_Model(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -37,14 +41,14 @@ HRESULT CImgui_Model::Update(_double time)
 		if (type == OBJECT_TYPE_3D_STATIC)
 		{
 			mCurrent_ModelStaticObject = static_cast<CGameObject_3D_Static*>(SelectObject);
-			meModelMode = CImgui_Model::MODEL_TOOLMODE_STATIC;
+			meModelMode = CImgui_Model::TOOLMODE_MODEL_STATIC;
 
 		}
 
 		else if (type == OBJECT_TYPE_3D_DYNAMIC)
 		{
 			mCurrent_ModelDynamicObject = static_cast<CGameObject_3D_Dynamic*>(SelectObject);
-			meModelMode = CImgui_Model::MODEL_TOOLMODE_DYNAMIC;
+			meModelMode = CImgui_Model::TOOLMODE_MODEL_DYNAMIC;
 		}
 	}
 	else
@@ -56,7 +60,7 @@ HRESULT CImgui_Model::Update(_double time)
 
 		mCurrent_ModelStaticObject = nullptr;
 		mCurrent_ModelDynamicObject = nullptr;
-		meModelMode = CImgui_Model::MODEL_TOOLMODE_DYNAMIC;
+		meModelMode = CImgui_Model::TOOLMODE_MODEL_DYNAMIC;
 	}
 
 
@@ -79,13 +83,13 @@ HRESULT CImgui_Model::Render_UI()
 			RENDER_CREATE_PROTO();
 
 			// 각 모드에 맞는 세팅
-			if (meModelMode == CImgui_Model::MODEL_TOOLMODE_STATIC)
+			if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC)
 			{
 				// 타입에 따라 저장
 				RENDER_STATIC_MODE();
 			}
 
-			if (meModelMode == CImgui_Model::MODEL_TOOLMODE_DYNAMIC)
+			if (meModelMode == CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
 			{
 				RENDER_DYNAMIC_MODE();
 			}
@@ -315,7 +319,7 @@ HRESULT CImgui_Model::Edit_FBX()
 
 	static int selectedTex = -1;
 
-	if (meModelMode == CImgui_Model::MODEL_TOOLMODE_STATIC)
+	if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC)
 	{
 		if (mFBX_Static_pathList->empty())
 			return E_FAIL;
@@ -350,7 +354,7 @@ HRESULT CImgui_Model::Edit_FBX()
 
 
 	}
-	if (meModelMode == CImgui_Model::MODEL_TOOLMODE_DYNAMIC)
+	if (meModelMode == CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
 	{
 		if (mFBX_Dynamic_pathList->empty())
 			return E_FAIL;

@@ -12,11 +12,12 @@ class CImgui_Model final:
 	public CImgui_Base
 {
 public:
-	enum E_MODEL_TOOLMODE
+	enum E_TOOLMODE_MODEL
 	{
-		MODEL_TOOLMODE_STATIC,
-		MODEL_TOOLMODE_DYNAMIC,
-		MODEL_TOOLMODE_END,
+		
+		TOOLMODE_MODEL_STATIC,
+		TOOLMODE_MODEL_DYNAMIC,
+		TOOLMODE_MODEL_END,
 
 	};
 private:
@@ -71,7 +72,7 @@ private:
 private:
 	bool							mIsModelSetting = false;
 	E_TAYLAY						meCreateLayer = LAY_OBJECT;
-	E_MODEL_TOOLMODE				meModelMode = MODEL_TOOLMODE_END;
+	E_TOOLMODE_MODEL				meModelMode = TOOLMODE_MODEL_END;
 
 
 public:

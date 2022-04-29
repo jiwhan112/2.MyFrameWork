@@ -49,11 +49,14 @@ _int CCamera_Client::Tick(_double TimeDelta)
 	case CCamera_Client::CAMERA_MODE_TARGET:
 		if (mTargetObject)
 		{
-			FAILED_CHECK_NONERETURN(Update_Target(TimeDelta));
+			FAILED_CHECK_NONERETURN(Update_Target_Unit(TimeDelta));
 		}
 		break;
 	case CCamera_Client::CAMERA_MODE_MAP:
-		meCameraMode = CAMERA_MODE_DEFAULT;
+		if (mTargetObject)
+		{
+			FAILED_CHECK_NONERETURN(Update_Target_Unit(TimeDelta));
+		}
 
 		break;		
 	case CCamera_Client::CAMERA_MODE_END:
@@ -133,7 +136,7 @@ HRESULT CCamera_Client::Update_Default(_double TimeDelta)
 	return S_OK;
 }
 
-HRESULT CCamera_Client::Update_Target(_double TimeDelta)
+HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 {
 	// 타겟을 돌려가면서 랜더링
 	if (mTargetObject == nullptr)
@@ -162,6 +165,11 @@ HRESULT CCamera_Client::Update_Target(_double TimeDelta)
 		mComTransform->GO_Right(TimeDelta);
 	}*/
 
+	return S_OK;
+}
+
+HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
+{
 	return S_OK;
 }
 

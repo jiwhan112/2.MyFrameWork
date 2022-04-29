@@ -213,10 +213,11 @@
     <ClInclude Include="..\Public\Tool\ImguiMgr.h" />
     <ClInclude Include="..\Public\Tool\Imgui_Base.h" />
     <ClInclude Include="..\Public\Tool\Imgui_CommonUI.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_InGame.h" />
     <ClInclude Include="..\Public\Tool\Imgui_Model.h" />
     <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h" />
-    <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <ClInclude Include="..\Public\Tool\Imgui_Terrain.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
@@ -266,8 +267,9 @@
     <ClCompile Include="..\Private\Tool\Imgui_CommonUI.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_Model.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp" />
-    <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <ClCompile Include="..\Private\Tool\Imgui_InGame.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_Terrain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_UI.cpp" />

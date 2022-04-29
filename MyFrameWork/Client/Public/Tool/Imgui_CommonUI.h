@@ -53,14 +53,10 @@ private:
 	_double dClock;
 	_uint	mFrameCount;
 	_uint	mCurrentFrame;
-	
-
-
 
 public:
 	static CImgui_CommonUI* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);
 
 	virtual void Free() override;
 };
-
 END

@@ -252,9 +252,6 @@
     <ClInclude Include="..\Public\Client_DESC.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Tool\IMGUI_Terrain.h">
-      <Filter>10.Imgui\02.Tools\03.3DTool\03.MapTool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
     </ClInclude>
@@ -290,6 +287,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_Base.h">
       <Filter>10.Imgui\02.Tools\00.BaseTool\0.BaseUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_Terrain.h">
+      <Filter>10.Imgui\02.Tools\03.3DTool\03.MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_InGame.h">
+      <Filter>10.Imgui\02.Tools\04.InGameTool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -371,9 +374,6 @@
     <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp">
       <Filter>02.GameObject\00.ObjectBase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Tool\IMGUI_Terrain.cpp">
-      <Filter>10.Imgui\02.Tools\03.3DTool\03.MapTool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
     </ClCompile>
@@ -409,6 +409,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_Base.cpp">
       <Filter>10.Imgui\02.Tools\00.BaseTool\0.BaseUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_Terrain.cpp">
+      <Filter>10.Imgui\02.Tools\03.3DTool\03.MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_InGame.cpp">
+      <Filter>10.Imgui\02.Tools\04.InGameTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

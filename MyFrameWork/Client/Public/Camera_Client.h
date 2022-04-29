@@ -41,7 +41,8 @@ public:
 
 private:
 	HRESULT Update_Default(_double TimeDelta);
-	HRESULT Update_Target(_double TimeDelta);
+	HRESULT Update_Target_Unit(_double TimeDelta);
+	HRESULT Update_Target_Terrain(_double TimeDelta);
 	HRESULT Update_Map(_double TimeDelta);
 
 

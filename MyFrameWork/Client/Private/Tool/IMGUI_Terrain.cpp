@@ -1,28 +1,36 @@
 #include "stdafx.h"
-#include "Tool/IMGUI_Terrain.h"
-#include "FIleIO/ObjectIO.h"
+#include "Tool/Imgui_Terrain.h"
+
+// #TODO: ¸ÊÅø Á¦ÀÛ
+// ¸Ê ¹öÅØ½º ¼öÁ¤
+// ¸Ê ÀúÀå ºÒ·¯¿À±â
+// ¸Ê ¿ÀºêÁ§Æ® ¹èÄ¡
+// Å¥ºê ¼¿ ±ò±â
 
 
-CIMGUI_Terrain::CIMGUI_Terrain(ID3D11Device * device, ID3D11DeviceContext * context)
+
+CImgui_Terrain::CImgui_Terrain(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
 {
 }
 
-HRESULT CIMGUI_Terrain::NativeConstruct()
+HRESULT CImgui_Terrain::NativeConstruct()
 {
 
+	meCreateTERRAIN_Layer = LAY_TERRAIN;
+	meCreateOBJ_Layer = LAY_OBJECT;
 
 	return S_OK;
 }
 
-HRESULT CIMGUI_Terrain::Update(_double time)
+HRESULT CImgui_Terrain::Update(_double time)
 {
 	FAILED_CHECK(Render_UI());
 
 	return S_OK;
 }
 
-HRESULT CIMGUI_Terrain::Render_UI()
+HRESULT CImgui_Terrain::Render_UI()
 {
 
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
@@ -39,20 +47,20 @@ HRESULT CIMGUI_Terrain::Render_UI()
 }
 
 
-CIMGUI_Terrain * CIMGUI_Terrain::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
+CImgui_Terrain * CImgui_Terrain::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {
-	CIMGUI_Terrain*	pInstance = NEW CIMGUI_Terrain(deviec, context);
+	CImgui_Terrain*	pInstance = NEW CImgui_Terrain(deviec, context);
 
 	if (FAILED(pInstance->NativeConstruct()))
 	{
-		MSGBOX("Failed to Creating CIMGUI_Terrain");
+		MSGBOX("Failed to Creating CImgui_Terrain");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CIMGUI_Terrain::Free()
+void CImgui_Terrain::Free()
 {
 	__super::Free();
 
