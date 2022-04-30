@@ -11,7 +11,11 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11Device
 CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	: CGameObject_Base(rhs)
 	, mComVIBuffer(rhs.mComVIBuffer)
+	, mComTexture(rhs.mComTexture)
 {
+	Safe_AddRef(mComVIBuffer);
+	Safe_AddRef(mComTexture);
+
 }
 
 HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
@@ -24,10 +28,8 @@ HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
 HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	//string str("GUI_Menu_Main_Curtain.png");
-	//strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str.c_str());
+	FAILED_CHECK(Set_Component());
 
-	//mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 	return S_OK;
 }
 
@@ -42,7 +44,7 @@ _int CGameObject_MyTerrain::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
 	return UPDATENONE;
 }
 
@@ -56,23 +58,47 @@ HRESULT CGameObject_MyTerrain::Render()
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Tex());
 	FAILED_CHECK(Set_ConstantTable_Light());
-//	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
+
+	mComTexture->SetUp_OnShader(mComShader,STR_TEX_DIFFUSE,0);
+	mComVIBuffer->Render(mComShader, 0);
 	return S_OK;
+}
+
+bool CGameObject_MyTerrain::PickObject()
+{
+	_float3 pick;
+	if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
+	{
+		int breakPoint = 5;
+		return true;
+	}
+	return false;
 }
 
 
 HRESULT CGameObject_MyTerrain::Set_Component()
 {
-//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
-//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
-//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+
+	if (mComRenderer == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
+
+	// 모델 타입에 따라 정적모델 동적모델 처리
+	if (mComShader == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
+
+	if (mComVIBuffer == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+
+	if (mComTexture == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_GRASS), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
 	return S_OK;
 }
 
 HRESULT CGameObject_MyTerrain::Set_ConstantTable_Tex()
 {
+	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE, 0));
+
 	return S_OK;
 }
 
@@ -107,5 +133,7 @@ void CGameObject_MyTerrain::Free()
 {
 	__super::Free();
 	Safe_Release(mComVIBuffer);
+	Safe_Release(mComTexture);
+	
 
 }

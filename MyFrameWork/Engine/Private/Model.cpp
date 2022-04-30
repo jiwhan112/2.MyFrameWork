@@ -259,12 +259,12 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 			strcat_s(szFullPath, szFileName);
 			strcat_s(szFullPath, szExt);
 
-			_tchar		szTextureFullPath[MAX_PATH] = TEXT("");
-			MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szTextureFullPath, MAX_PATH);
+			string str = szFullPath;
+			wstring wfullpath = CHelperClass::Convert_str2wstr(str);
 
-			pMeshMaterialDesc->pTexture[j] = CTexture::Create(m_pDevice, m_pDeviceContext, szTextureFullPath);
+			pMeshMaterialDesc->pTexture[j] = CTexture::Create(m_pDevice, m_pDeviceContext, wfullpath.c_str());
 			if (nullptr == pMeshMaterialDesc->pTexture[j])
-				return E_FAIL;			
+				return S_FALSE;			
 		}		
 
 		m_Materials.push_back(pMeshMaterialDesc);

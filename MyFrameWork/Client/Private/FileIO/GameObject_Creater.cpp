@@ -107,12 +107,12 @@ HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, c
 	{
 	case OBJECT_TYPE_2D:
 	{
-		offset = sizeof(UIDESC);
+		offset = sizeof(UI_DESC);
 
-		UIDESC UIDesc;
-		memcpy(&UIDesc, data, sizeof(UIDESC));
-		TEXTUREDESC TexDesc;
-		memcpy(&TexDesc, data + offset, sizeof(TEXTUREDESC));
+		UI_DESC UIDesc;
+		memcpy(&UIDesc, data, sizeof(UI_DESC));
+		TEXTURE_DESC TexDesc;
+		memcpy(&TexDesc, data + offset, sizeof(TEXTURE_DESC));
 
 		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
 		obj = CreateEmptyObject(GAMEOBJECT_2D);
@@ -133,6 +133,28 @@ HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, c
 		obj3D->Set_LoadModelDESC(ModelDESC);
 	}
 		break;
+
+	case OBJECT_TYPE_3D_DYNAMIC:
+	{
+		MODEL_DYNAMIC_DESC ModelDESC;
+		memcpy(&ModelDESC, data, sizeof(MODEL_DYNAMIC_DESC));
+
+		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
+		obj = CreateEmptyObject(GAMEOBJECT_3D_STATIC);
+		CGameObject_3D_Dynamic* obj3D = static_cast<CGameObject_3D_Dynamic*>(obj);
+		obj3D->Set_LoadModelDynamicDESC(ModelDESC);
+	}
+	break;
+	case OBJECT_TYPE_TERRAIN:
+	{
+		//MODEL_STATIC_DESC ModelDESC;
+		//memcpy(&ModelDESC, data, sizeof(MODEL_STATIC_DESC));
+
+		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
+		obj = CreateEmptyObject(GAMEOBJECT_TERRAIN);
+		CGameObject_MyTerrain* obj3D = static_cast<CGameObject_MyTerrain*>(obj);
+	}
+	break;
 
 	case OBJECT_TYPE_END:
 		return E_FAIL;

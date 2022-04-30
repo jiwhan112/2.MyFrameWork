@@ -4,6 +4,10 @@
 #include "GameObject/GameObject_3D_Static.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 
+#include "Model.h"
+#include "Animation.h"
+
+
 // #TODO: 모델 애니메이션 툴 제작
 // 모델은 충돌체 씌울 수 있게
 // 애니메이션은 각 애니메이션 재생할 수 있게.
@@ -38,6 +42,8 @@ HRESULT CImgui_Model::Update(_double time)
 	{
 		E_OBJECT_TYPE type = SelectObject->Get_ObjectTypeID_Client();
 
+		mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
+
 		if (type == OBJECT_TYPE_3D_STATIC)
 		{
 			mCurrent_ModelStaticObject = static_cast<CGameObject_3D_Static*>(SelectObject);
@@ -50,6 +56,9 @@ HRESULT CImgui_Model::Update(_double time)
 			mCurrent_ModelDynamicObject = static_cast<CGameObject_3D_Dynamic*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_DYNAMIC;
 		}
+		else
+			SelectObject = nullptr;
+
 	}
 	else
 	{
@@ -60,11 +69,13 @@ HRESULT CImgui_Model::Update(_double time)
 
 		mCurrent_ModelStaticObject = nullptr;
 		mCurrent_ModelDynamicObject = nullptr;
-		meModelMode = CImgui_Model::TOOLMODE_MODEL_DYNAMIC;
+		meModelMode = CImgui_Model::TOOLMODE_MODEL_END;
 	}
 
 
 	FAILED_CHECK(Render_UI());
+
+	SelectObject = nullptr;
 
 	return S_OK;
 }
@@ -114,11 +125,14 @@ HRESULT CImgui_Model::Render_UI()
 
 void CImgui_Model::FBX_SETTINGMODE()
 {
-
-	// 선택된 FBX 오브젝트 수정
-	FAILED_CHECK_NONERETURN(Edit_FBX());
-	FAILED_CHECK_NONERETURN(Edit_ANI());
-	FAILED_CHECK_NONERETURN(Edit_COL());
+	if (mCurrent_ModelDynamicObject ||
+		mCurrent_ModelStaticObject)
+	{
+		// 선택된 FBX 오브젝트 수정
+		FAILED_CHECK_NONERETURN(Edit_FBX());
+		FAILED_CHECK_NONERETURN(Edit_ANI());
+		FAILED_CHECK_NONERETURN(Edit_COL());
+	}
 
 }
 
@@ -240,33 +254,29 @@ void CImgui_Model::RENDER_DYNAMIC_MODE()
 void CImgui_Model::RENDER_CREATEEMPTY()
 {
 
-//	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Create_Empty"))
+	// 빈 오브젝트 클론
+	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Static")))
 	{
-		// 빈 오브젝트 클론
-		CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
-		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Static")))
-		{
+		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC);
 
-			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-			CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC);
+		// 이미 만들어진 오브젝트 추가
+		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
+	}
 
-			// 이미 만들어진 오브젝트 추가
-			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
-		}
+	ImGui::SameLine();
 
-		ImGui::SameLine();
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Dynamic")))
+	{
 
-		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Dynamic")))
-		{
+		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
 
-			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-			CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
-
-			// 이미 만들어진 오브젝트 추가
-			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
-		}
-	//	IMGUI_TREE_END
+		// 이미 만들어진 오브젝트 추가
+		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
 	}
 }
 
@@ -319,6 +329,7 @@ HRESULT CImgui_Model::Edit_FBX()
 
 	static int selectedTex = -1;
 
+	// 정적 FBX 처리
 	if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC)
 	{
 		if (mFBX_Static_pathList->empty())
@@ -351,14 +362,16 @@ HRESULT CImgui_Model::Edit_FBX()
 
 			IMGUI_TREE_END
 		}
-
-
 	}
+
+	// 동적 FBX 처리
 	if (meModelMode == CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
 	{
 		if (mFBX_Dynamic_pathList->empty())
 			return E_FAIL;
 
+
+		// FBX 파일
 		IMGUI_TREE_BEGIN("FbxFiles")
 		{
 			_uint cnt = 0;
@@ -385,6 +398,7 @@ HRESULT CImgui_Model::Edit_FBX()
 			IMGUI_TREE_END
 		}
 
+		
 	}
 
 	return S_OK;
@@ -392,6 +406,55 @@ HRESULT CImgui_Model::Edit_FBX()
 
 HRESULT CImgui_Model::Edit_ANI()
 {
+	
+	if (meModelMode != CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
+		return S_FALSE;
+
+	// 애니메이션 에디터
+	// #TODO: 애니메이션 출력
+
+	CModel* modelCom = mCurrent_ModelDynamicObject->Get_ComModel();
+	auto pVecAni = modelCom->Get_VecAnimations();
+	if (pVecAni == nullptr)
+		return S_FALSE;
+
+	static int selectedINT = -1;
+
+	IMGUI_TREE_BEGIN("AniFiles")
+	{
+	// 선택시 파일에 있는 애니메이션 출력
+
+	
+		_uint cnt = 0;
+		string SelectStr = "";
+		static ImGuiTextFilter filter;
+		filter.Draw();
+
+
+		for (auto iter = pVecAni->begin(); iter != pVecAni->end(); ++cnt, iter++)
+		{
+
+			char AniName[256] = "";
+			strcpy_s(AniName, (*iter)->Get_Name());
+
+			if (filter.PassFilter(AniName))
+			{
+				if (ImGui::Selectable(AniName, selectedINT == cnt))
+				{
+					selectedINT = cnt;
+					SelectStr = AniName;
+					//MODEL_DYNAMIC_DESC fbx;
+					//
+					//strcpy_s(fbx.mModelName, selectFBX.c_str());
+					//mCurrent_ModelDynamicObject->Set_LoadModelDynamicDESC(fbx);
+				}
+			}
+		}
+
+	
+		IMGUI_TREE_END
+	}
+
 	return S_OK;
 }
 

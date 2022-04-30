@@ -73,6 +73,7 @@ public:
 
 	HRESULT Chase(_fvector TargetPos, _double time);
 	HRESULT LookAt(_fvector TargetPos, _double time);
+	HRESULT LookAt(_fvector TargetPos);
 
 	// Scale
 //	HRESULT Scaling(_fvector scale);

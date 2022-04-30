@@ -26,14 +26,14 @@ public:
 	CTexture_map* Get_TextureMap() const { return mComTexture; }	
 	CVIBuffer* Get_VIBuffer() const { return mComVIBuffer; }
 
-	void Set_LoadUIDesc(const UIDESC& desc)
+	void Set_LoadUIDesc(const UI_DESC& desc)
 	{
-		memcpy(&mUiDesc, &desc, sizeof(UIDESC));
+		memcpy(&mUiDesc, &desc, sizeof(UI_DESC));
 	}
-	const UIDESC& Get_UIDesc() const { return mUiDesc; }
+	const UI_DESC& Get_UIDesc() const { return mUiDesc; }
 
-	void Set_LoadTexDesc(const TEXTUREDESC& desc);	
-	const TEXTUREDESC& Get_TextureDesc() const { return mTexStrDESC; }
+	void Set_LoadTexDesc(const TEXTURE_DESC& desc);	
+	const TEXTURE_DESC& Get_TextureDesc() const { return mTexStrDESC; }
 
 	// 오름차순으로 정렬 큰값을 나중에 그린다.
 	virtual const _int& Get_Depth() override { return mUiDesc.mDepth; }
@@ -51,8 +51,8 @@ protected: // UI에서 Com / DESC 추가
 	CVIBuffer*		mComVIBuffer = nullptr;
 	CTexture_map*	mComTexture = nullptr;
 
-	UIDESC			mUiDesc;
-	TEXTUREDESC		mTexStrDESC;
+	UI_DESC			mUiDesc;
+	TEXTURE_DESC		mTexStrDESC;
 
 public:
 

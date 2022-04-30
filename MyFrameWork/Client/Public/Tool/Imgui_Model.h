@@ -1,5 +1,9 @@
 #include "Tool/Imgui_Base.h"
 
+BEGIN(Engine)
+class CModel;
+class CAnimation;
+END
 BEGIN(Client)
 
 

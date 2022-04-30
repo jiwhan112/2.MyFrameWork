@@ -4,11 +4,13 @@
 
 BEGIN(Engine)
 class CVIBuffer;
+class CVIBuffer_Terrain;
 END
 
 BEGIN(Client)
 
-// 3D 오브젝트 
+// 지형 
+// 
 class CGameObject_MyTerrain final :
 	public CGameObject_Base
 {
@@ -26,13 +28,26 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
+	CVIBuffer_Terrain*		Get_TerrainBuffer() const { return mComVIBuffer; }
+
+	const TERRAIN_DESC& Get_TerrainDESC() const { return mTerrainDESC; }
+
+	HRESULT		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc);
+
+
+public:
+	bool PickObject();
+
 protected:
 	virtual HRESULT Set_Component()override;
 
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
 
-private:
-	CVIBuffer*		mComVIBuffer = nullptr;
+protected:
+	CVIBuffer_Terrain*		mComVIBuffer = nullptr;
+	CTexture*				mComTexture = nullptr;
+
+	TERRAIN_DESC			mTerrainDESC;
 
 
 public:

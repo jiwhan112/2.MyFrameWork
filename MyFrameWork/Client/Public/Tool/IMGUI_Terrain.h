@@ -31,31 +31,28 @@ public:
 	HRESULT Render_UI();
 
 private:
-	void FBX_SETTINGMODE();
 
 	void RENDER_CREATEEMPTY();
 	void RENDER_CREATE_PROTO();
 
-	void RENDER_STATIC_MODE();
-	void RENDER_DYNAMIC_MODE();
+	void RENDER_MAP_MODE();
+	void RENDER_MAP_OBJ_MODE();
+//	void INIT_FBXPathList();
 
-
-	void INIT_FBXPathList();
+	void WINDOW_TERRAIN();
 private:
-	HRESULT Edit_FBX(); // Fbx 파일 변경
-	HRESULT Edit_ANI(); // 애니메이션 툴
-	HRESULT Edit_COL(); // 충돌체 툴
 
-//	HRESULT Edit_Texture();
+	HRESULT Edit_TERRAIN(); 
+
 
 private:
 	class CCamera_Client*			mCameraClient = nullptr;
 
 	// 지형 오브젝트
-	class CGameObject_3D_Static*	mCurrent_TerrainObject = nullptr;
+	class CGameObject_MyTerrain*	mCurrent_TerrainObject = nullptr;
 
 	// 수정될 오브젝트
-	// class CGameObject_3D_Dynamic*	mCurrent_TerrainObject = nullptr;
+	// class Static*	mCurrent_TerrainObject = nullptr;
 
 //	// FBX파일 이름
 //	list<string>*					mFBX_Static_pathList = nullptr;
@@ -67,9 +64,11 @@ private:
 
 
 private:
+	bool							mIsTerrainSetting = false;
 	E_TAYLAY						meCreateTERRAIN_Layer = LAY_TERRAIN;
 	E_TAYLAY						meCreateOBJ_Layer = LAY_OBJECT;
 
+	E_TOOLMODE_TERRAIN				meToolMode = E_TOOLMODE_TERRAIN_END;
 
 public:
 	static CImgui_Terrain* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);

@@ -235,6 +235,43 @@ HRESULT CTransform::Chase(_fvector TargetPos, _double time)
 
 HRESULT CTransform::LookAt(_fvector TargetPos, _double time)
 {
+
+
+	return S_OK;
+}
+
+HRESULT CTransform::LookAt(_fvector targetPos)
+{
+	_float3 TargetPos = targetPos;
+	_float3 vPos = mWorldMatrix.Translation();
+	_float3 vScale = GetScaleXYZ();
+
+	_float3 vLook, vRight, vUp;
+
+	vLook = TargetPos - vPos;
+	vLook.Normalize();
+	vLook *= vScale.z;
+
+
+	if (vLook == _float3(0, 1, 0))
+	{
+		return S_OK;
+	}
+	else
+	{
+		vRight = _float3::Up.Cross(vLook);
+		vRight.Normalize();
+		vRight *= vScale.x;
+	}
+
+	vUp = vLook.Cross(vRight);
+	vUp.Normalize();
+	vUp *= vScale.y;
+
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);	
+
 	return S_OK;
 }
 

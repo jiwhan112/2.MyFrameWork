@@ -63,6 +63,7 @@ HRESULT CLevel_Tool::Ready_Tools()
 	// IMGUI 积己
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_UI::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Model::Create(m_pDevice, m_pDeviceContext));
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Terrain::Create(m_pDevice, m_pDeviceContext));
 
 	// 坷宏璃飘 积己
 
@@ -114,17 +115,6 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 HRESULT CLevel_Tool::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
-
-//	UIDESC desc;
-
-	// CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
-	// CGameObject_2D* uiobj = static_cast<CGameObject_2D*>(obj);
-	// uiobj->Set_LoadUIDesc(desc);
-	// mIMGUI_UI->Set_UIObject(uiobj);
-
-//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
-//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_MYTERRAIN)));
-//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_TEST)));
 
 
 	return S_OK;

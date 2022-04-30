@@ -8,8 +8,8 @@
 HRESULT CObjectIO::NativeConstruct()
 {
 	ZeroMemory(&mObjectType,sizeof(E_OBJECT_TYPE));
-	ZeroMemory(&mUIDesc, sizeof(UIDESC));
-	ZeroMemory(&mTexDesc,sizeof(TEXTUREDESC));
+	ZeroMemory(&mUIDesc, sizeof(UI_DESC));
+	ZeroMemory(&mTexDesc,sizeof(TEXTURE_DESC));
 
 	return S_OK;
 }
@@ -83,10 +83,10 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void
 		SaveOBJECT(fwrite, (E_OBJECT_TYPE*)desc);
 		break;
 	case OBJECT_TYPE_DATA_UIDESC:
-		SaveUIDESC(fwrite, (UIDESC*)desc);
+		SaveUIDESC(fwrite, (UI_DESC*)desc);
 		break;
 	case OBJECT_TYPE_DATA_TEXTUREDESC:
-		SaveTEXTUREDESC(fwrite,(TEXTUREDESC*)desc);
+		SaveTEXTUREDESC(fwrite,(TEXTURE_DESC*)desc);
 		break;
 	case OBJECT_TYPE_DATA_MODEL_STATICDESC:
 		SaveMODELSTATICDESC(fwrite, (MODEL_STATIC_DESC*)desc);
@@ -131,17 +131,17 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 	case OBJECT_TYPE_2D:
 	{
 		// 로드 확인 완료
-		bufsize = sizeof(UIDESC) + sizeof(TEXTUREDESC);
+		bufsize = sizeof(UI_DESC) + sizeof(TEXTURE_DESC);
 		*pData = NEW char[bufsize];
-		UIDESC uiDesc;
-		TEXTUREDESC texDesc;
-		int offset = sizeof(UIDESC);
+		UI_DESC uiDesc;
+		TEXTURE_DESC texDesc;
+		int offset = sizeof(UI_DESC);
 
-		fRead.read(*pData, sizeof(UIDESC));
-		memcpy(&uiDesc, *pData, sizeof(UIDESC));
+		fRead.read(*pData, sizeof(UI_DESC));
+		memcpy(&uiDesc, *pData, sizeof(UI_DESC));
 
-		fRead.read(*pData + offset, sizeof(TEXTUREDESC));
-		memcpy(&texDesc, *pData+ offset, sizeof(TEXTUREDESC));
+		fRead.read(*pData + offset, sizeof(TEXTURE_DESC));
+		memcpy(&texDesc, *pData+ offset, sizeof(TEXTURE_DESC));
 		
 	}
 	break;
@@ -202,13 +202,13 @@ HRESULT CObjectIO::SaveOBJECT(ofstream * fwrite, E_OBJECT_TYPE* desc)
 
 }
 
-HRESULT CObjectIO::SaveUIDESC(ofstream * fwrite, UIDESC* desc)
+HRESULT CObjectIO::SaveUIDESC(ofstream * fwrite, UI_DESC* desc)
 {
-	char * newdesc = NEW char[sizeof(UIDESC)];
+	char * newdesc = NEW char[sizeof(UI_DESC)];
 
-	memcpy(newdesc,desc,sizeof(UIDESC));
+	memcpy(newdesc,desc,sizeof(UI_DESC));
 
-	fwrite->write(newdesc, sizeof(UIDESC));
+	fwrite->write(newdesc, sizeof(UI_DESC));
 
 	Safe_Delete_Array(newdesc);
 
@@ -217,13 +217,13 @@ HRESULT CObjectIO::SaveUIDESC(ofstream * fwrite, UIDESC* desc)
 
 }
 
-HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTUREDESC* desc)
+HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTURE_DESC* desc)
 {
-	char * newdesc = NEW char[sizeof(TEXTUREDESC)];
+	char * newdesc = NEW char[sizeof(TEXTURE_DESC)];
 
-	memcpy(newdesc, desc, sizeof(TEXTUREDESC));
+	memcpy(newdesc, desc, sizeof(TEXTURE_DESC));
 
-	fwrite->write(newdesc, sizeof(TEXTUREDESC));
+	fwrite->write(newdesc, sizeof(TEXTURE_DESC));
 	Safe_Delete_Array(newdesc);
 
 	return S_OK;

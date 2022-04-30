@@ -20,6 +20,7 @@ HRESULT CImgui_UI::NativeConstruct()
 HRESULT CImgui_UI::Update(_double time)
 {
 	CGameObject_Base* SelectObject = (CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
+
 	if (SelectObject != nullptr)
 	{
 		E_OBJECT_TYPE type = SelectObject->Get_ObjectTypeID_Client();
@@ -27,6 +28,9 @@ HRESULT CImgui_UI::Update(_double time)
 		{
 			mCurrentUIObject = static_cast<CGameObject_2D*>(SelectObject);
 		}
+
+		else
+			SelectObject = nullptr;
 			
 	}
 	else
@@ -112,7 +116,7 @@ void CImgui_UI::UI_CREATEMODE()
 			// UI 타입별로 빈 오브젝트 생성
 			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 			CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_2D);
-			UIDESC emptyDesc;
+			UI_DESC emptyDesc;
 			static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(emptyDesc);
 
 			// 이미 만들어진 오브젝트 추가
@@ -162,7 +166,7 @@ HRESULT CImgui_UI::Edit_UIObject()
 
 
 	// UIDesc 정보만 변경해주면 알아서 오브젝트 업데이트 시에 수정된다.
-	UIDESC myDesc = mCurrentUIObject->Get_UIDesc();
+	UI_DESC myDesc = mCurrentUIObject->Get_UIDesc();
 
 	IMGUI_TREE_BEGIN("Position")
 	{
@@ -235,7 +239,7 @@ HRESULT CImgui_UI::Edit_Texture()
 					selectTeture = *iter;
 					//	mUIObject->Get_TextureMap()->Set_TextureMap(selectTeture);
 
-					TEXTUREDESC tex;
+					TEXTURE_DESC tex;
 					strcpy_s(tex.mTextureKey_Diffuse, selectTeture.c_str());
 					mCurrentUIObject->Set_LoadTexDesc(tex);
 				}			

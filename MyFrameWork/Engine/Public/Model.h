@@ -18,6 +18,9 @@ public:
 	_uint Get_NumMaterials() const;
 	_uint Get_NumAnimations()const { return m_iNumAnimations; }
 
+	const vector<class CAnimation*>* Get_VecAnimations()const { return &m_Animations; }
+
+	
 public:
 	virtual HRESULT NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);
 	virtual HRESULT NativeConstruct(void* pArg);
@@ -44,13 +47,13 @@ private:
 	vector<MESHMATERIALDESC*>				m_Materials;
 	typedef vector<MESHMATERIALDESC*>		MATERIALS;
 
+	// 애니메이션 영역
 private:
+	// 계층
 	vector<class CHierarchyNode*>			m_HierarchyNodes;
 	typedef vector<class CHierarchyNode*>	HIERARCHYNODES;	
 
-	
-
-private:
+	// 애니메이션
 	_uint									m_iCurrentAnim = 0;
 	_uint									m_iNumAnimations;
 	vector<class CAnimation*>				m_Animations;

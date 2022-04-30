@@ -4,7 +4,7 @@
 // UI 정보
 typedef struct tag_UIDESC
 {
-	tag_UIDESC()
+	explicit tag_UIDESC()
 	{
 		mPosX = g_iWinCX * 0.5f;
 		mPosY = g_iWinCY * 0.5f;
@@ -21,7 +21,7 @@ typedef struct tag_UIDESC
 	_int	mDepth = 0;
 	_float2 mPivot = {0.5f,0.5f};
 
-}UIDESC;
+}UI_DESC;
 
 
 // 텍스처 이름 8개 저장
@@ -36,7 +36,7 @@ typedef struct tag_TEXTUREDESC
 	char mTextureKey_05[MAX_STR] = "";
 	char mTextureKey_06[MAX_STR] = "";
 	char mTextureKey_07[MAX_STR] = "";
-}TEXTUREDESC;
+}TEXTURE_DESC;
 
 
 typedef struct tag_MODEL_STATIC_DESC
@@ -53,6 +53,18 @@ typedef struct tag_MODEL_DYNAMIC_DESC
 	char mModelName[MAX_STR] = "";
 
 }MODEL_DYNAMIC_DESC;
+
+typedef struct tag_TERRAIN_DESC
+{
+	explicit tag_TERRAIN_DESC()
+	{
+		NumX = 129;
+		NumZ = 129;
+	}
+	int NumX;
+	int NumZ;
+
+}TERRAIN_DESC;
 
 
 

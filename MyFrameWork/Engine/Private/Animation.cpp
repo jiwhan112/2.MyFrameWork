@@ -5,6 +5,11 @@ CAnimation::CAnimation()
 {
 }
 
+const char * CAnimation::Get_Name()
+{
+	return m_szName;
+}
+
 HRESULT CAnimation::NativeConstruct(const char* pName, _double Duration, _double TickPerSecond)
 {
 	strcpy_s(m_szName, pName);

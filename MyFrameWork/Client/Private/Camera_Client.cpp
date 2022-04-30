@@ -4,6 +4,7 @@
 CCamera_Client::CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CCamera(pDevice, pDeviceContext)
 {
+	mObjectTypeid = OBJECT_TYPE_CAMERA;
 }
 
 CCamera_Client::CCamera_Client(const CCamera_Client & rhs)
@@ -145,25 +146,33 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 
 	CTransform* targetTrans = mTargetObject->Get_TransformCom();
+	_float3 targetPos = targetTrans->GetState(CTransform::STATE_POSITION);
 
-	DirectX::SimpleMath::Vector4  look = targetTrans->GetState(CTransform::STATE_LOOK);
-	DirectX::SimpleMath::Vector4  newPosition = targetTrans->GetState(CTransform::STATE_POSITION);
-	newPosition += (look * -1) * 5.0f;
+	mComTransform->LookAt(targetPos);
 
-	mComTransform->Set_WorldMat(targetTrans->GetWorldFloat4x4());
 
-	mComTransform->Set_State(CTransform::STATE_POSITION, newPosition);
-
-	/*if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & DIS_Press)
+	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
 	{
+		mComTransform->GO_Straight(TimeDelta);
+	}
 
+	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
+	{
+		mComTransform->GO_Backward(TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_A) & DIS_Press)
+	{
 		mComTransform->GO_Left(TimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & DIS_Press)
+	if (pGameInstance->Get_DIKeyState(DIK_D) & DIS_Press)
 	{
 		mComTransform->GO_Right(TimeDelta);
-	}*/
+	}
+
+	
+
 
 	return S_OK;
 }

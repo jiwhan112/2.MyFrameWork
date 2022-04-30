@@ -6,7 +6,7 @@
 
 BEGIN(Engine)
 
-class CAnimation final : public CBase
+class ENGINE_DLL CAnimation final : public CBase
 {
 private:
 	CAnimation();
@@ -21,6 +21,7 @@ public:
 	const vector<class CChannel*>* Get_Channels() const {
 		return &m_Channels;
 	}
+	const char* Get_Name();
 public:
 	HRESULT NativeConstruct(const char* pName, _double Duration, _double TickPerSecond);
 	HRESULT Update_TransformMatrices(_double TimeDelta);
