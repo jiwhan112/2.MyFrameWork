@@ -80,6 +80,14 @@ namespace Engine
 		{
 			return tagFloat4_Derived(x, y, z, _w);
 		}
+		Vector4& operator=(const _float3& f)
+		{
+			x = f.x;
+			y = f.y;
+			z = f.z;
+			w = 0;
+			return *this;
+		}
 
 	}_float4;
 

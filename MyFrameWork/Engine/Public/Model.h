@@ -19,6 +19,8 @@ public:
 	_uint Get_NumAnimations()const { return m_iNumAnimations; }
 
 	const vector<class CAnimation*>* Get_VecAnimations()const { return &m_Animations; }
+	HRESULT Set_AniString(string AniName);
+
 
 	
 public:
@@ -67,8 +69,10 @@ private:
 	HRESULT Ready_Animation();
 	HRESULT Link_ChannelToNode();
 
+
 private:
 	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr);
+	_uint Find_Animation(string AniName)const; // 애니메이션 찾기
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);

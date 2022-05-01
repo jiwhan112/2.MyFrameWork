@@ -168,26 +168,27 @@ HRESULT CImgui_UI::Edit_UIObject()
 	// UIDesc 정보만 변경해주면 알아서 오브젝트 업데이트 시에 수정된다.
 	UI_DESC myDesc = mCurrentUIObject->Get_UIDesc();
 
-	IMGUI_TREE_BEGIN("Position")
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Position"))
 	{
 		ImGui::DragInt("PosX", &myDesc.mPosX, 1.0f,0, g_iWinCX, "PosX = %d");
 		ImGui::DragInt("PosY", &myDesc.mPosY, 1.0f, 0, g_iWinCY, "PosY= %d");
 		IMGUI_TREE_END
 	}
 
-	IMGUI_TREE_BEGIN("Size")
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Size"))
 	{
 		ImGui::DragInt("sizeX", &myDesc.mSizeX,1, 1, g_iWinCX, "sizex = %d");
 		ImGui::DragInt("sizeY", &myDesc.mSizeY,1, 1, g_iWinCY, "sizey = %d");
 		IMGUI_TREE_END
 	}
 
-	IMGUI_TREE_BEGIN("Pivot")
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Pivot"))
 	{
 		ImGui::DragFloat2("PivotXY", (float*)&myDesc.mPivot,0.01f, 0.0f, 1.0f);
 		IMGUI_TREE_END
 	}
-	IMGUI_TREE_BEGIN("Depth")
+
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Depth"))
 	{
 		ImGui::DragInt("DepthINT", (int*)&myDesc.mDepth, 1, 0, 50);
 		IMGUI_TREE_END

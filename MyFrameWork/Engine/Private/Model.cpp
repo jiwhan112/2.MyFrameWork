@@ -46,6 +46,30 @@ _uint CModel::Get_NumMaterials() const
 
 }
 
+HRESULT CModel::Set_AniString(string AniName)
+{
+	_uint index = Find_Animation(AniName);
+	SetUp_AnimIndex(index);
+	return S_OK;
+}
+
+_uint CModel::Find_Animation(string AniName) const
+{
+	_uint returnIndex = 0;
+
+	for (_uint i=0 ;i< m_iNumAnimations;i++)
+	{
+		string name = m_Animations[i]->Get_Name();
+		if (AniName.compare(name) == 0)
+		{
+			returnIndex = i;
+			break;
+		}
+	}
+
+	return returnIndex;
+}
+
 HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * pModelFilePath, const char * pModelFileName, _fmatrix TransformMatrix)
 {
 	char	szFullPath[MAX_PATH] = "";

@@ -137,8 +137,8 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
 	
 	// 지형 컴포넌트
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
+	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
 
 	// 정적 오브젝트
 	// _float4x4		DefaultTransform;	
@@ -165,10 +165,15 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Filter.bmp"), 1)));
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/tile1.png"), 1)));
+
+
 	// 모델 / 텍스처 맵 / 셰이더 / 
 	FAILED_CHECK(Ready_Prototype_Components_Model());
 	FAILED_CHECK(Ready_Prototype_Components_AniModel());
 	FAILED_CHECK(Ready_Prototype_Components_Texture());
+	FAILED_CHECK(Ready_Prototype_Components_Terrain());
 	FAILED_CHECK(Ready_Prototype_Components_Shader());
 
 	return S_OK;
@@ -213,7 +218,7 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 
 
 	_float4x4		DefaultTransform;
-	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	DefaultTransform = _float4x4::CreateScale(0.5f) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
 	for (auto& path : *listFBXpath_Static)
 	{
@@ -237,7 +242,7 @@ HRESULT CMainApp::Ready_Prototype_Components_AniModel()
 
 	const list<MYFILEPATH*>* listFBXpath_Dynamic = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX_DYNAMIC);
 	_float4x4		DefaultTransform;
-	DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	DefaultTransform = _float4x4::CreateScale(0.5f) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
 	for (auto& path : *listFBXpath_Dynamic)
 	{
@@ -274,6 +279,28 @@ HRESULT CMainApp::Ready_Prototype_Components_Texture()
 
 	return S_OK;
 }
+
+HRESULT CMainApp::Ready_Prototype_Components_Terrain()
+{
+	// 지형 컴포넌트
+	int TerrainSize = 0;
+	//TerrainSize = pow(2, 4);
+	//TerrainSize = pow(2, 5);
+	//TerrainSize = pow(2, 6);
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 17, 17)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 33, 33)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 65, 65)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 129, 129)));
+
+	return S_OK;
+}
+
+
 
 HRESULT CMainApp::Ready_Prototype_Components_Shader()
 {

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
+#include "GameObject/GameObject_MyTerrain.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -30,12 +31,14 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
 
 	mCurrentShaderPass = 0;
 
+
 	return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
+	mComModel->SetUp_AnimIndex(0);
 
 	
 
@@ -46,25 +49,23 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-	CGameInstance* pGameInstance = GetSingle(CGameInstance);
-	static int aniIndex = 0;
-
-	if (pGameInstance->Get_DIKeyState(DIK_F) & DIS_Down)
-	{
-		int max = mComModel->Get_NumAnimations();
-
-		aniIndex++;
-		aniIndex %= max;
-	}
-
-	mComModel->SetUp_AnimIndex(aniIndex);
-
 	return UPDATENONE;
 }
 
 _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+
+	CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+	if (terrain->Get_isPick())
+	{
+		_float3 worldPos = terrain->Get_PickWorldPos();
+		_float4 pos;
+		pos = worldPos;
+		pos.w = 1;
+		mComTransform->Set_State(CTransform::STATE_POSITION, pos);
+
+	}
 
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);

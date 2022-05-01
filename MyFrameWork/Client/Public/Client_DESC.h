@@ -1,5 +1,19 @@
 #pragma 
 
+// OTHER Data
+
+enum E_TERRAINSIZE
+{
+	TERRAINSIZE_16,
+	TERRAINSIZE_32,
+	TERRAINSIZE_64,
+	TERRAINSIZE_128,
+	TERRAINSIZE_END,
+};
+
+
+
+// DESC DATA
 
 // UI Á¤º¸
 typedef struct tag_UIDESC
@@ -15,11 +29,11 @@ typedef struct tag_UIDESC
 	};
 
 	_int	mPosX = g_iWinCX * 0.5f;
-	_int	mPosY = g_iWinCY *0.5f;
+	_int	mPosY = g_iWinCY * 0.5f;
 	_int	mSizeX = g_iWinCX;
 	_int	mSizeY = g_iWinCY;
 	_int	mDepth = 0;
-	_float2 mPivot = {0.5f,0.5f};
+	_float2 mPivot = { 0.5f,0.5f };
 
 }UI_DESC;
 
@@ -58,13 +72,16 @@ typedef struct tag_TERRAIN_DESC
 {
 	explicit tag_TERRAIN_DESC()
 	{
-		NumX = 129;
-		NumZ = 129;
+		meTerrainSize = TERRAINSIZE_END;
+		mTextureMultiSize = 30;
 	}
-	int NumX;
-	int NumZ;
+
+	E_TERRAINSIZE			meTerrainSize;
+	_uint					mTextureMultiSize;
+
 
 }TERRAIN_DESC;
+
 
 
 

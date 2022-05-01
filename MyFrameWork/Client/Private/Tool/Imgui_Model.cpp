@@ -338,7 +338,6 @@ HRESULT CImgui_Model::Edit_FBX()
 
 		IMGUI_TREE_BEGIN("FbxFiles")
 		{
-
 			_uint cnt = 0;
 			string selectFBX = "";
 			static ImGuiTextFilter filter;
@@ -359,7 +358,6 @@ HRESULT CImgui_Model::Edit_FBX()
 					}
 				}
 			}
-
 			IMGUI_TREE_END
 		}
 	}
@@ -394,13 +392,9 @@ HRESULT CImgui_Model::Edit_FBX()
 					}
 				}
 			}
-
 			IMGUI_TREE_END
-		}
-
-		
+		}		
 	}
-
 	return S_OK;
 }
 
@@ -423,8 +417,6 @@ HRESULT CImgui_Model::Edit_ANI()
 	IMGUI_TREE_BEGIN("AniFiles")
 	{
 	// 선택시 파일에 있는 애니메이션 출력
-
-	
 		_uint cnt = 0;
 		string SelectStr = "";
 		static ImGuiTextFilter filter;
@@ -443,9 +435,10 @@ HRESULT CImgui_Model::Edit_ANI()
 				{
 					selectedINT = cnt;
 					SelectStr = AniName;
-					//MODEL_DYNAMIC_DESC fbx;
-					//
-					//strcpy_s(fbx.mModelName, selectFBX.c_str());
+					mCurrent_ModelDynamicObject->Get_ComModel()->Set_AniString(SelectStr);
+
+					// MODEL_DYNAMIC_DESC fbx;
+					//	strcpy_s(fbx.mModelName, selectFBX.c_str());
 					//mCurrent_ModelDynamicObject->Set_LoadModelDynamicDESC(fbx);
 				}
 			}

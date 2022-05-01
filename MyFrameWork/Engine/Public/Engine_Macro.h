@@ -186,6 +186,8 @@ static const char* STR_CAMPOS = "g_CameraPosition";
 
 static const char* STR_BONES = "g_BoneMatrices";
 
+static const char* STR_TEXTURESIZE = "g_TextureSize";
+
 
 
 

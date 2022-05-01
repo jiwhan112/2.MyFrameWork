@@ -141,6 +141,8 @@ void CImgui_Terrain::RENDER_CREATE_PROTO()
 
 void CImgui_Terrain::RENDER_MAP_MODE()
 {
+
+
 }
 
 void CImgui_Terrain::RENDER_MAP_OBJ_MODE()
@@ -160,6 +162,39 @@ void CImgui_Terrain::WINDOW_TERRAIN()
 
 HRESULT CImgui_Terrain::Edit_TERRAIN()
 {
+
+	if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_MAP)
+	{
+
+		IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Size"))
+		{
+			TERRAIN_DESC terrainDesc = mCurrent_TerrainObject->Get_TerrainDESC();
+
+
+
+			ImGui::DragInt(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "TexSize"),
+				(int*)&terrainDesc.mTextureMultiSize,	
+				1.0f, 10, 200, "%d");
+
+			mCurrent_TerrainObject->Set_LoadTerrainDESC(terrainDesc);
+
+			if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "TerrainSize")))
+			{
+				static _uint eSize = 0;
+				static const _uint eMaxSize = E_TERRAINSIZE::TERRAINSIZE_END;
+				eSize++;
+				eSize %= eMaxSize;
+				mCurrent_TerrainObject->Set_TerrainMode(E_TERRAINSIZE(eSize));
+
+			}
+
+			
+
+			IMGUI_TREE_END
+		}
+
+	}
+
 	return S_OK;
 }
 

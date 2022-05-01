@@ -28,7 +28,7 @@ HRESULT	CPicking::Transform_ToWorldSpace()
 
 	POINT ptMouse;
 	GetCursorPos(&ptMouse);
-	ClientToScreen(m_hWnd, &ptMouse);
+	ScreenToClient(m_hWnd, &ptMouse);
 
 	D3D11_VIEWPORT ViewPortDesc;
 	UINT ViewIndex = 1;

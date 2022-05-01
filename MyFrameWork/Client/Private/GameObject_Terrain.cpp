@@ -36,6 +36,7 @@ _int CGameObject_Terrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
+
 	/*if (PickObject())
 	{
 		int a = 5;

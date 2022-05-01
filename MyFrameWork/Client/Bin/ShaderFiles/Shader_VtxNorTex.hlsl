@@ -13,6 +13,7 @@ cbuffer BrushDesc
 	float		g_fRadius = 3.f;
 };
 
+uint g_TextureSize;
 
 // VS
 struct VS_IN
@@ -65,7 +66,7 @@ PS_OUT PS_MAIN_TERRAIN(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	// 텍스처 색상
-	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV*30);
+	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV*g_TextureSize);
 
 	// 노말
 	float	Nomal = saturate(dot(normalize(g_vLightDir) * -1.f, In.vNormal));

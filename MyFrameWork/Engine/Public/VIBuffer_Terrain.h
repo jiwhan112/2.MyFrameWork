@@ -19,6 +19,17 @@ public:
 	// #Tag 지형타기
 	_float4 Get_Height(_float4 TargetPos);
 
+	// 피킹 타일 인덱스 반환
+	_uint Get_TileIndex(_float3 worldPos);
+	_float3 Get_TileWorldPos(_uint TileIndex);
+
+
+
+	HRESULT INIT_Default_VIBuffer(_uint x, _uint z, const _tchar* newHeight = L"");
+	HRESULT INIT_New_VIBuffer(_uint x, _uint z, const _tchar* newHeight = L"");
+
+private:
+	HRESULT Set_NewXZ(const _uint X, const _uint Z);
 
 private:
 	_uint			miNumX = 0;
