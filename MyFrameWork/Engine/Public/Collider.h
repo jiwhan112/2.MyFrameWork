@@ -29,6 +29,7 @@ private:
 public:
 	virtual HRESULT NativeConstruct_Prototype(E_COLLIDER_TYPE eType);
 	virtual HRESULT NativeConstruct(void* pArg);
+	virtual HRESULT Update_Collider(_float4x4 TransformMatrix);
 
 public:
 	void SetScale(_float3 size);
@@ -36,7 +37,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render(class CTransform* trnas);
+	virtual HRESULT Render();
 #endif // _DEBUG
 
 	

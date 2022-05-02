@@ -1,10 +1,6 @@
 #include "..\Public\EasingMgr.h"
 
-IMPLEMENT_SINGLETON(CEasingMgr)
-
-CEasingMgr::CEasingMgr()
-{
-}
+IMPLEMENT_SINGLETON(CEasingMgr);
 
 _float CEasingMgr::Easing(_uint eEasingType, _float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 {
@@ -290,6 +286,11 @@ _float CEasingMgr::BounceEaseOut(_float fStartPoint, _float fTargetPoint, _float
 		return _float((fTargetPoint - fStartPoint) * (7.5625f * (fPassedTime -= (2.625f / 2.75f)) * fPassedTime + .984375f) + fStartPoint);
 }
 
+void Engine::CEasingMgr::Free()
+{
+
+}
+
 _float CEasingMgr::BounceEaseIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	return _float(BounceEaseOut(fTargetPoint, fStartPoint, fTotalTime - fPassedTime, fTotalTime));
@@ -309,7 +310,3 @@ _float CEasingMgr::BounceEaseIn(_float fStartPoint, _float fTargetPoint, _float 
 //		return BounceEaseOut(fStartPoint, fTargetPoint * 0.5f, fPassedTime * 0.5f, fTotalTime * 0.5f);
 //	return BounceEaseIn(fTargetPoint * 0.5f, fTargetPoint, fPassedTime * 0.5f, fTotalTime * 0.5f);
 //}
-
-void CEasingMgr::Free()
-{
-}

@@ -68,6 +68,18 @@ typedef struct tag_MODEL_DYNAMIC_DESC
 
 }MODEL_DYNAMIC_DESC;
 
+typedef struct tag_COLLIDERODEL_DESC
+{
+	tag_COLLIDERODEL_DESC()
+	{
+		meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+		mSize = _float3(1, 1, 1);
+	}
+	CCollider::E_COLLIDER_TYPE meColliderType;
+	_float3 mSize;
+
+}COLLIDER_DESC;
+
 typedef struct tag_TERRAIN_DESC
 {
 	explicit tag_TERRAIN_DESC()
@@ -81,9 +93,3 @@ typedef struct tag_TERRAIN_DESC
 
 
 }TERRAIN_DESC;
-
-
-
-
-
-

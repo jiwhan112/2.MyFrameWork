@@ -12,9 +12,11 @@ CGameObject_3D_Static::CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11Device
 CGameObject_3D_Static::CGameObject_3D_Static(const CGameObject_3D_Static& rhs)
 	: CGameObject_Base(rhs)
 	, mComModel(rhs.mComModel)
-	, mModelDesc(rhs.mModelDesc)
+	, mComCollider(rhs.mComCollider)
+	, mModelStatic_Desc(rhs.mModelStatic_Desc)
 {
 	Safe_AddRef(mComModel);
+	Safe_AddRef(mComCollider);
 }
 
 HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
@@ -22,10 +24,10 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
 	// 데이터 디폴트 세팅
-	if (strlen(mModelDesc.mModelName) < 2)
+	if (strlen(mModelStatic_Desc.mModelName) < 2)
 	{
 		string str("room_Prison_FloorTile.fbx");
-		strcpy_s(mModelDesc.mModelName, str.c_str());
+		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
 	}
 
 
@@ -44,6 +46,8 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 _int CGameObject_3D_Static::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+	mComCollider->Update_Collider(mComTransform->GetWorldFloat4x4());
+
 	return UPDATENONE;
 }
 
@@ -76,14 +80,19 @@ HRESULT CGameObject_3D_Static::Render()
 			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
 		}
 	}	
-	
+
+#ifdef _DEBUG
+	mComCollider->Render();
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
 
 HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
 {
-	memcpy(&mModelDesc, &desc, sizeof(MODEL_STATIC_DESC));
+	memcpy(&mModelStatic_Desc, &desc, sizeof(MODEL_STATIC_DESC));
 
 	// 해당 모델 컴포넌트로 변경
 	if (mComModel != nullptr)
@@ -92,7 +101,7 @@ HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
 		mComModel = nullptr;
 	}
 
-	string strModel = mModelDesc.mModelName;
+	string strModel = mModelStatic_Desc.mModelName;
 	wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
 
 	FAILED_CHECK(__super::Release_Component(TEXT("Com_Model")));
@@ -100,6 +109,42 @@ HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 
 	return S_OK;
+}
+
+HRESULT CGameObject_3D_Static::Set_LoadColliderDESC(const COLLIDER_DESC & desc)
+{
+	memcpy(&mCollider_Desc, &desc, sizeof(COLLIDER_DESC));
+
+	// 해당 모델 컴포넌트로 변경
+	if (mComCollider != nullptr)
+	{
+		Safe_Release(mComCollider);
+		mComCollider = nullptr;
+	}
+
+	;
+
+	FAILED_CHECK(__super::Release_Component(TEXT("Com_Collider")));
+
+	switch (mCollider_Desc.meColliderType)
+	{
+	default:
+		break;
+	case CCollider::COL_AABB:
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB), TEXT("Com_Collider"), (CComponent**)&mComCollider));
+		break;
+	case CCollider::COL_OBB:
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_OBB), TEXT("Com_Collider"), (CComponent**)&mComCollider));
+		break;
+	case CCollider::COL_SPHERE:
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
+		break;
+	case CCollider::COL_END:
+		break;
+	}
+	mComCollider->SetScale(mCollider_Desc.mSize);
+	return S_OK;
+
 }
 
 HRESULT CGameObject_3D_Static::Set_Component()
@@ -114,10 +159,17 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	
 	if (mComModel == nullptr)
 	{
-		string strModel = mModelDesc.mModelName;
+		string strModel = mModelStatic_Desc.mModelName;
 		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 	}
+	if (mComCollider == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
+
+	}
+
+
 	return S_OK;
 }
 
@@ -157,4 +209,5 @@ void CGameObject_3D_Static::Free()
 	__super::Free();
 
 	Safe_Release(mComModel);
+	Safe_Release(mComCollider);
 }

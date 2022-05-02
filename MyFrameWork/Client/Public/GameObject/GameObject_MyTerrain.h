@@ -34,10 +34,12 @@ public:
 		explicit tag_MyTile(int index, E_TILE_MODE e)
 		{
 			mTileIndex = index;
+			mTilePre = index;
 			mTileMode = e;
 		}
 
 		int mTileIndex;
+		int mTilePre;
 		E_TILE_MODE mTileMode;
 
 	}MYTILE;
@@ -68,7 +70,10 @@ public:
 		return mPickWorldPos;
 	}
 
-	bool Get_isPick() const { return misPick; };
+	bool		Get_isPick() const { return misPick; };
+	int			Get_TileIndex(_float3 worldPos);
+	_float3		Get_TileWorld(_uint index);
+	vector<MYTILE*>* Get_VecTile() { return mVecTile; }
 
 protected:
 	virtual HRESULT Set_Component()override;

@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class CModel;
+class CCollider;
 END
 
 // 기본 3D 오브젝트 출력
@@ -28,9 +29,11 @@ public:
 public:
 
 	CModel*		Get_ComModel() const { return mComModel; }
-	const MODEL_STATIC_DESC& Get_ModelDESC() const { return mModelDesc; }
+	const MODEL_STATIC_DESC& Get_ModelDESC() const { return mModelStatic_Desc; }
+	const COLLIDER_DESC& Get_ColliderDESC() const { return mCollider_Desc; }
 
 	HRESULT		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc);
+	HRESULT		Set_LoadColliderDESC(const COLLIDER_DESC& desc);
 
 protected:
 	virtual HRESULT Set_Component()override;
@@ -42,7 +45,10 @@ protected:
 
 protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
-	MODEL_STATIC_DESC			mModelDesc;
+	CCollider*					mComCollider = nullptr;
+
+	MODEL_STATIC_DESC			mModelStatic_Desc;
+	COLLIDER_DESC				mCollider_Desc;
 
 public:
 	static CGameObject_3D_Static* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

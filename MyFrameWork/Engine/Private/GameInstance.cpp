@@ -24,6 +24,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pLightMgr);
 	Safe_AddRef(m_pFileMgr);
 	Safe_AddRef(m_pPickMgr);
+
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -334,6 +335,8 @@ _bool CGameInstance::Get_isPick() const
 
 void CGameInstance::Release_Engine()
 {
+
+
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGameInstance");
 
@@ -366,6 +369,10 @@ void CGameInstance::Release_Engine()
 
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");
+
+
+
+
 
 }
 

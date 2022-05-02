@@ -140,6 +140,16 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 
 }
 
+int CGameObject_MyTerrain::Get_TileIndex(_float3 worldPos)
+{
+	return mComVIBuffer->Get_TileIndex(worldPos);
+}
+
+_float3 CGameObject_MyTerrain::Get_TileWorld(_uint index)
+{
+	return mComVIBuffer->Get_TileWorldPos(index);
+}
+
 HRESULT CGameObject_MyTerrain::Set_Component()
 {
 

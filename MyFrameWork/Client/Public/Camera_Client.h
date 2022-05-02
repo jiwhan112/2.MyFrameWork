@@ -16,6 +16,8 @@ public:
 		CAMERA_MODE_RETURN,
 		CAMERA_MODE_TARGET,
 		CAMERA_MODE_MAP,
+		CAMERA_MODE_GAME_D,
+		CAMERA_MODE_GAME_W,
 		CAMERA_MODE_END,
 	};
 
@@ -43,6 +45,7 @@ private:
 	HRESULT Update_Default(_double TimeDelta);
 	HRESULT Update_Target_Unit(_double TimeDelta);
 	HRESULT Update_Target_Terrain(_double TimeDelta);
+	HRESULT Update_Target_D(_double TimeDelta);
 	HRESULT Update_Map(_double TimeDelta);
 
 

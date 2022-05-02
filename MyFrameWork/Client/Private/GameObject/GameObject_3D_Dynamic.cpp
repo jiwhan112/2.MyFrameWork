@@ -31,7 +31,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
 
 	mCurrentShaderPass = 0;
 
-
 	return S_OK;
 }
 
@@ -39,8 +38,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	mComModel->SetUp_AnimIndex(0);
-
-	
+	meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
 
 	return S_OK;
 }
@@ -48,6 +46,15 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+	mComCollider->Update_Collider(mComTransform->GetWorldFloat4x4());
+	
+
+	E_LEVEL Getindex = (E_LEVEL)GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+
+	// ÀÌµ¿ 
+	if (Getindex == LEVEL_MYGAMEPLAY)
+		GOMOVE(TimeDelta);
+
 
 	return UPDATENONE;
 }
@@ -57,16 +64,26 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
 	CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
-	if (terrain->Get_isPick())
+	if (terrain != nullptr)
 	{
-		_float3 worldPos = terrain->Get_PickWorldPos();
-		_float4 pos;
-		pos = worldPos;
-		pos.w = 1;
-		mComTransform->Set_State(CTransform::STATE_POSITION, pos);
+		if (terrain->Get_isPick())
+		{
+
+			_float3 worldPos = terrain->Get_PickWorldPos();
+			int index = terrain->Get_TileIndex(worldPos);
+			mGoalPosition = terrain->Get_TileWorld(index);
+			mStartPosition = mComTransform->GetState(CTransform::STATE_POSITION);
+
+			mTimer = 0;
+			mTimeMax = _float3::Distance(mStartPosition, mGoalPosition);
+
+			meAI = CGameObject_3D_Dynamic::BASEAI_MOVE;
+
+		}
+		//	mComTransform->Set_State(CTransform::STATE_POSITION, pos);
+
 
 	}
-
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	return UPDATENONE;
@@ -92,6 +109,9 @@ HRESULT CGameObject_3D_Dynamic::Render()
 			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, i, STR_BONES));
 		}
 	}
+#ifdef _DEBUG
+	mComCollider->Render();
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -137,7 +157,46 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 	}
 
+	if (mComCollider == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
+
+	}	
 	return S_OK;
+}
+
+void CGameObject_3D_Dynamic::GOMOVE(_double delta)
+{
+	switch (meAI)
+	{
+	case Client::CGameObject_3D_Dynamic::BASEAI_IDLE:
+		mComModel->SetUp_AnimIndex(25);
+		break;
+	case Client::CGameObject_3D_Dynamic::BASEAI_MOVE:
+	{
+		mComTransform->LookAt(mGoalPosition);
+
+		mComModel->SetUp_AnimIndex(29);
+		mTimer += delta;
+		_float3 CurrentPos = _float3::Lerp(mStartPosition, mGoalPosition, mTimer/ mTimeMax);
+		_float4 CurrentPos4;
+		CurrentPos4 = CurrentPos;
+		CurrentPos4.w = 1;
+		mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPos4);
+
+		_float distance =  _float3::Distance(CurrentPos, mGoalPosition);
+
+		if (mTimer > mTimeMax)
+			meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
+	}
+
+	break;
+	case Client::CGameObject_3D_Dynamic::BASEAI_END:
+		break;
+	default:
+		break;
+	}
+
 }
 
 
@@ -171,6 +230,7 @@ void CGameObject_3D_Dynamic::Free()
 	__super::Free();
 
 	Safe_Release(mComModel);
+	Safe_Release(mComCollider);
 
 
 }

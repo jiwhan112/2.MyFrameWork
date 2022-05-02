@@ -58,8 +58,14 @@ _int CCamera_Client::Tick(_double TimeDelta)
 		{
 			FAILED_CHECK_NONERETURN(Update_Target_Unit(TimeDelta));
 		}
+		break;	
+	case CCamera_Client::CAMERA_MODE_GAME_D:		
+		FAILED_CHECK_NONERETURN(Update_Target_D(TimeDelta));
+		break;
+	case CCamera_Client::CAMERA_MODE_GAME_W:
 
-		break;		
+		break;
+
 	case CCamera_Client::CAMERA_MODE_END:
 		meCameraMode = CAMERA_MODE_DEFAULT;
 		break;
@@ -179,6 +185,33 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 
 HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 {
+	return S_OK;
+}
+
+HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
+{
+	
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
+	{
+		mComTransform->GO_WorldVec(_float3(0, 0, 1), 45, CTransform::ROTTYPE_Y, TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
+	{
+		mComTransform->GO_WorldVec(_float3(0, 0, -1), 45, CTransform::ROTTYPE_Y, TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_A) & DIS_Press)
+	{
+		mComTransform->GO_Left(TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_D) & DIS_Press)
+	{
+		mComTransform->GO_Right(TimeDelta);
+	}
 	return S_OK;
 }
 

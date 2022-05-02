@@ -176,7 +176,6 @@
     <ClInclude Include="..\Public\d3dxGlobal.h" />
     <ClInclude Include="..\Public\Direct_TK\DDSTextureLoader.h" />
     <ClInclude Include="..\Public\Direct_TK\WICTextureLoader.h" />
-    <ClInclude Include="..\Public\EasingMgr.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Easing.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -221,7 +220,6 @@
     <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\Picking.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
-    <ClCompile Include="..\Private\EasingMgr.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />
     <ClCompile Include="..\Private\GameObject.cpp" />
@@ -242,6 +240,9 @@
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

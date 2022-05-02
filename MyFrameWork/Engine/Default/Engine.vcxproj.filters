@@ -135,9 +135,6 @@
     <ClCompile Include="..\private\GameInstance.cpp">
       <Filter>01.Utility\00.GameInstance</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\EasingMgr.cpp">
-      <Filter>01.Utility\01.EasingMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Timer_Manager.cpp">
       <Filter>01.Utility\03.TimerMgr\Mgr</Filter>
     </ClCompile>
@@ -269,9 +266,6 @@
     <ClInclude Include="..\Public\Engine_Easing.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\EasingMgr.h">
-      <Filter>01.Utility\01.EasingMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Timer_Manager.h">
       <Filter>01.Utility\03.TimerMgr\Mgr</Filter>
     </ClInclude>
@@ -377,5 +371,8 @@
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01.Utility\06.ComponentMgr\06.Collider\DebugDraw</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

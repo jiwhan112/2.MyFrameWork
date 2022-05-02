@@ -3,8 +3,12 @@
 
 BEGIN(Engine)
 
-class CEasingMgr :public CBase
+class CEasingMgr final:
+	public CBase
 {
+	DECLARE_SINGLETON(CEasingMgr);
+
+
 private:
 	enum EasingTypeID
 	{
@@ -48,10 +52,9 @@ private:
 		TYPE_End
 	};
 
-	DECLARE_SINGLETON(CEasingMgr);
 
 private:
-	explicit CEasingMgr();
+	CEasingMgr() = default;
 	virtual ~CEasingMgr() = default;
 
 public:
@@ -95,8 +98,11 @@ private:
 	_float BounceEaseIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
 	_float BounceEaseOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
 
+
 public:
+	// CBase을(를) 통해 상속됨
 	virtual void Free() override;
+
 };
 
 END

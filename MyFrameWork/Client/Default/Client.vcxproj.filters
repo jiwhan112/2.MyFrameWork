@@ -76,15 +76,6 @@
     <Filter Include="02.GameObject\02.3DObject">
       <UniqueIdentifier>{07567c0f-55dd-4aee-a9d0-c7f7100acc41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Creater">
-      <UniqueIdentifier>{cf7a3b89-3b5d-4c99-94d9-73450e026ea5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Creater\01.ObjectIO">
-      <UniqueIdentifier>{f6cf2dec-78b7-4f65-81eb-a81e0709e4b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Creater\02.Creater">
-      <UniqueIdentifier>{f7319978-bbc4-4c25-82f7-916d50e42b24}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\00.ObjectBase">
       <UniqueIdentifier>{7105b8a6-3552-4ab3-832c-6f277a2ca3c3}</UniqueIdentifier>
     </Filter>
@@ -147,6 +138,18 @@
     </Filter>
     <Filter Include="10.Imgui\02.Tools\04.InGameTool">
       <UniqueIdentifier>{bd0f7125-304d-40f7-be6c-2a3727589cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems">
+      <UniqueIdentifier>{cf7a3b89-3b5d-4c99-94d9-73450e026ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\01.ObjectIO">
+      <UniqueIdentifier>{f6cf2dec-78b7-4f65-81eb-a81e0709e4b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\02.Creater">
+      <UniqueIdentifier>{f7319978-bbc4-4c25-82f7-916d50e42b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\03.AStar">
+      <UniqueIdentifier>{973a7d75-ad1c-4610-adc7-869ad590d5f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -232,10 +235,10 @@
       <Filter>10.Imgui\02.Tools\01.MyDemo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FIleIO\ObjectIO.h">
-      <Filter>03.Creater\01.ObjectIO</Filter>
+      <Filter>03.GameSystems\01.ObjectIO</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h">
-      <Filter>03.Creater\02.Creater</Filter>
+      <Filter>03.GameSystems\02.Creater</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_FBX_Ani.h">
       <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
@@ -293,6 +296,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Tool\Imgui_InGame.h">
       <Filter>10.Imgui\02.Tools\04.InGameTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\System\Astar.h">
+      <Filter>03.GameSystems\03.AStar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -360,10 +366,10 @@
       <Filter>10.Imgui\02.Tools\01.MyDemo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp">
-      <Filter>03.Creater\01.ObjectIO</Filter>
+      <Filter>03.GameSystems\01.ObjectIO</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp">
-      <Filter>03.Creater\02.Creater</Filter>
+      <Filter>03.GameSystems\02.Creater</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_FBX_Ani.cpp">
       <Filter>02.GameObject\02.3DObject\3.FBX_Study</Filter>
@@ -415,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tool\Imgui_InGame.cpp">
       <Filter>10.Imgui\02.Tools\04.InGameTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\System\Astar.cpp">
+      <Filter>03.GameSystems\03.AStar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -210,6 +210,7 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\stdafx.h" />
+    <ClInclude Include="..\Public\System\Astar.h" />
     <ClInclude Include="..\Public\Tool\ImguiMgr.h" />
     <ClInclude Include="..\Public\Tool\Imgui_Base.h" />
     <ClInclude Include="..\Public\Tool\Imgui_CommonUI.h" />
@@ -262,6 +263,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\System\Astar.cpp" />
     <ClCompile Include="..\Private\Tool\ImguiMgr.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_Base.cpp" />
     <ClCompile Include="..\Private\Tool\Imgui_CommonUI.cpp" />

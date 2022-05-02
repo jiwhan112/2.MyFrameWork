@@ -126,7 +126,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 	{
 
 		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_TERRAIN);
+		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
 
 		// 이미 만들어진 오브젝트 추가
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), createobj);

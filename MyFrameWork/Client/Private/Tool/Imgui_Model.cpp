@@ -425,7 +425,6 @@ HRESULT CImgui_Model::Edit_ANI()
 
 		for (auto iter = pVecAni->begin(); iter != pVecAni->end(); ++cnt, iter++)
 		{
-
 			char AniName[256] = "";
 			strcpy_s(AniName, (*iter)->Get_Name());
 
@@ -453,6 +452,35 @@ HRESULT CImgui_Model::Edit_ANI()
 
 HRESULT CImgui_Model::Edit_COL()
 {
+	if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC)
+	{
+		IMGUI_TREE_BEGIN("Collider_Setting")
+		{
+			COLLIDER_DESC desc = mCurrent_ModelStaticObject->Get_ColliderDESC();
+
+
+			ImGui::DragFloat3("ColliderSize", (float*)&desc.mSize, 0.01f, 1, 10);
+
+			if (ImGui::Button("AABB"))
+			{
+				desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
+			}
+			if (ImGui::Button("OBB"))
+			{
+				desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_OBB;
+			}
+
+			if (ImGui::Button("SPHERE"))
+			{
+				desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+			}
+
+			mCurrent_ModelStaticObject->Set_LoadColliderDESC(desc);
+			IMGUI_TREE_END
+		}
+	}
+
+
 	return S_OK;
 }
 

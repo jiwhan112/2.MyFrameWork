@@ -192,8 +192,8 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 	//	CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
 	 
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA_GAME),
-		CCamera_Game::Create(m_pDevice, m_pDeviceContext)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA_GAME),
+	//	CCamera_Game::Create(m_pDevice, m_pDeviceContext)));
 
 	// 마우스
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MOUSE),
@@ -346,7 +346,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 		CGameObject_3D_Dynamic::Create(m_pDevice, m_pDeviceContext)));
 
 	// 지형 깡통
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
 		CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
 
 	return S_OK;

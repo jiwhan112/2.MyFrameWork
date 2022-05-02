@@ -63,7 +63,7 @@ _int CGameObject_FBX::Tick(_double TimeDelta)
 	{
 		mComTransform->Turn(XMVectorSet(0, -1, 0, 0), TimeDelta);
 	}
-
+	mComCollider->Update_Collider(mComTransform->GetWorldFloat4x4());
 
 	return UPDATENONE;
 }
@@ -91,7 +91,7 @@ HRESULT CGameObject_FBX::Render()
 	}
 
 	// 해당 위치에 충돌체 렌더링
-	mComCollider->Render(mComTransform);
+	mComCollider->Render();
 	return S_OK;
 }
 

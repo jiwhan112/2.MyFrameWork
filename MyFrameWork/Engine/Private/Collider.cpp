@@ -101,6 +101,21 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 
 	return S_OK;
 }
+HRESULT CCollider::Update_Collider(_float4x4 TransformMatrix)
+{
+	// 해당 컴포넌트 위치
+
+	if (nullptr != mAABB)
+		mAABB->Center = TransformMatrix.Translation();
+	if (nullptr != mOBB)
+		mOBB->Transform(*mOBB, TransformMatrix);
+	if (nullptr != mSphere)
+		mSphere->Center = TransformMatrix.Translation();
+
+	
+
+	return S_OK;
+}
 void CCollider::SetScale(_float3 size)
 {
 	// 일단 대입방식
@@ -115,15 +130,15 @@ void CCollider::SetScale(_float3 size)
 
 #ifdef _DEBUG
 
-HRESULT CCollider::Render(CTransform* trans)
+HRESULT CCollider::Render()
 {
 
 	// 랜더링시 처리
 	m_pDeviceContext->IASetInputLayout(mInputLayout);
-	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
+//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
 
 	CPipeLine*		pPipeLine = GetSingle(CPipeLine);
-
+	mBaseEffect->SetWorld(_float4x4::Identity);
 	mBaseEffect->SetView(XMLoadFloat4x4(&pPipeLine->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	mBaseEffect->SetProjection(XMLoadFloat4x4(&pPipeLine->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
@@ -133,11 +148,11 @@ HRESULT CCollider::Render(CTransform* trans)
 	mBatch->Begin();
 
 	if(nullptr != mAABB)
-		DX::Draw(mBatch, *mAABB);
+		DX::Draw(mBatch, *mAABB, DirectX::Colors::Green);
 	if (nullptr != mOBB)
-		DX::Draw(mBatch, *mOBB);
+		DX::Draw(mBatch, *mOBB, DirectX::Colors::Green);
 	if (nullptr != mSphere)		
-		DX::Draw(mBatch, *mSphere);
+		DX::Draw(mBatch, *mSphere,DirectX::Colors::Green);
 
 	mBatch->End();
 

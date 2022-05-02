@@ -12,6 +12,14 @@ BEGIN(Client)
 class CGameObject_3D_Dynamic final :
 	public CGameObject_Base
 {
+public :
+	enum E_BASEAI
+	{
+		BASEAI_IDLE,
+		BASEAI_MOVE,
+		BASEAI_END,
+
+	};
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs);
@@ -36,10 +44,20 @@ public:
 protected:
 	virtual HRESULT Set_Component() override;
 
+	void		GOMOVE(_double timer);
 
 protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
+	CCollider*					mComCollider = nullptr;
 	MODEL_DYNAMIC_DESC			mModelDesc;
+
+
+	_float3						mGoalPosition;
+	_float3						mStartPosition;
+	_float						mTimer;
+	_float						mTimeMax;
+
+	E_BASEAI					meAI;
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

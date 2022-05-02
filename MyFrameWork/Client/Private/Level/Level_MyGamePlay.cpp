@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Level/Level_MyGamePlay.h"
 #include "Tool/Imgui_MyDemo.h"
-#include "Camera.h"
+#include "Tool/Imgui_InGame.h"
+#include "Camera_Client.h"
 
 CLevel_MyGamePlay::CLevel_MyGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice, pDeviceContext)
@@ -55,7 +56,9 @@ HRESULT CLevel_MyGamePlay::Ready_IMGUI()
 {
 	// IMGUI »ý¼º
 
-	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
+//	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
+
+//	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_InGame::Create(m_pDevice, m_pDeviceContext));
 	return S_OK;
 }
 
@@ -99,7 +102,10 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.SpeedPersec = 10.f;
 	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
 
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA_GAME), &CameraDesc));
+
+	CCamera_Client* client =(CCamera_Client*)(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
+	client->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_D);
+
 	return S_OK;
 }
 
@@ -113,9 +119,8 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 //	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_TERRAIN), TAGOBJ(GAMEOBJECT_TERRAIN)));
-//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST)));
-//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_FBXTEST_ANI)));
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_TERRAIN), TAGOBJ(GAMEOBJECT_MYTERRAIN)));
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_3D_DYNAMIC)));
 
 	return S_OK;
 }
