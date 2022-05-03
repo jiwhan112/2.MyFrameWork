@@ -151,6 +151,9 @@
     <Filter Include="03.GameSystems\03.AStar">
       <UniqueIdentifier>{973a7d75-ad1c-4610-adc7-869ad590d5f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.3DObject\4.">
+      <UniqueIdentifier>{44e5992f-a1fc-4fa1-9f36-29a8ac984080}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">

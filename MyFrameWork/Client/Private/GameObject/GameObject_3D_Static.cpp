@@ -46,7 +46,7 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 _int CGameObject_3D_Static::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-	mComCollider->Update_Collider(mComTransform->GetWorldFloat4x4());
+	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
 	return UPDATENONE;
 }

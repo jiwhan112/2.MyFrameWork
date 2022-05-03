@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "Collider.h"
+#include "Navigation.h"
 
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"

@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CVIBuffer;
 class CVIBuffer_Terrain;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -86,6 +87,7 @@ private:
 protected:
 	CVIBuffer_Terrain*		mComVIBuffer = nullptr;
 	CTexture*				mComTexture = nullptr;
+	CNavigation*			mComNaviMesh = nullptr;
 
 	TERRAIN_DESC			mTerrainDESC;
 

@@ -1,4 +1,5 @@
-#include "..\Public\Collider.h"
+#include "../Public/Collider.h"
+
 #include "Transform.h"
 
 #include "DebugDraw.h"
@@ -101,7 +102,7 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 
 	return S_OK;
 }
-HRESULT CCollider::Update_Collider(_float4x4 TransformMatrix)
+HRESULT CCollider::Update_Transform(_float4x4 TransformMatrix)
 {
 	// 해당 컴포넌트 위치
 
@@ -116,6 +117,21 @@ HRESULT CCollider::Update_Collider(_float4x4 TransformMatrix)
 
 	return S_OK;
 }
+bool CCollider::Update_Collider(CCollider* TargetCollider)
+{
+	if (TargetCollider == nullptr || meType == CCollider::COL_END)
+		return false;
+
+	// 현재 들고있는 타입에 대해 충돌처리 
+	if (meType == CCollider::COL_AABB)
+		return Update_AABB(TargetCollider);
+	else if (meType == CCollider::COL_OBB)
+		return Update_OBB(TargetCollider);
+	else if (meType == CCollider::COL_SPHERE)
+		return Update_SPHERE(TargetCollider);
+
+	return false;
+}
 void CCollider::SetScale(_float3 size)
 {
 	// 일단 대입방식
@@ -129,6 +145,29 @@ void CCollider::SetScale(_float3 size)
 }
 
 #ifdef _DEBUG
+
+CCollider::OBBDESC CCollider::Get_Compute_OBBDesc()
+{
+	OBBDESC		OBBDesc;
+	ZeroMemory(&OBBDesc, sizeof(OBBDESC));
+	if (mOBB == nullptr)
+		return OBBDesc;
+
+	_float3		vPoint[8];
+	mOBB->GetCorners(vPoint);
+
+	// XYZ에 대한 방향 벡터
+	XMStoreFloat3(&OBBDesc.vAlignAxis[0], XMVector3Normalize(XMLoadFloat3(&vPoint[2]) - XMLoadFloat3(&vPoint[3])));
+	XMStoreFloat3(&OBBDesc.vAlignAxis[1], XMVector3Normalize(XMLoadFloat3(&vPoint[2]) - XMLoadFloat3(&vPoint[1])));
+	XMStoreFloat3(&OBBDesc.vAlignAxis[2], XMVector3Normalize(XMLoadFloat3(&vPoint[2]) - XMLoadFloat3(&vPoint[6])));
+
+	// 중심에서 각 면을 향하는 벡터를 구한다.
+	XMStoreFloat3(&OBBDesc.vCenterAxis[0], (XMLoadFloat3(&vPoint[2]) + XMLoadFloat3(&vPoint[5])) * 0.5f - XMLoadFloat3(&mOBB->Center));
+	XMStoreFloat3(&OBBDesc.vCenterAxis[1], (XMLoadFloat3(&vPoint[2]) + XMLoadFloat3(&vPoint[7])) * 0.5f - XMLoadFloat3(&mOBB->Center));
+	XMStoreFloat3(&OBBDesc.vCenterAxis[2], (XMLoadFloat3(&vPoint[2]) + XMLoadFloat3(&vPoint[0])) * 0.5f - XMLoadFloat3(&mOBB->Center));
+
+	return OBBDesc;
+}
 
 HRESULT CCollider::Render()
 {
@@ -158,6 +197,155 @@ HRESULT CCollider::Render()
 
 	return S_OK;
 }
+bool CCollider::Update_AABB(CCollider * TargetCollider)
+{
+
+	// Intersects
+	BoundingBox* targetAABB = TargetCollider->Get_Collider_AABB();
+	BoundingOrientedBox* targetOBB = TargetCollider->Get_Collider_OBB();
+	BoundingSphere* targetSPHERE = TargetCollider->Get_Collider_SPHERE();
+
+	// 각 타입에 따라 AABB와 충돌연산
+	if (targetAABB != nullptr)
+		return  mAABB->Intersects(*targetAABB);
+
+	else if (targetOBB != nullptr)
+		return  mAABB->Intersects(*targetOBB);
+
+	else if (targetSPHERE != nullptr)
+		return  mAABB->Intersects(*targetSPHERE);
+
+	return false;
+}
+bool CCollider::Update_OBB(CCollider * TargetCollider)
+{
+	// Intersects
+	BoundingBox* targetAABB = TargetCollider->Get_Collider_AABB();
+	BoundingOrientedBox* targetOBB = TargetCollider->Get_Collider_OBB();
+	BoundingSphere* targetSPHERE = TargetCollider->Get_Collider_SPHERE();
+
+	if (targetAABB != nullptr)
+		return  mOBB->Intersects(*targetAABB);
+
+	else if (targetOBB != nullptr)
+		return  mOBB->Intersects(*targetOBB);
+
+	else if (targetSPHERE != nullptr)
+		return  mOBB->Intersects(*targetSPHERE);
+
+	return false;
+
+
+	return false;
+}
+bool CCollider::Update_SPHERE(CCollider * TargetCollider)
+{
+	// Intersects
+	BoundingBox* targetAABB = TargetCollider->Get_Collider_AABB();
+	BoundingOrientedBox* targetOBB = TargetCollider->Get_Collider_OBB();
+	BoundingSphere* targetSPHERE = TargetCollider->Get_Collider_SPHERE();
+
+	if (targetAABB != nullptr)
+		return  mSphere->Intersects(*targetAABB);
+
+	else if (targetOBB != nullptr)
+		return  mSphere->Intersects(*targetOBB);
+
+	else if (targetSPHERE != nullptr)
+		return  mSphere->Intersects(*targetSPHERE);
+
+	return false;
+}
+bool CCollider::Update_MY_AABB(CCollider * TargetCollider)
+{
+
+	BoundingBox* Target_AABB= TargetCollider->Get_Collider_AABB();
+	if (nullptr == mAABB ||
+		nullptr == Target_AABB)
+		return false;
+
+
+	_float3		vSourMin, vSourMax;
+	_float3		vDestMin, vDestMax;
+
+	// A의 Min Max
+	vSourMin = _float3(mAABB->Center.x - mAABB->Extents.x,
+		mAABB->Center.y - mAABB->Extents.y,
+		mAABB->Center.z - mAABB->Extents.z
+		);
+
+	vSourMax = _float3(mAABB->Center.x + mAABB->Extents.x,
+		mAABB->Center.y + mAABB->Extents.y,
+		mAABB->Center.z + mAABB->Extents.z
+	);
+
+	// B의 Min Max
+	vDestMin = _float3(Target_AABB->Center.x - Target_AABB->Extents.x,
+		Target_AABB->Center.y - Target_AABB->Extents.y,
+		Target_AABB->Center.z - Target_AABB->Extents.z
+	);
+
+	vDestMax = _float3(Target_AABB->Center.x + Target_AABB->Extents.x,
+		Target_AABB->Center.y + Target_AABB->Extents.y,
+		Target_AABB->Center.z + Target_AABB->Extents.z
+	);
+
+
+	bool mCol = true;
+
+	// 충돌이 아닌 영역 비교
+	if (max(vSourMin.x, vDestMin.x) > min(vSourMax.x, vDestMax.x))
+		mCol = false;
+
+	if (max(vSourMin.y, vDestMin.y) > min(vSourMax.y, vDestMax.y))
+		mCol = false;
+
+	if (max(vSourMin.z, vDestMin.z) > min(vSourMax.z, vDestMax.z))
+		mCol = false;
+
+	return mCol;
+
+}
+bool CCollider::Update_MY_OBB(CCollider * TargetCollider)
+{
+	
+
+	OBBDESC obbdesc[2];
+	obbdesc[0]= Get_Compute_OBBDesc();
+	obbdesc[1]= TargetCollider->Get_Compute_OBBDesc();
+
+	bool bCol = true;
+
+	_float distance[3];
+
+	for (_uint i = 0; i < 2; ++i)
+	{
+		for (_uint j = 0; j < 3; ++j)
+		{
+			// #TODO OBB 구현
+			//distance[0] = fabs(XMVectorGetX(XMVector3Dot(XMLoadFloat3(&OBBDesc[0].vCenterAxis[0]), XMLoadFloat3(&OBBDesc[i].vAlignAxis[j])))) +
+			//	fabs(XMVectorGetX(XMVector3Dot(XMLoadFloat3(&OBBDesc[0].vCenterAxis[1]), XMLoadFloat3(&OBBDesc[i].vAlignAxis[j])))) +
+			//	fabs(XMVectorGetX(XMVector3Dot(XMLoadFloat3(&OBBDesc[0].vCenterAxis[2]), XMLoadFloat3(&OBBDesc[i].vAlignAxis[j]))));
+
+			//distance[1] = fabs(XMVectorGetX(XMVector3Dot(XMLoadFloat3(&OBBDesc[1].vCenterAxis[0]), XMLoadFloat3(&OBBDesc[i].vAlignAxis[j])))) +
+			//	fabs(XMVectorGetX(XMVector3Dot(XMLoadFloat3(&OBBDesc[1].vCenterAxis[1]), XMLoadFloat3(&OBBDesc[i].vAlignAxis[j])))) +
+			//	fabs(XMVectorGetX(XMVector3Dot(XMLoadFloat3(&OBBDesc[1].vCenterAxis[2]), XMLoadFloat3(&OBBDesc[i].vAlignAxis[j]))));
+
+			//distance[2] = fabs(XMVectorGetX(XMVector3Dot(XMLoadFloat3(&pTargetCollider->m_pOBB[BOUNDING_TRANSFORM]->Center) -
+			//	XMLoadFloat3(&m_pOBB[BOUNDING_TRANSFORM]->Center), XMLoadFloat3(&OBBDesc[i].vAlignAxis[j]))));
+
+			if (distance[0] + distance[1] < distance[2])
+			{
+				bCol = false;
+				break;
+			}
+		}
+		if (false == bCol)
+			break;
+	}	
+	return bCol;
+}
+
 #endif // _DEBUG
 
 CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_COLLIDER_TYPE eType)

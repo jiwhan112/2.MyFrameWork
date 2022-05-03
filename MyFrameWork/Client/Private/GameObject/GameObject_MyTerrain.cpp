@@ -12,9 +12,12 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	: CGameObject_Base(rhs)
 	, mComVIBuffer(rhs.mComVIBuffer)
 	, mComTexture(rhs.mComTexture)
+	, mComNaviMesh(rhs.mComNaviMesh)
 {
 	Safe_AddRef(mComVIBuffer);
 	Safe_AddRef(mComTexture);
+	Safe_AddRef(mComNaviMesh);
+
 	mVecTile = nullptr;
 
 }
@@ -75,6 +78,10 @@ HRESULT CGameObject_MyTerrain::Render()
 
 	mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE, 0);
 	mComVIBuffer->Render(mComShader, 0);
+
+#ifdef _DEBUG
+	mComNaviMesh->Render(mComTransform);
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -168,6 +175,11 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 	if (mComTexture == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
+
+	if (mComNaviMesh == nullptr)
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
+
+
 	return S_OK;
 }
 
@@ -245,6 +257,7 @@ void CGameObject_MyTerrain::Free()
 	__super::Free();
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
+	Safe_Release(mComNaviMesh);
 
 	if (mVecTile == nullptr)
 		return;

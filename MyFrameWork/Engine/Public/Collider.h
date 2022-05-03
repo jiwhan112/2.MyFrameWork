@@ -12,7 +12,13 @@ public:
 	enum E_COLLIDER_TYPE { COL_AABB, COL_OBB, COL_SPHERE, COL_END };
 
 public:
-	
+	typedef struct tagOBBDesc
+	{
+		_float3		vCenterAxis[3];
+		_float3		vAlignAxis[3];
+	}OBBDESC;
+
+public:
 	// 충돌체의 위치 적용
 	typedef struct tagColliderDesc
 	{
@@ -29,10 +35,30 @@ private:
 public:
 	virtual HRESULT NativeConstruct_Prototype(E_COLLIDER_TYPE eType);
 	virtual HRESULT NativeConstruct(void* pArg);
-	virtual HRESULT Update_Collider(_float4x4 TransformMatrix);
+	virtual HRESULT Update_Transform(_float4x4 TransformMatrix);
+	virtual bool Update_Collider(CCollider* TargetCollider);
 
 public:
 	void SetScale(_float3 size);
+	E_COLLIDER_TYPE Get_Type()
+	{
+		return meType;
+	}
+
+	BoundingBox* Get_Collider_AABB()
+	{
+		return mAABB;
+	}
+	BoundingOrientedBox* Get_Collider_OBB()
+	{
+		return mOBB;
+	}
+	BoundingSphere* Get_Collider_SPHERE()
+	{
+		return mSphere;
+	}
+
+	OBBDESC Get_Compute_OBBDesc();
 
 
 #ifdef _DEBUG
@@ -40,6 +66,13 @@ public:
 	virtual HRESULT Render();
 #endif // _DEBUG
 
+private:
+	bool Update_AABB(CCollider* TargetCollider);
+	bool Update_OBB(CCollider* TargetCollider);
+	bool Update_SPHERE(CCollider* TargetCollider);
+
+	bool Update_MY_AABB(CCollider* TargetCollider);
+	bool Update_MY_OBB(CCollider* TargetCollider);
 	
 private: // 충돌체 정보 
 	// 충돌체에 따라서 처리
@@ -50,7 +83,6 @@ private: // 충돌체 정보
 	// 타입과 DESC
 	E_COLLIDER_TYPE				meType = COL_END;
 	COLLIDERDESC				mColliderDesc;
-	
 
 	// Draw 관련
 #ifdef _DEBUG

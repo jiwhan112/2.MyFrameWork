@@ -63,7 +63,7 @@ _int CGameObject_FBX::Tick(_double TimeDelta)
 	{
 		mComTransform->Turn(XMVectorSet(0, -1, 0, 0), TimeDelta);
 	}
-	mComCollider->Update_Collider(mComTransform->GetWorldFloat4x4());
+	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
 	return UPDATENONE;
 }

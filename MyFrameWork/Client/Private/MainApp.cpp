@@ -117,7 +117,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TRANSFORM),
 		CTransform::Create(m_pDevice, m_pDeviceContext)));
 
-
+	// 충돌
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB),
 		CCollider::Create(m_pDevice, m_pDeviceContext,CCollider::COL_AABB)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_OBB),
@@ -125,6 +125,9 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE),
 		CCollider::Create(m_pDevice, m_pDeviceContext, CCollider::COL_SPHERE)));
 
+	// 네비
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH),
+		CNavigation::Create(m_pDevice, m_pDeviceContext, nullptr)));
 
 	// 버퍼 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),

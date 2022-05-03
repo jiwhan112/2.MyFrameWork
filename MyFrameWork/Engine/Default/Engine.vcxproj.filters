@@ -121,6 +121,15 @@
     <Filter Include="01.Utility\06.ComponentMgr\06.Collider\DebugDraw">
       <UniqueIdentifier>{f7f8f27c-9f8b-4d9e-ba8a-f5376a832447}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\07.Navigation">
+      <UniqueIdentifier>{ab5de5df-388f-4211-baa3-080bdc5938f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\07.Navigation\Cell">
+      <UniqueIdentifier>{47411ff3-7bd1-4d08-9ffe-6109bd721387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Triangle">
+      <UniqueIdentifier>{b7e44e0d-9068-4415-ad92-d9b01dff8ff4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -233,6 +242,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>01.Utility\06.ComponentMgr\06.Collider\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Navigation.cpp">
+      <Filter>01.Utility\06.ComponentMgr\07.Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp">
+      <Filter>01.Utility\06.ComponentMgr\07.Navigation\Cell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +385,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01.Utility\06.ComponentMgr\06.Collider\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Navigation.h">
+      <Filter>01.Utility\06.ComponentMgr\07.Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h">
+      <Filter>01.Utility\06.ComponentMgr\07.Navigation\Cell</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
