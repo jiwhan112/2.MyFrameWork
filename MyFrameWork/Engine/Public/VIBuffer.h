@@ -3,7 +3,7 @@
 #include "Component.h"
 
 BEGIN(Engine)
-
+// class CShader;
 class ENGINE_DLL CVIBuffer abstract : public CComponent
 {
 public:
@@ -16,8 +16,10 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);
 
 public:
-	HRESULT Render(class CShader* shader, _uint passindex);
+	virtual HRESULT Render(class CShader* pShader, _uint iPassIndex);
 
+
+public:
 	_bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);
 	_float3*		Get_VerrtexPosition() const { return mpVertexPos; }
 	_uint		Get_VerrtexSize() const { return m_iNumVertices; }

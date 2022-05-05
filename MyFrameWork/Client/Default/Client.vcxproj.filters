@@ -303,6 +303,9 @@
     <ClInclude Include="..\Public\System\Astar.h">
       <Filter>03.GameSystems\03.AStar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h">
+      <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -428,6 +431,9 @@
     <ClCompile Include="..\Private\System\Astar.cpp">
       <Filter>03.GameSystems\03.AStar</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp">
+      <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -456,6 +462,9 @@
       <Filter>97.Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAni.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
   </ItemGroup>

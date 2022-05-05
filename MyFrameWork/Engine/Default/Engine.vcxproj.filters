@@ -252,6 +252,9 @@
     <ClCompile Include="..\Private\Cell.cpp">
       <Filter>01.Utility\06.ComponentMgr\07.Navigation\Cell</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect_Instance.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Graphic_Device.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Cell.h">
       <Filter>01.Utility\06.ComponentMgr\07.Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect_Instance.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

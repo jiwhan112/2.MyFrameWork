@@ -173,6 +173,7 @@
     <ClInclude Include="..\Public\GameManager.h" />
     <ClInclude Include="..\Public\GameObject\Camera_Game.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Base.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\Private\GameManager.cpp" />
     <ClCompile Include="..\Private\GameObject\Camera_Game.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp" />
@@ -310,6 +312,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

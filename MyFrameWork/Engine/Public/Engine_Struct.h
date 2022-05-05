@@ -48,6 +48,22 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXTEX_DECLARATION;
 
+
+	typedef struct tagVertex_Matrix
+	{
+		XMFLOAT4			vRight;
+		XMFLOAT4			vUp;
+		XMFLOAT4			vLook;
+		XMFLOAT4			vTranslation;
+	}VTXMATRIX;
+
+
+	typedef struct ENGINE_DLL tagVertex_Instance_Declaration
+	{
+		static const unsigned int iNumElements = 6;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXINSTANCE_DECLARATION;
+
 	typedef struct tagVertex_CubeTexture
 	{
 		XMFLOAT3			vPosition;
