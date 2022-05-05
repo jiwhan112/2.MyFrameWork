@@ -61,6 +61,7 @@ public:
 
 public:
 	CVIBuffer_Terrain*		Get_TerrainBuffer() const { return mComVIBuffer; }
+	CNavigation*			Get_ComNavimesh() const { return mComNaviMesh; }
 
 	const TERRAIN_DESC& Get_TerrainDESC() const { return mTerrainDESC; }
 	HRESULT		Set_LoadTerrainDESC(const TERRAIN_DESC& desc);

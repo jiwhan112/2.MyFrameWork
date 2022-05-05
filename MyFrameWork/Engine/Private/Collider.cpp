@@ -14,10 +14,12 @@ CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContex
 
 CCollider::CCollider(const CCollider & rhs)
 	: CComponent(rhs)
+#ifdef _DEBUG
 	, mBaseEffect(rhs.mBaseEffect)
 	, mBatch(rhs.mBatch)
-	, meType(rhs.meType)
 	, mInputLayout(rhs.mInputLayout)
+#endif // _DEBUG
+	, meType(rhs.meType)
 {
 	// 복사시 새로 만들어지고 위치를 설정해준다.
 	if (nullptr != rhs.mAABB)
@@ -27,7 +29,10 @@ CCollider::CCollider(const CCollider & rhs)
 	if (nullptr != rhs.mSphere)
 		mSphere = new BoundingSphere(*rhs.mSphere);
 
+#ifdef _DEBUG
 	Safe_AddRef(mInputLayout);
+#endif // _DEBUG
+
 	
 }
 
@@ -105,7 +110,6 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 HRESULT CCollider::Update_Transform(_float4x4 TransformMatrix)
 {
 	// 해당 컴포넌트 위치
-
 	if (nullptr != mAABB)
 		mAABB->Center = TransformMatrix.Translation();
 	if (nullptr != mOBB)
@@ -144,7 +148,6 @@ void CCollider::SetScale(_float3 size)
 
 }
 
-#ifdef _DEBUG
 
 CCollider::OBBDESC CCollider::Get_Compute_OBBDesc()
 {
@@ -169,6 +172,7 @@ CCollider::OBBDESC CCollider::Get_Compute_OBBDesc()
 	return OBBDesc;
 }
 
+#ifdef _DEBUG
 HRESULT CCollider::Render()
 {
 
@@ -197,6 +201,8 @@ HRESULT CCollider::Render()
 
 	return S_OK;
 }
+#endif // _DEBUG
+
 bool CCollider::Update_AABB(CCollider * TargetCollider)
 {
 
@@ -244,6 +250,8 @@ bool CCollider::Update_SPHERE(CCollider * TargetCollider)
 	BoundingBox* targetAABB = TargetCollider->Get_Collider_AABB();
 	BoundingOrientedBox* targetOBB = TargetCollider->Get_Collider_OBB();
 	BoundingSphere* targetSPHERE = TargetCollider->Get_Collider_SPHERE();
+
+//	mSphere->Intersects(rr.position, rr.direction, dist);
 
 	if (targetAABB != nullptr)
 		return  mSphere->Intersects(*targetAABB);
@@ -346,7 +354,6 @@ bool CCollider::Update_MY_OBB(CCollider * TargetCollider)
 	return bCol;
 }
 
-#endif // _DEBUG
 
 CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_COLLIDER_TYPE eType)
 {
@@ -382,9 +389,10 @@ void CCollider::Free()
 	Safe_Delete(mOBB);
 	Safe_Delete(mSphere);
 
-	Safe_Release(mInputLayout);
 
 #ifdef _DEBUG
+	Safe_Release(mInputLayout);
+
 	if (false == m_isCloned)
 	{
 		Safe_Delete(mBaseEffect);

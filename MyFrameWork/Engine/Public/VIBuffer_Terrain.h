@@ -22,6 +22,7 @@ public:
 	// 피킹 타일 인덱스 반환
 	_uint Get_TileIndex(_float3 worldPos);
 	_float3 Get_TileWorldPos(_uint TileIndex);
+	_uint* Get_XZ() { _uint r[2] = { miNumX ,miNumZ }; return r; };
 
 
 

@@ -102,7 +102,7 @@ DepthStencilState  ZTestAndWriteState
 {
 	DepthEnable = true;
 	DepthWriteMask = all;
-	DepthFunc = less;
+	DepthFunc = less_equal;
 };
 
 DepthStencilState  NonZTestAndWriteState

@@ -42,7 +42,7 @@ private:
 	void WINDOW_TERRAIN();
 private:
 
-	HRESULT Edit_TERRAIN(); 
+	HRESULT Edit_TERRAIN();
 
 
 private:

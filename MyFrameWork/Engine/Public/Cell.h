@@ -31,23 +31,25 @@ public:
 public:
 	HRESULT NativeConstruct(const _float3* pPoints, _uint iIndex);
 	_bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
-
-#ifdef _DEBUG
-public:
-	HRESULT Render();
-#endif // _DEBUG
-	
+	// 현재 인덱스 
+	_bool isIn(_fvector vPosition, _int* pNeighborIndex);
 
 private:
 	ID3D11Device*				m_pDevice = nullptr;
 	ID3D11DeviceContext*		m_pDeviceContext = nullptr;
 
 private:
-	// 이웃하는 인덱스와 점 3개를 갖는다.
-	// 이웃하는 메시는 최대 3개이다.
+	
+	// 현재 인덱스
 	_uint			mIndex = 0;
+	
+	// 이웃하는 인덱스
 	_int			mNeighborIndex[LINE_END] = { -1, -1, -1 };
+	
+	// 점의 위치
 	_float3			mPoints[POINT_END];
+	// 라인의 위치
+	_float3			mLineDir[LINE_END];
 
 public:
 	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _float3* pPoints, _uint iIndex);

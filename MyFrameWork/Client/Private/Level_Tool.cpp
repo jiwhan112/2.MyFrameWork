@@ -24,10 +24,12 @@ HRESULT CLevel_Tool::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
 	
+#ifdef _DEBUG
 	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(Ready_Tools());
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
+#endif
 
 	return S_OK;
 }
@@ -60,11 +62,13 @@ HRESULT CLevel_Tool::Render()
 
 HRESULT CLevel_Tool::Ready_Tools()
 {
+#ifdef _DEBUG
+
 	// IMGUI 积己
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_UI::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Model::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Terrain::Create(m_pDevice, m_pDeviceContext));
-
+#endif
 	// 坷宏璃飘 积己
 
 	return S_OK;

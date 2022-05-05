@@ -193,13 +193,109 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 			IMGUI_TREE_END
 		}
 
+		// 네비메시
+
+		IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Navi"))
+		{
+			if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "AutoNavi")))
+			{
+				// 네비메시 데이터 자동 세팅
+				CNavigation* navi = mCurrent_TerrainObject->Get_ComNavimesh();
+				CVIBuffer_Terrain* terrainbuffer = mCurrent_TerrainObject->Get_TerrainBuffer();
+
+				// 1. 정점을 가져온다.
+				_float3* vertexes = terrainbuffer->Get_VerrtexPosition();
+				_uint vertexSize = terrainbuffer->Get_VerrtexSize();
+				_uint numX = terrainbuffer->Get_XZ()[0];
+				_uint numZ = terrainbuffer->Get_XZ()[1];
+
+			//	list<_float3> Newfloat3List;
+
+
+
+			/*	for (_uint i = 0; i< vertexSize;++i)
+				{
+					_float3 position = vertexes[i];
+					Newfloat3List.push_back(position);
+
+				}*/
+				// 랜덤 
+
+
+				// 버텍스 그대로 네비에 넘김
+				list<_float3*> NewFloat3ArrayList;
+				_float3 vPoints[3];
+
+
+
+				for (_uint z = 0; z < numZ - 1; z++)
+				{
+					for (_uint x = 0; x < numX - 1; x++)
+					{
+						_uint		iIndex = z * numX + x;
+
+						_uint		iIndices[4] = {
+							iIndex + numX,
+							iIndex + numX + 1,
+							iIndex + 1,
+							iIndex
+						};
+												
+						vPoints[0] = vertexes[iIndices[0]];
+						vPoints[1] = vertexes[iIndices[1]];
+						vPoints[2] = vertexes[iIndices[2]];
+
+						_float3* newPoint1 = NEW _float3[3];
+						newPoint1[0] = vPoints[0];
+						newPoint1[1] = vPoints[1];
+						newPoint1[2] = vPoints[2];
+						NewFloat3ArrayList.push_back(newPoint1);
+
+						vPoints[0] = vertexes[iIndices[0]];
+						vPoints[1] = vertexes[iIndices[2]];
+						vPoints[2] = vertexes[iIndices[3]];
+
+						_float3* newPoint2 = NEW _float3[3];
+						newPoint2[0] = vPoints[0];
+						newPoint2[1] = vPoints[1];
+						newPoint2[2] = vPoints[2];
+						NewFloat3ArrayList.push_back(newPoint2);
+
+					}
+				}
+				
+				
+				// 3개씩 데이터 넘김
+				// for (auto iter = Newfloat3List.begin(); iter != Newfloat3List.end();)
+				// {
+				// 	for (int i =0; i<3 ; ++i)
+				// 	{
+				// 		vPoints[i] = *iter;
+				// 		iter++;
+				// 		if (iter == Newfloat3List.end())
+				// 			break;
+				// 	}
+				// 
+				// 	if (iter == Newfloat3List.end())
+				// 		break;
+				// 	NewFloat3ArrayList.push_back(vPoints);
+				// }
+
+				navi->SetUp_NewNaviMesh(NewFloat3ArrayList);
+				for (auto& p : NewFloat3ArrayList)
+				{
+					Safe_Delete_Array(p);
+				}
+				NewFloat3ArrayList.clear();
+
+			}
+			IMGUI_TREE_END
+		}
+
 	}
 
 	return S_OK;
 }
-
-
-
 
 CImgui_Terrain * CImgui_Terrain::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {
@@ -210,7 +306,6 @@ CImgui_Terrain * CImgui_Terrain::Create(ID3D11Device* deviec, ID3D11DeviceContex
 		MSGBOX("Failed to Creating CImgui_Terrain");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 

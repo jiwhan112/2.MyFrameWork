@@ -49,7 +49,7 @@ _int CGameObject_Terrain::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_FIRST, this);
 	return _int();
 }
 

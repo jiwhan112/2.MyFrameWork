@@ -72,7 +72,7 @@ _int CGameObject_FBX::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 	Set_Height();
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_FIRST, this);
 	return UPDATENONE;
 }
 
@@ -91,7 +91,11 @@ HRESULT CGameObject_FBX::Render()
 	}
 
 	// 해당 위치에 충돌체 렌더링
+
+#ifdef _DEBUG
 	mComCollider->Render();
+#endif // _DEBUG
+
 	return S_OK;
 }
 

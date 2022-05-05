@@ -459,7 +459,7 @@ HRESULT CImgui_Model::Edit_COL()
 			COLLIDER_DESC desc = mCurrent_ModelStaticObject->Get_ColliderDESC();
 
 
-			ImGui::DragFloat3("ColliderSize", (float*)&desc.mSize, 0.01f, 1, 10);
+			ImGui::DragFloat3("ColliderSize", (float*)&desc.mSize, 0.01f, 0.1f, 100);
 
 			if (ImGui::Button("AABB"))
 			{

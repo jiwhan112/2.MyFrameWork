@@ -130,6 +130,9 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Triangle">
       <UniqueIdentifier>{b7e44e0d-9068-4415-ad92-d9b01dff8ff4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance">
+      <UniqueIdentifier>{d7e2005f-e146-4e85-9951-c5d3f38e8280}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">

@@ -10,7 +10,7 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND_FIRST,RENDER_NONBLEND_SECOND, RENDER_BLEND, RENDER_UI, RENDER_END };
 public:
 	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~CRenderer() = default;
@@ -29,7 +29,8 @@ private:
 
 private:
 	HRESULT Render_Priority();
-	HRESULT Render_NonAlpha();
+	HRESULT Render_NonAlpha_First();
+	HRESULT Render_NonAlpha_Second();
 	HRESULT Render_Alpha();
 	HRESULT Render_UI();
 

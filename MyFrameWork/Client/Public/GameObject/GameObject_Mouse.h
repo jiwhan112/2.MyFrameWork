@@ -24,11 +24,13 @@ public:
 	virtual _int LateTick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
+	
+
 public: // Get Set
 
 protected: // DESC
-	_float2 mMousePos;
-	_viewport mViewPort;
+	_float2			mMousePos;
+	_viewport		mViewPort;
 
 public:
 	static CGameObject_Mouse* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

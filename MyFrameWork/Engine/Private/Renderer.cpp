@@ -35,7 +35,10 @@ HRESULT CRenderer::Render()
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
 
-	if (FAILED(Render_NonAlpha()))
+	if (FAILED(Render_NonAlpha_First()))
+		return E_FAIL;
+
+	if (FAILED(Render_NonAlpha_Second()))
 		return E_FAIL;
 
 	if (FAILED(Render_Alpha()))
@@ -66,9 +69,9 @@ HRESULT CRenderer::Render_Priority()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_NonAlpha()
+HRESULT CRenderer::Render_NonAlpha_First()
 {
-	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND])
+	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND_FIRST])
 	{
 
 		if (nullptr != pRenderObject)
@@ -81,11 +84,29 @@ HRESULT CRenderer::Render_NonAlpha()
 		}
 		Safe_Release(pRenderObject);
 	}
-	mRenderObjects[RENDER_NONBLEND].clear();
+	mRenderObjects[RENDER_NONBLEND_FIRST].clear();
 
 	return S_OK;
 }
+HRESULT CRenderer::Render_NonAlpha_Second()
+{
+	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND_SECOND])
+	{
 
+		if (nullptr != pRenderObject)
+		{
+			if (pRenderObject->Get_IsRenderer())
+			{
+				if (FAILED(pRenderObject->Render()))
+					return E_FAIL;
+			}
+		}
+		Safe_Release(pRenderObject);
+	}
+	mRenderObjects[RENDER_NONBLEND_SECOND].clear();
+
+	return S_OK;
+}
 HRESULT CRenderer::Render_Alpha()
 {
 	//mRenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool

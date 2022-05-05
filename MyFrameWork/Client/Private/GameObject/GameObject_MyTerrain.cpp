@@ -26,6 +26,7 @@ HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
+
 	return S_OK;
 }
 
@@ -34,6 +35,9 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	FAILED_CHECK(Set_Component());
 	misPick = false;
+
+	// #TODO: 데이터로 받아오게 처리하자
+//	mComNaviMesh->SetUp_AutoMesh(mComVIBuffer);
 	return S_OK;
 }
 
@@ -46,10 +50,17 @@ _int CGameObject_MyTerrain::Tick(_double TimeDelta)
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
 	{
 		_float3 pick;
-		if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
+		//if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
+		//{
+		//	Update_PickPos(pick);
+		//
+		//	return true;
+		//}
+
+		// 네비 메시 충돌
+		if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
 		{
 			Update_PickPos(pick);
-		
 			return true;
 		}
 		return false;
@@ -61,7 +72,7 @@ _int CGameObject_MyTerrain::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_FIRST, this);
 	return UPDATENONE;
 }
 

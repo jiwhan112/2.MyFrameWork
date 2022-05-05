@@ -41,6 +41,7 @@ private:
 	void Update_ListBox(CGameObject * parent, _uint cnt, _int* selectindex);
 	void Update_ListBox(CGameObject * obj,string Layer, _uint cnt, _int* selectindex);
 	void PATHMODE();
+	void PATHMODE_ALLLOAD();
 
 	void Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname, wstring exeName = L"");
 

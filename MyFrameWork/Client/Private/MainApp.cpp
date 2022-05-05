@@ -125,15 +125,13 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE),
 		CCollider::Create(m_pDevice, m_pDeviceContext, CCollider::COL_SPHERE)));
 
-	// 네비
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH),
-		CNavigation::Create(m_pDevice, m_pDeviceContext, nullptr)));
-
+	
 	// 버퍼 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),
 		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
 		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
+
 
 	// 높이맵으로 처리
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
@@ -286,13 +284,9 @@ HRESULT CMainApp::Ready_Prototype_Components_Texture()
 HRESULT CMainApp::Ready_Prototype_Components_Terrain()
 {
 	// 지형 컴포넌트
-	int TerrainSize = 0;
-	//TerrainSize = pow(2, 4);
-	//TerrainSize = pow(2, 5);
-	//TerrainSize = pow(2, 6);
-
+	CVIBuffer_Terrain* debugterrain = nullptr;
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 17, 17)));
+		debugterrain = CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 17, 17)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 33, 33)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64),
@@ -300,6 +294,13 @@ HRESULT CMainApp::Ready_Prototype_Components_Terrain()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 129, 129)));
 
+
+	// 네비
+	CNavigation* initNavi = nullptr;
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH),
+		initNavi=CNavigation::Create(m_pDevice, m_pDeviceContext, nullptr)));
+
+	initNavi->SetUp_AutoMesh(debugterrain);
 	return S_OK;
 }
 

@@ -18,7 +18,6 @@ CGameObject_Mouse::CGameObject_Mouse(const CGameObject_Mouse& rhs)
 HRESULT CGameObject_Mouse::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-
 	return S_OK;
 }
 
@@ -48,18 +47,9 @@ _int CGameObject_Mouse::Tick(_double TimeDelta)
 	mMousePos.x = (float)ptMouse.x -(g_iWinCX * 0.5f);
 	mMousePos.y = (g_iWinCY * 0.5f) - (float)ptMouse.y ;
 
-
 	mComTransform->Scaled(XMVectorSet(50, 50, 1, 0.0f));
-
 	mComTransform->Set_State(CTransform::STATE_POSITION,
 		XMVectorSet(mMousePos.x, mMousePos.y, 0.0f, 1.f));
-
-
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
-	{
-		_float3 f = GetSingle(CGameInstance)->Get_PickPos();
-		int a = 5;		
-	}
 
 	return UPDATENONE;
 }

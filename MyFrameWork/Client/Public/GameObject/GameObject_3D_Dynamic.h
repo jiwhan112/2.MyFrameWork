@@ -49,6 +49,7 @@ protected:
 protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
 	CCollider*					mComCollider = nullptr;
+	CNavigation*				mComNaviMesh = nullptr;
 	MODEL_DYNAMIC_DESC			mModelDesc;
 
 
