@@ -1,18 +1,13 @@
 #pragma once
 #include "Base.h"
 
-
-
-
 BEGIN(Client)
 
 // IMGUI 사용할 것만 업데이트
 // #Tag IMGUI 헤더 추가
 
-
 class CImguiMgr :public CBase
 {
-
 private:
 	explicit CImguiMgr() = default;
 	virtual ~CImguiMgr() = default;
@@ -39,10 +34,9 @@ private:
 private:
 	// 기본 UI 저장해놓음
 	class CImgui_CommonUI*		mCommonUI = nullptr;
-	
 
 public:
-	static CImguiMgr* Create(HWND hwnd,ID3D11Device* d, ID3D11DeviceContext* c);
+	static CImguiMgr* Create(HWND hwnd, ID3D11Device* d, ID3D11DeviceContext* c);
 
 	virtual void Free() override;
 };

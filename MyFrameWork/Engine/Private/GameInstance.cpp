@@ -24,7 +24,6 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pLightMgr);
 	Safe_AddRef(m_pFileMgr);
 	Safe_AddRef(m_pPickMgr);
-
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -34,7 +33,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 		return E_FAIL;
 
 	FAILED_CHECK(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinCX, GraphicDesc.iWinCY, ppDeviceOut, ppDeviceContextOut));
-	FAILED_CHECK(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd,0.3f));
+	FAILED_CHECK(m_pInput_Device->Ready_Input_Device(hInstance, GraphicDesc.hWnd, 0.3f));
 	FAILED_CHECK(m_pObject_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
@@ -46,7 +45,6 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pObject_Manager)
 		return -1;
-
 
 	// INPUT
 	FAILED_CHECK(m_pInput_Device->SetUp_InputDeviceState(TimeDelta));
@@ -209,7 +207,7 @@ HRESULT CGameInstance::Push_Object(_uint levelindex, const _tchar * pLayerTag, C
 	if (m_pObject_Manager == nullptr)
 		return E_FAIL;
 
-	return m_pObject_Manager->Push_GameObject(levelindex,pLayerTag,obj);
+	return m_pObject_Manager->Push_GameObject(levelindex, pLayerTag, obj);
 }
 
 const list<CGameObject*>* CGameInstance::Get_GameObjectLayerList(_uint iLevelIndex, const _tchar * pLayerTag)
@@ -294,7 +292,7 @@ void CGameInstance::SaveVectorToDat(const wstring&  savetxtName, wstring exename
 list<MYFILEPATH*> CGameInstance::Load_ExtensionList(const wstring& txtfilepath, string exe)
 {
 	NULL_CHECK_BREAK(m_pFileMgr);
-	return m_pFileMgr->Load_ExtensionList(txtfilepath,exe);
+	return m_pFileMgr->Load_ExtensionList(txtfilepath, exe);
 }
 
 wstring CGameInstance::Get_PathData(wstring Fullpath)
@@ -315,7 +313,7 @@ _bool CGameInstance::isPick(_float3 * pLocalPoint, _float3 * pOut)
 {
 	NULL_CHECK_BREAK(m_pPickMgr);
 
-	return m_pPickMgr->isPick(pLocalPoint,pOut);
+	return m_pPickMgr->isPick(pLocalPoint, pOut);
 }
 
 _float3 CGameInstance::Get_PickPos() const
@@ -331,12 +329,8 @@ _bool CGameInstance::Get_isPick() const
 	return m_pPickMgr->Get_isPick();
 }
 
-
-
 void CGameInstance::Release_Engine()
 {
-
-
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGameInstance");
 
@@ -369,11 +363,6 @@ void CGameInstance::Release_Engine()
 
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");
-
-
-
-
-
 }
 
 void CGameInstance::Free()
@@ -388,5 +377,4 @@ void CGameInstance::Free()
 	Safe_Release(m_pLightMgr);
 	Safe_Release(m_pFileMgr);
 	Safe_Release(m_pPickMgr);
-
 }

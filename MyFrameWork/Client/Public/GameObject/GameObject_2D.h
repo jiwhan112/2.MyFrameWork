@@ -13,7 +13,6 @@ protected:
 	explicit CGameObject_2D(const CGameObject_2D& rhs);
 	virtual ~CGameObject_2D() = default;
 
-
 public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
@@ -23,7 +22,7 @@ public:
 	virtual HRESULT Render();
 
 public:
-	CTexture_map* Get_TextureMap() const { return mComTexture; }	
+	CTexture_map* Get_TextureMap() const { return mComTexture; }
 	CVIBuffer* Get_VIBuffer() const { return mComVIBuffer; }
 
 	void Set_LoadUIDesc(const UI_DESC& desc)
@@ -32,7 +31,7 @@ public:
 	}
 	const UI_DESC& Get_UIDesc() const { return mUiDesc; }
 
-	void Set_LoadTexDesc(const TEXTURE_DESC& desc);	
+	void Set_LoadTexDesc(const TEXTURE_DESC& desc);
 	const TEXTURE_DESC& Get_TextureDesc() const { return mTexStrDESC; }
 
 	// 오름차순으로 정렬 큰값을 나중에 그린다.
@@ -44,7 +43,6 @@ protected:
 	// 셰이더 넘기기
 	virtual HRESULT Set_ConstantTable_UI(); // UI Cam
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처 설정
-
 
 protected: // UI에서 Com / DESC 추가
 

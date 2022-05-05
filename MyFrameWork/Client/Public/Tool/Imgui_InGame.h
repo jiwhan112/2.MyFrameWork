@@ -2,7 +2,6 @@
 
 BEGIN(Client)
 
-
 // Terrain툴
 
 class CImgui_InGame final :
@@ -11,10 +10,9 @@ class CImgui_InGame final :
 public:
 	enum E_TOOLMODE_TERRAIN
 	{
-		E_TOOLMODE_TERRAIN_MAP, // 맵 버텍스 
+		E_TOOLMODE_TERRAIN_MAP, // 맵 버텍스
 		E_TOOLMODE_TERRAIN_OBJ, // 맵 오브젝트 얻기
 		E_TOOLMODE_TERRAIN_END
-
 	};
 
 private:
@@ -38,7 +36,6 @@ private:
 
 	void RENDER_STATIC_MODE();
 	void RENDER_DYNAMIC_MODE();
-
 
 	void INIT_FBXPathList();
 private:
@@ -65,11 +62,9 @@ private:
 //	list<string>*					mProtoStaticModelList = nullptr;
 //	list<string>*					mProtoDynamicModelList = nullptr;
 
-
 private:
 	E_TAYLAY						meCreateTERRAIN_Layer = LAY_TERRAIN;
 	E_TAYLAY						meCreateOBJ_Layer = LAY_OBJECT;
-
 
 public:
 	static CImgui_InGame* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);

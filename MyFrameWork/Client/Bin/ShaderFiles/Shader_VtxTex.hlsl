@@ -58,10 +58,9 @@ PS_OUT PS_MAIN_UI(PS_IN In)
 	if (Out.vColor.a < 0.5f)
 	{
 		discard;
-	}	
+	}
 	return Out;
 }
-
 
 technique11		DefaultTechnique
 {
@@ -86,5 +85,4 @@ technique11		DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_UI();
 	}
-
 }

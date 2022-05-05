@@ -7,11 +7,9 @@
 #include "Model.h"
 #include "Animation.h"
 
-
 // #TODO: 모델 애니메이션 툴 제작
 // 모델은 충돌체 씌울 수 있게
 // 애니메이션은 각 애니메이션 재생할 수 있게.
-
 
 CImgui_Model::CImgui_Model(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -48,7 +46,6 @@ HRESULT CImgui_Model::Update(_double time)
 		{
 			mCurrent_ModelStaticObject = static_cast<CGameObject_3D_Static*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_STATIC;
-
 		}
 
 		else if (type == OBJECT_TYPE_3D_DYNAMIC)
@@ -58,7 +55,6 @@ HRESULT CImgui_Model::Update(_double time)
 		}
 		else
 			SelectObject = nullptr;
-
 	}
 	else
 	{
@@ -72,7 +68,6 @@ HRESULT CImgui_Model::Update(_double time)
 		meModelMode = CImgui_Model::TOOLMODE_MODEL_END;
 	}
 
-
 	FAILED_CHECK(Render_UI());
 
 	SelectObject = nullptr;
@@ -84,7 +79,6 @@ HRESULT CImgui_Model::Render_UI()
 {
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_MAIN)))
 	{
-
 		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "3D_MODEL")))
 		{
 			// 빈 3D 오브젝트 생성
@@ -118,7 +112,6 @@ HRESULT CImgui_Model::Render_UI()
 		}
 		ImGui::End();
 	}
-	
 
 	return S_OK;
 }
@@ -133,19 +126,16 @@ void CImgui_Model::FBX_SETTINGMODE()
 		FAILED_CHECK_NONERETURN(Edit_ANI());
 		FAILED_CHECK_NONERETURN(Edit_COL());
 	}
-
 }
 
 void CImgui_Model::RENDER_CREATE_PROTO()
 {
-
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
 	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Proto_Static"))
 	{
 		if (mProtoStaticModelList == nullptr)
 			mProtoStaticModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC);
-
 
 		static int selectObjectIndex = -1;
 		_uint cnt = 0;
@@ -199,7 +189,6 @@ void CImgui_Model::RENDER_CREATE_PROTO()
 
 		IMGUI_TREE_END
 	}
-
 }
 
 void CImgui_Model::RENDER_STATIC_MODE()
@@ -214,9 +203,9 @@ void CImgui_Model::RENDER_STATIC_MODE()
 		{
 			static char ObjectName[128] = "";
 			ImGui::InputTextWithHint("savetext_static", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
-			if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX,"Save")))
+			if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Save")))
 			{
-				// dat 파일 경로에 저장	
+				// dat 파일 경로에 저장
 				string str = ObjectName;
 				wstring wstr = CHelperClass::Convert_str2wstr(str);
 				Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_ModelStaticObject);
@@ -231,7 +220,6 @@ void CImgui_Model::RENDER_DYNAMIC_MODE()
 	// 저장
 	CObjectIO* Object_IO_Manager = GetSingle(CGameManager)->Get_ObjectIOManager();
 
-
 	// STATIC 저장
 	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "DynamicSaver"))
 	{
@@ -241,7 +229,7 @@ void CImgui_Model::RENDER_DYNAMIC_MODE()
 			ImGui::InputTextWithHint("savetext_dynamic", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
 			if (ImGui::Button("SaveTest"))
 			{
-				// dat 파일 경로에 저장	
+				// dat 파일 경로에 저장
 				string str = ObjectName;
 				wstring wstr = CHelperClass::Convert_str2wstr(str);
 				Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_DYNAMIC, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_ModelDynamicObject);
@@ -253,13 +241,11 @@ void CImgui_Model::RENDER_DYNAMIC_MODE()
 
 void CImgui_Model::RENDER_CREATEEMPTY()
 {
-
 	// 빈 오브젝트 클론
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Static")))
 	{
-
 		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC);
 
@@ -271,7 +257,6 @@ void CImgui_Model::RENDER_CREATEEMPTY()
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Dynamic")))
 	{
-
 		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
 
@@ -297,7 +282,6 @@ void CImgui_Model::INIT_FBXPathList()
 			string str = CHelperClass::Convert_Wstr2str(wstr);
 			mFBX_Static_pathList->push_front(str);
 		}
-
 	}
 
 	if (mFBX_Dynamic_pathList == nullptr)
@@ -315,14 +299,13 @@ void CImgui_Model::INIT_FBXPathList()
 			string str = CHelperClass::Convert_Wstr2str(wstr);
 			mFBX_Dynamic_pathList->push_front(str);
 		}
-
 	}
 }
 
 HRESULT CImgui_Model::Edit_FBX()
 {
 	// FBX 파일에 따라 모델 바꾸기
-	// 저장 불러오기 
+	// 저장 불러오기
 
 	// 텍스처 선택 화면
 	INIT_FBXPathList();
@@ -334,7 +317,6 @@ HRESULT CImgui_Model::Edit_FBX()
 	{
 		if (mFBX_Static_pathList->empty())
 			return E_FAIL;
-
 
 		IMGUI_TREE_BEGIN("FbxFiles")
 		{
@@ -368,7 +350,6 @@ HRESULT CImgui_Model::Edit_FBX()
 		if (mFBX_Dynamic_pathList->empty())
 			return E_FAIL;
 
-
 		// FBX 파일
 		IMGUI_TREE_BEGIN("FbxFiles")
 		{
@@ -393,14 +374,13 @@ HRESULT CImgui_Model::Edit_FBX()
 				}
 			}
 			IMGUI_TREE_END
-		}		
+		}
 	}
 	return S_OK;
 }
 
 HRESULT CImgui_Model::Edit_ANI()
 {
-	
 	if (meModelMode != CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
 		return S_FALSE;
 
@@ -416,12 +396,11 @@ HRESULT CImgui_Model::Edit_ANI()
 
 	IMGUI_TREE_BEGIN("AniFiles")
 	{
-	// 선택시 파일에 있는 애니메이션 출력
+		// 선택시 파일에 있는 애니메이션 출력
 		_uint cnt = 0;
 		string SelectStr = "";
 		static ImGuiTextFilter filter;
 		filter.Draw();
-
 
 		for (auto iter = pVecAni->begin(); iter != pVecAni->end(); ++cnt, iter++)
 		{
@@ -443,7 +422,6 @@ HRESULT CImgui_Model::Edit_ANI()
 			}
 		}
 
-	
 		IMGUI_TREE_END
 	}
 
@@ -457,7 +435,6 @@ HRESULT CImgui_Model::Edit_COL()
 		IMGUI_TREE_BEGIN("Collider_Setting")
 		{
 			COLLIDER_DESC desc = mCurrent_ModelStaticObject->Get_ColliderDESC();
-
 
 			ImGui::DragFloat3("ColliderSize", (float*)&desc.mSize, 0.01f, 0.1f, 100);
 
@@ -480,12 +457,8 @@ HRESULT CImgui_Model::Edit_COL()
 		}
 	}
 
-
 	return S_OK;
 }
-
-
-
 
 CImgui_Model * CImgui_Model::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {
@@ -505,11 +478,7 @@ void CImgui_Model::Free()
 	__super::Free();
 	Safe_Release(mCameraClient);
 	Safe_Delete(mFBX_Static_pathList);
-	Safe_Delete(mProtoStaticModelList); 
+	Safe_Delete(mProtoStaticModelList);
 	Safe_Delete(mFBX_Dynamic_pathList);
 	Safe_Delete(mProtoDynamicModelList);
-	
-	
-
-
 }

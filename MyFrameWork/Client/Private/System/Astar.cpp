@@ -44,7 +44,6 @@ void CAstar::Free()
 	}
 }
 
-
 void CAstar::Start_AStar(const _float3& vStart, const _float3& vGoal)
 {
 	mListOpen.clear();
@@ -64,7 +63,6 @@ void CAstar::Start_AStar(const _float3& vStart, const _float3& vGoal)
 
 	int	iGoalIndex = pterrain->Get_TileIndex(vGoal);
 
-
 	if (0 > miStartIndex || 0 > iGoalIndex)
 		return;
 
@@ -72,14 +70,13 @@ void CAstar::Start_AStar(const _float3& vStart, const _float3& vGoal)
 		return;
 
 	// 목표 지점이 못가는 곳이면 astar 탐색 중지
-	if ((*vecTile)[iGoalIndex]->mTileMode == CGameObject_MyTerrain::TILEMODE_XXX || 
+	if ((*vecTile)[iGoalIndex]->mTileMode == CGameObject_MyTerrain::TILEMODE_XXX ||
 		(*vecTile)[iGoalIndex]->mTileMode == CGameObject_MyTerrain::TILEMODE_END)
 		return;
 
 	// 경로 찾기
 	//if (true == MakeRoute(miStartIndex, iGoalIndex))
 	//	MakeBestList(iGoalIndex);
-
 }
 
 void CAstar::MakeBestList(int iGoalIndex)
@@ -108,10 +105,9 @@ void CAstar::MakeBestList(int iGoalIndex)
 	}
 }
 
-
 //bool CAstar::MakeRoute(int iStartIndex, int iGoalIndex)
 //{
-//	// 
+//	//
 //
 //	CGameObject_MyTerrain* pterrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
 //	if (pterrain == nullptr)
@@ -169,7 +165,7 @@ void CAstar::MakeBestList(int iGoalIndex)
 //		float fCost2 = D3DXVec3Length(&vPCost2) + D3DXVec3Length(&vGCost2);
 //
 //		return fCost1 < fCost2;
-//	});	
+//	});
 //
 //	// 깊이 우선탐색처럼 도착지점을 찾을 때까지 계속 탐색
 //	return MakeRoute(m_OpenList.front(), iGoalIndex);

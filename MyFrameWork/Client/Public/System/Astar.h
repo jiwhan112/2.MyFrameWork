@@ -4,15 +4,13 @@
 
 BEGIN(Client)
 
-class CAstar final:
+class CAstar final :
 	public CBase
 {
-
 private:
 	explicit CAstar();
 	explicit CAstar(const CAstar& rhs);
 	virtual ~CAstar() = default;
-
 
 public:
 	HRESULT NativeConstruct_Prototype();
@@ -25,7 +23,6 @@ public:
 private:
 	bool		MakeRoute(int iStartIndex, int iGoalIndex);
 	void		MakeBestList(int iGoalIndex);
-
 
 	//int		GetTileIndex(const D3DXVECTOR3& vPos);
 	//bool		Picking(const D3DXVECTOR3& vPos, int iIndex);
@@ -40,10 +37,8 @@ private:
 
 	int												miStartIndex;
 
-
 public:
 	static CAstar* Create();
 	virtual void Free() override;
-
 };
 END

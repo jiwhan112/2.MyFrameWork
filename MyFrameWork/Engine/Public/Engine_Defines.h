@@ -15,7 +15,6 @@
 
 #include <DirectXCollision.h> // 충돌관련 구현
 
-
 // 텍스처 로드 관련 Include
 // DDS 및 이외의 텍스처 로드 단 tga는 지원 안함
 // DDS가 가장 빠르다.
@@ -28,16 +27,14 @@
 #include <Direct_TK/SimpleMath.h> // 수학관련 함수
 // #include <Direct_TK/Mouse.h> // 마우스
 
-
 #include <Direct_TK/SpriteFont.h>
 #include <Direct_TK/SpriteBatch.h>
 
 #include <Direct_TK/Effects.h> // 기본 셰이더 제공
 //#include <Direct_TK/GeometricPrimitive.h> // 도형 그리기 처리 #include "DebugDraw.h" 이걸로 사용
 
-#include <Direct_TK/PrimitiveBatch.h> // 기본 도형 DrawCall 
+#include <Direct_TK/PrimitiveBatch.h> // 기본 도형 DrawCall
 #include <Direct_TK/VertexTypes.h> // 가장 많이 쓰는 정점 타입 정의
-
 
 #include <wincodec.h>
 

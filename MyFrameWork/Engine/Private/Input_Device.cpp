@@ -43,16 +43,13 @@ HRESULT CInput_Device::Ready_Input_Device(HINSTANCE hInst, HWND hWnd, _float fDo
 	ZeroMemory(m_byDoubleKeyState, sizeof(_float) * 256);
 	ZeroMemory(m_bIsKeyPulsDeltaTime, sizeof(_bool) * 256);
 
-
 	ZeroMemory(&m_MouseState, sizeof(MOUSEBUTTONSTATE));
 	ZeroMemory(&m_byOldMouseState, sizeof(_byte)* MBS_END);
 	ZeroMemory(m_byDoubleMouseState, sizeof(_float) * MBS_END);
 	ZeroMemory(m_bIsMousePulsDeltaTime, sizeof(_bool) * MBS_END);
 
-
 	return S_OK;
 }
-
 
 _byte CInput_Device::Get_DIKeyState(_ubyte eKeyID)
 {
@@ -86,8 +83,6 @@ _byte CInput_Device::Get_DIKeyState(_ubyte eKeyID)
 
 			else
 				return 0b00000010;
-
-
 		}
 
 		//지금 눌렸고 이전 프레임에도 눌렸을 떄(Pressing)
@@ -103,7 +98,6 @@ _byte CInput_Device::Get_DIKeyState(_ubyte eKeyID)
 		//지금 안눌렸고 이전 프레임에 눌렸을 떄(Up)
 		else
 			return 0b00000001;
-
 	}
 }
 
@@ -146,24 +140,21 @@ _byte CInput_Device::Get_DIMouseButtonState(MOUSEBUTTONSTATE eMouseButtonState)
 	}
 }
 
-
 HRESULT CInput_Device::SetUp_InputDeviceState(_double fDeltaTime)
 {
 	if (nullptr == m_pKeyboard ||
 		nullptr == m_pMouse)
 		return E_FAIL;
 
-	//매프레임마다 더블 키입력 검사를 위해 m_byDoubleKeyState(float * 256)개의 
+	//매프레임마다 더블 키입력 검사를 위해 m_byDoubleKeyState(float * 256)개의
 	//모든키의 값을 검사하는 것은 비효율 적인 것 같아서
 	//더블 키 입력검사를 키검사 호출되는 곳으로 넘기기 위해 델타타임을 넘기고
-	//한프레임 내에서 여러번 호출되더라도 한번만 DeltaTime을 올리기 위해 해당 키에 올려줬는지를 memcpy로 false로 바꿈 
+	//한프레임 내에서 여러번 호출되더라도 한번만 DeltaTime을 올리기 위해 해당 키에 올려줬는지를 memcpy로 false로 바꿈
 	m_fDeltaTime = fDeltaTime;
-
 
 	ZeroMemory(m_bIsKeyPulsDeltaTime, sizeof(_bool) * 256);
 	memcpy(m_byOldKeyState, m_byKeyState, sizeof(_byte) * 256);
 	m_pKeyboard->GetDeviceState(256, m_byKeyState);
-
 
 	ZeroMemory(m_bIsMousePulsDeltaTime, sizeof(_bool) * MBS_END);
 	memcpy(&m_byOldMouseState, &(m_MouseState.rgbButtons), sizeof(_byte)* MBS_END);

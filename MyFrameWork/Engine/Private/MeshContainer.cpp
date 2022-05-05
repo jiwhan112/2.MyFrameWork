@@ -1,17 +1,14 @@
 #include "..\Public\MeshContainer.h"
 #include "HierarchyNode.h"
 
-
 CMeshContainer::CMeshContainer(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CVIBuffer(pDevice, pDeviceContext)
 {
-
 }
 
 CMeshContainer::CMeshContainer(const CMeshContainer & rhs)
 	: CVIBuffer(rhs)
 {
-
 }
 
 HRESULT CMeshContainer::NativeConstruct_Prototype(aiMesh * pAIMesh)
@@ -36,7 +33,6 @@ HRESULT CMeshContainer::Ready_VertexIndexBuffer(CModel::E_MODEL_TYPE eMeshtype, 
 	m_iNumVertices = m_pAIMesh->mNumVertices;
 	m_iNumVertexBuffers = 1;
 
-
 	HRESULT			hr = 0;
 
 	if (CModel::MODEL_NOANI == eMeshtype)
@@ -45,7 +41,6 @@ HRESULT CMeshContainer::Ready_VertexIndexBuffer(CModel::E_MODEL_TYPE eMeshtype, 
 		hr = Ready_AnimMeshContainer(m_pAIMesh);
 
 #pragma endregion
-
 
 #pragma region INDICES
 	m_iNumPrimitive = m_pAIMesh->mNumFaces;
@@ -74,7 +69,7 @@ HRESULT CMeshContainer::Ready_VertexIndexBuffer(CModel::E_MODEL_TYPE eMeshtype, 
 	if (FAILED(Create_IndexBuffer()))
 		return E_FAIL;
 
-//	Safe_Delete_Array(pIndices);
+	//	Safe_Delete_Array(pIndices);
 
 #pragma endregion
 
@@ -92,15 +87,14 @@ HRESULT CMeshContainer::SetUp_Matrices(_float4x4 * pBoneMatrices, const vector<C
 {
 	_uint	iIndex = 0;
 
-	if(0 == m_iNumBones)
+	if (0 == m_iNumBones)
 	{
-
-		auto	iter = find_if(pNodes->begin(), pNodes->end(), [&](CHierarchyNode* pHierarchyNode) 
+		auto	iter = find_if(pNodes->begin(), pNodes->end(), [&](CHierarchyNode* pHierarchyNode)
 		{
-			return !strcmp(m_szName, pHierarchyNode->Get_Name());			
+			return !strcmp(m_szName, pHierarchyNode->Get_Name());
 		});
 
-		if(iter == pNodes->end())
+		if (iter == pNodes->end())
 			XMStoreFloat4x4(&pBoneMatrices[0], XMMatrixIdentity());
 
 		else
@@ -112,12 +106,10 @@ HRESULT CMeshContainer::SetUp_Matrices(_float4x4 * pBoneMatrices, const vector<C
 
 			XMStoreFloat4x4(&pBoneMatrices[iIndex++], XMMatrixTranspose(BoneMatrix));
 		}
-
 	}
 
 	for (auto& iNodeIndex : m_HierarchyNodeIndices)
 	{
-		
 		_matrix		OffsetMatrix = (*pNodes)[iNodeIndex]->Get_OffsetMatrix();
 		_matrix		CombinedTransformationMatrix = (*pNodes)[iNodeIndex]->Get_CombinedTransformationMatrix();
 
@@ -134,7 +126,7 @@ HRESULT CMeshContainer::Ready_NonAnimMeshContainer(aiMesh* pAIMesh, _fmatrix Tra
 	ZeroMemory(&m_VBDesc, sizeof(D3D11_BUFFER_DESC));
 
 	m_VBDesc.ByteWidth = sizeof(VTXMODEL) * m_iNumVertices;
-	m_VBDesc.StructureByteStride = sizeof(VTXMODEL);	
+	m_VBDesc.StructureByteStride = sizeof(VTXMODEL);
 	m_VBDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	m_VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -195,7 +187,6 @@ HRESULT CMeshContainer::Ready_AnimMeshContainer(aiMesh* pAIMesh)
 
 	Safe_Delete_Array(pVertices);
 
-
 	return S_OK;
 }
 
@@ -208,7 +199,7 @@ HRESULT CMeshContainer::Ready_SkinnedInfo(VTXANIMODEL* pVertices)
 
 	for (_uint i = 0; i < m_iNumBones; ++i)
 	{
-		aiBone*			pAIBone = m_pAIMesh->mBones[i];		
+		aiBone*			pAIBone = m_pAIMesh->mBones[i];
 
 		for (_uint j = 0; j < pAIBone->mNumWeights; ++j)
 		{
@@ -236,8 +227,8 @@ HRESULT CMeshContainer::Ready_SkinnedInfo(VTXANIMODEL* pVertices)
 				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndex.w = i;
 				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeight.w = pAIBone->mWeights[j].mWeight;
 			}
-		}		
-	}	
+		}
+	}
 
 	return S_OK;
 }
@@ -273,5 +264,4 @@ void CMeshContainer::Free()
 	//	Safe_Release(pHierarchyNode);
 
 	m_HierarchyNodeIndices.clear();
-
 }

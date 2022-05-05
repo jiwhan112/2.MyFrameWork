@@ -1,4 +1,4 @@
-#pragma 
+#pragma
 
 // OTHER Data
 
@@ -10,8 +10,6 @@ enum E_TERRAINSIZE
 	TERRAINSIZE_128,
 	TERRAINSIZE_END,
 };
-
-
 
 // DESC DATA
 
@@ -34,9 +32,7 @@ typedef struct tag_UIDESC
 	_int	mSizeY = g_iWinCY;
 	_int	mDepth = 0;
 	_float2 mPivot = { 0.5f,0.5f };
-
 }UI_DESC;
-
 
 // 텍스처 이름 8개 저장
 // 텍스처 맵에서 이름으로 매핑할 수 있게 한다.
@@ -52,20 +48,16 @@ typedef struct tag_TEXTUREDESC
 	char mTextureKey_07[MAX_STR] = "";
 }TEXTURE_DESC;
 
-
 typedef struct tag_MODEL_STATIC_DESC
 {
 	// FBX 이름
 	char mModelName[MAX_STR] = "";
-
 }MODEL_STATIC_DESC;
-
 
 typedef struct tag_MODEL_DYNAMIC_DESC
 {
 	// FBX 이름
 	char mModelName[MAX_STR] = "";
-
 }MODEL_DYNAMIC_DESC;
 
 typedef struct tag_COLLIDERODEL_DESC
@@ -77,7 +69,6 @@ typedef struct tag_COLLIDERODEL_DESC
 	}
 	CCollider::E_COLLIDER_TYPE meColliderType;
 	_float3 mSize;
-
 }COLLIDER_DESC;
 
 typedef struct tag_TERRAIN_DESC
@@ -90,6 +81,4 @@ typedef struct tag_TERRAIN_DESC
 
 	E_TERRAINSIZE			meTerrainSize;
 	_uint					mTextureMultiSize;
-
-
 }TERRAIN_DESC;

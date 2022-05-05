@@ -7,9 +7,9 @@
 
 HRESULT CObjectIO::NativeConstruct()
 {
-	ZeroMemory(&mObjectType,sizeof(E_OBJECT_TYPE));
+	ZeroMemory(&mObjectType, sizeof(E_OBJECT_TYPE));
 	ZeroMemory(&mUIDesc, sizeof(UI_DESC));
-	ZeroMemory(&mTexDesc,sizeof(TEXTURE_DESC));
+	ZeroMemory(&mTexDesc, sizeof(TEXTURE_DESC));
 
 	return S_OK;
 }
@@ -34,22 +34,19 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
 		SaverData(&fWrite, OBJECT_TYPE_DATA_UIDESC, &(oobj->Get_UIDesc()));
 		SaverData(&fWrite, OBJECT_TYPE_DATA_TEXTUREDESC, &(oobj->Get_TextureDesc()));
-
 	}
-		break;
+	break;
 	case OBJECT_TYPE_3D_STATIC:
 	{
 		CGameObject_3D_Static* oobj = static_cast<CGameObject_3D_Static*>(obj);
 		SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
 		SaverData(&fWrite, OBJECT_TYPE_DATA_MODEL_STATICDESC, &(oobj->Get_ModelDESC()));
-
 	}
 	case OBJECT_TYPE_3D_DYNAMIC:
 	{
 		CGameObject_3D_Dynamic* oobj = static_cast<CGameObject_3D_Dynamic*>(obj);
 		SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
-	//	SaverData(&fWrite, OBJECT_TYPE_DATA_MODEL_DYNAMICDESC, &(oobj->Get_DESC()));
-
+		//	SaverData(&fWrite, OBJECT_TYPE_DATA_MODEL_DYNAMICDESC, &(oobj->Get_DESC()));
 	}
 	case OBJECT_TYPE_TERRAIN:
 	{
@@ -57,7 +54,6 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		//SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
 		//SaverData(&fWrite, OBJECT_TYPE_DATA_UIDESC, &(oobj->Get_UIDesc()));
 		//SaverData(&fWrite, OBJECT_TYPE_DATA_TEXTUREDESC, &(oobj->Get_TextureDesc()));
-
 	}
 	case OBJECT_TYPE_END:
 
@@ -72,11 +68,8 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	return S_OK;
 }
 
-
-
-HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void * desc)
+HRESULT CObjectIO::SaverData(ofstream* fwrite, E_OBJECT_DATA_TYPE type, const void * desc)
 {
-
 	switch (type)
 	{
 	case OBJECT_TYPE_DATA_OBJECT:
@@ -86,7 +79,7 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void
 		SaveUIDESC(fwrite, (UI_DESC*)desc);
 		break;
 	case OBJECT_TYPE_DATA_TEXTUREDESC:
-		SaveTEXTUREDESC(fwrite,(TEXTURE_DESC*)desc);
+		SaveTEXTUREDESC(fwrite, (TEXTURE_DESC*)desc);
 		break;
 	case OBJECT_TYPE_DATA_MODEL_STATICDESC:
 		SaveMODELSTATICDESC(fwrite, (MODEL_STATIC_DESC*)desc);
@@ -94,19 +87,17 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite,E_OBJECT_DATA_TYPE type,const void
 	case OBJECT_TYPE_DATA_MODEL_DYNAMICDESC:
 		SaveMODELDYNAMICDESC(fwrite, (MODEL_DYNAMIC_DESC*)desc);
 		break;
-		
+
 	case OBJECT_TYPE_DATA_END:
 		break;
 	default:
 		break;
 	}
 	return S_OK;
-
-
 }
 
 HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData, E_OBJECT_TYPE* type)
-{ 
+{
 	// #INIT ObjectLoad 추가
 
 	ifstream fRead(FolderPath + L"\\" + filename, ios::in | ios::binary);
@@ -116,7 +107,7 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 	}
 	_uint bufsize = 0;
 
-	char* objType  = NEW char[sizeof(E_OBJECT_DATA_TYPE)];
+	char* objType = NEW char[sizeof(E_OBJECT_DATA_TYPE)];
 
 	// 데이터 가장 위쪽에 현재 저장된 타입의 ID 해석.
 	fRead.read(objType, sizeof(E_OBJECT_DATA_TYPE));
@@ -141,8 +132,7 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 		memcpy(&uiDesc, *pData, sizeof(UI_DESC));
 
 		fRead.read(*pData + offset, sizeof(TEXTURE_DESC));
-		memcpy(&texDesc, *pData+ offset, sizeof(TEXTURE_DESC));
-		
+		memcpy(&texDesc, *pData + offset, sizeof(TEXTURE_DESC));
 	}
 	break;
 
@@ -152,24 +142,19 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 		*pData = NEW char[bufsize];
 		MODEL_STATIC_DESC ModelDesc;
 
-
 		fRead.read(*pData, sizeof(MODEL_STATIC_DESC));
 		memcpy(&ModelDesc, *pData, sizeof(MODEL_STATIC_DESC));
 		int a = 5;
-
 	}
 	break;
 	case OBJECT_TYPE_3D_DYNAMIC:
 	{
-
 		bufsize = sizeof(MODEL_DYNAMIC_DESC);
 		*pData = NEW char[bufsize];
 		MODEL_DYNAMIC_DESC ModelDesc;
 
-
 		fRead.read(*pData, sizeof(MODEL_DYNAMIC_DESC));
 		memcpy(&ModelDesc, *pData, sizeof(MODEL_DYNAMIC_DESC));
-
 	}
 	break;
 	case OBJECT_TYPE_END:
@@ -179,14 +164,10 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 		break;
 	}
 	Safe_Delete_Array(objType);
-//	Safe_Delete_Array(DataLoad);
+	//	Safe_Delete_Array(DataLoad);
 
 	return S_OK;
-
 }
-
-
-
 
 HRESULT CObjectIO::SaveOBJECT(ofstream * fwrite, E_OBJECT_TYPE* desc)
 {
@@ -198,23 +179,19 @@ HRESULT CObjectIO::SaveOBJECT(ofstream * fwrite, E_OBJECT_TYPE* desc)
 	Safe_Delete_Array(newdesc);
 
 	return S_OK;
-
-
 }
 
 HRESULT CObjectIO::SaveUIDESC(ofstream * fwrite, UI_DESC* desc)
 {
 	char * newdesc = NEW char[sizeof(UI_DESC)];
 
-	memcpy(newdesc,desc,sizeof(UI_DESC));
+	memcpy(newdesc, desc, sizeof(UI_DESC));
 
 	fwrite->write(newdesc, sizeof(UI_DESC));
 
 	Safe_Delete_Array(newdesc);
 
-
 	return S_OK;
-
 }
 
 HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTURE_DESC* desc)
@@ -227,8 +204,6 @@ HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTURE_DESC* desc)
 	Safe_Delete_Array(newdesc);
 
 	return S_OK;
-
-
 }
 HRESULT CObjectIO::SaveMODELSTATICDESC(ofstream * fwrite, MODEL_STATIC_DESC* desc)
 {
@@ -240,8 +215,6 @@ HRESULT CObjectIO::SaveMODELSTATICDESC(ofstream * fwrite, MODEL_STATIC_DESC* des
 	Safe_Delete_Array(newdesc);
 
 	return S_OK;
-
-
 }
 HRESULT CObjectIO::SaveMODELDYNAMICDESC(ofstream * fwrite, MODEL_DYNAMIC_DESC* desc)
 {
@@ -253,8 +226,6 @@ HRESULT CObjectIO::SaveMODELDYNAMICDESC(ofstream * fwrite, MODEL_DYNAMIC_DESC* d
 	Safe_Delete_Array(newdesc);
 
 	return S_OK;
-
-
 }
 
 CObjectIO * CObjectIO::Create()
@@ -272,7 +243,6 @@ CObjectIO * CObjectIO::Create()
 void CObjectIO::Free()
 {
 }
-
 
 // 선택한 오브젝트를 저장한다.
 
@@ -303,15 +273,12 @@ void CObjectIO::Free()
 //	lstrcpy(NEWName, Filename);
 //	PathRemoveExtension(NEWName);
 
-
-
 //	const TCHAR*		pGetPath = str.GetString();
 
 //	HANDLE hFile = CreateFile(pGetPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 //	if (INVALID_HANDLE_VALUE == hFile)
 //		return E_FAIL;
-
 
 //	DWORD	dwByte = 0;
 
@@ -326,5 +293,3 @@ void CObjectIO::Free()
 //	WriteFile(hFile, &obj->Get_OutputData(), sizeof(OUTPUT_OBJECTINFO), &dwByte, nullptr);
 
 //	CloseHandle(hFile);
-
-

@@ -85,32 +85,32 @@ public:
 	HRESULT Release_Component(const _tchar* pComponentTag);
 
 private:
-//	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	//	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
 
-protected:
-	ID3D11Device*			m_pDevice = nullptr;
-	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+	protected:
+		ID3D11Device*			m_pDevice = nullptr;
+		ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
-protected:
-	class CTransform*		mComTransform = nullptr;
-	static const _tchar*	mComTag_Transform;
+	protected:
+		class CTransform*		mComTransform = nullptr;
+		static const _tchar*	mComTag_Transform;
 
-	// Á×À½ Ã¼Å©¿Í ·»´õ¸µ ¿©ºÎ
-	bool				mIsLife = true;
-	bool				mIsRenderer = true;
+		// Á×À½ Ã¼Å©¿Í ·»´õ¸µ ¿©ºÎ
+		bool				mIsLife = true;
+		bool				mIsRenderer = true;
 
-	_uint				mObjectTypeid = 99;
+		_uint				mObjectTypeid = 99;
 
-protected:
-	CComponent*	Find_Component(const _tchar* pComponentTag);
+	protected:
+		CComponent*	Find_Component(const _tchar* pComponentTag);
 
-protected:
-	map<const _tchar*, CComponent*>			m_Components;
-	typedef map<const _tchar*, CComponent*>	COMPONENTS;
+	protected:
+		map<const _tchar*, CComponent*>			m_Components;
+		typedef map<const _tchar*, CComponent*>	COMPONENTS;
 
-public:
-	virtual CGameObject* Clone(void* pArg) = 0;
-	virtual void Free() override;
+	public:
+		virtual CGameObject* Clone(void* pArg) = 0;
+		virtual void Free() override;
 };
 
 END

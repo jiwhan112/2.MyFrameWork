@@ -5,7 +5,6 @@ CChannel::CChannel()
 {
 }
 
-
 HRESULT CChannel::NativeConstruct(const char* pName/*, CHierarchyNode* pNode*/)
 {
 	strcpy_s(m_szName, pName);
@@ -32,8 +31,6 @@ void CChannel::Set_HierarchyNodePtr(CHierarchyNode * pNode)
 	Safe_AddRef(m_pNode);
 }
 
-
-
 CChannel * CChannel::Create(const char* pName/*, CHierarchyNode* pNode*/)
 {
 	CChannel*	pInstance = new CChannel();
@@ -55,4 +52,3 @@ void CChannel::Free()
 
 	Safe_Release(m_pNode);
 }
-

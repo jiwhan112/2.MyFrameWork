@@ -24,9 +24,9 @@ HRESULT CCamera_Client::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	// 직교 투영 행렬 초기화 
+	// 직교 투영 행렬 초기화
 	FAILED_CHECK(GetSingle(CGameInstance)->SetTransform(CPipeLine::D3DTS_PROJ_ORI, XMMatrixOrthographicLH((float)g_iWinCX, (float)g_iWinCY, 0.f, 1.f)));
-	
+
 	mStartWorlMat = mComTransform->GetWorldFloat4x4();
 	meCameraMode = CCamera_Client::CAMERA_MODE_DEFAULT;
 
@@ -35,7 +35,6 @@ HRESULT CCamera_Client::NativeConstruct(void* pArg)
 
 _int CCamera_Client::Tick(_double TimeDelta)
 {
-
 	switch (meCameraMode)
 	{
 	case CCamera_Client::CAMERA_MODE_DEFAULT:
@@ -58,8 +57,8 @@ _int CCamera_Client::Tick(_double TimeDelta)
 		{
 			FAILED_CHECK_NONERETURN(Update_Target_Unit(TimeDelta));
 		}
-		break;	
-	case CCamera_Client::CAMERA_MODE_GAME_D:		
+		break;
+	case CCamera_Client::CAMERA_MODE_GAME_D:
 		FAILED_CHECK_NONERETURN(Update_Target_D(TimeDelta));
 		break;
 	case CCamera_Client::CAMERA_MODE_GAME_W:
@@ -69,17 +68,10 @@ _int CCamera_Client::Tick(_double TimeDelta)
 	case CCamera_Client::CAMERA_MODE_END:
 		meCameraMode = CAMERA_MODE_DEFAULT;
 		break;
-
-
 	}
-	
 
 	// View Proj 행렬세팅
 	return __super::Tick(TimeDelta);
-
-	
-
-
 }
 
 _int CCamera_Client::LateTick(_double TimeDelta)
@@ -100,7 +92,6 @@ void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, CGameObject * target)
 	Safe_Release(mTargetObject);
 	mTargetObject = target;
 	Safe_AddRef(mTargetObject);
-
 }
 
 HRESULT CCamera_Client::Update_Default(_double TimeDelta)
@@ -156,7 +147,6 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 
 	mComTransform->LookAt(targetPos);
 
-
 	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
 	{
 		mComTransform->GO_Straight(TimeDelta);
@@ -177,9 +167,6 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 		mComTransform->GO_Right(TimeDelta);
 	}
 
-	
-
-
 	return S_OK;
 }
 
@@ -190,7 +177,6 @@ HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 
 HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
 {
-	
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 
 	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
@@ -249,5 +235,4 @@ void CCamera_Client::Free()
 {
 	__super::Free();
 	Safe_Release(mTargetObject);
-
 }

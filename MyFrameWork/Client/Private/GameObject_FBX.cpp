@@ -5,7 +5,6 @@
 CGameObject_FBX::CGameObject_FBX(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
 {
-
 }
 
 CGameObject_FBX::CGameObject_FBX(const CGameObject_FBX& rhs)
@@ -56,7 +55,7 @@ _int CGameObject_FBX::Tick(_double TimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & DIS_Press)
 	{
-		mComTransform->Turn(XMVectorSet(0,1,0,0), TimeDelta);
+		mComTransform->Turn(XMVectorSet(0, 1, 0, 0), TimeDelta);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & DIS_Press)
@@ -86,7 +85,7 @@ HRESULT CGameObject_FBX::Render()
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{
 		mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
-	//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+		//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
 		mComModel->Render(mComShader, 0, i);
 	}
 
@@ -98,7 +97,6 @@ HRESULT CGameObject_FBX::Render()
 
 	return S_OK;
 }
-
 
 CGameObject_FBX * CGameObject_FBX::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -154,7 +152,6 @@ HRESULT CGameObject_FBX::Set_ConstantTable()
 
 	FAILED_CHECK(mComShader->Set_RawValue(STR_CAMPOS, &pGameInstance->GetCameraPosition_vec(), sizeof(_float4)));
 
-
 	return S_OK;
 }
 
@@ -165,7 +162,7 @@ HRESULT CGameObject_FBX::Set_Height()
 	{
 		int index = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 		auto listdata = GetSingle(CGameInstance)->Get_GameObjectLayerList(index, TAGLAY(LAY_TERRAIN));
-		
+
 		NULL_CHECK_BREAK(listdata);
 
 		mTerrain = (CGameObject_Terrain*)*listdata->begin();
@@ -188,8 +185,8 @@ HRESULT CGameObject_FBX::Set_Height()
 	// 3.공간 맞춰서 연산하고 다시 공간 변환
 	// 월드 -> 로컬 -> 연산 -> 로컬 -> 월드
 	_float4::Transform(vPosition, WorldMatrixInverse, vPosition);
-	vPosition = pVIBuffer->Get_Height(vPosition);	
-	_float4::Transform(vPosition, WorldMatrix, vPosition); 
+	vPosition = pVIBuffer->Get_Height(vPosition);
+	_float4::Transform(vPosition, WorldMatrix, vPosition);
 
 	vPosition.y = 5;
 	// 세팅
@@ -198,15 +195,12 @@ HRESULT CGameObject_FBX::Set_Height()
 	return S_OK;
 }
 
-
 void CGameObject_FBX::Free()
 {
 	Safe_Release(mComShader);
 	Safe_Release(mComRenderer);
 	Safe_Release(mComModel);
 	Safe_Release(mComCollider);
-	
+
 	__super::Free();
-
 }
-

@@ -25,13 +25,11 @@ HRESULT CImgui_MyDemo::Update(_double time)
 	return S_OK;
 }
 
-
 void CImgui_MyDemo::DemoTest()
 {
 	if (bDemo)
 	{
 		ImGui::ShowDemoWindow(&bDemo);
-
 	}
 }
 
@@ -40,17 +38,16 @@ void CImgui_MyDemo::FrameUI(_double time)
 	dClock += time;
 	mFrameCount++;
 
-
 	if (dClock >= 1)
 	{
 		mCurrentFrame = mFrameCount;
 		dClock = 0;
 		mFrameCount = 0;
-	}	
-	
+	}
+
 	ImGui::Begin("Frame");
 	ImGui::Text("Frame: %d", mCurrentFrame);
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f
 		/ ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 }
@@ -90,10 +87,8 @@ void CImgui_MyDemo::FrameUI_Overaly(_double time)
 		ImGui::Text("Frame: %d", mCurrentFrame);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f
 			/ ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
 	}
 	ImGui::End();
-
 }
 
 static void HelpMarker(const char* desc)
@@ -108,8 +103,6 @@ static void HelpMarker(const char* desc)
 		ImGui::EndTooltip();
 	}
 }
-
-
 
 void CImgui_MyDemo::IMGUI_TEST_Window()
 {
@@ -167,7 +160,6 @@ void CImgui_MyDemo::IMGUI_TEST_Window()
 		}
 		ImGui::EndMainMenuBar();
 	}
-
 }
 
 void CImgui_MyDemo::IMGUI_TEST_MyDemo(_double timer)
@@ -210,7 +202,6 @@ void CImgui_MyDemo::IMGUI_TEST_MyDemo(_double timer)
 			{
 				FrameUI_Overaly(timer);
 			}
-
 		}
 
 		ImGui::End();
@@ -220,7 +211,6 @@ void CImgui_MyDemo::IMGUI_TEST_Basic()
 {
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
-
 		IMGUI_TREE_BEGIN("Basic Button")
 		{
 			// Button
@@ -333,7 +323,7 @@ void CImgui_MyDemo::IMGUI_TEST_Basic()
 			static float vec4[4] = { 0.1f, 0.2f, 0.3f, 0.44f };
 			ImGui::InputFloat3("input float3", vec4, "%.1f");
 
-			// Drag 
+			// Drag
 			static int iValue2 = 1;
 			static int iValue3 = 1;
 			ImGui::DragInt("drag int", &iValue2, 1);
@@ -396,7 +386,6 @@ void CImgui_MyDemo::IMGUI_TEST_Basic()
 			// 스크롤에 따른 추적
 			bool scroll_to_off = ImGui::Button("Scroll Offset");
 			ImGui::SameLine(140); scroll_to_off |= ImGui::DragFloat("##off", &scroll_to_off_px, 1.00f, 0, FLT_MAX, "+%.0f px");
-
 
 			if (scroll_to_off)
 				enable_track = false;
@@ -477,12 +466,10 @@ void CImgui_MyDemo::IMGUI_TEST_Basic()
 
 void CImgui_MyDemo::IMGUI_TEST_Details()
 {
-
-	// 각 기능의 세부기능 모음 
+	// 각 기능의 세부기능 모음
 	// 쓸만한 기능만 추리기
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_TEST)))
 	{
-
 		IMGUI_TREE_BEGIN("Details")
 		{
 			// TreeNode
@@ -506,7 +493,6 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 				}
 				IMGUI_TREE_END
 			}
-
 
 			// TEXT
 			IMGUI_TREE_BEGIN("Text")
@@ -535,8 +521,6 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 				//	draw_list->AddRectFilled(marker_min, marker_max, IM_COL32(255, 0, 255, 255));
 				//	ImGui::PopTextWrapPos();
 				//}
-
-
 
 				IMGUI_TREE_END
 			}
@@ -580,7 +564,6 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 				}
 
 				IMGUI_TREE_END
-
 			}
 
 			IMGUI_TREE_BEGIN("LISTBOX")
@@ -623,7 +606,6 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 
 			IMGUI_TREE_BEGIN("COMBO")
 			{
-
 				// 한줄 콤보박스
 				static int item_current_2 = 0;
 				ImGui::Combo("combo 2 (one-liner)", &item_current_2, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
@@ -693,18 +675,15 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 					IMGUI_TREE_END
 				}
 
-
-				// 행 
+				// 행
 				//	IMGUI_DEMO_MARKER("Widgets/Selectables/In columns");
-				// 그리드 
+				// 그리드
 				//	IMGUI_DEMO_MARKER("Widgets/Selectables/Grid");
 				// Alignment
 				//	IMGUI_DEMO_MARKER("Widgets/Selectables/Alignment");
 
-
 				IMGUI_TREE_END
 			}
-
 
 			IMGUI_TREE_BEGIN("Input Box")
 			{
@@ -761,19 +740,16 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 				}
 				ImGui::Separator();
 				IMGUI_TREE_END
-
 			}
-			
+
 			// 진행바
 			IMGUI_TREE_BEGIN("PrograssBar")
 			{
-
 				static float progress = 0.0f, progress_dir = 1.0f;
 
 				progress += progress_dir * 0.4f * ImGui::GetIO().DeltaTime;
 				if (progress >= +1.1f) { progress = +1.1f; progress_dir *= -1.0f; }
 				if (progress <= -0.1f) { progress = -0.1f; progress_dir *= -1.0f; }
-				
 
 				// Typically we would use ImVec2(-1.0f,0.0f) or ImVec2(-FLT_MIN,0.0f) to use all available width,
 				// or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
@@ -794,9 +770,9 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 			{
 				static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
 
-				ImGuiColorEditFlags misc_flags = ImGuiColorEditFlags_AlphaPreview ;
+				ImGuiColorEditFlags misc_flags = ImGuiColorEditFlags_AlphaPreview;
 				ImGui::ColorEdit4("MyColor##1", (float*)&color, misc_flags);
-				ImGui::ColorEdit4("MyColor##2", (float*)&color, ImGuiColorEditFlags_Float| misc_flags);
+				ImGui::ColorEdit4("MyColor##2", (float*)&color, ImGuiColorEditFlags_Float | misc_flags);
 
 				ImGui::Text("Color button with Picker:"); ImGui::SameLine();
 				ImGui::ColorEdit4("MyColor##3", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | misc_flags);
@@ -804,9 +780,7 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 				IMGUI_TREE_END
 			}
 
-
 #pragma region ItemBar Status
-
 
 			// 각 UI의 상태 디버깅용
 			IMGUI_TREE_BEGIN("ItemBar Status For Watching")
@@ -907,7 +881,6 @@ void CImgui_MyDemo::IMGUI_TEST_Details()
 			}
 #pragma endregion
 
-
 			IMGUI_TREE_END
 		}
 		ImGui::End();
@@ -959,8 +932,6 @@ void CImgui_MyDemo::AppSimpleOverlay(bool* p_open)
 	ImGui::End();
 }
 
-
-
 CImgui_MyDemo * CImgui_MyDemo::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {
 	CImgui_MyDemo*	pInstance = NEW CImgui_MyDemo(deviec, context);
@@ -977,5 +948,4 @@ CImgui_MyDemo * CImgui_MyDemo::Create(ID3D11Device* deviec, ID3D11DeviceContext*
 void CImgui_MyDemo::Free()
 {
 	__super::Free();
-
 }

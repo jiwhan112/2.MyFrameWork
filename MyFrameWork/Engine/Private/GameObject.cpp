@@ -9,9 +9,7 @@ CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
-
 }
-
 
 CGameObject::CGameObject(const CGameObject & rhs)
 	: m_pDevice(rhs.m_pDevice)
@@ -22,8 +20,6 @@ CGameObject::CGameObject(const CGameObject & rhs)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
-
-
 }
 
 CComponent * CGameObject::Get_Component(const _tchar * pComponentTag)
@@ -59,24 +55,16 @@ HRESULT CGameObject::NativeConstruct(void * pArg)
 
 _int CGameObject::Tick(_double TimeDelta)
 {
-
-
-
 	return UPDATENONE;
 }
 
 _int CGameObject::LateTick(_double TimeDelta)
 {
-
-
-
 	return UPDATENONE;
 }
 
 HRESULT CGameObject::Render()
 {
-
-
 	return S_OK;
 }
 

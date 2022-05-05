@@ -20,9 +20,9 @@ HRESULT CCamera_Game::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	// 직교 투영 행렬 초기화 
+	// 직교 투영 행렬 초기화
 	FAILED_CHECK(GetSingle(CGameInstance)->SetTransform(CPipeLine::D3DTS_PROJ_ORI, XMMatrixOrthographicLH((float)g_iWinCX, (float)g_iWinCY, 0.f, 1.f)));
-	
+
 	return S_OK;
 }
 
@@ -32,7 +32,7 @@ _int CCamera_Game::Tick(_double TimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
 	{
-		mComTransform->GO_WorldVec(_float3(0,0,1),45, CTransform::ROTTYPE_Y, TimeDelta);
+		mComTransform->GO_WorldVec(_float3(0, 0, 1), 45, CTransform::ROTTYPE_Y, TimeDelta);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
@@ -51,10 +51,6 @@ _int CCamera_Game::Tick(_double TimeDelta)
 	}
 
 	return __super::Tick(TimeDelta);
-
-	
-
-
 }
 
 _int CCamera_Game::LateTick(_double TimeDelta)

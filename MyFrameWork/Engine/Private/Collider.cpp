@@ -9,7 +9,6 @@
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
 }
 
 CCollider::CCollider(const CCollider & rhs)
@@ -32,8 +31,6 @@ CCollider::CCollider(const CCollider & rhs)
 #ifdef _DEBUG
 	Safe_AddRef(mInputLayout);
 #endif // _DEBUG
-
-	
 }
 
 HRESULT CCollider::NativeConstruct_Prototype(E_COLLIDER_TYPE eType)
@@ -43,10 +40,10 @@ HRESULT CCollider::NativeConstruct_Prototype(E_COLLIDER_TYPE eType)
 
 	// 각 타입별로 크기 1인 충돌체 생성
 	meType = eType;
-	
+
 	switch (meType)
 	{
-	case COL_AABB: 
+	case COL_AABB:
 		mAABB = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(1.f, 1.f, 1.f));
 		break;
 	case COL_OBB:
@@ -71,10 +68,8 @@ HRESULT CCollider::NativeConstruct_Prototype(E_COLLIDER_TYPE eType)
 		pShaderByteCode, iShaderByteCodeLength, &mInputLayout));
 
 	mBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
-	
+
 #endif // _DEBUG
-
-
 
 	return S_OK;
 }
@@ -89,7 +84,7 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 	{
 		memcpy(&mColliderDesc, pArg, sizeof(COLLIDERDESC));
 		TransformMatrix = XMMatrixAffineTransformation(
-			XMLoadFloat3(&mColliderDesc.vScale), 
+			XMLoadFloat3(&mColliderDesc.vScale),
 			XMVectorSet(0.f, 0.f, 0.f, 1.f),
 			XMLoadFloat4(&mColliderDesc.vRotation),
 			XMLoadFloat4(&mColliderDesc.vTranslation));
@@ -117,8 +112,6 @@ HRESULT CCollider::Update_Transform(_float4x4 TransformMatrix)
 	if (nullptr != mSphere)
 		mSphere->Center = TransformMatrix.Translation();
 
-	
-
 	return S_OK;
 }
 bool CCollider::Update_Collider(CCollider* TargetCollider)
@@ -126,7 +119,7 @@ bool CCollider::Update_Collider(CCollider* TargetCollider)
 	if (TargetCollider == nullptr || meType == CCollider::COL_END)
 		return false;
 
-	// 현재 들고있는 타입에 대해 충돌처리 
+	// 현재 들고있는 타입에 대해 충돌처리
 	if (meType == CCollider::COL_AABB)
 		return Update_AABB(TargetCollider);
 	else if (meType == CCollider::COL_OBB)
@@ -145,9 +138,7 @@ void CCollider::SetScale(_float3 size)
 		mOBB->Extents = size;
 	if (nullptr != mSphere)
 		mSphere->Radius = size.x;
-
 }
-
 
 CCollider::OBBDESC CCollider::Get_Compute_OBBDesc()
 {
@@ -175,10 +166,9 @@ CCollider::OBBDESC CCollider::Get_Compute_OBBDesc()
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {
-
 	// 랜더링시 처리
 	m_pDeviceContext->IASetInputLayout(mInputLayout);
-//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
+	//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
 
 	CPipeLine*		pPipeLine = GetSingle(CPipeLine);
 	mBaseEffect->SetWorld(_float4x4::Identity);
@@ -190,12 +180,12 @@ HRESULT CCollider::Render()
 	// 배치 클래스의 Begin ~ End 까지 물체를 그린다.
 	mBatch->Begin();
 
-	if(nullptr != mAABB)
+	if (nullptr != mAABB)
 		DX::Draw(mBatch, *mAABB, DirectX::Colors::Green);
 	if (nullptr != mOBB)
 		DX::Draw(mBatch, *mOBB, DirectX::Colors::Green);
-	if (nullptr != mSphere)		
-		DX::Draw(mBatch, *mSphere,DirectX::Colors::Green);
+	if (nullptr != mSphere)
+		DX::Draw(mBatch, *mSphere, DirectX::Colors::Green);
 
 	mBatch->End();
 
@@ -205,7 +195,6 @@ HRESULT CCollider::Render()
 
 bool CCollider::Update_AABB(CCollider * TargetCollider)
 {
-
 	// Intersects
 	BoundingBox* targetAABB = TargetCollider->Get_Collider_AABB();
 	BoundingOrientedBox* targetOBB = TargetCollider->Get_Collider_OBB();
@@ -241,7 +230,6 @@ bool CCollider::Update_OBB(CCollider * TargetCollider)
 
 	return false;
 
-
 	return false;
 }
 bool CCollider::Update_SPHERE(CCollider * TargetCollider)
@@ -251,7 +239,7 @@ bool CCollider::Update_SPHERE(CCollider * TargetCollider)
 	BoundingOrientedBox* targetOBB = TargetCollider->Get_Collider_OBB();
 	BoundingSphere* targetSPHERE = TargetCollider->Get_Collider_SPHERE();
 
-//	mSphere->Intersects(rr.position, rr.direction, dist);
+	//	mSphere->Intersects(rr.position, rr.direction, dist);
 
 	if (targetAABB != nullptr)
 		return  mSphere->Intersects(*targetAABB);
@@ -266,12 +254,10 @@ bool CCollider::Update_SPHERE(CCollider * TargetCollider)
 }
 bool CCollider::Update_MY_AABB(CCollider * TargetCollider)
 {
-
-	BoundingBox* Target_AABB= TargetCollider->Get_Collider_AABB();
+	BoundingBox* Target_AABB = TargetCollider->Get_Collider_AABB();
 	if (nullptr == mAABB ||
 		nullptr == Target_AABB)
 		return false;
-
 
 	_float3		vSourMin, vSourMax;
 	_float3		vDestMin, vDestMax;
@@ -280,7 +266,7 @@ bool CCollider::Update_MY_AABB(CCollider * TargetCollider)
 	vSourMin = _float3(mAABB->Center.x - mAABB->Extents.x,
 		mAABB->Center.y - mAABB->Extents.y,
 		mAABB->Center.z - mAABB->Extents.z
-		);
+	);
 
 	vSourMax = _float3(mAABB->Center.x + mAABB->Extents.x,
 		mAABB->Center.y + mAABB->Extents.y,
@@ -298,7 +284,6 @@ bool CCollider::Update_MY_AABB(CCollider * TargetCollider)
 		Target_AABB->Center.z + Target_AABB->Extents.z
 	);
 
-
 	bool mCol = true;
 
 	// 충돌이 아닌 영역 비교
@@ -312,15 +297,12 @@ bool CCollider::Update_MY_AABB(CCollider * TargetCollider)
 		mCol = false;
 
 	return mCol;
-
 }
 bool CCollider::Update_MY_OBB(CCollider * TargetCollider)
 {
-	
-
 	OBBDESC obbdesc[2];
-	obbdesc[0]= Get_Compute_OBBDesc();
-	obbdesc[1]= TargetCollider->Get_Compute_OBBDesc();
+	obbdesc[0] = Get_Compute_OBBDesc();
+	obbdesc[1] = TargetCollider->Get_Compute_OBBDesc();
 
 	bool bCol = true;
 
@@ -350,10 +332,9 @@ bool CCollider::Update_MY_OBB(CCollider * TargetCollider)
 		}
 		if (false == bCol)
 			break;
-	}	
+	}
 	return bCol;
 }
-
 
 CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_COLLIDER_TYPE eType)
 {
@@ -389,7 +370,6 @@ void CCollider::Free()
 	Safe_Delete(mOBB);
 	Safe_Delete(mSphere);
 
-
 #ifdef _DEBUG
 	Safe_Release(mInputLayout);
 
@@ -397,6 +377,6 @@ void CCollider::Free()
 	{
 		Safe_Delete(mBaseEffect);
 		Safe_Delete(mBatch);
-	}	
+	}
 #endif // _DEBUG
 }

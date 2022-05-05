@@ -9,14 +9,13 @@ END
 
 // 기본 3D 오브젝트 출력
 BEGIN(Client)
-class CGameObject_3D_Static final:
+class CGameObject_3D_Static final :
 	public CGameObject_Base
 {
 protected:
 	explicit CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_3D_Static(const CGameObject_3D_Static& rhs);
 	virtual ~CGameObject_3D_Static() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -40,8 +39,6 @@ protected:
 
 	virtual HRESULT Set_ConstantTable_Model(); // 모델 설정
 //	virtual HRESULT Set_ConstantTable_Light(_uint lightid = 0); // 라이팅
-
-
 
 protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;

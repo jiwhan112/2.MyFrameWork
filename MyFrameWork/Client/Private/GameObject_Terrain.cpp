@@ -15,7 +15,6 @@ CGameObject_Terrain::CGameObject_Terrain(const CGameObject_Terrain& rhs)
 	Safe_AddRef(mComShader);
 	Safe_AddRef(mComRenderer);
 	Safe_AddRef(mComVIBuffer);
-
 }
 
 HRESULT CGameObject_Terrain::NativeConstruct_Prototype()
@@ -28,14 +27,13 @@ HRESULT CGameObject_Terrain::NativeConstruct_Prototype()
 HRESULT CGameObject_Terrain::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-//	Create_FilterTexture();
+	//	Create_FilterTexture();
 	return S_OK;
 }
 
 _int CGameObject_Terrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
 
 	/*if (PickObject())
 	{
@@ -64,7 +62,6 @@ bool CGameObject_Terrain::PickObject()
 
 	return false;
 }
-
 
 HRESULT CGameObject_Terrain::Render()
 {
@@ -100,9 +97,9 @@ HRESULT CGameObject_Terrain::Set_ConstantTable()
 
 	// 텍스처 넘기기
 	FAILED_CHECK(mComTexture[TYPE_DIFFUSE]->SetUp_OnShader(mComShader, "g_DiffuseTexture"));
-	FAILED_CHECK(mComTexture[TYPE_DIFFUSE]->SetUp_OnShader(mComShader, "g_SourDiffuseTexture",0));
-	FAILED_CHECK(mComTexture[TYPE_DIFFUSE]->SetUp_OnShader(mComShader, "g_DestDiffuseTexture",1));
-//	FAILED_CHECK(mComTexture[TYPE_FILTER]->SetUp_OnShader(mComShader, "g_FilterTexture"));
+	FAILED_CHECK(mComTexture[TYPE_DIFFUSE]->SetUp_OnShader(mComShader, "g_SourDiffuseTexture", 0));
+	FAILED_CHECK(mComTexture[TYPE_DIFFUSE]->SetUp_OnShader(mComShader, "g_DestDiffuseTexture", 1));
+	//	FAILED_CHECK(mComTexture[TYPE_FILTER]->SetUp_OnShader(mComShader, "g_FilterTexture"));
 	FAILED_CHECK(mComTexture[TYPE_BRUSH]->SetUp_OnShader(mComShader, "g_BrushTexture"));
 	mComShader->Set_Texture("g_FilterTexture", mRSV);
 
@@ -143,8 +140,8 @@ HRESULT CGameObject_Terrain::Create_FilterTexture()
 	TextureDesc.SampleDesc.Quality = 0;
 	TextureDesc.Usage = D3D11_USAGE_DYNAMIC; // 수정을 위해 DYNAMIC으로 제작
 	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE; // 셰이더 리소스라고 명시
-	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // CPU에서 수정할 수 있게 (Write) 
-	
+	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // CPU에서 수정할 수 있게 (Write)
+
 	// D3D11_SUBRESOURCE_DATA 리소스 생성
 	D3D11_SUBRESOURCE_DATA			SubResourceData;
 	ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -176,11 +173,11 @@ HRESULT CGameObject_Terrain::Create_FilterTexture()
 	// 텍스처는 Pitch 설정 필수
 	SubResourceData.SysMemPitch = sizeof(_ulong) * NumX;
 
-	// 텍스처 생성 -> 리소스뷰형태로 변환 (텍스처 사용) 
+	// 텍스처 생성 -> 리소스뷰형태로 변환 (텍스처 사용)
 	FAILED_CHECK(m_pDevice->CreateTexture2D(&TextureDesc, &SubResourceData, &pTexture));
 	FAILED_CHECK(m_pDevice->CreateShaderResourceView(pTexture, nullptr, &mRSV));
 
-	// 텍스처 생성 ->리소스뷰형태로 저장 (텍스처 저장) 
+	// 텍스처 생성 ->리소스뷰형태로 저장 (텍스처 저장)
 	FAILED_CHECK(SaveWICTextureToFile(m_pDeviceContext, pTexture,
 		GUID_ContainerFormatPng, TEXT("../Bin/Resources/Textures/Test.png"), &GUID_WICPixelFormat32bppBGRA));
 

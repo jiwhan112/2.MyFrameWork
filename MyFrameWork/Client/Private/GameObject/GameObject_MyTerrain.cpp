@@ -5,7 +5,6 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11Device
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_TERRAIN;
-
 }
 
 CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
@@ -19,13 +18,11 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	Safe_AddRef(mComNaviMesh);
 
 	mVecTile = nullptr;
-
 }
 
 HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-
 
 	return S_OK;
 }
@@ -45,7 +42,6 @@ _int CGameObject_MyTerrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 	misPick = false;
-
 
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
 	{
@@ -108,7 +104,6 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 	if (mTerrainDESC.meTerrainSize == e)
 		return S_OK;
 
-
 	mTerrainDESC.meTerrainSize = e;
 
 	// 해당 모델 컴포넌트로 변경
@@ -122,7 +117,6 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 
 	switch (mTerrainDESC.meTerrainSize)
 	{
-	
 	case TERRAINSIZE_16:
 		mTerrainDESC.mTextureMultiSize = 16;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
@@ -144,7 +138,7 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 	case TERRAINSIZE_128:
 		mTerrainDESC.mTextureMultiSize = 128;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-		Update_TileVec(129,129);
+		Update_TileVec(129, 129);
 
 		break;
 	case TERRAINSIZE_END:
@@ -154,8 +148,6 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 	}
 
 	return S_OK;
-
-
 }
 
 int CGameObject_MyTerrain::Get_TileIndex(_float3 worldPos)
@@ -170,7 +162,6 @@ _float3 CGameObject_MyTerrain::Get_TileWorld(_uint index)
 
 HRESULT CGameObject_MyTerrain::Set_Component()
 {
-
 	if (mComRenderer == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
@@ -186,10 +177,8 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 	if (mComTexture == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
-
 	if (mComNaviMesh == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
-
 
 	return S_OK;
 }
@@ -197,7 +186,7 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 HRESULT CGameObject_MyTerrain::Set_ConstantTable_Tex()
 {
 	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE, 0));
-	FAILED_CHECK(mComShader->Set_RawValue(STR_TEXTURESIZE,&mTerrainDESC.mTextureMultiSize,sizeof(_uint)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_TEXTURESIZE, &mTerrainDESC.mTextureMultiSize, sizeof(_uint)));
 	return S_OK;
 }
 
@@ -207,7 +196,6 @@ void CGameObject_MyTerrain::Update_PickPos(_float3 pickPos)
 	// 피킹시 게임 매니저에 전달??
 	_uint iIndex = mComVIBuffer->Get_TileIndex(pickPos);
 	mPickWorldPos = mComVIBuffer->Get_TileWorldPos(iIndex);
-
 }
 
 void CGameObject_MyTerrain::Update_TileVec(int xx, int zz)
@@ -225,7 +213,7 @@ void CGameObject_MyTerrain::Update_TileVec(int xx, int zz)
 
 	mVecTile->reserve(xx*zz);
 
-	for (int z=0;z<zz;++z)
+	for (int z = 0; z < zz; ++z)
 	{
 		for (int x = 0; x < xx; ++x)
 		{
@@ -235,8 +223,6 @@ void CGameObject_MyTerrain::Update_TileVec(int xx, int zz)
 		}
 	}
 }
-
-
 
 CGameObject_MyTerrain * CGameObject_MyTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -273,11 +259,10 @@ void CGameObject_MyTerrain::Free()
 	if (mVecTile == nullptr)
 		return;
 
-	for (auto tile: *mVecTile)
+	for (auto tile : *mVecTile)
 	{
 		Safe_Delete(tile);
 	}
 	mVecTile->clear();
 	Safe_Delete(mVecTile);
-
 }

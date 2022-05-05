@@ -16,14 +16,13 @@ BEGIN(Client)
 
 // 클라이언트에서 사용하는 기본 게임 오브젝트
 // 컴포넌트 반환 / 기본 컴포넌트 세팅 / 기본 기능 정의
-class CGameObject_Base abstract:
+class CGameObject_Base abstract :
 	public CGameObject
 {
 protected:
 	explicit CGameObject_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_Base(const CGameObject_Base& rhs);
 	virtual ~CGameObject_Base() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -33,7 +32,6 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
-
 public: // 컴포넌트 반환
 	CShader*		Get_ComShader() { return mComShader; }
 	CRenderer*		Get_ComRenderer() { return mComRenderer; }
@@ -42,18 +40,16 @@ public: // 컴포넌트 반환
 protected:
 	// 월드 셰이더 세팅
 	virtual HRESULT Set_ConstantTable_World();
-	virtual HRESULT Set_ConstantTable_Light(_uint lightid=0);
-	
+	virtual HRESULT Set_ConstantTable_Light(_uint lightid = 0);
 
-//	bool PickObject_3D();
+	//	bool PickObject_3D();
 
 protected:
 	_uint			mCurrentShaderPass = 0;
 
 	// 모든 클라이언트 오브젝트 기본 컴포넌트
-	CShader*		mComShader		= nullptr;
-	CRenderer*		mComRenderer	= nullptr;
-
+	CShader*		mComShader = nullptr;
+	CRenderer*		mComRenderer = nullptr;
 
 public:
 	virtual CGameObject_Base* Clone(void* pArg)PURE;

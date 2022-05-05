@@ -41,34 +41,31 @@ HRESULT CAnimation::Update_TransformMatrices(_double TimeDelta)
 		if (true == m_isFinished)
 			m_Channels[i]->Set_CurrentKeyFrame(0);
 
-
 		/* 각각의 뼈들이 시간값에 따른 상태값을 표현한 키프레임들을 가져온다. */
 		const vector<KEYFRAME*>*	pKeyFrames = m_Channels[i]->Get_KeyFrames();
 		if (nullptr == pKeyFrames)
 			return E_FAIL;
 
-
-
 		_uint iNumKeyFrame = pKeyFrames->size();
 
 		_uint iCurrentKeyFrameIndex = m_Channels[i]->Get_CurrentKeyFrame();
-		
+
 		/* 마지막 키프레임을 넘어가면. */
 		if (m_PlayTimeAcc >= (*pKeyFrames)[iNumKeyFrame - 1]->Time)
 		{
 			vScale = XMLoadFloat3(&(*pKeyFrames)[iNumKeyFrame - 1]->vScale);
 			vRotation = XMLoadFloat4(&(*pKeyFrames)[iNumKeyFrame - 1]->vRotation);
-			vPosition = XMLoadFloat3(&(*pKeyFrames)[iNumKeyFrame - 1]->vPosition);			
+			vPosition = XMLoadFloat3(&(*pKeyFrames)[iNumKeyFrame - 1]->vPosition);
 		}
 		/* 특정 키프레임 두개 사이에 존재할때?! */
-		else		
+		else
 		{
 			while (m_PlayTimeAcc >= (*pKeyFrames)[iCurrentKeyFrameIndex + 1]->Time)
 			{
-				m_Channels[i]->Set_CurrentKeyFrame(++iCurrentKeyFrameIndex);				
+				m_Channels[i]->Set_CurrentKeyFrame(++iCurrentKeyFrameIndex);
 			}
 
-			_double		Ratio = (m_PlayTimeAcc - (*pKeyFrames)[iCurrentKeyFrameIndex]->Time) 
+			_double		Ratio = (m_PlayTimeAcc - (*pKeyFrames)[iCurrentKeyFrameIndex]->Time)
 				/ ((*pKeyFrames)[iCurrentKeyFrameIndex + 1]->Time - (*pKeyFrames)[iCurrentKeyFrameIndex]->Time);
 
 			_vector		vSourScale, vDestScale;
@@ -93,7 +90,7 @@ HRESULT CAnimation::Update_TransformMatrices(_double TimeDelta)
 		_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
 		m_Channels[i]->Set_TransformationMatrix(TransformationMatrix);
-	}	
+	}
 
 	return S_OK;
 }
@@ -117,4 +114,3 @@ void CAnimation::Free()
 
 	m_Channels.clear();
 }
-

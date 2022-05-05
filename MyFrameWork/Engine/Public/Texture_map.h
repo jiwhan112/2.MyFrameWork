@@ -18,7 +18,7 @@ public:
 	HRESULT Set_TextureMap(string texturename);
 
 public:
-	virtual HRESULT NativeConstruct_Prototype(list<MYFILEPATH*> listpath);	
+	virtual HRESULT NativeConstruct_Prototype(list<MYFILEPATH*> listpath);
 	virtual HRESULT NativeConstruct(void* pArg);
 
 public:
@@ -32,7 +32,6 @@ private:
 	// 현재 바인딩된 텍스처
 	string	mCurrentKey = "";
 	ID3D11ShaderResourceView* mCurrentTexture = nullptr;
-
 
 private:
 	/*

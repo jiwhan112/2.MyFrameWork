@@ -36,7 +36,6 @@ _int CLayer::Tick(_double TimeDelta)
 			return -1;
 	}
 
-
 	return 0;
 }
 
@@ -91,4 +90,3 @@ HRESULT CLayer::Release_DeadObejct()
 
 	return S_OK;
 }
-

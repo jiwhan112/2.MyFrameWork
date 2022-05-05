@@ -11,7 +11,7 @@ CCell::CCell(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 
 HRESULT CCell::NativeConstruct(const _float3 * pPoints, _uint iIndex)
 {
-	// 점 3개와 인덱스 초기화 
+	// 점 3개와 인덱스 초기화
 	memcpy(mPoints, pPoints, sizeof(_float3) * POINT_END);
 	mIndex = iIndex;
 
@@ -19,8 +19,6 @@ HRESULT CCell::NativeConstruct(const _float3 * pPoints, _uint iIndex)
 	mLineDir[LINE_AB] = mPoints[POINT_B] - mPoints[POINT_A];
 	mLineDir[LINE_BC] = mPoints[POINT_C] - mPoints[POINT_B];
 	mLineDir[LINE_CA] = mPoints[POINT_A] - mPoints[POINT_C];
-
-
 
 	return S_OK;
 }
@@ -33,7 +31,7 @@ _bool CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
 		if (mPoints[POINT_B] == vDestPoint)
 			return true;
 		if (mPoints[POINT_C] == vDestPoint)
-			return true;	
+			return true;
 	}
 
 	if (mPoints[POINT_B] == vSourPoint)
@@ -85,9 +83,6 @@ _bool CCell::isIn(_fvector vPosition, _int* pNeighborIndex)
 	// 안에있음
 	return true;
 }
-
-
-
 
 CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _float3 * pPoints, _uint iIndex)
 {

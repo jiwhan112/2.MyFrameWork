@@ -5,14 +5,12 @@ CGameObject_Mouse::CGameObject_Mouse(ID3D11Device* pDevice, ID3D11DeviceContext*
 	: CGameObject_2D(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_MOUSE;
-
 }
 
 CGameObject_Mouse::CGameObject_Mouse(const CGameObject_Mouse& rhs)
 	: CGameObject_2D(rhs)
 
 {
-
 }
 
 HRESULT CGameObject_Mouse::NativeConstruct_Prototype()
@@ -37,15 +35,14 @@ HRESULT CGameObject_Mouse::NativeConstruct(void* pArg)
 
 _int CGameObject_Mouse::Tick(_double TimeDelta)
 {
-//	FAILED_UPDATE(__super::Tick(TimeDelta));
+	//	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	POINT ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-
-	mMousePos.x = (float)ptMouse.x -(g_iWinCX * 0.5f);
-	mMousePos.y = (g_iWinCY * 0.5f) - (float)ptMouse.y ;
+	mMousePos.x = (float)ptMouse.x - (g_iWinCX * 0.5f);
+	mMousePos.y = (g_iWinCY * 0.5f) - (float)ptMouse.y;
 
 	mComTransform->Scaled(XMVectorSet(50, 50, 1, 0.0f));
 	mComTransform->Set_State(CTransform::STATE_POSITION,
@@ -56,18 +53,16 @@ _int CGameObject_Mouse::Tick(_double TimeDelta)
 
 _int CGameObject_Mouse::LateTick(_double TimeDelta)
 {
-
-//	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	//	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return UPDATENONE;
-
 }
 
 HRESULT CGameObject_Mouse::Render()
 {
-//	FAILED_CHECK(__super::Render());
+	//	FAILED_CHECK(__super::Render());
 
 	FAILED_CHECK(Set_ConstantTable_UI());
 	FAILED_CHECK(Set_ConstantTable_Tex());
@@ -76,8 +71,6 @@ HRESULT CGameObject_Mouse::Render()
 
 	return S_OK;
 }
-
-
 
 //HRESULT CGameObject_Mouse::Set_Component()
 //{
@@ -97,8 +90,6 @@ HRESULT CGameObject_Mouse::Render()
 //
 //	return S_OK;
 //}
-
-
 
 CGameObject_Mouse * CGameObject_Mouse::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -128,6 +119,4 @@ CGameObject_Mouse* CGameObject_Mouse::Clone(void* pArg)
 void CGameObject_Mouse::Free()
 {
 	__super::Free();
-
-
 }

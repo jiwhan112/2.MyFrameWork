@@ -47,7 +47,6 @@ public:
 	// #Tag 텍스처 파일 만들기
 	HRESULT Create_FilterTexture();
 
-
 public:
 	static CGameObject_Terrain* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
 	virtual CGameObject_Terrain* Clone(void* pArg);

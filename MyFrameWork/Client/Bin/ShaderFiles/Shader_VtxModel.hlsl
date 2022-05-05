@@ -5,7 +5,6 @@
 texture2D g_DiffuseTexture;
 //texture2D g_NormalTexture;
 
-
 // VS
 struct VS_IN
 {
@@ -13,7 +12,6 @@ struct VS_IN
 	float3		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
 	float3		vTangent : TANGENT;
-
 };
 
 struct VS_OUT
@@ -22,7 +20,6 @@ struct VS_OUT
 	float4		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
-
 };
 
 VS_OUT VS_MAIN_DEFAULT(VS_IN In)
@@ -34,11 +31,10 @@ VS_OUT VS_MAIN_DEFAULT(VS_IN In)
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 
-
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
 	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vNormal = normalize(mul(vector(In.vNormal, 0.0f), g_WorldMatrix));
-//	Out.vTangent = normalize(mul(vector(In.vTangent, 0.0f), g_WorldMatrix));
+	//	Out.vTangent = normalize(mul(vector(In.vTangent, 0.0f), g_WorldMatrix));
 	Out.vTexUV = In.vTexUV;
 	return Out;
 }
@@ -50,7 +46,6 @@ struct PS_IN
 	float4		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
-
 };
 
 struct PS_OUT
@@ -67,15 +62,15 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 	// 노말
 	// float3	NormalMap = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
-	// 
+	//
 	// NormalMap = normalize(NormalMap*2-1);
 	 // float3x3 TBN = float3x3(In.vTangent, cross(In.vTangent, In.vNormal), In.vNormal);
 	// float3x3 TBN = float3x3(In.vTangent, cross(In.vNormal, In.vTangent), In.vNormal);
-	// 
-	// 
+	//
+	//
 	// float3	WorldNormal = mul(TBN, NormalMap);
-	// 
-	
+	//
+
 	// 노말2
 
 	float	Noraml = saturate(dot(normalize(In.vNormal), normalize(g_vLightDir) * -1));
@@ -85,11 +80,9 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 	float4		vLook = normalize(g_CameraPosition - In.vWorldPos);
 	float		fSpecular = pow(saturate(dot(normalize(vReflect), vLook)), 30.f);
 
-
 	float4  Diffuse = g_vLightDiffuse * DiffuseMap;
 	float4  Shade = saturate(Noraml + (g_vLightAmbient * g_vMtrlAmbient));
 	float4  Specular = (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
-
 
 	float4 color = Diffuse * Shade + Specular;
 	color.a = DiffuseMap.a;
@@ -113,23 +106,17 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
 	return Out;
 }
 
-
-
-
 technique11		DefaultTechnique
 {
 	pass Default
 	{
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
-	//	SetRasterizerState(CullMode_ccw);
+		//	SetRasterizerState(CullMode_ccw);
 		SetRasterizerState(CullMode_None);
-
 
 		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT();
 	}
-
-	
 }

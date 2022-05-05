@@ -19,12 +19,6 @@ namespace Client {}
 
 using namespace Client;
 
-
-
-
-
-
-
 #define  STR_FILEPATH_RESOURCE_SPRITE_L				L"..\\Bin\\Resources\\Sprite"
 #define  STR_FILEPATH_RESOURCE_DAT_L				L"..\\Bin\\Resources\\data"
 #define  STR_FILEPATH_RESOURCE_3DMODEL_L			L"..\\Bin\\Resources\\Game"
@@ -38,8 +32,6 @@ using namespace Client;
 #define  STR_FILEPATH_RESOURCE_3DTEXPATHHTXT_L			L"..\\Bin\\Resources\\PathTxT\\Sprite3DPath.txt"
 #define  STR_FILEPATH_RESOURCE_3DPATHTXT_STATIC_L	L"..\\Bin\\Resources\\PathTxT\\3DPath_Static.txt"
 #define  STR_FILEPATH_RESOURCE_3DPATHTXT_DYNAMIC_L	L"..\\Bin\\Resources\\PathTxT\\3DPath_Dynamic.txt"
-
-
 
 #define STR_FILENAME_DATA_TXT						L"DatPath.txt"
 #define STR_FILENAME_SPRITE_TXT						L"SpritePath.txt"

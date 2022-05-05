@@ -108,13 +108,11 @@ _bool CVIBuffer::Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut)
 	{
 		iIndexByte = 4;
 		iIndexSize = sizeof(FACEINDICES32);
-
 	}
 	_bool		isPick = false;
 
 	_uint	iIndices[3] = { 0 };
 
-	
 	for (_uint i = 0; i < m_iNumPrimitive; ++i)
 	{
 		_uint	iIndices[3] = { 0 };
@@ -153,12 +151,8 @@ void CVIBuffer::Free()
 	{
 		Safe_Delete_Array(mpVertexPos);
 		Safe_Delete_Array(mIndeces);
-
 	}
 
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
-
-
-
 }

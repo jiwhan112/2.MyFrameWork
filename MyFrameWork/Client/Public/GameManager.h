@@ -46,16 +46,13 @@ public:
 	HRESULT Set_ReListPath(E_PATHTYPE type);
 
 	// 카메라나 플레이어 가져올때 좀더 편하게 가져옴
-	CGameObject* Get_LevelObject_LayerTag(const wchar_t* layerTag,_uint index=0);
-
-
+	CGameObject* Get_LevelObject_LayerTag(const wchar_t* layerTag, _uint index = 0);
 
 private:
 	// 경로 저장
 	HRESULT Initialize_PathData();
-	HRESULT Set_PathData(list<MYFILEPATH*>* outData,wstring str, const char* filetype);
+	HRESULT Set_PathData(list<MYFILEPATH*>* outData, wstring str, const char* filetype);
 	HRESULT Safe_Delete_Path(list<MYFILEPATH*>* outData);
-
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

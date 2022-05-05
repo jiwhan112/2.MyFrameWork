@@ -11,7 +11,6 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain & rhs)
 	, miNumZ(rhs.miNumZ)
 
 {
-	
 }
 
 HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
@@ -172,7 +171,6 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(_uint x, _uint z)
 	// 동적 버퍼 생성
 //	INIT_New_VIBuffer(x, z);
 
-
 	return S_OK;
 }
 
@@ -200,7 +198,6 @@ _float4 CVIBuffer_Terrain::Get_Height(_float4 TargetPos)
 
 	_float fY = 0.f;
 	_plane plane;
-
 
 	// Width가 더 크면 위쪽 삼각형
 	if (fWidth > fDeoth)
@@ -249,7 +246,7 @@ _float3 CVIBuffer_Terrain::Get_TileWorldPos(_uint TileIndex)
 	_float fCenterX = mpVertexPos[TileIndex].x + fWidth * 0.5f;
 	_float fCenterZ = mpVertexPos[TileIndex].z + fDeoth * 0.5f;;
 
-	return _float3(fCenterX,0, fCenterZ);
+	return _float3(fCenterX, 0, fCenterZ);
 }
 
 HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z, const _tchar * newHeight)
@@ -258,7 +255,6 @@ HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z, const _tchar 
 
 	miNumX = x;
 	miNumZ = z;
-
 
 	ZeroMemory(&m_VBDesc, sizeof(D3D11_BUFFER_DESC));
 
@@ -297,7 +293,6 @@ HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z, const _tchar 
 
 #pragma region INDEX_BUFFER
 
-
 	// 인덱스 버퍼는 사각형에 삼각형이 두개씩 들어간다.
 	m_iNumPrimitive = (miNumX - 1) * (miNumZ - 1) * 2;
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
@@ -381,7 +376,7 @@ HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z, const _tchar 
 	if (FAILED(Create_IndexBuffer()))
 		return E_FAIL;
 
-//	Safe_Delete_Array(pIndices);
+	//	Safe_Delete_Array(pIndices);
 
 #pragma endregion
 
@@ -408,7 +403,6 @@ HRESULT CVIBuffer_Terrain::INIT_New_VIBuffer(_uint x, _uint z, const _tchar * ne
 	m_VBDesc.StructureByteStride = sizeof(VTXNORTEX);
 	m_VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-
 	// 이제 정점 세팅을 LOCK UNLOCK을 하지 않고 해준다.
 	VTXNORTEX*		pVertices = NEW VTXNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
@@ -432,7 +426,6 @@ HRESULT CVIBuffer_Terrain::INIT_New_VIBuffer(_uint x, _uint z, const _tchar * ne
 	m_VBSubResourceData.pSysMem = pVertices;
 #pragma endregion NEWVERTEX
 
-
 #pragma region NEWINDEX
 
 	// 인덱스 버퍼는 사각형에 삼각형이 두개씩 들어간다.
@@ -444,9 +437,9 @@ HRESULT CVIBuffer_Terrain::INIT_New_VIBuffer(_uint x, _uint z, const _tchar * ne
 	m_IBDesc.ByteWidth = sizeof(FACEINDICES32) * m_iNumPrimitive;
 	m_IBDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	m_IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-//	m_VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//	m_VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	// 직접 Indices에 세팅
+		// 직접 Indices에 세팅
 	FACEINDICES32*	pIndices = NEW FACEINDICES32[m_iNumPrimitive];
 	ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitive);
 
@@ -519,7 +512,7 @@ HRESULT CVIBuffer_Terrain::INIT_New_VIBuffer(_uint x, _uint z, const _tchar * ne
 	if (FAILED(Create_IndexBuffer()))
 		return E_FAIL;
 
-//	Safe_Delete_Array(pIndices);
+	//	Safe_Delete_Array(pIndices);
 #pragma endregion NEWINDEX
 	return S_OK;
 }
@@ -534,15 +527,12 @@ HRESULT CVIBuffer_Terrain::Set_NewXZ(const _uint X, const _uint Z)
 		mpVertexPos = nullptr;
 	}
 
-
 	miNumX = X;
 	miNumZ = Z;
 	m_iNumVertices = miNumX * miNumZ;
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource;
 	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-
-
 
 	mpVertexPos = NEW _float3[m_iNumVertices];
 	ZeroMemory(mpVertexPos, sizeof(_float3));
@@ -556,7 +546,7 @@ HRESULT CVIBuffer_Terrain::Set_NewXZ(const _uint X, const _uint Z)
 		{
 			_uint iIndex = z * miNumX + x;
 			((VTXNORTEX*)SubResource.pData)[iIndex].vPosition = mpVertexPos[iIndex] = _float3(x, 0.0f, z);
-			((VTXNORTEX*)SubResource.pData)[iIndex].vNormal = _float3(0.0f, 1, 0.0f); 
+			((VTXNORTEX*)SubResource.pData)[iIndex].vNormal = _float3(0.0f, 1, 0.0f);
 			((VTXNORTEX*)SubResource.pData)[iIndex].vTexUV = _float2(x / (miNumX - 1.f), z / (miNumZ - 1.f));
 		}
 	}
@@ -565,11 +555,9 @@ HRESULT CVIBuffer_Terrain::Set_NewXZ(const _uint X, const _uint Z)
 
 	// 인덱스 버퍼 재생성
 
-
 #pragma region INDEX
 
 	ZeroMemory(mIndeces, sizeof(FACEINDICES32) * m_iNumPrimitive);
-
 
 	_uint		iNumFace = 0;
 
@@ -586,12 +574,10 @@ HRESULT CVIBuffer_Terrain::Set_NewXZ(const _uint X, const _uint Z)
 				iIndex
 			};
 
-
 			((FACEINDICES32*)mIndeces)[iNumFace]._0 = iIndices[0];
 			((FACEINDICES32*)mIndeces)[iNumFace]._1 = iIndices[1];
 			((FACEINDICES32*)mIndeces)[iNumFace]._2 = iIndices[2];
 			++iNumFace;
-
 
 			((FACEINDICES32*)mIndeces)[iNumFace]._0 = iIndices[0];
 			((FACEINDICES32*)mIndeces)[iNumFace]._1 = iIndices[2];
@@ -604,8 +590,6 @@ HRESULT CVIBuffer_Terrain::Set_NewXZ(const _uint X, const _uint Z)
 
 	return S_OK;
 }
-
-
 
 CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * HeightMap)
 {
@@ -623,7 +607,7 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11Devi
 {
 	CVIBuffer_Terrain*	pInstance = NEW CVIBuffer_Terrain(pDevice, pDeviceContext);
 
-	if (FAILED(pInstance->NativeConstruct_Prototype(x,z)))
+	if (FAILED(pInstance->NativeConstruct_Prototype(x, z)))
 	{
 		MSGBOX("Failed to Created CVIBuffer_Terrain");
 		Safe_Release(pInstance);

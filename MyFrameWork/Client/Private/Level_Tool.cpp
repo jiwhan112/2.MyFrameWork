@@ -9,8 +9,6 @@
 #include "Tool/Imgui_Model.h"
 #include "Tool/IMGUI_Terrain.h"
 
-
-
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice, pDeviceContext)
 {
@@ -23,7 +21,7 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 HRESULT CLevel_Tool::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
-	
+
 #ifdef _DEBUG
 	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(Ready_Tools());
@@ -44,14 +42,12 @@ _int CLevel_Tool::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	
 	return UPDATENONE;
 }
 
 HRESULT CLevel_Tool::Render()
 {
 	FAILED_CHECK(__super::Render());
-
 
 #ifdef _DEBUG
 	SetWindowText(g_hWnd, TEXT("Tool Level"));
@@ -114,17 +110,12 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const _tchar * pLayerTag)
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
 
 	return S_OK;
-
 }
 
 HRESULT CLevel_Tool::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
-
-
 	return S_OK;
 }
-
-
 
 CLevel_Tool * CLevel_Tool::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -143,6 +134,6 @@ void CLevel_Tool::Free()
 {
 	__super::Free();
 
-//	Safe_Release(mIMGUI_DEMO);
-//	Safe_Release(mIMGUI_UI);
+	//	Safe_Release(mIMGUI_DEMO);
+	//	Safe_Release(mIMGUI_UI);
 }

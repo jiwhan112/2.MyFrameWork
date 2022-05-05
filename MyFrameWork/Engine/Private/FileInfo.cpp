@@ -2,8 +2,6 @@
 #include "io.h"
 #include <sstream>
 
-
-
 IMPLEMENT_SINGLETON(CFileInfo);
 
 //void CFileInfo::DirInfoExtraction(const wstring & FileFolder, list<FILEPATH*>& rPathInfoList, E_FILETYPE type)
@@ -61,7 +59,7 @@ IMPLEMENT_SINGLETON(CFileInfo);
 //			// substr(시작, 끝) : 시작에서 끝에 해당하는 문자열을 얻어오는 함수
 //			// L"AKIHA_AKI01_00%d.png"
 //			wstrTextureName = wstrTextureName.substr(0, wstrTextureName.size() - 1) + L"%d." + StrFiletype;
-//			
+//
 //			TCHAR	szBuf[MAX_STR] = L"";
 //			lstrcpy(szBuf, Find.GetFilePath().GetString());
 //			// D:\유준환\124기\Frame124\Texture\Stage\Player\Attack\AKIHA_AKI01_000.png
@@ -95,7 +93,6 @@ IMPLEMENT_SINGLETON(CFileInfo);
 //		}
 //	}
 //}
-
 
 static int isFileOrDir(_finddatai64_t fd)
 {
@@ -173,16 +170,15 @@ static vector<string> StringSplit(string input, char de)
 
 HRESULT CFileInfo::FolderFinder(const wstring& FileFolder)
 {
-
 	wstring	wstrFilePath = FileFolder + L"\\*.*";
 	string strFilePath;
 	strFilePath.assign(wstrFilePath.begin(), wstrFilePath.end());
-//	wstrFilePath.assign(strFilePath.begin(), strFilePath.end());
+	//	wstrFilePath.assign(strFilePath.begin(), strFilePath.end());
 
 	struct _finddatai64_t fd;
 
 	intptr_t handle = _findfirsti64(strFilePath.c_str(), &fd);
-	
+
 	do
 	{
 		int checkDirFile = isFileOrDir(fd);//현재 객체 종류 확인(파일 or 디렉토리)
@@ -190,8 +186,7 @@ HRESULT CFileInfo::FolderFinder(const wstring& FileFolder)
 		// 디렉토리라면 재귀
 		switch (checkDirFile)
 		{
-
-		case 0: // 디렉토리 
+		case 0: // 디렉토리
 		{
 			string filename = fd.name;
 			wstring newFolderPath = FileFolder;
@@ -200,10 +195,9 @@ HRESULT CFileInfo::FolderFinder(const wstring& FileFolder)
 
 			FolderFinder(newFolderPath + L"\\" + newDirName);
 		}
-			break;
+		break;
 		case 1: // 파일
 		{
-
 			MYFILEPATH* myFilePath = NEW MYFILEPATH;
 
 			string filename = fd.name;
@@ -214,18 +208,15 @@ HRESULT CFileInfo::FolderFinder(const wstring& FileFolder)
 
 			mListFilePathData.push_front(myFilePath);
 		}
-			break;
+		break;
 		case 2: // 불가능
 			break;
 		}
-
-
 	} while (_findnexti64(handle, &fd) == 0);
 
 	_findclose(handle);
 
 	return S_OK;
-
 }
 
 void CFileInfo::SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstring filename)
@@ -237,11 +228,11 @@ void CFileInfo::SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstrin
 	lstrcpy(path->FileName, filename.c_str());
 
 	wstring exeName = L"";
-	for (int i =0; i< filename.size();i++)
+	for (int i = 0; i < filename.size(); i++)
 	{
 		if (filename[i] == L'.')
 		{
-			exeName += filename.substr(i+1, filename.size() - 1);
+			exeName += filename.substr(i + 1, filename.size() - 1);
 			break;
 		}
 	}
@@ -253,7 +244,7 @@ void CFileInfo::SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstrin
 void CFileInfo::SaveVectorToDat(wstring savetxtName, wstring ExtensionName)
 {
 	bool isAllFile = true;
-	if(ExtensionName.size() > 2)
+	if (ExtensionName.size() > 2)
 		isAllFile = false;
 
 	// txt파일에 전체 리소스 정보 저장
@@ -269,13 +260,12 @@ void CFileInfo::SaveVectorToDat(wstring savetxtName, wstring ExtensionName)
 			wstring FileName = pathdata->FileName;
 			wstring Extension = pathdata->Extension;
 
-			if(isAllFile == false && Extension != ExtensionName)
+			if (isAllFile == false && Extension != ExtensionName)
 				continue;
 
 			_tchar buf[16] = L"";
 			_itow_s(pathdata->FileCount, buf, 10);
 			wstring FileCount = buf;
-
 
 			wstring filetxt =
 				Fullpath + L'|' +
@@ -312,7 +302,6 @@ void CFileInfo::FileOpenTest(wstring savetxtName)
 	//}
 	//if (fWrite.is_open())
 	//	fWrite.close();
-
 }
 
 list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
@@ -326,9 +315,9 @@ list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
 
 	string line;
 	while (!fRead.eof())
-	{ 
+	{
 		getline(fRead, line);
-		vector<string> vecStr = StringSplit(line,'|');
+		vector<string> vecStr = StringSplit(line, '|');
 		if (vecStr.size() != 4)
 			continue;
 
@@ -342,7 +331,7 @@ list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
 
 		for (auto str : vecStr)
 		{
-			wstring wstr; 
+			wstring wstr;
 			wstr.assign(str.begin(), str.end());
 			vecWStr.push_back(wstr);
 		}
@@ -354,11 +343,9 @@ list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
 		pngPathList.push_front(path);
 	}
 
-	
 	fRead.close();
 
 	return pngPathList;
-
 }
 
 wstring CFileInfo::Get_PathData(wstring Fullpath)
@@ -387,15 +374,13 @@ void CFileInfo::Free()
 {
 	if (mListFilePathData.empty() == false)
 	{
-		for (auto pathdata :mListFilePathData)
+		for (auto pathdata : mListFilePathData)
 		{
 			Safe_Delete(pathdata);
 		}
 		mListFilePathData.clear();
-
 	}
 }
-
 
 //l CFileInfo::FindType(CFileFind& Find, E_FILETYPE type)
 //{

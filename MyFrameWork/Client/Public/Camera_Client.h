@@ -48,14 +48,11 @@ private:
 	HRESULT Update_Target_D(_double TimeDelta);
 	HRESULT Update_Map(_double TimeDelta);
 
-
 private:
 	E_CAMERA_MODE meCameraMode;
 
 	_float4x4 mStartWorlMat;
 	CGameObject* mTargetObject = nullptr;
-
-
 
 public:
 	static CCamera_Client* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

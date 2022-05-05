@@ -6,7 +6,6 @@ CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11Devi
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_DYNAMIC;
-
 }
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs)
@@ -53,14 +52,12 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
-	
 
 	E_LEVEL Getindex = (E_LEVEL)GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 
-	// 이동 
+	// 이동
 	if (Getindex == LEVEL_MYGAMEPLAY)
 		GOMOVE(TimeDelta);
-
 
 	return UPDATENONE;
 }
@@ -74,7 +71,6 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	{
 		if (terrain->Get_isPick())
 		{
-
 			_float3 worldPos = terrain->Get_PickWorldPos();
 			int index = terrain->Get_TileIndex(worldPos);
 			mGoalPosition = terrain->Get_TileWorld(index);
@@ -84,11 +80,8 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 			mTimeMax = _float3::Distance(mStartPosition, mGoalPosition);
 
 			meAI = CGameObject_3D_Dynamic::BASEAI_MOVE;
-
 		}
 		//	mComTransform->Set_State(CTransform::STATE_POSITION, pos);
-
-
 	}
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
@@ -97,7 +90,6 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_3D_Dynamic::Render()
 {
-
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Light());
 
@@ -118,13 +110,12 @@ HRESULT CGameObject_3D_Dynamic::Render()
 #ifdef _DEBUG
 	mComCollider->Render();
 
-	CTransform* terraintrans =  GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN))->Get_TransformCom();
+	CTransform* terraintrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN))->Get_TransformCom();
 	mComNaviMesh->Render(terraintrans);
 #endif // _DEBUG
 
 	return S_OK;
 }
-
 
 HRESULT CGameObject_3D_Dynamic::Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC & desc)
 {
@@ -142,8 +133,6 @@ HRESULT CGameObject_3D_Dynamic::Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DES
 
 	FAILED_CHECK(__super::Release_Component(TEXT("Com_Model")));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
-
-
 
 	return S_OK;
 }
@@ -172,7 +161,6 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 	if (mComNaviMesh == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
 
-
 	return S_OK;
 }
 
@@ -189,25 +177,22 @@ void CGameObject_3D_Dynamic::GOMOVE(_double delta)
 
 		mComModel->SetUp_AnimIndex(29);
 		mTimer += delta;
-		_float3 CurrentPos = _float3::Lerp(mStartPosition, mGoalPosition, mTimer/ mTimeMax);
+		_float3 CurrentPos = _float3::Lerp(mStartPosition, mGoalPosition, mTimer / mTimeMax);
 		_float4 CurrentPos4;
 		CurrentPos4 = CurrentPos;
 		CurrentPos4.w = 1;
 
-		if(mComNaviMesh->Move_OnNavigation(CurrentPos4))
+		if (mComNaviMesh->Move_OnNavigation(CurrentPos4))
 		{
 			mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPos4);
 		}
 		else
 			meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
 
-
-
-	//	_float distance =  _float3::Distance(CurrentPos, mGoalPosition);
+		//	_float distance =  _float3::Distance(CurrentPos, mGoalPosition);
 
 		if (mTimer > mTimeMax)
 			meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
-
 	}
 
 	break;
@@ -216,9 +201,7 @@ void CGameObject_3D_Dynamic::GOMOVE(_double delta)
 	default:
 		break;
 	}
-
 }
-
 
 CGameObject_3D_Dynamic * CGameObject_3D_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -252,5 +235,4 @@ void CGameObject_3D_Dynamic::Free()
 	Safe_Release(mComModel);
 	Safe_Release(mComCollider);
 	Safe_Release(mComNaviMesh);
-
 }

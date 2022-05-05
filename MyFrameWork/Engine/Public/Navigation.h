@@ -15,7 +15,6 @@ public:
 		NAVI_OBJTYPE_STATIC,
 		NAVI_OBJTYPE_DYNAMIC,
 		NAVI_OBJTYPE_END,
-		
  };
 
 private:
@@ -32,12 +31,9 @@ public:
 	bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);
 	HRESULT SetUp_NewNaviMesh(list<_float3*>& vpointlist);
 	HRESULT SetUp_AutoMesh(class CVIBuffer_Terrain* terrain);
-	
+
 	// 움직임 연산
 	_bool Move_OnNavigation(_fvector vPos);
-
-
-
 
 #ifdef _DEBUG
 public:

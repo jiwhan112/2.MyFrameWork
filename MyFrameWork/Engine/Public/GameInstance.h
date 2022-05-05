@@ -57,7 +57,6 @@ public: /* For.Object_Manager */
 	const list<CGameObject*>* Get_GameObjectLayerList(_uint iLevelIndex, const _tchar* pLayerTag);
 	const map<wstring, class CLayer*>* Get_All_GameObjectLayerMap(_uint iLevelIndex);
 
-
 public: /* For. PipeLine Single*/
 	HRESULT SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);
 	_matrix GetTransformMatrix(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
@@ -75,7 +74,6 @@ public: // For. File
 	void SaveVectorToDat(const wstring& savetxtName, wstring exename = L"");
 	list<MYFILEPATH*> Load_ExtensionList(const wstring& txtfilepath, string exe);
 	wstring Get_PathData(wstring Fullpath);
-
 
 public: // For. Picking
 	HRESULT Transform_ToLocalSpace(_fmatrix WorldMatrixinverse);

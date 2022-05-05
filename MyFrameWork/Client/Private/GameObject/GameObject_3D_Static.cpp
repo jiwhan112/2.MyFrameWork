@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Static.h"
 
-
 CGameObject_3D_Static::CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_STATIC;
-
 }
 
 CGameObject_3D_Static::CGameObject_3D_Static(const CGameObject_3D_Static& rhs)
@@ -30,7 +28,6 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
 	}
 
-
 	mCurrentShaderPass = 0;
 	return S_OK;
 }
@@ -39,7 +36,6 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	
 	return S_OK;
 }
 
@@ -61,7 +57,6 @@ _int CGameObject_3D_Static::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_3D_Static::Render()
 {
-
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Light());
 	FAILED_CHECK(Set_ConstantTable_Model());
@@ -79,16 +74,14 @@ HRESULT CGameObject_3D_Static::Render()
 			// 여기서 뼈를 넘긴다.
 			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
 		}
-	}	
+	}
 
 #ifdef _DEBUG
 	mComCollider->Render();
 #endif // _DEBUG
 
-
 	return S_OK;
 }
-
 
 HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
 {
@@ -144,7 +137,6 @@ HRESULT CGameObject_3D_Static::Set_LoadColliderDESC(const COLLIDER_DESC & desc)
 	}
 	mComCollider->SetScale(mCollider_Desc.mSize);
 	return S_OK;
-
 }
 
 HRESULT CGameObject_3D_Static::Set_Component()
@@ -152,11 +144,11 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	if (mComRenderer == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
-		// 모델 타입에 따라 정적모델 동적모델 처리
+	// 모델 타입에 따라 정적모델 동적모델 처리
 
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
-	
+
 	if (mComModel == nullptr)
 	{
 		string strModel = mModelStatic_Desc.mModelName;
@@ -166,9 +158,7 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	if (mComCollider == nullptr)
 	{
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
-
 	}
-
 
 	return S_OK;
 }
@@ -177,7 +167,6 @@ HRESULT CGameObject_3D_Static::Set_ConstantTable_Model()
 {
 	return S_OK;
 }
-
 
 CGameObject_3D_Static * CGameObject_3D_Static::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

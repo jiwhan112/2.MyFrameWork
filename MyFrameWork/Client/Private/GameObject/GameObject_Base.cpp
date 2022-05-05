@@ -5,7 +5,6 @@ CGameObject_Base::CGameObject_Base(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	: CGameObject(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_END;
-
 }
 
 CGameObject_Base::CGameObject_Base(const CGameObject_Base& rhs)
@@ -17,7 +16,6 @@ CGameObject_Base::CGameObject_Base(const CGameObject_Base& rhs)
 
 	Safe_AddRef(mComShader);
 	Safe_AddRef(mComRenderer);
-
 }
 
 HRESULT CGameObject_Base::NativeConstruct_Prototype()
@@ -43,7 +41,6 @@ _int CGameObject_Base::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 	return UPDATENONE;
-
 }
 
 HRESULT CGameObject_Base::Render()
@@ -51,8 +48,6 @@ HRESULT CGameObject_Base::Render()
 	FAILED_CHECK(__super::Render());
 	return S_OK;
 }
-
-
 
 HRESULT CGameObject_Base::Set_ConstantTable_World()
 {
@@ -82,7 +77,6 @@ HRESULT CGameObject_Base::Set_ConstantTable_Light(_uint lightid)
 	return S_OK;
 }
 
-
 //bool CGameObject_Base::PickObject_3D()
 //{
 //	if (mComVIBuffer == nullptr)
@@ -101,5 +95,4 @@ void CGameObject_Base::Free()
 	__super::Free();
 	Safe_Release(mComShader);
 	Safe_Release(mComRenderer);
-
 }

@@ -7,11 +7,8 @@ CImgui_Base::CImgui_Base(ID3D11Device * device, ID3D11DeviceContext * context)
 {
 }
 
-
-
 void CImgui_Base::Free()
 {
 	Safe_Release(mDevice);
 	Safe_Release(mDeviceContext);
-
 }

@@ -6,7 +6,7 @@ BEGIN(Client)
 // UI DESC 저장
 // 패스 데이터 저장
 
-class CImgui_UI final:
+class CImgui_UI final :
 	public CImgui_Base
 {
 public:
@@ -20,7 +20,7 @@ private:
 	explicit CImgui_UI(ID3D11Device* device, ID3D11DeviceContext* context);
 	explicit CImgui_UI(const CImgui_UI& rhs);
 	virtual ~CImgui_UI() = default;
-	
+
 public:
 	// CImgui_Base을(를) 통해 상속됨
 	virtual HRESULT NativeConstruct() override;
@@ -48,14 +48,11 @@ private:
 	// list<class CGameObject_2D*> mListUISet;
 
 	bool					mIsDataSetting = false;
-//	E_UITOOL_MODE			meUIToolMode = UITOOL_MODE_END;
-
+	//	E_UITOOL_MODE			meUIToolMode = UITOOL_MODE_END;
 
 public:
 	static CImgui_UI* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);
 	virtual void Free() override;
-
-
 };
 
 END

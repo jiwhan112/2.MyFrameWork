@@ -2,7 +2,6 @@
 
 #include "Base.h"
 
-
 BEGIN(Client)
 
 // 클라이언트의 DESC 정보 저장 불러오기 클래스
@@ -12,12 +11,11 @@ class CGameObject_Base;
 class CObjectIO final
 	:public CBase
 {
-
 private:
 	explicit	CObjectIO() = default;
 	explicit	CObjectIO(const CObjectIO& rhs) = default;
 	virtual		~CObjectIO() = default;
-	
+
 public:
 	HRESULT NativeConstruct();
 
@@ -30,7 +28,6 @@ public:
 
 	// 데이터를 불러와서 생성기에 넘김
 	HRESULT LoadObject(wstring FolderPath, wstring filename, char** pData, E_OBJECT_TYPE* type);
-
 
 private:
 	// 각 데이터별로 저장
@@ -50,8 +47,6 @@ private:
 public:
 	static CObjectIO* Create();
 	virtual void Free() override;
-
 };
-
 
 END

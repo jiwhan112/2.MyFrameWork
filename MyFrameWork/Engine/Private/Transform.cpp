@@ -94,7 +94,6 @@ HRESULT CTransform::GO_Backward(_double deltatime)
 
 HRESULT CTransform::GO_Up(_double deltatime)
 {
-
 	_vector		vPosition = GetState(CTransform::STATE_POSITION);
 	_vector		vUp = GetState(CTransform::STATE_UP);
 
@@ -106,7 +105,6 @@ HRESULT CTransform::GO_Up(_double deltatime)
 
 HRESULT CTransform::GO_Down(_double deltatime)
 {
-
 	_vector		vPosition = GetState(CTransform::STATE_POSITION);
 	_vector		vUp = GetState(CTransform::STATE_UP);
 
@@ -140,7 +138,6 @@ HRESULT CTransform::GO_Left(_double deltatime)
 
 HRESULT CTransform::GO_WorldVec(_float3 vec, _double deltatime)
 {
-
 	_float3		vPosition = GetState(CTransform::STATE_POSITION);
 
 	vec.Normalize();
@@ -155,7 +152,6 @@ HRESULT CTransform::GO_WorldVec(_float3 vec, _double deltatime)
 
 HRESULT CTransform::GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _double deltatime)
 {
-
 	_float3		vPosition = GetState(CTransform::STATE_POSITION);
 	vec.Normalize();
 
@@ -174,20 +170,17 @@ HRESULT CTransform::GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _doub
 		break;
 	default:
 		break;
-
 	}
 
-	_float4 newVec = _float4(vec,1.f); 
+	_float4 newVec = _float4(vec, 1.f);
 	_float4::Transform(newVec, RotMat, newVec);
 
 	vPosition += newVec.Get_Float3() * mDesc.SpeedPersec *(_float)deltatime;
-
 
 	Set_State(CTransform::STATE_POSITION, _float4(vPosition, 1.f));
 
 	return S_OK;
 }
-
 
 HRESULT CTransform::Turn(_fvector vAxis, _double time)
 {
@@ -235,8 +228,6 @@ HRESULT CTransform::Chase(_fvector TargetPos, _double time)
 
 HRESULT CTransform::LookAt(_fvector TargetPos, _double time)
 {
-
-
 	return S_OK;
 }
 
@@ -251,7 +242,6 @@ HRESULT CTransform::LookAt(_fvector targetPos)
 	vLook = TargetPos - vPos;
 	vLook.Normalize();
 	vLook *= vScale.z;
-
 
 	if (vLook == _float3(0, 1, 0))
 	{
@@ -270,7 +260,7 @@ HRESULT CTransform::LookAt(_fvector targetPos)
 
 	Set_State(CTransform::STATE_RIGHT, vRight);
 	Set_State(CTransform::STATE_UP, vUp);
-	Set_State(CTransform::STATE_LOOK, vLook);	
+	Set_State(CTransform::STATE_LOOK, vLook);
 
 	return S_OK;
 }

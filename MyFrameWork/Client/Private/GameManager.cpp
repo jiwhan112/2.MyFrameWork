@@ -8,7 +8,6 @@ IMPLEMENT_SINGLETON(CGameManager);
 
 CGameManager::CGameManager()
 {
-
 }
 
 HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
@@ -40,7 +39,6 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 
 HRESULT CGameManager::Update(_double timer)
 {
-
 	mIMGUIManager->Update(timer);
 	return S_OK;
 }
@@ -77,7 +75,7 @@ HRESULT CGameManager::Initialize_PathData()
 	Set_PathData(&mListPath[PATHTYPE_FBX_DYNAMIC], STR_FILEPATH_RESOURCE_3DPATHTXT_DYNAMIC_L, "fbx");
 	Set_PathData(&mListPath[PATHTYPE_FBXTEX], STR_FILEPATH_RESOURCE_3DTEXPATHHTXT_L, "png");
 	Set_PathData(&mListPath[PATHTYPE_DATA], STR_FILEPATH_RESOURCE_DATPATHTXT_L, "dat");
-	
+
 	return S_OK;
 }
 HRESULT CGameManager::Set_ReListPath(E_PATHTYPE type)
@@ -115,7 +113,7 @@ HRESULT CGameManager::Set_ReListPath(E_PATHTYPE type)
 CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _uint index)
 {
 	_uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	auto GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(levelIndex,layerTag);
+	auto GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(levelIndex, layerTag);
 	if (GameObjectList == nullptr)
 		return nullptr;
 
@@ -158,7 +156,7 @@ HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, 
 
 HRESULT CGameManager::Safe_Delete_Path(list<MYFILEPATH*>* outData)
 {
-	for (auto& path: *outData)
+	for (auto& path : *outData)
 	{
 		Safe_Delete(path);
 	}
@@ -167,14 +165,11 @@ HRESULT CGameManager::Safe_Delete_Path(list<MYFILEPATH*>* outData)
 	return S_OK;
 }
 
-
 void CGameManager::Free()
 {
 	// Path 데이터 삭제
 	for (auto& pathlist : mListPath)
 		Safe_Delete_Path(&pathlist);
-	
-
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pDeviceContext);

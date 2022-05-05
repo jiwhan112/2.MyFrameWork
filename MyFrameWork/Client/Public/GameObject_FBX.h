@@ -10,14 +10,13 @@ class CCollider;
 END
 
 BEGIN(Client)
-class CGameObject_FBX final:
+class CGameObject_FBX final :
 	public CGameObject
 {
 protected:
 	explicit CGameObject_FBX(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_FBX(const CGameObject_FBX& rhs);
 	virtual ~CGameObject_FBX() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -32,7 +31,7 @@ protected:
 	virtual HRESULT Set_Component() override;
 	HRESULT Set_ConstantTable();
 
-	// 지형 타기 
+	// 지형 타기
 	HRESULT Set_Height();
 
 private:
@@ -43,12 +42,11 @@ private:
 	CCollider*			mComCollider = nullptr;
 
 	class CGameObject_Terrain* mTerrain = nullptr;
-	
+
 public:
 	static CGameObject_FBX* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
 	virtual CGameObject_FBX* Clone(void* pArg);
 	virtual void Free() override;
-
 };
 
 END

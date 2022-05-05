@@ -46,5 +46,4 @@ CHierarchyNode * CHierarchyNode::Create(const char* pName, _float4x4 Transformat
 void CHierarchyNode::Free()
 {
 	Safe_Release(m_pParent);
-
 }

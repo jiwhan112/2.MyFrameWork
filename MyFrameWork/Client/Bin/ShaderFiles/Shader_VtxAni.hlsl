@@ -1,5 +1,4 @@
-
-#include "Shader_Defines.hpp" 
+#include "Shader_Defines.hpp"
 
 // µ¿Àû ¸ğµ¨ ¼ÎÀÌ´õ
 

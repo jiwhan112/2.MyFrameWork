@@ -10,8 +10,8 @@ END
 
 BEGIN(Client)
 
-// 지형 
-// 
+// 지형
+//
 class CGameObject_MyTerrain final :
 	public CGameObject_Base
 {
@@ -42,14 +42,12 @@ public:
 		int mTileIndex;
 		int mTilePre;
 		E_TILE_MODE mTileMode;
-
 	}MYTILE;
 
 protected:
 	explicit CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs);
 	virtual ~CGameObject_MyTerrain() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -66,7 +64,7 @@ public:
 	const TERRAIN_DESC& Get_TerrainDESC() const { return mTerrainDESC; }
 	HRESULT		Set_LoadTerrainDESC(const TERRAIN_DESC& desc);
 	HRESULT		Set_TerrainMode(E_TERRAINSIZE e);
-	
+
 	const _float3& Get_PickWorldPos()const
 	{
 		return mPickWorldPos;
@@ -83,7 +81,7 @@ protected:
 
 private:
 	void Update_PickPos(_float3 pickPos);
-	void Update_TileVec(int x,int z);
+	void Update_TileVec(int x, int z);
 
 protected:
 	CVIBuffer_Terrain*		mComVIBuffer = nullptr;
@@ -92,13 +90,11 @@ protected:
 
 	TERRAIN_DESC			mTerrainDESC;
 
-	bool misPick = false;	
-	_float3 mPickWorldPos = _float3(0,0,0);
-
+	bool misPick = false;
+	_float3 mPickWorldPos = _float3(0, 0, 0);
 
 	// 타일 벡터를 저장해서 여기서 길찾기 수행
 	vector<MYTILE*>*			mVecTile = nullptr;
-
 
 public:
 	static CGameObject_MyTerrain* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

@@ -15,7 +15,7 @@ HRESULT CLevel_MyGamePlay::NativeConstruct()
 	FAILED_CHECK(__super::NativeConstruct());
 	Ready_IMGUI();
 
-	FAILED_CHECK(Ready_Light());	
+	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
@@ -102,8 +102,7 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.SpeedPersec = 10.f;
 	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
 
-
-	CCamera_Client* client =(CCamera_Client*)(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
+	CCamera_Client* client = (CCamera_Client*)(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
 	client->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_D);
 
 	return S_OK;
@@ -117,14 +116,13 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_Mouse(const _tchar * pLayerTag)
 
 HRESULT CLevel_MyGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
-//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D)));
+	//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_TERRAIN), TAGOBJ(GAMEOBJECT_MYTERRAIN)));
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_3D_DYNAMIC)));
 
 	return S_OK;
 }
-
 
 HRESULT CLevel_MyGamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
 {

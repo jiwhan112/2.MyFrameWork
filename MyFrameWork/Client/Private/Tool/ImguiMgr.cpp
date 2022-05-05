@@ -2,7 +2,6 @@
 #include "Tool/ImguiMgr.h"
 #include "Tool/Imgui_CommonUI.h"
 
-
 HRESULT CImguiMgr::NativeConstruct(HWND hwnd, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
 	// IMGUI ÃÊ±âÈ­
@@ -21,8 +20,7 @@ HRESULT CImguiMgr::NativeConstruct(HWND hwnd, ID3D11Device* pDevice, ID3D11Devic
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(pDevice, pDeviceContext);
 
-
-	Add_IMGUI(mCommonUI = CImgui_CommonUI::Create(pDevice,pDeviceContext));
+	Add_IMGUI(mCommonUI = CImgui_CommonUI::Create(pDevice, pDeviceContext));
 	Safe_AddRef(mCommonUI);
 
 	return S_OK;
@@ -133,8 +131,6 @@ HRESULT CImguiMgr::Remove_IMGUI(_uint idx)
 //	}
 //}
 
-
-
 HRESULT CImguiMgr::Update(_double time)
 {
 	misUpdate = true;
@@ -142,7 +138,7 @@ HRESULT CImguiMgr::Update(_double time)
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	
+
 	for (auto& gui : mVecIMGUI)
 	{
 		gui->Update(time);
@@ -150,15 +146,14 @@ HRESULT CImguiMgr::Update(_double time)
 
 	ImGui::EndFrame();
 	return S_OK;
-
 }
 
 HRESULT CImguiMgr::Render()
 {
 	if (misUpdate == false)
 		return S_OK;
-	
-	if (mVecIMGUI.empty()== false)
+
+	if (mVecIMGUI.empty() == false)
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

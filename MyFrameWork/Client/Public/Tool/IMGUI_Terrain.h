@@ -2,7 +2,6 @@
 
 BEGIN(Client)
 
-
 // Terrain툴
 
 class CImgui_Terrain final :
@@ -11,10 +10,9 @@ class CImgui_Terrain final :
 public:
 	enum E_TOOLMODE_TERRAIN
 	{
-		E_TOOLMODE_TERRAIN_MAP, // 맵 버텍스 
+		E_TOOLMODE_TERRAIN_MAP, // 맵 버텍스
 		E_TOOLMODE_TERRAIN_OBJ, // 맵 오브젝트 얻기
 		E_TOOLMODE_TERRAIN_END
-
 	};
 
 private:
@@ -37,13 +35,12 @@ private:
 
 	void RENDER_MAP_MODE();
 	void RENDER_MAP_OBJ_MODE();
-//	void INIT_FBXPathList();
+	//	void INIT_FBXPathList();
 
 	void WINDOW_TERRAIN();
 private:
 
 	HRESULT Edit_TERRAIN();
-
 
 private:
 	class CCamera_Client*			mCameraClient = nullptr;
@@ -61,7 +58,6 @@ private:
 //	// 만들어진 원본 이름
 //	list<string>*					mProtoStaticModelList = nullptr;
 //	list<string>*					mProtoDynamicModelList = nullptr;
-
 
 private:
 	bool							mIsTerrainSetting = false;

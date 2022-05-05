@@ -4,7 +4,6 @@
 CGameObject_FBX_Ani::CGameObject_FBX_Ani(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
 {
-
 }
 
 CGameObject_FBX_Ani::CGameObject_FBX_Ani(const CGameObject_FBX_Ani& rhs)
@@ -53,7 +52,7 @@ _int CGameObject_FBX_Ani::Tick(_double TimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_LEFTARROW) & DIS_Press)
 	{
-		mComTransform->Turn(XMVectorSet(0,1,0,0), TimeDelta);
+		mComTransform->Turn(XMVectorSet(0, 1, 0, 0), TimeDelta);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_RIGHTARROW) & DIS_Press)
@@ -92,16 +91,13 @@ HRESULT CGameObject_FBX_Ani::Render()
 
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{
-
 		mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
-	//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
-		mComModel->Render(mComShader, 0, i,STR_BONES);
+		//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+		mComModel->Render(mComShader, 0, i, STR_BONES);
 	}
-
 
 	return S_OK;
 }
-
 
 CGameObject_FBX_Ani * CGameObject_FBX_Ani::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -154,10 +150,8 @@ HRESULT CGameObject_FBX_Ani::Set_ConstantTable()
 	//FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_AMBIENT, &pLightDesc->vAmbient, sizeof(_float4)));
 	//FAILED_CHECK(mComShader->Set_RawValue(STR_LIGHT_SPECULAR, &pLightDesc->vSpecular, sizeof(_float4)));
 
-
 	return S_OK;
 }
-
 
 void CGameObject_FBX_Ani::Free()
 {
@@ -166,6 +160,4 @@ void CGameObject_FBX_Ani::Free()
 	Safe_Release(mComModel);
 
 	__super::Free();
-
 }
-

@@ -21,8 +21,6 @@ public:
 	const vector<class CAnimation*>* Get_VecAnimations()const { return &m_Animations; }
 	HRESULT Set_AniString(string AniName);
 
-
-	
 public:
 	virtual HRESULT NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);
 	virtual HRESULT NativeConstruct(void* pArg);
@@ -53,7 +51,7 @@ private:
 private:
 	// 계층
 	vector<class CHierarchyNode*>			m_HierarchyNodes;
-	typedef vector<class CHierarchyNode*>	HIERARCHYNODES;	
+	typedef vector<class CHierarchyNode*>	HIERARCHYNODES;
 
 	// 애니메이션
 	_uint									m_iCurrentAnim = 0;
@@ -64,11 +62,10 @@ private:
 private:
 	HRESULT Ready_MeshContainers();
 	HRESULT Ready_Materials(const char* pModelFilePath);
-	HRESULT Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _uint iDepth);	
+	HRESULT Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _uint iDepth);
 	HRESULT Ready_OffsetMatrices();
 	HRESULT Ready_Animation();
 	HRESULT Link_ChannelToNode();
-
 
 private:
 	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr);
@@ -79,6 +76,5 @@ public:
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };
-
 
 END

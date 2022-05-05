@@ -11,8 +11,6 @@ class CGameObject_Base;
 class CGameObject_Creater final
 	:public CBase
 {
-
-
 private:
 	explicit	CGameObject_Creater();
 	virtual		~CGameObject_Creater() = default;
@@ -30,7 +28,6 @@ public:
 	// 타입별로 키 리스트 반환
 	list<string>* Get_MapObject_Type(E_OBJECT_TYPE type);
 
-
 	// 기능 테스트용으로 public 시킴
 public:
 	// dat파일로 저장된 데이터를 로드해서 깡통객체에 정보를 입력해 클론 객체 생성
@@ -45,16 +42,12 @@ public:
 	// 맵에 저장된 데이터로 씬에서 클론객체 생성해봄
 	CGameObject_Base* Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag);
 
-//	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
+	//	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
 
-	
-
-	
 private:
 	CGameObject_Base* Find_MapObject(wstring key);
 
-
-private:	
+private:
 	// 데이터 로드
 //	class CObjectIO* mObjectIoManager = nullptr;
 
@@ -67,6 +60,5 @@ private:
 public:
 	static CGameObject_Creater* Create(ID3D11Device* d, ID3D11DeviceContext* c);
 	virtual void Free() override;
-
 };
 END

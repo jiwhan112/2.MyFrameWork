@@ -6,7 +6,7 @@ CPicking::CPicking()
 {
 }
 
-HRESULT CPicking::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, HWND hWnd, void * pArg )
+HRESULT CPicking::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, HWND hWnd, void * pArg)
 {
 	m_hWnd = hWnd;
 	m_pDevice = device;
@@ -20,8 +20,6 @@ HRESULT CPicking::Initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 	return S_OK;
 }
 
-
-
 HRESULT	CPicking::Transform_ToWorldSpace()
 {
 	misPick = false;
@@ -33,7 +31,6 @@ HRESULT	CPicking::Transform_ToWorldSpace()
 	D3D11_VIEWPORT ViewPortDesc;
 	UINT ViewIndex = 1;
 	m_pDeviceContext->RSGetViewports(&ViewIndex, &ViewPortDesc);
-
 
 	_float4 vMousePos;
 	vMousePos.x = ptMouse.x / (ViewPortDesc.Width*0.5f) - 1.f;
@@ -100,7 +97,6 @@ HRESULT	CPicking::Transform_ToWorldSpace()
 
 HRESULT CPicking::Transform_ToLocalSpace(_fmatrix WorldMatrixInverse)
 {
-
 	_float3::TransformNormal(mRayWorld.direction, WorldMatrixInverse, mRayLocal.direction);
 	mRayLocal.direction.Normalize();
 
@@ -111,7 +107,6 @@ HRESULT CPicking::Transform_ToLocalSpace(_fmatrix WorldMatrixInverse)
 
 _bool CPicking::isPick(_float3* pLocalPoint, _float3 *pOut)
 {
-
 	_float fDist;
 	if (mRayLocal.Intersects(pLocalPoint[0], pLocalPoint[1], pLocalPoint[2], fDist))
 	{
@@ -134,7 +129,6 @@ _bool CPicking::isPick(_float3* pLocalPoint, _float3 *pOut)
 //
 //	return PtInRect(TargetRect, ptMouse);
 //}
-
 
 void CPicking::Free()
 {

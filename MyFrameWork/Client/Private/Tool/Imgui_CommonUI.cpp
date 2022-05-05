@@ -12,9 +12,9 @@ HRESULT CImgui_CommonUI::NativeConstruct()
 {
 	PATHMODE_ALLLOAD();
 
-	dClock=0;
-	mFrameCount=0;
-	mCurrentFrame=0;
+	dClock = 0;
+	mFrameCount = 0;
+	mCurrentFrame = 0;
 
 	mSelectObject = nullptr;
 	return S_OK;
@@ -32,7 +32,6 @@ HRESULT CImgui_CommonUI::Render_UI()
 {
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_MAIN)))
 	{
-
 		// Path
 		if (ImGui::CollapsingHeader("PATH"))
 		{
@@ -48,12 +47,8 @@ HRESULT CImgui_CommonUI::Render_UI()
 
 		// Frame
 
-
 		ImGui::End();
 	}
-
-
-
 
 	return S_OK;
 }
@@ -61,7 +56,7 @@ HRESULT CImgui_CommonUI::Render_UI()
 void CImgui_CommonUI::PATHMODE()
 {
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
-	
+
 	// 경로 저장용
 
 	// 텍스트 저장
@@ -71,7 +66,6 @@ void CImgui_CommonUI::PATHMODE()
 		if (ImGui::Button("PATH_ALL"))
 		{
 			PATHMODE_ALLLOAD();
-
 		}
 
 		//	if (ImGui::Button("Path_For_Sprite"))
@@ -111,24 +105,19 @@ void CImgui_CommonUI::PATHMODE()
 		}
 		IMGUI_TREE_END
 	}
-
-	
 }
 
 void CImgui_CommonUI::PATHMODE_ALLLOAD()
 {
-
 	// 경로 / 저장위치 / 파일이름
 	Button_PathTxtSave(STR_FILEPATH_RESOURCE_SPRITE_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_SPRITE_TXT);
 	Button_PathTxtSave(STR_FILEPATH_RESOURCE_DAT_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_DATA_TXT);
 	Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DSPRITE_TXT, L"png");
 	Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_STATIC_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DSTATIC_TXT, L"fbx");
 	Button_PathTxtSave(STR_FILEPATH_RESOURCE_3DMODEL_DYNAMIC_L, STR_FILEPATH_RESOURCE_PATH_L, STR_FILENAME_3DDYNAMIC_TXT, L"fbx");
-
 }
 
-
-void CImgui_CommonUI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname,wstring exeName)
+void CImgui_CommonUI::Button_PathTxtSave(wstring path, wstring txtpath, wstring txtname, wstring exeName)
 {
 	// 탐색
 	GetSingle(CGameInstance)->FolderFinder(path);
@@ -148,7 +137,7 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 	if (objmap == nullptr)
 		return S_OK;
 
-	if(ImGui::BeginListBox("ObjectListBox"))
+	if (ImGui::BeginListBox("ObjectListBox"))
 	{
 		static _int selectIndex = -1;
 		_uint cnt = 0;
@@ -181,7 +170,7 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 			mSelectObject = nullptr;
 		}
 	}
-	
+
 	/*if (ImGui::BeginListBox("ObjectListBox"))
 	{
 		static _int selectIndex = -1;
@@ -199,7 +188,6 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 
 	*/
 	return S_OK;
-
 }
 
 HRESULT CImgui_CommonUI::Set_SelectObject(CGameObject * obj)
@@ -309,13 +297,9 @@ void CImgui_CommonUI::FrameUI_Overaly(_double time)
 		ImGui::Text("Frame: %d", mCurrentFrame);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f
 			/ ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
 	}
 	ImGui::End();
 }
-
-
-
 
 CImgui_CommonUI * CImgui_CommonUI::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {

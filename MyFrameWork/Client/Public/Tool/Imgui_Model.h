@@ -6,23 +6,20 @@ class CAnimation;
 END
 BEGIN(Client)
 
-
 // Model툴
 // 정적 모델의 모델 FBX 이름으로 Dat 파일을 만든다.
 // 오브젝트 1개에대한 처리만 가능하게
-// 충돌체 설정 / 애니메이션 설정 넣기 
+// 충돌체 설정 / 애니메이션 설정 넣기
 
-class CImgui_Model final:
+class CImgui_Model final :
 	public CImgui_Base
 {
 public:
 	enum E_TOOLMODE_MODEL
 	{
-		
 		TOOLMODE_MODEL_STATIC,
 		TOOLMODE_MODEL_DYNAMIC,
 		TOOLMODE_MODEL_END,
-
 	};
 private:
 	explicit CImgui_Model(ID3D11Device* device, ID3D11DeviceContext* context);
@@ -45,7 +42,6 @@ private:
 
 	void RENDER_STATIC_MODE();
 	void RENDER_DYNAMIC_MODE();
-
 
 	void INIT_FBXPathList();
 private:
@@ -72,12 +68,10 @@ private:
 	list<string>*					mProtoStaticModelList = nullptr;
 	list<string>*					mProtoDynamicModelList = nullptr;
 
-
 private:
 	bool							mIsModelSetting = false;
 	E_TAYLAY						meCreateLayer = LAY_OBJECT;
 	E_TOOLMODE_MODEL				meModelMode = TOOLMODE_MODEL_END;
-
 
 public:
 	static CImgui_Model* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);

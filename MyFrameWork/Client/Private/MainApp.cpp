@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\MainApp.h"
 
-
 #include "Level_Logo.h"
 #include "Level_Loader.h"
 
@@ -13,18 +12,15 @@
 #include "GameObject/GameObject_3D_Static.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 
-
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
 #include "GameObject_FBX.h"
 #include "GameObject_FBX_Ani.h"
 
-
-
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
-	m_pGameManager =  GetSingle(CGameManager)->GetInstance();
+	m_pGameManager = GetSingle(CGameManager)->GetInstance();
 	Safe_AddRef(m_pGameInstance);
 }
 
@@ -35,7 +31,7 @@ HRESULT CMainApp::NativeConstruct()
 
 	FAILED_CHECK(Ready_Prototype_Components());
 	FAILED_CHECK(Ready_Prototype_GameObject());
-	FAILED_CHECK(Open_Level(LEVEL_LOGO));	
+	FAILED_CHECK(Open_Level(LEVEL_LOGO));
 	return S_OK;
 }
 
@@ -119,30 +115,28 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	// 충돌
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB),
-		CCollider::Create(m_pDevice, m_pDeviceContext,CCollider::COL_AABB)));
+		CCollider::Create(m_pDevice, m_pDeviceContext, CCollider::COL_AABB)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_OBB),
 		CCollider::Create(m_pDevice, m_pDeviceContext, CCollider::COL_OBB)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE),
 		CCollider::Create(m_pDevice, m_pDeviceContext, CCollider::COL_SPHERE)));
 
-	
 	// 버퍼 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_RECT),
 		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
 		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
 
-
 	// 높이맵으로 처리
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
-	
+
 	// 지형 컴포넌트
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
 	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
 
 	// 정적 오브젝트
-	// _float4x4		DefaultTransform;	
+	// _float4x4		DefaultTransform;
 	// DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
 	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
@@ -150,7 +144,6 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	// 동적 오브젝트
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
 	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
-
 
 	// 텍스처 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT),
@@ -169,8 +162,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/tile1.png"), 1)));
 
-
-	// 모델 / 텍스처 맵 / 셰이더 / 
+	// 모델 / 텍스처 맵 / 셰이더 /
 	FAILED_CHECK(Ready_Prototype_Components_Model());
 	FAILED_CHECK(Ready_Prototype_Components_AniModel());
 	FAILED_CHECK(Ready_Prototype_Components_Texture());
@@ -192,7 +184,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_TERRAIN),
 	//	CGameObject_Terrain::Create(m_pDevice, m_pDeviceContext)));
-	 
+
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_CAMERA_GAME),
 	//	CCamera_Game::Create(m_pDevice, m_pDeviceContext)));
 
@@ -217,7 +209,6 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 
 	const list<MYFILEPATH*>* listFBXpath_Static = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX_STATIC);
 
-
 	_float4x4		DefaultTransform;
 	DefaultTransform = _float4x4::CreateScale(0.5f) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
@@ -229,10 +220,9 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 		string pathstr;
 		string namestr;
 		CHelperClass::Convert_string_wstring(wpath, pathstr, true);
-		CHelperClass::Convert_string_wstring(wName, namestr, true);		
+		CHelperClass::Convert_string_wstring(wName, namestr, true);
 		FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
 			CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, pathstr.c_str(), namestr.c_str(), DefaultTransform)));
-		
 	}
 
 	return S_OK;
@@ -256,14 +246,10 @@ HRESULT CMainApp::Ready_Prototype_Components_AniModel()
 		CHelperClass::Convert_string_wstring(wName, namestr, true);
 		FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
 			CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, pathstr.c_str(), namestr.c_str(), DefaultTransform)));
-
 	}
 
 	return S_OK;
 }
-
-
-
 
 HRESULT CMainApp::Ready_Prototype_Components_Texture()
 {
@@ -271,7 +257,6 @@ HRESULT CMainApp::Ready_Prototype_Components_Texture()
 	const list<MYFILEPATH*>* listpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_SPRITE);
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP),
 		CTexture_map::Create(m_pDevice, m_pDeviceContext, *listpngpath)));
-
 
 	// 모델 텍스처 맵
 //	const list<MYFILEPATH*>* listFBXpngpath = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBXTEX);
@@ -294,17 +279,14 @@ HRESULT CMainApp::Ready_Prototype_Components_Terrain()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 129, 129)));
 
-
 	// 네비
 	CNavigation* initNavi = nullptr;
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH),
-		initNavi=CNavigation::Create(m_pDevice, m_pDeviceContext, nullptr)));
+		initNavi = CNavigation::Create(m_pDevice, m_pDeviceContext, nullptr)));
 
 	initNavi->SetUp_AutoMesh(debugterrain);
 	return S_OK;
 }
-
-
 
 HRESULT CMainApp::Ready_Prototype_Components_Shader()
 {
@@ -337,7 +319,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	// #Tag 깡통 오브젝트들 초기화
 
 	// 깡통: 컴포넌트 기능으로 여러가지 오브젝트를 만들 수 있게 설계된 오브젝트를 뜻함
-	
+
 	// 2D 깡통
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_2D),
 		CGameObject_2D::Create(m_pDevice, m_pDeviceContext)));
@@ -380,6 +362,5 @@ void CMainApp::Free()
 
 	GetSingle(CGameInstance)->DestroyInstance();
 
-	
 	CGameInstance::Release_Engine();
 }

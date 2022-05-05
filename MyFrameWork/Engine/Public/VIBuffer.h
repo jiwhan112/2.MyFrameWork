@@ -18,10 +18,10 @@ public:
 public:
 	HRESULT Render(class CShader* shader, _uint passindex);
 
-	_bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);	
+	_bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);
 	_float3*		Get_VerrtexPosition() const { return mpVertexPos; }
 	_uint		Get_VerrtexSize() const { return m_iNumVertices; }
-	
+
 protected:
 	// DX11¿ë VB »ý¼º
 	ID3D11Buffer*				m_pVB = nullptr;

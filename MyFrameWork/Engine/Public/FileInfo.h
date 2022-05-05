@@ -7,14 +7,10 @@
 
 // 파일 로드 / 저장시 사용
 
-
-
-
 class CFileInfo
 	:public CBase
 {
 	DECLARE_SINGLETON(CFileInfo);
-
 
 private:
 	CFileInfo() = default;
@@ -25,20 +21,18 @@ public:
 	HRESULT			FolderFinder(const wstring& FileFolder);
 
 	// TXT 파일로 MYFILEPATH 정보 저장 // 경로 파일이름 확장자
-	void SaveVectorToDat(wstring savetxtName , wstring ExtensionName = L"");
+	void SaveVectorToDat(wstring savetxtName, wstring ExtensionName = L"");
 
 	// 해당 Txt파일을 읽어서 Path 리스트 제작
-	list<MYFILEPATH*> Load_ExtensionList(wstring txtfilepath,string exe);
+	list<MYFILEPATH*> Load_ExtensionList(wstring txtfilepath, string exe);
 
 	// Full 패스의 경로만 리턴
 	wstring Get_PathData(wstring Fullpath);
 
 private:
 	void SaveFilePathByVector(MYFILEPATH * path, wstring filepath, wstring filename);
-	
+
 	void FileOpenTest(wstring savetxtName);
-
-
 
 private:
 	list<MYFILEPATH*>		mListFilePathData;
@@ -46,5 +40,3 @@ private:
 	// CBase을(를) 통해 상속됨
 	virtual void Free() override;
 };
-
-

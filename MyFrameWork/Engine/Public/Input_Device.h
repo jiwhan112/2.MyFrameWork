@@ -23,7 +23,6 @@ public:
 
 	_byte Get_DIMouseButtonState(MOUSEBUTTONSTATE eMouseButtonState);
 
-
 public:
 	HRESULT Ready_Input_Device(HINSTANCE hInst, HWND hWnd, _float fDoubleTimeInterver);
 	HRESULT SetUp_InputDeviceState(_double fDeltaTime);
@@ -32,8 +31,6 @@ private:
 	LPDIRECTINPUT8				m_pInput = nullptr;
 	LPDIRECTINPUTDEVICE8		m_pKeyboard = nullptr;
 	LPDIRECTINPUTDEVICE8		m_pMouse = nullptr;
-
-
 
 private:
 	_byte					m_byKeyState[256];

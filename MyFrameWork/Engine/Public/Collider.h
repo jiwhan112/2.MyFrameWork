@@ -22,7 +22,7 @@ public:
 	// 충돌체의 위치 적용
 	typedef struct tagColliderDesc
 	{
-		_float3 vScale; 
+		_float3 vScale;
 		_float4 vRotation;
 		_float4 vTranslation;
 	} COLLIDERDESC;
@@ -60,7 +60,6 @@ public:
 
 	OBBDESC Get_Compute_OBBDesc();
 
-
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render();
@@ -73,13 +72,13 @@ private:
 
 	bool Update_MY_AABB(CCollider* TargetCollider);
 	bool Update_MY_OBB(CCollider* TargetCollider);
-	
-private: // 충돌체 정보 
+
+private: // 충돌체 정보
 	// 충돌체에 따라서 처리
 	BoundingBox*				mAABB = nullptr;
 	BoundingOrientedBox*		mOBB = nullptr;
 	BoundingSphere*				mSphere = nullptr;
-	
+
 	// 타입과 DESC
 	E_COLLIDER_TYPE				meType = COL_END;
 	COLLIDERDESC				mColliderDesc;

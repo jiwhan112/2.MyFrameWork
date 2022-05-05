@@ -45,7 +45,6 @@ public:
 		mWorldMatrix = worldmat;
 	}
 
-
 public:
 	virtual HRESULT NativeConstruct_Prototype() override;
 	virtual HRESULT NativeConstruct(void* pArg) override;

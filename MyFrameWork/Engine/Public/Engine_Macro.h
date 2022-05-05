@@ -188,17 +188,13 @@ static const char* STR_BONES = "g_BoneMatrices";
 
 static const char* STR_TEXTURESIZE = "g_TextureSize";
 
-
-
-
 #pragma endregion
 
 // #Tag STR_FILEPATH
 #pragma region STR_FILEPATH
 
-	static const char* FILEPATH_RESOURCE = "..\\Bin\\Resources";
-	static const char* FILEPATH_TXT_TEST = "..\\Bin\\Resources\\PathFinder\\test.txt";
-	static const char* FILEPATH_TXT_RSOURCES = "..\\Bin\\Resources\\PathFinder\\path.txt";
+static const char* FILEPATH_RESOURCE = "..\\Bin\\Resources";
+static const char* FILEPATH_TXT_TEST = "..\\Bin\\Resources\\PathFinder\\test.txt";
+static const char* FILEPATH_TXT_RSOURCES = "..\\Bin\\Resources\\PathFinder\\path.txt";
 
 #pragma endregion
-

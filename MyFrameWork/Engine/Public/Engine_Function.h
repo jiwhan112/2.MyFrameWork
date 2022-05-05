@@ -68,7 +68,6 @@ namespace Engine
 		return dwRefCnt;
 	}
 
-
 	// wstr <-> str º¯È¯
 
 	class CHelperClass
@@ -97,9 +96,6 @@ namespace Engine
 			wstring wstr;
 			wstr.assign(str.begin(), str.end());
 			return wstr;
-
 		}
 	};
-
-
 }

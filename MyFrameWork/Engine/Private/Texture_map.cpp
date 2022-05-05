@@ -19,7 +19,6 @@ CTexture_map::CTexture_map(const CTexture_map & rhs)
 
 	mCurrentKey = "";
 	mCurrentTexture = nullptr;
-
 }
 
 HRESULT CTexture_map::SetUp_OnShader(CShader * pShader, const char * pValueName)
@@ -60,7 +59,6 @@ HRESULT CTexture_map::NativeConstruct_Prototype(list<MYFILEPATH*> listpath)
 		_tchar		szTextureFilePath[MAX_PATH] = TEXT("");
 		_tchar		szExt[MAX_PATH] = TEXT("");
 
-
 		ID3D11ShaderResourceView*		pSRV = nullptr;
 		lstrcpy(szTextureFilePath, filepath->FullPath);
 		lstrcpy(szExt, filepath->Extension);
@@ -68,9 +66,9 @@ HRESULT CTexture_map::NativeConstruct_Prototype(list<MYFILEPATH*> listpath)
 		string		keyname;
 		wstring w = filepath->FileName;
 		keyname.assign(w.begin(), w.end());
-		if(Find_MapTexture(keyname) !=nullptr)
+		if (Find_MapTexture(keyname) != nullptr)
 			continue;
-			
+
 		if (!lstrcmp(szExt, TEXT("dds")))
 		{
 			// DTK 지원함수
@@ -105,7 +103,7 @@ ID3D11ShaderResourceView * CTexture_map::Find_MapTexture(string key)
 	if (mMapTextures.empty())
 		return nullptr;
 
-	auto iter =  mMapTextures.find(key.c_str());
+	auto iter = mMapTextures.find(key.c_str());
 	if (iter == mMapTextures.end())
 		return nullptr;
 	return iter->second;
@@ -142,7 +140,7 @@ void CTexture_map::Free()
 	for (auto& maptex : mMapTextures)
 	{
 		Safe_Release(maptex.second);
-	}	
+	}
 	mMapTextures.clear();
 
 	if (m_isCloned == false)

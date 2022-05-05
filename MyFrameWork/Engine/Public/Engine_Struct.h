@@ -73,7 +73,6 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXNORTEX_DECLARATION;
 
-
 	typedef struct tagVertex_Model
 	{
 		XMFLOAT3			vPosition;
@@ -104,8 +103,6 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXANIMODEL_DECLARATION;
 
-
-
 	typedef struct tagLineIndices32
 	{
 		unsigned long	_0, _1;
@@ -134,11 +131,5 @@ namespace Engine
 		wchar_t FileName[256] = L"";
 		wchar_t Extension[32] = L"";
 		unsigned int FileCount = 0;
-
 	}MYFILEPATH;
-
-
-
-
-
 }

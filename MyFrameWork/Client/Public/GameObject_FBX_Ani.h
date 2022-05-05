@@ -11,14 +11,13 @@ END
 // 애니메이션 모델 재생
 
 BEGIN(Client)
-class CGameObject_FBX_Ani final:
+class CGameObject_FBX_Ani final :
 	public CGameObject
 {
 protected:
 	explicit CGameObject_FBX_Ani(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_FBX_Ani(const CGameObject_FBX_Ani& rhs);
 	virtual ~CGameObject_FBX_Ani() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -43,8 +42,6 @@ public:
 	static CGameObject_FBX_Ani* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
 	virtual CGameObject_FBX_Ani* Clone(void* pArg);
 	virtual void Free() override;
-
-
 };
 
 END

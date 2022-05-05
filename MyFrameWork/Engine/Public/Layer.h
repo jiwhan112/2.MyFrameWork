@@ -16,7 +16,6 @@ public:
 		return &m_Objects;
 	}
 
-
 public:
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
 	_int Tick(_double TimeDelta);

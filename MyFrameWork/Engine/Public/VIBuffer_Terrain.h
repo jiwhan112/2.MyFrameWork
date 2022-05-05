@@ -24,8 +24,6 @@ public:
 	_float3 Get_TileWorldPos(_uint TileIndex);
 	_uint* Get_XZ() { _uint r[2] = { miNumX ,miNumZ }; return r; };
 
-
-
 	HRESULT INIT_Default_VIBuffer(_uint x, _uint z, const _tchar* newHeight = L"");
 	HRESULT INIT_New_VIBuffer(_uint x, _uint z, const _tchar* newHeight = L"");
 

@@ -13,11 +13,13 @@ private:
 	virtual ~CMeshContainer() = default;
 
 public:
-	_uint Get_NumBones() const {
+	_uint Get_NumBones() const
+	{
 		return m_iNumBones;
 	}
 
-	aiMesh* Get_AIMesh() {
+	aiMesh* Get_AIMesh()
+	{
 		return m_pAIMesh;
 	}
 

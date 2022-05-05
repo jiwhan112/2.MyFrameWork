@@ -9,7 +9,6 @@
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
 }
 
 CModel::CModel(const CModel & rhs)
@@ -19,14 +18,14 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumMeshContainers(rhs.m_iNumMeshContainers)
 	, m_eModelType(rhs.m_eModelType)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
-	, m_Materials(rhs.m_Materials)	
+	, m_Materials(rhs.m_Materials)
 	, m_iCurrentAnim(rhs.m_iCurrentAnim)
 	, m_TransformMatrix(rhs.m_TransformMatrix)
-{	
+{
 	for (auto& pMaterial : m_Materials)
 	{
-		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)		
-			Safe_AddRef(pMaterial->pTexture[i]);	
+		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
+			Safe_AddRef(pMaterial->pTexture[i]);
 	}
 
 	if (nullptr != m_pMeshContainers)
@@ -41,9 +40,7 @@ CModel::CModel(const CModel & rhs)
 
 _uint CModel::Get_NumMaterials() const
 {
-
 	return m_iNumMaterials;
-
 }
 
 HRESULT CModel::Set_AniString(string AniName)
@@ -57,7 +54,7 @@ _uint CModel::Find_Animation(string AniName) const
 {
 	_uint returnIndex = 0;
 
-	for (_uint i=0 ;i< m_iNumAnimations;i++)
+	for (_uint i = 0; i < m_iNumAnimations; i++)
 	{
 		string name = m_Animations[i]->Get_Name();
 		if (AniName.compare(name) == 0)
@@ -81,7 +78,7 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 
 	/* 칼, 그림자 */
 
-	if (MODEL_NOANI == eModelType)	
+	if (MODEL_NOANI == eModelType)
 		iFlag = aiProcess_PreTransformVertices | /*aiProcess_GlobalScale | */aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 	else
 		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
@@ -122,7 +119,7 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 	//		for (auto& pMeshContainer : m_pMeshContainers[i])
 	//			pMeshContainer->Ready_VertexIndexBuffer(m_eModelType, TransformMatrix);
 	//	}
-	//	
+	//
 	//	return S_OK;
 	//}
 
@@ -154,8 +151,6 @@ HRESULT CModel::NativeConstruct(void * pArg)
 	if (FAILED(Link_ChannelToNode()))
 		return E_FAIL;
 
-
-
 	return S_OK;
 }
 
@@ -165,12 +160,12 @@ HRESULT CModel::SetUp_AnimIndex(_uint iAnimIndex)
 		return E_FAIL;
 
 	m_iCurrentAnim = iAnimIndex;
-	
+
 	return S_OK;
 }
 
 HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
-{	
+{
 	/* 모든 뼈들의 혅2ㅐ 시간에 맞는 상태를 저장시킨다.(채널에)  */
 	m_Animations[m_iCurrentAnim]->Update_TransformMatrices(TimeDelta);
 
@@ -192,19 +187,19 @@ HRESULT CModel::Bind_OnShader(CShader * pShader, _uint iMaterialIndex, aiTexture
 	if (nullptr == pTexture)
 		return E_FAIL;
 
-	return pTexture->SetUp_OnShader(pShader, pValueName);	
+	return pTexture->SetUp_OnShader(pShader, pValueName);
 }
 
 HRESULT CModel::Render(CShader * pShader, _uint iPassIndex, _uint iMaterialIndex, const char* pBoneValueName)
 {
-	if (iMaterialIndex >= m_iNumMaterials || 
+	if (iMaterialIndex >= m_iNumMaterials ||
 		nullptr == m_pMeshContainers)
 		return E_FAIL;
 
 	_float4x4		BoneMatrices[MAX_BONES];
 
 	for (auto& pMeshContainer : m_pMeshContainers[iMaterialIndex])
-	{	
+	{
 		if (MODEL_ANI == m_eModelType)
 		{
 			ZeroMemory(&BoneMatrices, sizeof(_float4x4) * MAX_BONES);
@@ -218,7 +213,7 @@ HRESULT CModel::Render(CShader * pShader, _uint iPassIndex, _uint iMaterialIndex
 			pMeshContainer->Render(pShader, iPassIndex);
 	}
 
-	return S_OK;	
+	return S_OK;
 }
 
 HRESULT CModel::Ready_MeshContainers()
@@ -231,11 +226,10 @@ HRESULT CModel::Ready_MeshContainers()
 	m_pMeshContainers = new MESHCONTAINERS[m_iNumMaterials];
 
 	for (_uint i = 0; i < m_iNumMeshContainers; ++i)
-	{	
+	{
 		CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pDeviceContext, m_pScene->mMeshes[i]);
 		if (nullptr == pMeshContainer)
 			return E_FAIL;
-
 
 		for (_uint j = 0; j < m_pScene->mMeshes[i]->mNumBones; ++j)
 		{
@@ -288,8 +282,8 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 
 			pMeshMaterialDesc->pTexture[j] = CTexture::Create(m_pDevice, m_pDeviceContext, wfullpath.c_str());
 			if (nullptr == pMeshMaterialDesc->pTexture[j])
-				return S_FALSE;			
-		}		
+				return S_FALSE;
+		}
 
 		m_Materials.push_back(pMeshMaterialDesc);
 	}
@@ -300,7 +294,7 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 HRESULT CModel::Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _uint iDepth)
 {
 	if (nullptr == pNode)
-		return E_FAIL;	
+		return E_FAIL;
 
 	_float4x4		TransformationMatrix;
 	memcpy(&TransformationMatrix, &pNode->mTransformation, sizeof(_float4x4));
@@ -318,7 +312,6 @@ HRESULT CModel::Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _ui
 
 	return S_OK;
 }
-
 
 HRESULT CModel::Ready_OffsetMatrices()
 {
@@ -343,7 +336,6 @@ HRESULT CModel::Ready_OffsetMatrices()
 				memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_float4x4));
 
 				pHierarchyNode->Set_OffsetMatrix(OffsetMatrix);
-			
 			}
 		}
 	}
@@ -374,9 +366,8 @@ HRESULT CModel::Ready_Animation()
 
 			CChannel*	pChannel = CChannel::Create(pAIChannel->mNodeName.data/*, pNode*/);
 			if (nullptr == pChannel)
-				return E_FAIL;	
+				return E_FAIL;
 
-			
 			_uint		iNumKeyFrames = max(pAIChannel->mNumScalingKeys, pAIChannel->mNumRotationKeys);
 			iNumKeyFrames = max(iNumKeyFrames, pAIChannel->mNumPositionKeys);
 
@@ -394,7 +385,7 @@ HRESULT CModel::Ready_Animation()
 
 				if (pAIChannel->mNumScalingKeys > k)
 				{
-					memcpy(&vScale, &pAIChannel->mScalingKeys[k].mValue, sizeof(_float3));					
+					memcpy(&vScale, &pAIChannel->mScalingKeys[k].mValue, sizeof(_float3));
 					Time = pAIChannel->mScalingKeys[k].mTime;
 				}
 
@@ -411,7 +402,7 @@ HRESULT CModel::Ready_Animation()
 				{
 					memcpy(&vPosition, &pAIChannel->mPositionKeys[k].mValue, sizeof(_float3));
 					Time = pAIChannel->mPositionKeys[k].mTime;
-				}			
+				}
 
 				pKeyFrame->vScale = vScale;
 				pKeyFrame->vRotation = vRotation;
@@ -459,15 +450,15 @@ CHierarchyNode * CModel::Find_HierarchyNode(const char * pName, _uint* pOut)
 		if (!strcmp(pHierarchyNode->Get_Name(), pName))
 		{
 			pNode = pHierarchyNode;
-			if(nullptr != pOut)
+			if (nullptr != pOut)
 				*pOut = iIndex;
 
 			break;
 		}
 
-		iIndex++;		
+		iIndex++;
 	}
-	return pNode;	
+	return pNode;
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_MODEL_TYPE eModelType, const char * pModelFilePath, const char * pModelFileName, _fmatrix TransformMatrix)
@@ -506,10 +497,10 @@ void CModel::Free()
 		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
 			Safe_Release(pMaterial->pTexture[i]);
 
-		if(false == m_isCloned)
+		if (false == m_isCloned)
 			Safe_Delete(pMaterial);
 	}
-	
+
 	m_Materials.clear();
 
 	if (nullptr != m_pMeshContainers)
@@ -519,10 +510,10 @@ void CModel::Free()
 			for (auto& pMeshContainer : m_pMeshContainers[i])
 				Safe_Release(pMeshContainer);
 
-			if(false == m_isCloned)
+			if (false == m_isCloned)
 				m_pMeshContainers[i].clear();
 		}
-	}	
+	}
 
 	if (false == m_isCloned)
 	{
@@ -533,7 +524,5 @@ void CModel::Free()
 	for (auto& pNode : m_HierarchyNodes)
 		Safe_Release(pNode);
 
-	m_HierarchyNodes.clear();	
-
-	
+	m_HierarchyNodes.clear();
 }

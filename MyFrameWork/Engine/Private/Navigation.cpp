@@ -10,7 +10,6 @@
 CNavigation::CNavigation(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
-
 }
 
 CNavigation::CNavigation(const CNavigation & rhs)
@@ -29,10 +28,8 @@ CNavigation::CNavigation(const CNavigation & rhs)
 	Safe_AddRef(mInputLayout);
 #endif // _DEBUG
 
-
 	for (auto& pCell : mVecCells)
 		Safe_AddRef(pCell);
-
 }
 
 HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNaviDataFilePath)
@@ -74,8 +71,6 @@ HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNaviDataFilePath)
 	//if (FAILED(SetUp_Neighbor()))
 	//	return E_FAIL;
 
-
-
 #ifdef _DEBUG
 
 	// 셰이더 정점 초기화
@@ -92,7 +87,6 @@ HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNaviDataFilePath)
 		return E_FAIL;
 
 	mBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
-
 
 #endif // _DEBUG
 
@@ -158,7 +152,6 @@ HRESULT CNavigation::SetUp_AutoMesh(CVIBuffer_Terrain * terrain)
 	}
 	mVecCells.clear();
 
-
 	// 네비메시 데이터 자동 세팅
 	CVIBuffer_Terrain* terrainbuffer = terrain;
 
@@ -168,12 +161,9 @@ HRESULT CNavigation::SetUp_AutoMesh(CVIBuffer_Terrain * terrain)
 	_uint numX = terrainbuffer->Get_XZ()[0];
 	_uint numZ = terrainbuffer->Get_XZ()[1];
 
-
-		// 버텍스 그대로 네비에 넘김
+	// 버텍스 그대로 네비에 넘김
 	list<_float3*> NewFloat3ArrayList;
 	_float3 vPoints[3];
-
-
 
 	for (_uint z = 0; z < numZ - 1; z++)
 	{
@@ -207,7 +197,6 @@ HRESULT CNavigation::SetUp_AutoMesh(CVIBuffer_Terrain * terrain)
 			newPoint2[1] = vPoints[1];
 			newPoint2[2] = vPoints[2];
 			NewFloat3ArrayList.push_back(newPoint2);
-
 		}
 	}
 
@@ -248,7 +237,6 @@ _bool CNavigation::Move_OnNavigation(_fvector vPosition)
 						return false;
 				}
 				iNeighborIndex = iCurrentNeighborIndex;
-
 			}
 			return true;
 		}
@@ -267,9 +255,8 @@ _bool CNavigation::Move_OnNavigation(_fvector vPosition)
 
 HRESULT CNavigation::ReadyNaviMeshForListData(list<_float3*>& vpointlist)
 {
-
 	_float newY = 0.01f;
-	for (auto point: vpointlist)
+	for (auto point : vpointlist)
 	{
 		_float3			vPoints[3];
 		CCell*		pCell = nullptr;
@@ -295,8 +282,6 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 	if (mVecCells.empty())
 		return S_FALSE;
 
-
-
 	// 랜더링시 처리
 	m_pDeviceContext->IASetInputLayout(mInputLayout);
 	//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
@@ -320,7 +305,6 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 				cell->Get_Point(CCell::POINT_A),
 				cell->Get_Point(CCell::POINT_B),
 				cell->Get_Point(CCell::POINT_C), debugColor);
-
 		}
 	}
 	else
@@ -328,14 +312,14 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 		switch (meNaviType)
 		{
 		case Engine::CNavigation::NAVI_OBJTYPE_PLAYER:
-			debugColor = DirectX::Colors::Red;		
+			debugColor = DirectX::Colors::Red;
 			break;
 		case Engine::CNavigation::NAVI_OBJTYPE_STATIC:
 			debugColor = DirectX::Colors::Blue;
 			break;
 
 		case Engine::CNavigation::NAVI_OBJTYPE_DYNAMIC:
-			debugColor = DirectX::Colors::Magenta;		
+			debugColor = DirectX::Colors::Magenta;
 			break;
 		default:
 			debugColor = DirectX::Colors::White;
@@ -346,7 +330,6 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 			mVecCells[mCurrentIndex]->Get_Point(CCell::POINT_A),
 			mVecCells[mCurrentIndex]->Get_Point(CCell::POINT_B),
 			mVecCells[mCurrentIndex]->Get_Point(CCell::POINT_C), debugColor);
-
 	}
 	mBatch->End();
 
@@ -365,25 +348,24 @@ HRESULT CNavigation::SetUp_Neighbor()
 				continue;
 
 			if (true == pDestCell->Compare_Points(
-				pSourCell->Get_Point(CCell::POINT_A), 
+				pSourCell->Get_Point(CCell::POINT_A),
 				pSourCell->Get_Point(CCell::POINT_B)))
 			{
 				pSourCell->Set_NeighborIndex(CCell::LINE_AB, pDestCell->Get_Index());
 			}
 
 			if (true == pDestCell->Compare_Points(
-				pSourCell->Get_Point(CCell::POINT_B), 
+				pSourCell->Get_Point(CCell::POINT_B),
 				pSourCell->Get_Point(CCell::POINT_C)))
 			{
 				pSourCell->Set_NeighborIndex(CCell::LINE_BC, pDestCell->Get_Index());
 			}
 
 			if (true == pDestCell->Compare_Points(
-				pSourCell->Get_Point(CCell::POINT_C), 
+				pSourCell->Get_Point(CCell::POINT_C),
 				pSourCell->Get_Point(CCell::POINT_A)))
 			{
 				pSourCell->Set_NeighborIndex(CCell::LINE_CA, pDestCell->Get_Index());
-
 			}
 		}
 	}
@@ -406,11 +388,10 @@ void CNavigation::ReadyDefault()
 		return;
 	mVecCells.push_back(pCell);
 
-
 	vPoints[0] = _float3(0.f, newY, 5.f);
 	vPoints[1] = _float3(5.f, newY, 5.f);
 	vPoints[2] = _float3(5.f, newY, 0.f);
-	
+
 	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
 	if (nullptr == pCell)
 		return;
@@ -425,7 +406,6 @@ void CNavigation::ReadyDefault()
 		return;
 	mVecCells.push_back(pCell);
 
-
 	vPoints[0] = _float3(5.f, newY, 5.f);
 	vPoints[1] = _float3(10.f, newY, 0.f);
 	vPoints[2] = _float3(5.f, newY, 0.f);
@@ -434,7 +414,6 @@ void CNavigation::ReadyDefault()
 	if (nullptr == pCell)
 		return;
 	mVecCells.push_back(pCell);
-
 }
 
 CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * pNaviDataFilePath)
@@ -472,7 +451,6 @@ void CNavigation::Free()
 
 	mVecCells.clear();
 
-
 #ifdef _DEBUG
 	Safe_Release(mInputLayout);
 
@@ -483,4 +461,3 @@ void CNavigation::Free()
 	}
 #endif // _DEBUG
 }
-

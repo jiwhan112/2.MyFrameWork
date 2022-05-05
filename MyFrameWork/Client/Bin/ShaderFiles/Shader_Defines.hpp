@@ -25,7 +25,6 @@ sampler PointSampler = sampler_state
 	AddressV = wrap;
 };
 
-
 // Light
 // 빛은 3가지 색으로 정의되고 일반적으로 Diffuse가 기본 색이다.
 cbuffer LightDesc
@@ -50,7 +49,6 @@ cbuffer CameraDesc
 {
 	float4 g_CameraPosition;
 };
-
 
 // Blends
 /*

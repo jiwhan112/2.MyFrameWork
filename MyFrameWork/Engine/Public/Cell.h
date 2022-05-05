@@ -16,22 +16,25 @@ private:
 	virtual ~CCell() = default;
 
 public:
-	_uint Get_Index() {
+	_uint Get_Index()
+	{
 		return mIndex;
 	}
 
-	const _float3& Get_Point(POINTS ePoint) const {
+	const _float3& Get_Point(POINTS ePoint) const
+	{
 		return mPoints[ePoint];
 	}
 
-	void Set_NeighborIndex(LINES eLine, _int iNeighborIndex) {
+	void Set_NeighborIndex(LINES eLine, _int iNeighborIndex)
+	{
 		mNeighborIndex[eLine] = iNeighborIndex;
 	}
 
 public:
 	HRESULT NativeConstruct(const _float3* pPoints, _uint iIndex);
 	_bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
-	// 현재 인덱스 
+	// 현재 인덱스
 	_bool isIn(_fvector vPosition, _int* pNeighborIndex);
 
 private:
@@ -39,13 +42,13 @@ private:
 	ID3D11DeviceContext*		m_pDeviceContext = nullptr;
 
 private:
-	
+
 	// 현재 인덱스
 	_uint			mIndex = 0;
-	
+
 	// 이웃하는 인덱스
 	_int			mNeighborIndex[LINE_END] = { -1, -1, -1 };
-	
+
 	// 점의 위치
 	_float3			mPoints[POINT_END];
 	// 라인의 위치

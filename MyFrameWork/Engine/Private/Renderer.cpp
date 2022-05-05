@@ -73,7 +73,6 @@ HRESULT CRenderer::Render_NonAlpha_First()
 {
 	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND_FIRST])
 	{
-
 		if (nullptr != pRenderObject)
 		{
 			if (pRenderObject->Get_IsRenderer())
@@ -92,7 +91,6 @@ HRESULT CRenderer::Render_NonAlpha_Second()
 {
 	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND_SECOND])
 	{
-
 		if (nullptr != pRenderObject)
 		{
 			if (pRenderObject->Get_IsRenderer())
@@ -118,7 +116,6 @@ HRESULT CRenderer::Render_Alpha()
 	{
 		if (nullptr != pRenderObject)
 		{
-
 			if (pRenderObject->Get_IsRenderer())
 			{
 				if (FAILED(pRenderObject->Render()))
@@ -140,16 +137,13 @@ HRESULT CRenderer::Render_UI()
 
 	mRenderObjects[RENDER_UI].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 	{
-
 		return pSour->Get_Depth() > pDest->Get_Depth();
 	});
-
 
 	for (auto& pRenderObject : mRenderObjects[RENDER_UI])
 	{
 		if (nullptr != pRenderObject)
 		{
-
 			if (pRenderObject->Get_IsRenderer())
 			{
 				if (FAILED(pRenderObject->Render()))

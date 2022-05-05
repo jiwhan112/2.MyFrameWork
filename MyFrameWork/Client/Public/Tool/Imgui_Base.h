@@ -6,7 +6,6 @@ BEGIN(Client)
 
 // IMGUI 사용할 것만 업데이트
 
-
 // IMGUI 창 DEFINE
 #define IMGUI_TREE_BEGIN(x)	if(ImGui::TreeNode(x))
 #define IMGUI_TREE_END		ImGui::TreePop();
@@ -14,8 +13,7 @@ BEGIN(Client)
 #define IM_MAX(A, B)            (((A) >= (B)) ? (A) : (B))
 #define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V))
 
-
-class CImgui_Base abstract:
+	class CImgui_Base abstract :
 	public CBase
 {
 public:
@@ -30,8 +28,7 @@ public:
 		IMGUI_TITLE_FBX_ANI, // FBX_ANI 세팅창
 		IMGUI_TITLE_TERRAIN, // TERRAIAN 세팅창
 		IMGUI_TITLE_INGAME, // INGAME 세팅창
-		IMGUI_TITLE_END, // 
-
+		IMGUI_TITLE_END, //
 	};
 
 	const char* STR_IMGUITITLE(E_IMGUI_CHANEL e)
@@ -41,7 +38,7 @@ public:
 		case IMGUI_TITLE_TEST:
 			return "IMGUI_TITLE_TEST";
 		case IMGUI_TITLE_MAIN:
-			return "IMGUI_TITLE_MAIN";			
+			return "IMGUI_TITLE_MAIN";
 		case IMGUI_TITLE_UI:
 			return "IMGUI_TITLE_UI";
 		case IMGUI_TITLE_OBJECTLIST:
@@ -84,20 +81,18 @@ public:
 		}
 	};
 
-
 	// 같은 기능 ID 구분을 위함
 	const char* STR_IMGUI_IDSTR(E_IMGUI_CHANEL type, const char* str)
 	{
-		mTestStr= STR_IMGUITITLE_MINI(type);
+		mTestStr = STR_IMGUITITLE_MINI(type);
 		mTestStr += '_';
 		mTestStr += str;
 
 		return mTestStr.c_str();
 	}
 
-
 protected:
-	explicit CImgui_Base(ID3D11Device* device , ID3D11DeviceContext* context);
+	explicit CImgui_Base(ID3D11Device* device, ID3D11DeviceContext* context);
 	explicit CImgui_Base(const CImgui_Base& rhs) = default;
 	virtual ~CImgui_Base() = default;
 
@@ -105,15 +100,11 @@ public:
 	virtual HRESULT NativeConstruct()PURE;
 	virtual HRESULT Update(_double time)PURE;
 
-
-
 protected:
 	ID3D11Device*			mDevice = nullptr;
 	ID3D11DeviceContext*	mDeviceContext = nullptr;
 
 	string					mTestStr = "";
-
-
 
 public:
 

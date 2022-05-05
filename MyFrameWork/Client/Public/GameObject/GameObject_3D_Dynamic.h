@@ -12,19 +12,17 @@ BEGIN(Client)
 class CGameObject_3D_Dynamic final :
 	public CGameObject_Base
 {
-public :
+public:
 	enum E_BASEAI
 	{
 		BASEAI_IDLE,
 		BASEAI_MOVE,
 		BASEAI_END,
-
 	};
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs);
 	virtual ~CGameObject_3D_Dynamic() = default;
-
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -40,7 +38,6 @@ public:
 
 	HRESULT		Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC& desc);
 
-
 protected:
 	virtual HRESULT Set_Component() override;
 
@@ -51,7 +48,6 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CCollider*					mComCollider = nullptr;
 	CNavigation*				mComNaviMesh = nullptr;
 	MODEL_DYNAMIC_DESC			mModelDesc;
-
 
 	_float3						mGoalPosition;
 	_float3						mStartPosition;

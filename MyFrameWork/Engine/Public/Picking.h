@@ -10,16 +10,16 @@ private:
 	virtual ~CPicking() = default;
 
 public:
-	HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context, HWND hWnd, void * pArg=nullptr);
+	HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context, HWND hWnd, void * pArg = nullptr);
 
-	 HRESULT Transform_ToWorldSpace();
+	HRESULT Transform_ToWorldSpace();
 	// HRESULT Transform_ToWorldSpace(POINT mousePos);
-	 HRESULT Transform_ToLocalSpace(_fmatrix WorldMatrixinverse);
-	 _bool isPick(_float3 * pLocalPoint, _float3 * pOut);
-	 _float3 Get_PickPos() const { return mPickPos; }
-	 _bool	 Get_isPick() const { return misPick; }
+	HRESULT Transform_ToLocalSpace(_fmatrix WorldMatrixinverse);
+	_bool isPick(_float3 * pLocalPoint, _float3 * pOut);
+	_float3 Get_PickPos() const { return mPickPos; }
+	_bool	 Get_isPick() const { return misPick; }
 
-//	 _bool	is_On_Rect(const _rect* TargetRect);
+	//	 _bool	is_On_Rect(const _rect* TargetRect);
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;
@@ -35,7 +35,6 @@ private:
 
 public:
 	virtual void Free() override;
-
 };
 
 END
