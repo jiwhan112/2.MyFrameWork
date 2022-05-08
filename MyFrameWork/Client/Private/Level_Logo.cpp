@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Level_Logo.h"
-#include "Level_Loader.h"
 #include "Camera_Client.h"
 #include "GameObject/GameObject_2D.h"
 
@@ -29,23 +28,6 @@ _int CLevel_Logo::Tick(_double TimeDelta)
 _int CLevel_Logo::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
-
-	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & DIS_Down)
-	{
-		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
-	{
-		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_TOOL)));
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
-	{
-		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_MYGAMEPLAY)));
-	}
 
 	return 0;
 }

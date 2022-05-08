@@ -35,6 +35,11 @@ public:
 	// 움직임 연산
 	_bool Move_OnNavigation(_fvector vPos);
 
+public:
+	HRESULT Save_NaviMeshData(wstring wpath);
+	HRESULT Load_NaviMeshData(wstring wpath);
+
+
 #ifdef _DEBUG
 public:
 	HRESULT Render(class CTransform* pTransform);

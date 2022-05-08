@@ -68,6 +68,9 @@ private:
 	list<string>*					mProtoStaticModelList = nullptr;
 	list<string>*					mProtoDynamicModelList = nullptr;
 
+	// 텍스처 설정
+
+	
 private:
 	bool							mIsModelSetting = false;
 	E_TAYLAY						meCreateLayer = LAY_OBJECT;

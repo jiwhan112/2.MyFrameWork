@@ -253,6 +253,74 @@ _bool CNavigation::Move_OnNavigation(_fvector vPosition)
 		return true;
 }
 
+HRESULT CNavigation::Save_NaviMeshData(wstring wpath)
+{
+
+	if (mVecCells.empty())
+		return E_FAIL;
+
+	// 파일 저장
+	_ulong			dwByte = 0;
+	HANDLE			hFile = CreateFile(wpath.c_str(), GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	_float3			vPoints[3];
+
+	for (_uint i=0; i<mVecCells.size();++i)
+	{
+
+
+
+	}
+	while (true)
+	{
+
+		if (0 == dwByte)
+			break;
+
+		CCell*		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+		if (nullptr == pCell)
+			return E_FAIL;
+
+		mVecCells.push_back(pCell);
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CNavigation::Load_NaviMeshData(wstring wpath)
+{
+	 
+	// 파일에 저장된 점을 가져온다.
+	_ulong			dwByte = 0;
+	HANDLE			hFile = CreateFile(wpath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	_float3			vPoints[3];
+
+	while (true)
+	{
+		ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
+
+		if (0 == dwByte)
+			break;
+
+		CCell*		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+		if (nullptr == pCell)
+			return E_FAIL;
+
+		mVecCells.push_back(pCell);
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
 HRESULT CNavigation::ReadyNaviMeshForListData(list<_float3*>& vpointlist)
 {
 	_float newY = 0.01f;

@@ -224,9 +224,9 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 		FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
 			CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, pathstr.c_str(), namestr.c_str(), DefaultTransform)));
 	}
-
 	return S_OK;
 }
+
 HRESULT CMainApp::Ready_Prototype_Components_AniModel()
 {
 	// 애니메이션 모델 컴포넌트 생성

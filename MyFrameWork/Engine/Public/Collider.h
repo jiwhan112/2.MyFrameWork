@@ -78,6 +78,9 @@ private: // 충돌체 정보
 	BoundingBox*				mAABB = nullptr;
 	BoundingOrientedBox*		mOBB = nullptr;
 	BoundingSphere*				mSphere = nullptr;
+	
+	// 컬링처리할때 사용
+	// BoundingFrustum*			mFrustum = nullptr;
 
 	// 타입과 DESC
 	E_COLLIDER_TYPE				meType = COL_END;

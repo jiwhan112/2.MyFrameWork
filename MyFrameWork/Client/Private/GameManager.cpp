@@ -4,6 +4,9 @@
 #include "../Public/FIleIO/GameObject_Creater.h"
 #include "../Public/FIleIO/ObjectIO.h"
 
+#include "Level_Logo.h"
+#include "Level_Loader.h"
+
 IMPLEMENT_SINGLETON(CGameManager);
 
 CGameManager::CGameManager()
@@ -40,8 +43,27 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 HRESULT CGameManager::Update(_double timer)
 {
 	mIMGUIManager->Update(timer);
+
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & DIS_Down)
+	{
+	//	FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+	{
+		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_TOOL)));
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
+	{
+		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_MYGAMEPLAY)));
+	}
+
 	return S_OK;
 }
+
 HRESULT CGameManager::Render()
 {
 	mIMGUIManager->Render();
@@ -110,6 +132,7 @@ HRESULT CGameManager::Set_ReListPath(E_PATHTYPE type)
 
 	return S_OK;
 }
+
 CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _uint index)
 {
 	_uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();

@@ -25,6 +25,9 @@ imgui.ini
 *.obj
 *.exe
 *.cso
+*.exp
+*.iobj
+*.ipdb
 
 ## Visual Studio artifacts
 .vs
