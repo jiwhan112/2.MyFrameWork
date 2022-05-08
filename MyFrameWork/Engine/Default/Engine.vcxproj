@@ -171,10 +171,6 @@
     <ClInclude Include="..\Public\LightMgr.h" />
     <ClInclude Include="..\Public\MeshContainer.h" />
     <ClInclude Include="..\Public\Model.h" />
-    <ClInclude Include="..\Public\MyComponent\MyAnimation.h" />
-    <ClInclude Include="..\Public\MyComponent\MyHierarchyNode.h" />
-    <ClInclude Include="..\Public\MyComponent\MyMeshContainer.h" />
-    <ClInclude Include="..\Public\MyComponent\MyModel.h" />
     <ClInclude Include="..\Public\Navigation.h" />
     <ClInclude Include="..\Public\Picking.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
@@ -226,10 +222,6 @@
     <ClCompile Include="..\Private\LightMgr.cpp" />
     <ClCompile Include="..\Private\MeshContainer.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
-    <ClCompile Include="..\Private\MyModel\MyAnimation.cpp" />
-    <ClCompile Include="..\Private\MyModel\MyHierarchyNode.cpp" />
-    <ClCompile Include="..\Private\MyModel\MyMeshContainer.cpp" />
-    <ClCompile Include="..\Private\MyModel\MyModel.cpp" />
     <ClCompile Include="..\Private\Navigation.cpp" />
     <ClCompile Include="..\Private\Picking.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />

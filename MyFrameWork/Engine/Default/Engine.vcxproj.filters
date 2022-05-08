@@ -133,18 +133,6 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance">
       <UniqueIdentifier>{d7e2005f-e146-4e85-9951-c5d3f38e8280}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel">
-      <UniqueIdentifier>{fb078891-66a1-467e-adcb-e7bad43f81e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\01.MeshContainer">
-      <UniqueIdentifier>{d8dc1e5b-2f78-4026-bcb5-aeda9a6d5cb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\02.Animation">
-      <UniqueIdentifier>{6aa44d7e-e92d-472f-88d3-51e36efa2ed7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\03.HierarchyNode">
-      <UniqueIdentifier>{9f1d013f-e131-4f4b-a0f6-ae471e7cc8dd}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -266,18 +254,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Rect_Instance.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MyModel\MyModel.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MyModel\MyHierarchyNode.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\03.HierarchyNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MyModel\MyAnimation.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\02.Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MyModel\MyMeshContainer.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\01.MeshContainer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -424,18 +400,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Rect_Instance.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyComponent\MyModel.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyComponent\MyHierarchyNode.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\03.HierarchyNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyComponent\MyAnimation.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\02.Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyComponent\MyMeshContainer.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\02.MyModel\01.MeshContainer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
