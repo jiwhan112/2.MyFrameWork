@@ -15,6 +15,8 @@ MyFrameWork/Client/Bin/Resources/**/*.*
 MyFrameWork/Engine/Default/x64/**/*.*
 MyFrameWork/Engine/Default/x86/**/*.*
 MyFrameWork/Reference/**/*.*
+MyFrameWork/Backupcodes/**/*.*
+
 
 
 ## Dear ImGui artifacts
