@@ -1,12 +1,18 @@
 #pragma once
 
 #include "Component.h"
+#include "Cell.h"
 
 BEGIN(Engine)
 
 // 네비게이션 컴포넌트
 class ENGINE_DLL CNavigation final : public CComponent
 {
+public:
+	const wstring NAVI_FILENAME16 = L"navi16.dat";
+	const wstring NAVI_FILENAME32 = L"navi32.dat";
+	const wstring NAVI_FILENAME64 = L"navi64.dat";
+
 public:
 	enum E_NAVI_OBJTYPE
 	{
@@ -29,6 +35,9 @@ public:
 public:
 	void Set_NaviObjType(E_NAVI_OBJTYPE t) { meNaviType = t; }
 	bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);
+	int  PickForCellIndex(const _float4x4& WorldMatrixInverse);
+	void Pick_ChangeCellOption(const _float4x4& WorldMatrixInverse, CCell::E_CELLTYPE type);
+	
 	HRESULT SetUp_NewNaviMesh(list<_float3*>& vpointlist);
 	HRESULT SetUp_AutoMesh(class CVIBuffer_Terrain* terrain);
 
@@ -38,6 +47,8 @@ public:
 public:
 	HRESULT Save_NaviMeshData(wstring wpath);
 	HRESULT Load_NaviMeshData(wstring wpath);
+	HRESULT Remove_NaviMeshData();
+
 
 
 #ifdef _DEBUG
@@ -46,8 +57,8 @@ public:
 #endif // _DEBUG
 
 private: // 셀 저장
-	vector<class CCell*>			mVecCells;
-	typedef vector<class CCell*>	CELLS;
+	vector<CCell*>			mVecCells;
+	typedef vector<CCell*>	CELLS;
 
 #ifdef _DEBUG
 private:

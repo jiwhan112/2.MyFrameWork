@@ -59,12 +59,12 @@ HRESULT CLevel_Tool::Render()
 HRESULT CLevel_Tool::Ready_Tools()
 {
 #ifdef _DEBUG
-
 	// IMGUI 积己
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_UI::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Model::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Terrain::Create(m_pDevice, m_pDeviceContext));
 #endif
+
 	// 坷宏璃飘 积己
 
 	return S_OK;

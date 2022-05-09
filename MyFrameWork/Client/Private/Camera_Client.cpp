@@ -198,6 +198,21 @@ HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
 	{
 		mComTransform->GO_Right(TimeDelta);
 	}
+
+	const _float MouseSpeed = 4.0f;
+	long MouseMove = pGameInstance->Get_DIMouseMoveState(CInput_Device::MMS_WHEEL);
+
+	if (MouseMove > 0)
+	{
+		mComTransform->GO_Straight(TimeDelta * MouseSpeed);
+	}
+
+	if (MouseMove < 0)
+	{
+		mComTransform->GO_Backward(TimeDelta * MouseSpeed);
+	}
+
+
 	return S_OK;
 }
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Level_GamePlay.h"
+#include "Tool/Imgui_InGame.h"
 #include "Camera.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -16,6 +17,8 @@ HRESULT CLevel_GamePlay::NativeConstruct()
 
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
+
+
 
 	return S_OK;
 }

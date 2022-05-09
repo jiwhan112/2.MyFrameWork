@@ -46,12 +46,6 @@ _int CGameObject_MyTerrain::Tick(_double TimeDelta)
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
 	{
 		_float3 pick;
-		//if (true == mComVIBuffer->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
-		//{
-		//	Update_PickPos(pick);
-		//
-		//	return true;
-		//}
 
 		// 네비 메시 충돌
 		if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
@@ -114,6 +108,8 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 	}
 
 	FAILED_CHECK(__super::Release_Component(TEXT("Com_VIBuffer")));
+	wstring datapath = STR_FILEPATH_RESOURCE_DAT_L;
+	datapath += L"\\";
 
 	switch (mTerrainDESC.meTerrainSize)
 	{
@@ -121,19 +117,23 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 		mTerrainDESC.mTextureMultiSize = 16;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 		Update_TileVec(17, 17);
+		
+		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME16);
+		
+		
 		break;
 	case TERRAINSIZE_32:
 		mTerrainDESC.mTextureMultiSize = 32;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 		Update_TileVec(33, 33);
-
+		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME32);
 		break;
 
 	case TERRAINSIZE_64:
 		mTerrainDESC.mTextureMultiSize = 64;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 		Update_TileVec(65, 65);
-
+		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME64);
 		break;
 	case TERRAINSIZE_128:
 		mTerrainDESC.mTextureMultiSize = 128;
@@ -169,16 +169,18 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
 
-	if (mComVIBuffer == nullptr)
-	{
-		Set_TerrainMode(TERRAINSIZE_16);
-	}
+	
 
 	if (mComTexture == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
 	if (mComNaviMesh == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
+
+	if (mComVIBuffer == nullptr)
+	{
+		Set_TerrainMode(TERRAINSIZE_16);
+	}
 
 	return S_OK;
 }

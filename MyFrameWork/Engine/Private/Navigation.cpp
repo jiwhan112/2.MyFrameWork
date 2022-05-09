@@ -2,7 +2,6 @@
 #include "..\Public\Picking.h"
 #include "..\Public\VIBuffer_Terrain.h"
 
-#include "Cell.h"
 #include "PipeLine.h"
 #include "Transform.h"
 #include "DebugDraw.h"
@@ -34,42 +33,8 @@ CNavigation::CNavigation(const CNavigation & rhs)
 
 HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNaviDataFilePath)
 {
-	//if (pNaviDataFilePath == nullptr)
-	//{
-	//	// 임의로 네비메시 생성
-	//	ReadyDefault();
-	//}
-
-	//else
-	//{
-	//	// 파일에 저장된 점을 가져온다.
-	//	_ulong			dwByte = 0;
-	//	HANDLE			hFile = CreateFile(pNaviDataFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	//	if (0 == hFile)
-	//		return E_FAIL;
-
-	//	_float3			vPoints[3];
-
-	//	while (true)
-	//	{
-	//		ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	//		if (0 == dwByte)
-	//			break;
-
-	//		CCell*		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
-	//		if (nullptr == pCell)
-	//			return E_FAIL;
-
-	//		mVecCells.push_back(pCell);
-	//	}
-
-	//	CloseHandle(hFile);
-	//}
-
-	//
-	//if (FAILED(SetUp_Neighbor()))
-	//	return E_FAIL;
+	if (pNaviDataFilePath != nullptr)
+		Load_NaviMeshData(pNaviDataFilePath);
 
 #ifdef _DEBUG
 
@@ -127,14 +92,40 @@ bool CNavigation::Pick(const _float4x4 & WorldMatrixInverse, _float3 * pOut)
 	return false;
 }
 
+
+void CNavigation::Pick_ChangeCellOption(const _float4x4 & WorldMatrixInverse,CCell::E_CELLTYPE type)
+{
+	// 피킹시 해당 인덱스 반환
+	CPicking*		pPicking = GetSingle(CPicking);
+	pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
+	_bool		isPick = false;
+
+	// 네비 메시 정점이랑 충돌
+	for (auto cell : mVecCells)
+	{
+		_float3		vPoint[3] = {
+			cell->Get_Point(CCell::POINT_A),
+			cell->Get_Point(CCell::POINT_B),
+			cell->Get_Point(CCell::POINT_C)
+		};
+
+		_float3 fOut;
+		if (isPick = pPicking->isPick(vPoint, &fOut))
+		{		
+			cell->Set_TileType(type);
+			return;
+		}
+	}
+
+	return;
+}
+
 HRESULT CNavigation::SetUp_NewNaviMesh(list<_float3*>& vpointlist)
 {
 	if (mVecCells.empty() == false)
 	{
-		for (auto& pCell : mVecCells)
-			Safe_Release(pCell);
+		Remove_NaviMeshData();
 	}
-	mVecCells.clear();
 
 	// 새로 초기화
 	FAILED_CHECK(ReadyNaviMeshForListData(vpointlist));
@@ -147,10 +138,8 @@ HRESULT CNavigation::SetUp_AutoMesh(CVIBuffer_Terrain * terrain)
 {
 	if (mVecCells.empty() == false)
 	{
-		for (auto& pCell : mVecCells)
-			Safe_Release(pCell);
+		Remove_NaviMeshData();
 	}
-	mVecCells.clear();
 
 	// 네비메시 데이터 자동 세팅
 	CVIBuffer_Terrain* terrainbuffer = terrain;
@@ -208,8 +197,11 @@ HRESULT CNavigation::SetUp_AutoMesh(CVIBuffer_Terrain * terrain)
 	NewFloat3ArrayList.clear();
 
 	FAILED_CHECK(SetUp_Neighbor());
+
 	return S_OK;
 }
+
+
 
 _bool CNavigation::Move_OnNavigation(_fvector vPosition)
 {
@@ -261,25 +253,103 @@ HRESULT CNavigation::Save_NaviMeshData(wstring wpath)
 
 	// 파일 저장
 	_ulong			dwByte = 0;
-	HANDLE			hFile = CreateFile(wpath.c_str(), GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE			hFile = CreateFile(wpath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
 	if (0 == hFile)
 		return E_FAIL;
 
-	_float3			vPoints[3];
+	/*
+	
+	// 셀의 속성
+	E_CELLTYPE		mCellType = CELLTYPE_NONE;
 
-	for (_uint i=0; i<mVecCells.size();++i)
+	// 현재 인덱스
+	_uint			mIndex = 0;
+
+	// 이웃하는 인덱스
+	_int			mNeighborIndex[LINE_END] = { -1, -1, -1 };
+
+	// 점의 위치
+	_float3			mPoints[POINT_END];
+
+	*/
+
+	// 저장될 정보
+	_uint					CellIndexndex = 0;
+	_float3					vPoints[3];
+	_int					vNeighborIndex[3];
+	CCell::E_CELLTYPE		CellType;
+
+	for (_uint index = 0; index < mVecCells.size(); ++index)
 	{
 
+		// 인덱스		
+		CellIndexndex =  mVecCells[index]->Get_Index();
+		WriteFile(hFile, &CellIndexndex, sizeof(_uint), &dwByte, nullptr);
+		// 점
+		for (_uint i = 0; i < 3; ++i)
+		{
+			vPoints[i] = mVecCells[index]->Get_Point((CCell::E_POINTS)i);
+		}
+		WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
 
+		// 인접점
+		for (_uint i = 0; i < 3; ++i)
+		{
+			vNeighborIndex[i] = mVecCells[index]->Get_NeighborIndex((CCell::E_LINES)i);
 
+		}
+		WriteFile(hFile, vNeighborIndex, sizeof(_uint) * 3, &dwByte, nullptr);
+
+		CellType = mVecCells[index]->Get_CellType();
+		WriteFile(hFile, &CellType, sizeof(CCell::E_CELLTYPE), &dwByte, nullptr);
 	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CNavigation::Load_NaviMeshData(wstring wpath)
+{
+	if (mVecCells.empty() == false)
+		Remove_NaviMeshData();
+
+	// 파일에 저장된 점을 가져온다.
+	_ulong			dwByte = 0;
+	HANDLE			hFile = CreateFile(wpath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+
+	_uint					CellIndexndex = 0;
+	_float3					vPoints[3];
+	_int					vNeighborIndex[3];
+	CCell::E_CELLTYPE		CellType;
+	CCell* pCell = nullptr;
+
 	while (true)
 	{
+
+		ReadFile(hFile, &CellIndexndex, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
+		ReadFile(hFile, vNeighborIndex, sizeof(_int) * 3, &dwByte, nullptr);
+		ReadFile(hFile, &CellType, sizeof(CCell::E_CELLTYPE) , &dwByte, nullptr);
 
 		if (0 == dwByte)
 			break;
 
-		CCell*		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, CellIndexndex);
+		
+		for (int i =0; i <3; ++i)
+		{
+			pCell->Set_NeighborIndex((CCell::E_LINES)i, vNeighborIndex[i]);
+		}
+
+		pCell->Set_TileType(CellType);
+
+
+
 		if (nullptr == pCell)
 			return E_FAIL;
 
@@ -291,32 +361,11 @@ HRESULT CNavigation::Save_NaviMeshData(wstring wpath)
 	return S_OK;
 }
 
-HRESULT CNavigation::Load_NaviMeshData(wstring wpath)
+HRESULT CNavigation::Remove_NaviMeshData()
 {
-	 
-	// 파일에 저장된 점을 가져온다.
-	_ulong			dwByte = 0;
-	HANDLE			hFile = CreateFile(wpath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	_float3			vPoints[3];
-
-	while (true)
-	{
-		ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-		if (0 == dwByte)
-			break;
-
-		CCell*		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
-		if (nullptr == pCell)
-			return E_FAIL;
-
-		mVecCells.push_back(pCell);
-	}
-
-	CloseHandle(hFile);
+	for (auto& pCell : mVecCells)
+		Safe_Release(pCell);
+	mVecCells.clear();
 
 	return S_OK;
 }
@@ -369,6 +418,11 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 	{
 		for (auto cell : mVecCells)
 		{
+			if(cell->Get_CellType() == CCell::E_CELLTYPE::CELLTYPE_STOP)
+				debugColor = DirectX::Colors::Red;
+			else
+				debugColor = DirectX::Colors::White;
+
 			DX::DrawTriangle(mBatch,
 				cell->Get_Point(CCell::POINT_A),
 				cell->Get_Point(CCell::POINT_B),
@@ -380,7 +434,7 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 		switch (meNaviType)
 		{
 		case Engine::CNavigation::NAVI_OBJTYPE_PLAYER:
-			debugColor = DirectX::Colors::Red;
+			debugColor = DirectX::Colors::Yellow;
 			break;
 		case Engine::CNavigation::NAVI_OBJTYPE_STATIC:
 			debugColor = DirectX::Colors::Blue;

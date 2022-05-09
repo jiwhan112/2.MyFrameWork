@@ -93,7 +93,6 @@ CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceConte
 		MSGBOX("Failed to Creating CCell");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 

@@ -20,6 +20,11 @@ HRESULT CLevel_MyGamePlay::NativeConstruct()
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 
+#ifdef _DEBUG
+	// IMGUI »ý¼º
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_InGame::Create(m_pDevice, m_pDeviceContext));
+#endif
+
 	return S_OK;
 }
 

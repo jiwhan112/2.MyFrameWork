@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Tool/Imgui_Terrain.h"
+#include "Cell.h"
 
 #include "Camera_Client.h"
 #include "GameObject/GameObject_MyTerrain.h"
@@ -237,22 +238,6 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 					}
 				}
 
-				// 3개씩 데이터 넘김
-				// for (auto iter = Newfloat3List.begin(); iter != Newfloat3List.end();)
-				// {
-				// 	for (int i =0; i<3 ; ++i)
-				// 	{
-				// 		vPoints[i] = *iter;
-				// 		iter++;
-				// 		if (iter == Newfloat3List.end())
-				// 			break;
-				// 	}
-				//
-				// 	if (iter == Newfloat3List.end())
-				// 		break;
-				// 	NewFloat3ArrayList.push_back(vPoints);
-				// }
-
 				navi->SetUp_NewNaviMesh(NewFloat3ArrayList);
 				for (auto& p : NewFloat3ArrayList)
 				{
@@ -260,6 +245,60 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 				}
 				NewFloat3ArrayList.clear();
 			}
+
+			ImGui::Text("SaveNaviData");
+			{
+				CNavigation* navi = mCurrent_TerrainObject->Get_ComNavimesh();
+				static char InputText[128] = "";
+
+				ImGui::InputTextWithHint("savetext_Navi", "enter Navi Name", InputText, IM_ARRAYSIZE(InputText));
+				if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "NaviData")))
+				{
+					// dat 파일 경로에 저장
+					string str = InputText;
+					wstring wstr = CHelperClass::Convert_str2wstr(str);
+					wstring savewstr = STR_FILEPATH_RESOURCE_DAT_L;
+					savewstr += L"\\" + wstr + L".dat";
+					navi->Save_NaviMeshData(savewstr);
+				}
+				
+				ImGui::Text("ReMoveData");
+				if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "ReMove")))
+				{
+					navi->Remove_NaviMeshData();
+				}
+			}
+
+			ImGui::Text("NoTile");
+			{
+				// 피킹시 해당 타일 옵션 변경
+				CNavigation* navi = mCurrent_TerrainObject->Get_ComNavimesh();
+
+				navi->Pick_ChangeCellOption(_float4x4::Identity, CCell::CELLTYPE_STOP);
+
+				//static char InputText[128] = "";
+				//ImGui::InputTextWithHint("savetext_Navi", "enter Navi Name", InputText, IM_ARRAYSIZE(InputText));
+				//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "NaviData")))
+				//{
+				//	// dat 파일 경로에 저장
+				//	string str = InputText;
+				//	wstring wstr = CHelperClass::Convert_str2wstr(str);
+				//	wstring savewstr = STR_FILEPATH_RESOURCE_DAT_L;
+				//	savewstr += L"\\" + wstr + L".dat";
+				//	navi->Save_NaviMeshData(savewstr);
+				//}
+
+				//ImGui::Text("ReMoveData");
+				//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "ReMove")))
+				//{
+				//	navi->Remove_NaviMeshData();
+				//}
+
+			}
+			
+
+
+			
 			IMGUI_TREE_END
 		}
 	}
