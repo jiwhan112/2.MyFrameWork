@@ -10,6 +10,7 @@
 #include "LightMgr.h"
 #include "FileInfo.h"
 #include "Picking.h"
+#include "Frstum.h"
 
 BEGIN(Engine)
 
@@ -81,6 +82,10 @@ public: // For. Picking
 	_float3 Get_PickPos() const;
 	_bool	 Get_isPick() const;
 
+public: // For. Frestum
+	_bool IsIn_WorldSpace(_fvector vPoint, _float fRange = 0);
+	_bool IsIn_LocalSpace(_fvector vPoint, _float fRange = 0);
+
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;
 	CTimer_Manager*				m_pTimer_Manager = nullptr;
@@ -92,6 +97,7 @@ private:
 	CLightMgr*					m_pLightMgr = nullptr;
 	CFileInfo*					m_pFileMgr = nullptr;
 	CPicking*					m_pPickMgr = nullptr;
+	CFrustum*					m_pFrstumMgr = nullptr;
 
 public:
 	static void Release_Engine();

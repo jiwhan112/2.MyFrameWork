@@ -24,6 +24,7 @@ public:
 public:
 	// 키 리스트 반환
 	list<string>* Get_MapKeyList() const { return mListKey; }
+	ID3D11ShaderResourceView* Get_MapTexture(string key);
 
 private:
 	ID3D11ShaderResourceView* Find_MapTexture(string key);

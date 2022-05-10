@@ -98,6 +98,19 @@ HRESULT CTexture_map::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
+ID3D11ShaderResourceView * CTexture_map::Get_MapTexture(string key)
+{
+	if (mMapTextures.empty())
+		return nullptr;
+
+	auto iter = mMapTextures.find(key.c_str());
+	if (iter == mMapTextures.end())
+		return nullptr;
+	return iter->second;
+}
+
+
+
 ID3D11ShaderResourceView * CTexture_map::Find_MapTexture(string key)
 {
 	if (mMapTextures.empty())

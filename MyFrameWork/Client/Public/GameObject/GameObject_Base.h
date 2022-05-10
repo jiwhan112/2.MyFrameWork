@@ -32,6 +32,15 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
+public:
+	bool IsName(const char* name)
+	{
+		// 이름 있는지 체크
+		if (2 < strlen(name))
+			return true;
+		return false;
+	}
+
 public: // 컴포넌트 반환
 	CShader*		Get_ComShader() { return mComShader; }
 	CRenderer*		Get_ComRenderer() { return mComRenderer; }

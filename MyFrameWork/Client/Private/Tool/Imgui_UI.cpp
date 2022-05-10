@@ -224,7 +224,7 @@ HRESULT CImgui_UI::Edit_Texture()
 					selectTeture = *iter;
 					//	mUIObject->Get_TextureMap()->Set_TextureMap(selectTeture);
 
-					TEXTURE_DESC tex;
+					TEXTURE_UI_DESC tex;
 					strcpy_s(tex.mTextureKey_Diffuse, selectTeture.c_str());
 					mCurrentUIObject->Set_LoadTexDesc(tex);
 				}

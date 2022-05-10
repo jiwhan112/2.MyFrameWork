@@ -48,7 +48,6 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXTEX_DECLARATION;
 
-
 	typedef struct tagVertex_Matrix
 	{
 		XMFLOAT4			vRight;
@@ -63,6 +62,19 @@ namespace Engine
 		static const unsigned int iNumElements = 6;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXINSTANCE_DECLARATION;
+
+	// 포인트 인스턴스
+	typedef struct tagVertex_Point
+	{
+		XMFLOAT3			vPosition;
+		float				fPSize;
+	}VTXPOINT;
+
+	typedef struct ENGINE_DLL tagVertex_Point_Instance_Declaration
+	{
+		static const unsigned int iNumElements = 6;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXPOINTINSTANCE_DECLARATION;
 
 	typedef struct tagVertex_CubeTexture
 	{

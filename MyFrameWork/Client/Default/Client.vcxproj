@@ -176,6 +176,7 @@
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static2.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Base.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
@@ -239,6 +240,7 @@
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
@@ -313,6 +315,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexPointInstance.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

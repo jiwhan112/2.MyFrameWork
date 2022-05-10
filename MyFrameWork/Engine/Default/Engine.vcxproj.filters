@@ -133,6 +133,12 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance">
       <UniqueIdentifier>{d7e2005f-e146-4e85-9951-c5d3f38e8280}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\11.Frustum">
+      <UniqueIdentifier>{dbc2d132-22d3-4600-a2b2-228f59e603f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Point_Instance">
+      <UniqueIdentifier>{01687584-6ccf-4164-9366-97261d78692a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -254,6 +260,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Rect_Instance.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Frstum.cpp">
+      <Filter>01.Utility\11.Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Point_Instance.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Point_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +412,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Rect_Instance.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Rect_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Frstum.h">
+      <Filter>01.Utility\11.Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Point_Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

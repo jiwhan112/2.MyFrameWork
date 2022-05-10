@@ -34,7 +34,7 @@ private:
 //	void SaveData(ofstream * fwrite, const void* desc, _uint size);
 	HRESULT SaveOBJECT(ofstream* fwrite, E_OBJECT_TYPE* desc);
 	HRESULT SaveUIDESC(ofstream* fwrite, UI_DESC* desc);
-	HRESULT SaveTEXTUREDESC(ofstream* fwrite, TEXTURE_DESC* desc);
+	HRESULT SaveTEXTUREDESC(ofstream* fwrite, TEXTURE_UI_DESC* desc);
 	HRESULT SaveMODELSTATICDESC(ofstream* fwrite, MODEL_STATIC_DESC* desc);
 	HRESULT SaveMODELDYNAMICDESC(ofstream* fwrite, MODEL_DYNAMIC_DESC* desc);
 
@@ -42,7 +42,7 @@ private:
 	// 임의 데이터 맴버 저장
 	E_OBJECT_TYPE		mObjectType;
 	UI_DESC				mUIDesc;
-	TEXTURE_DESC			mTexDesc;
+	TEXTURE_UI_DESC			mTexDesc;
 
 public:
 	static CObjectIO* Create();

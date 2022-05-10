@@ -71,9 +71,9 @@ HRESULT CGameObject_2D::Render()
 	return S_OK;
 }
 
-void CGameObject_2D::Set_LoadTexDesc(const TEXTURE_DESC & desc)
+void CGameObject_2D::Set_LoadTexDesc(const TEXTURE_UI_DESC & desc)
 {
-	memcpy(&mTexStrDESC, &desc, sizeof(TEXTURE_DESC));
+	memcpy(&mTexStrDESC, &desc, sizeof(TEXTURE_UI_DESC));
 	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 }
 

@@ -9,7 +9,7 @@ END
 
 // 기본 3D 오브젝트 출력
 BEGIN(Client)
-class CGameObject_3D_Static final :
+class CGameObject_3D_Static :
 	public CGameObject_Base
 {
 protected:
@@ -43,9 +43,13 @@ protected:
 protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
 	CCollider*					mComCollider = nullptr;
+	CTexture_map*				mComTexture = nullptr;
 
 	MODEL_STATIC_DESC			mModelStatic_Desc;
 	COLLIDER_DESC				mCollider_Desc;
+
+	// Diffuse 이외의 텍스처 연결
+	// TEXTURE_MODEL_DESC			mTexture_Model_DESC;
 
 public:
 	static CGameObject_3D_Static* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

@@ -33,7 +33,7 @@ protected:
 	CVIBuffer*		mComVIBuffer = nullptr;
 	CTexture_map*	mComTexture = nullptr;
 
-	TEXTURE_DESC		mTexStrDESC;
+	TEXTURE_UI_DESC		mTexStrDESC;
 public:
 
 	static CGameObject_2D_Particle* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

@@ -13,6 +13,7 @@ CGameInstance::CGameInstance()
 	, m_pLightMgr(CLightMgr::GetInstance())
 	, m_pFileMgr(CFileInfo::GetInstance())
 	, m_pPickMgr(CPicking::GetInstance())
+	, m_pFrstumMgr(CFrustum::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -24,12 +25,14 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pLightMgr);
 	Safe_AddRef(m_pFileMgr);
 	Safe_AddRef(m_pPickMgr);
+	Safe_AddRef(m_pFrstumMgr);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
 {
 	if (nullptr == m_pGraphic_Device ||
-		nullptr == m_pObject_Manager)
+		nullptr == m_pObject_Manager || 
+		nullptr == m_pFrstumMgr)
 		return E_FAIL;
 
 	FAILED_CHECK(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinCX, GraphicDesc.iWinCY, ppDeviceOut, ppDeviceContextOut));
@@ -37,6 +40,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	FAILED_CHECK(m_pObject_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
+	m_pFrstumMgr->Initialize();
 	return S_OK;
 }
 
@@ -56,6 +60,8 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 	FAILED_CHECK(m_pLevel_Manager->Tick(TimeDelta));
 	FAILED_CHECK(m_pObject_Manager->Tick(TimeDelta));
 
+	// Frstum
+	m_pFrstumMgr->Tick();
 	// PipeLine
 	FAILED_CHECK(m_pPipeLine->Tick());
 
@@ -329,6 +335,20 @@ _bool CGameInstance::Get_isPick() const
 	return m_pPickMgr->Get_isPick();
 }
 
+_bool CGameInstance::IsIn_WorldSpace(_fvector vPoint, _float fRange)
+{
+	NULL_CHECK_BREAK(m_pFrstumMgr);
+
+	return m_pFrstumMgr->IsIn_WorldSpace(vPoint,fRange);
+}
+
+_bool CGameInstance::IsIn_LocalSpace(_fvector vPoint, _float fRange)
+{
+	NULL_CHECK_BREAK(m_pFrstumMgr);
+
+	return m_pFrstumMgr->IsIn_LocalSpace(vPoint, fRange);
+}
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -358,6 +378,9 @@ void CGameInstance::Release_Engine()
 	if (0 != CPicking::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CPicking");
 
+	if (0 != CFrustum::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CFrustum");
+
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
 
@@ -377,4 +400,5 @@ void CGameInstance::Free()
 	Safe_Release(m_pLightMgr);
 	Safe_Release(m_pFileMgr);
 	Safe_Release(m_pPickMgr);
+	Safe_Release(m_pFrstumMgr);
 }

@@ -21,12 +21,6 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
-	// 데이터 디폴트 세팅
-	if (strlen(mModelStatic_Desc.mModelName) < 2)
-	{
-		string str("room_Prison_FloorTile.fbx");
-		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
-	}
 
 	mCurrentShaderPass = 0;
 	return S_OK;
@@ -35,6 +29,15 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
+
+
+	// 데이터 디폴트 세팅
+	if (IsName(mModelStatic_Desc.mModelName) == false)
+	{
+		string str("room_Prison_FloorTile.fbx");
+		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
+	}
+	Set_Component();
 
 	return S_OK;
 }
@@ -68,8 +71,9 @@ HRESULT CGameObject_3D_Static::Render()
 		// 재질 개수만큼 루프
 		for (int i = 0; i < iNumMaterials; ++i)
 		{
-			// 1. 텍스처 설정
+			// 1. Diffuse 텍스처 설정
 			mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+			
 			// 2. 랜더링
 			// 여기서 뼈를 넘긴다.
 			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
@@ -100,6 +104,7 @@ HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
 	FAILED_CHECK(__super::Release_Component(TEXT("Com_Model")));
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+	
 
 	return S_OK;
 }
@@ -151,20 +156,43 @@ HRESULT CGameObject_3D_Static::Set_Component()
 
 	if (mComModel == nullptr)
 	{
-		string strModel = mModelStatic_Desc.mModelName;
-		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+		if (IsName(mModelStatic_Desc.mModelName))
+		{
+
+			string strModel = mModelStatic_Desc.mModelName;
+			wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+		}
 	}
 	if (mComCollider == nullptr)
 	{
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
 	}
+	//if (mComTexture == nullptr)
+	//{
+	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+	//}
+
+	
 
 	return S_OK;
 }
 
 HRESULT CGameObject_3D_Static::Set_ConstantTable_Model()
 {
+	// 이외 텍스처 바인딩
+	if (mComTexture == nullptr)
+		return S_OK;
+
+	//auto tex1 = mComTexture->Get_MapTexture(mTexture_Model_DESC.mTextureKey_Normal);
+	//auto tex2 = mComTexture->Get_MapTexture(mTexture_Model_DESC.mTextureKey_Hieght);
+
+	//if (tex1)
+	//	mComShader->Set_Texture(STR_TEX_NOMAL, tex1);
+
+	//if (tex2)
+	//	mComShader->Set_Texture(STR_TEX_HEIGHT, tex2);
+
 	return S_OK;
 }
 
@@ -199,4 +227,6 @@ void CGameObject_3D_Static::Free()
 
 	Safe_Release(mComModel);
 	Safe_Release(mComCollider);
+	Safe_Release(mComTexture);
+	
 }

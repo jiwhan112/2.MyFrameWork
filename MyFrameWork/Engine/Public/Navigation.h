@@ -75,6 +75,7 @@ private:
 	// 현재 컴포넌트 객체의 셀 인덱스
 	_uint				mCurrentIndex = 0;
 	E_NAVI_OBJTYPE		meNaviType = NAVI_OBJTYPE_NONE;
+
 private:
 	// 포인트 리스트로 초기화
 	HRESULT ReadyNaviMeshForListData(list<_float3*>& vpointlist);

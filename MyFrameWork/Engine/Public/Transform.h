@@ -35,6 +35,11 @@ public:
 
 	// 저장용 데이터
 	_float4x4 GetWorldFloat4x4() const { return mWorldMatrix; }
+	_float4x4 GetInvert() const { 
+		_float4x4 invmat;  
+		mWorldMatrix.Invert(invmat);
+		return invmat;
+	}
 
 public:
 	// 인자로 들어올때의 타입 1~3 fvecotr

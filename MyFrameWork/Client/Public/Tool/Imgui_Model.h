@@ -19,6 +19,7 @@ public:
 	{
 		TOOLMODE_MODEL_STATIC,
 		TOOLMODE_MODEL_DYNAMIC,
+		TOOLMODE_MODEL_STATIC_PARENT,
 		TOOLMODE_MODEL_END,
 	};
 private:
@@ -59,6 +60,9 @@ private:
 
 	// 애니메이션 오브젝트
 	class CGameObject_3D_Dynamic*	mCurrent_ModelDynamicObject = nullptr;
+
+	// 모델2 오브젝트
+	class CGameObject_3D_Static2*	mCurrent_ModelStaticObject2 = nullptr;
 
 	// FBX파일 이름
 	list<string>*					mFBX_Static_pathList = nullptr;

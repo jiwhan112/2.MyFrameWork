@@ -3,6 +3,7 @@
 #include "Camera_Client.h"
 #include "GameObject/GameObject_3D_Static.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
+#include "GameObject/GameObject_3D_Static2.h"
 
 #include "Model.h"
 #include "Animation.h"
@@ -53,6 +54,12 @@ HRESULT CImgui_Model::Update(_double time)
 			mCurrent_ModelDynamicObject = static_cast<CGameObject_3D_Dynamic*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_DYNAMIC;
 		}
+		else if (type == OBJECT_TYPE_3D_STATIC_PARENT)
+		{
+			mCurrent_ModelStaticObject2 = static_cast<CGameObject_3D_Static2*>(SelectObject);
+			meModelMode = CImgui_Model::TOOLMODE_MODEL_STATIC_PARENT;
+		}
+
 		else
 			SelectObject = nullptr;
 	}
@@ -65,6 +72,7 @@ HRESULT CImgui_Model::Update(_double time)
 
 		mCurrent_ModelStaticObject = nullptr;
 		mCurrent_ModelDynamicObject = nullptr;
+		mCurrent_ModelStaticObject2 = nullptr;
 		meModelMode = CImgui_Model::TOOLMODE_MODEL_END;
 	}
 
@@ -119,7 +127,8 @@ HRESULT CImgui_Model::Render_UI()
 void CImgui_Model::FBX_SETTINGMODE()
 {
 	if (mCurrent_ModelDynamicObject ||
-		mCurrent_ModelStaticObject)
+		mCurrent_ModelStaticObject || 
+		mCurrent_ModelStaticObject2)
 	{
 		// 선택된 FBX 오브젝트 수정
 		FAILED_CHECK_NONERETURN(Edit_FBX());
@@ -263,6 +272,18 @@ void CImgui_Model::RENDER_CREATEEMPTY()
 		// 이미 만들어진 오브젝트 추가
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
 	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Static2")))
+	{
+		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC2);
+
+		// 이미 만들어진 오브젝트 추가
+		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
+	}
+
 }
 
 void CImgui_Model::INIT_FBXPathList()
@@ -375,6 +396,127 @@ HRESULT CImgui_Model::Edit_FBX()
 			}
 			IMGUI_TREE_END
 		}
+	}
+
+	// 부모 정적 FBX 처리
+	if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC_PARENT)
+	{
+		if (mFBX_Static_pathList->empty())
+			return E_FAIL;
+
+		static _int selectIndex = -1;
+		_uint cnt = 0;
+		if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "ChildObjects")))
+		{			
+			auto childlist = mCurrent_ModelStaticObject2->Get_ChildList();
+
+			for (auto& obj : *childlist)
+			{
+				if (obj == nullptr)
+					continue;
+
+				char buf[128] = "";
+				string name = obj->Get_ModelDESC().mModelName;
+				sprintf_s(buf, "%d:Model:%s", cnt, name.c_str());
+
+				if (ImGui::Selectable(buf, selectIndex == cnt))
+				{
+					selectIndex = cnt;
+				}
+				cnt++;
+			}
+
+			ImGui::EndListBox();
+		}
+
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "CreateChild")))
+		{
+			CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC);
+			mCurrent_ModelStaticObject2->Add_StaticObejct((CGameObject_3D_Static*)createobj);
+		}
+
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "DeleteChild")))
+		{
+			mCurrent_ModelStaticObject2->Delefe_StaticObejct(selectIndex);
+			selectIndex = -1;
+
+		}
+
+		// 선택 된 객체 모델 수정
+		if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Edit")))
+		{
+			IMGUI_TREE_BEGIN("FbxFiles")
+			{
+				if (0 <= selectIndex)
+				{
+					_uint cnt = 0;
+					string selectFBX = "";
+					static ImGuiTextFilter filter;
+					filter.Draw();
+
+					for (auto iter = mFBX_Static_pathList->begin(); iter != mFBX_Static_pathList->end(); ++cnt, iter++)
+					{
+						if (filter.PassFilter(iter->c_str()))
+						{
+							if (ImGui::Selectable(iter->c_str(), selectedTex == cnt))
+							{
+								selectedTex = cnt;
+								selectFBX = *iter;
+								MODEL_STATIC_DESC fbx;
+								strcpy_s(fbx.mModelName, selectFBX.c_str());
+								mCurrent_ModelStaticObject2->Get_ChildOfIndex(selectIndex)->Set_LoadModelDESC(fbx);
+							}
+						}
+					}
+				}
+				IMGUI_TREE_END
+			}
+			// 선택 된 객체 위치 수정
+
+			IMGUI_TREE_BEGIN("Transform")
+			{
+				if (0 <= selectIndex)
+				{
+					CTransform* trnascom = mCurrent_ModelStaticObject2->Get_ChildOfIndex(selectIndex)->Get_TransformCom();
+					
+					// #TODO: 해야할 것
+
+					// 수정
+					_float4x4 transform4x4 = trnascom->GetWorldMatrix();
+
+					// 위치
+					// ImGui::DragFloat3();
+					
+					// 크기
+					//ImGui::DragFloat3();
+					// 회전
+					//ImGui::DragFloat3();
+
+
+					
+				}
+				IMGUI_TREE_END
+			}
+
+			// 선택 된 객체 충돌박스 수정
+
+			IMGUI_TREE_BEGIN("Collider")
+			{
+				COLLIDER_DESC desc = mCurrent_ModelStaticObject2->Get_ChildOfIndex(selectIndex)->Get_ColliderDESC();
+				// desc.meColliderType;
+				// desc.mSize;
+
+
+				IMGUI_TREE_END
+			}
+
+			ImGui::EndListBox();
+		}		
+
+	
+
 	}
 	return S_OK;
 }

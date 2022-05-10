@@ -11,6 +11,7 @@
 #include "GameObject/GameObject_Mouse.h"
 #include "GameObject/GameObject_3D_Static.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
+#include "GameObject/GameObject_3D_Static2.h"
 
 #include "GameObject_Skybox.h"
 #include "GameObject_Terrain.h"
@@ -330,6 +331,10 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC),
 		CGameObject_3D_Dynamic::Create(m_pDevice, m_pDeviceContext)));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_STATIC2),
+		CGameObject_3D_Static2::Create(m_pDevice, m_pDeviceContext)));
+
 
 	// ÁöÇü ±øÅë
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),

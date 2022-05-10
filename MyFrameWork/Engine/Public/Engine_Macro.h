@@ -171,6 +171,7 @@ return _return;}
 
 static const char* STR_TEX_DIFFUSE = "g_DiffuseTexture";
 static const char* STR_TEX_NOMAL = "g_NormalTexture";
+static const char* STR_TEX_HEIGHT = "g_HeightTexture";
 
 static const char* STR_MAT_WORLD = "g_WorldMatrix";
 static const char* STR_MAT_VIEW = "g_ViewMatrix";

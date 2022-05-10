@@ -10,12 +10,13 @@ class CImgui_UI final :
 	public CImgui_Base
 {
 public:
-	//enum E_UITOOL_MODE
-	//{
-	//	UITOOL_MODE_2D,
-	//	UITOOL_MODE_END,
+	enum E_UITOOL_MODE
+	{
+		UITOOL_MODE_2D,
+		UITOOL_MODE_PARTICLE,
+		UITOOL_MODE_END,
 
-	//};
+	};
 private:
 	explicit CImgui_UI(ID3D11Device* device, ID3D11DeviceContext* context);
 	explicit CImgui_UI(const CImgui_UI& rhs);
@@ -47,7 +48,7 @@ private:
 	// 여기에 저장된 UISet이 한 묶음의 형태로 저장된다.
 	// list<class CGameObject_2D*> mListUISet;
 
-	bool					mIsDataSetting = false;
+	bool						mIsDataSetting = false;
 	//	E_UITOOL_MODE			meUIToolMode = UITOOL_MODE_END;
 
 public:

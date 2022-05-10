@@ -9,7 +9,7 @@ HRESULT CObjectIO::NativeConstruct()
 {
 	ZeroMemory(&mObjectType, sizeof(E_OBJECT_TYPE));
 	ZeroMemory(&mUIDesc, sizeof(UI_DESC));
-	ZeroMemory(&mTexDesc, sizeof(TEXTURE_DESC));
+	ZeroMemory(&mTexDesc, sizeof(TEXTURE_UI_DESC));
 
 	return S_OK;
 }
@@ -79,7 +79,7 @@ HRESULT CObjectIO::SaverData(ofstream* fwrite, E_OBJECT_DATA_TYPE type, const vo
 		SaveUIDESC(fwrite, (UI_DESC*)desc);
 		break;
 	case OBJECT_TYPE_DATA_TEXTUREDESC:
-		SaveTEXTUREDESC(fwrite, (TEXTURE_DESC*)desc);
+		SaveTEXTUREDESC(fwrite, (TEXTURE_UI_DESC*)desc);
 		break;
 	case OBJECT_TYPE_DATA_MODEL_STATICDESC:
 		SaveMODELSTATICDESC(fwrite, (MODEL_STATIC_DESC*)desc);
@@ -122,17 +122,17 @@ HRESULT CObjectIO::LoadObject(wstring FolderPath, wstring filename, char** pData
 	case OBJECT_TYPE_2D:
 	{
 		// 로드 확인 완료
-		bufsize = sizeof(UI_DESC) + sizeof(TEXTURE_DESC);
+		bufsize = sizeof(UI_DESC) + sizeof(TEXTURE_UI_DESC);
 		*pData = NEW char[bufsize];
 		UI_DESC uiDesc;
-		TEXTURE_DESC texDesc;
+		TEXTURE_UI_DESC texDesc;
 		int offset = sizeof(UI_DESC);
 
 		fRead.read(*pData, sizeof(UI_DESC));
 		memcpy(&uiDesc, *pData, sizeof(UI_DESC));
 
-		fRead.read(*pData + offset, sizeof(TEXTURE_DESC));
-		memcpy(&texDesc, *pData + offset, sizeof(TEXTURE_DESC));
+		fRead.read(*pData + offset, sizeof(TEXTURE_UI_DESC));
+		memcpy(&texDesc, *pData + offset, sizeof(TEXTURE_UI_DESC));
 	}
 	break;
 
@@ -194,13 +194,13 @@ HRESULT CObjectIO::SaveUIDESC(ofstream * fwrite, UI_DESC* desc)
 	return S_OK;
 }
 
-HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTURE_DESC* desc)
+HRESULT CObjectIO::SaveTEXTUREDESC(ofstream * fwrite, TEXTURE_UI_DESC* desc)
 {
-	char * newdesc = NEW char[sizeof(TEXTURE_DESC)];
+	char * newdesc = NEW char[sizeof(TEXTURE_UI_DESC)];
 
-	memcpy(newdesc, desc, sizeof(TEXTURE_DESC));
+	memcpy(newdesc, desc, sizeof(TEXTURE_UI_DESC));
 
-	fwrite->write(newdesc, sizeof(TEXTURE_DESC));
+	fwrite->write(newdesc, sizeof(TEXTURE_UI_DESC));
 	Safe_Delete_Array(newdesc);
 
 	return S_OK;
