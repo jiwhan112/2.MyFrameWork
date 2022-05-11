@@ -516,6 +516,21 @@ HRESULT CImgui_Model::Edit_FBX()
 				}
 				IMGUI_TREE_END
 			}
+
+			IMGUI_TREE_BEGIN("Parent_Transform")
+			{
+				CTransform* parentTrans = mCurrent_ModelStaticObject_Parent->Get_TransformCom();
+				_float4x4 Worldmat = parentTrans->GetWorldMatrix();
+				_float3		position = Worldmat.Translation();
+
+				// 위치
+				ImGui::DragFloat3("Position", (float*)&position, 0.1f, -50, 50);
+
+				parentTrans->Set_State( CTransform::STATE_POSITION,position);
+
+
+				IMGUI_TREE_END
+			}
 			// 선택 된 객체 위치 수정
 
 			IMGUI_TREE_BEGIN("Transform")

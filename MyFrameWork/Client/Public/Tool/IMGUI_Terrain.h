@@ -48,6 +48,7 @@ private:
 	HRESULT Edit_OBJECTS();
 
 	void Create_PickObject(CGameObject_Base* obj);
+	void Update_Hier(_double time);
 
 
 private:

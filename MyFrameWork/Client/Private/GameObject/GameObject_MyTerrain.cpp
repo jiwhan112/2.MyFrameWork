@@ -41,20 +41,25 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 _int CGameObject_MyTerrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-	misPick = false;
 
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
+	_float3 pick;
+
+	// 네비 메시 충돌
+	if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
 	{
-		_float3 pick;
-
-		// 네비 메시 충돌
-		if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
-		{
-			Update_PickPos(pick);
-			return true;
-		}
-		return false;
+		Update_PickPos(pick);
 	}
+
+	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
+	//{
+	//	_float3 pick;
+
+	//	// 네비 메시 충돌
+	//	if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
+	//	{
+	//		Update_PickPos(pick);
+	//	}
+	//}
 	return UPDATENONE;
 }
 

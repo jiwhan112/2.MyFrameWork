@@ -345,53 +345,55 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 HRESULT CImgui_Terrain::Edit_OBJECTS()
 {
 	// 만들어놓은 3D 깡통 오브젝트 배치 
-	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
-	CGameObject_3D_Static2* PickObject = nullptr;
+
+	//CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	//CGameObject_3D_Static2* PickObject = nullptr;
 
 
-	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Objects")))
-	{
-		auto ProtoParentModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
-		if (ProtoParentModelList != nullptr)
-		{
+	//if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Objects")))
+	//{
+	//	auto ProtoParentModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
+	//	if (ProtoParentModelList != nullptr)
+	//	{
 
-			static int selectObjectIndex = -1;
-			_uint cnt = 0;
-			static wstring selectObjectStr = L"";
-			for (auto& protoString : *ProtoParentModelList)
-			{
-				cnt++;
+	//		static int selectObjectIndex = -1;
+	//		_uint cnt = 0;
+	//		static wstring selectObjectStr = L"";
+	//		for (auto& protoString : *ProtoParentModelList)
+	//		{
+	//			cnt++;
 
-				if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
-				{
-					selectObjectIndex = cnt;
-					selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
-
-					
-				}
-
-				if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Click_Create")))
-				{
-					_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-					CGameObject_Base* base = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(meCreateOBJ_Layer));
-					if (base != nullptr)
-						Create_PickObject(base);
-				}
-			}
-
-			// 피킹된 위치에 따라가게 둠
+	//			if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
+	//			{
+	//				selectObjectIndex = cnt;
+	//				selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
 
 
-			Safe_Delete(ProtoParentModelList);
-		}
+	//			}
+	//		}
+
+	//		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Click_Create")))
+	//		{
+	//			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	//			CGameObject_Base* base = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(meCreateOBJ_Layer));
+	//			static_cast<CGameObject_3D_Static2*>(base)->Set_UpdateMode(CGameObject_3D_Static2::E_UPDATETYPE_PICK);
+	//			if (base != nullptr)
+	//				Create_PickObject(base);
+	//		}
 
 
-		
+	//		// 피킹된 위치에 따라가게 둠
 
-	
 
-		ImGui::EndListBox();
-	}
+	//		Safe_Delete(ProtoParentModelList);
+	//	}
+
+
+
+
+
+
+	//	ImGui::EndListBox();
 
 
 	return S_OK;
@@ -401,6 +403,13 @@ void CImgui_Terrain::Create_PickObject(CGameObject_Base* obj)
 {
 	Safe_Release(mCurrent_PickObject);
 	mCurrent_PickObject = obj;
+}
+
+void CImgui_Terrain::Update_Hier(_double time)
+{
+
+	// 자식 상태에 부모행렬을 넘겨준다.
+
 }
 
 

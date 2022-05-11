@@ -33,6 +33,10 @@ public:
 
 	HRESULT		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc);
 	HRESULT		Set_LoadColliderDESC(const COLLIDER_DESC& desc);
+	void		Set_ParentMat(_fmatrix parentmat)
+	{
+		mParentMat = parentmat;
+	}
 
 protected:
 	virtual HRESULT Set_Component()override;
@@ -48,6 +52,7 @@ protected: // 3D모델 Com / DESC 추가
 	MODEL_STATIC_DESC			mModelStatic_Desc;
 	COLLIDER_DESC				mCollider_Desc;
 
+	_float4x4					mParentMat;
 	// Diffuse 이외의 텍스처 연결
 	// TEXTURE_MODEL_DESC			mTexture_Model_DESC;
 

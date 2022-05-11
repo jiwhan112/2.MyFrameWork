@@ -37,6 +37,7 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 		string str("room_Prison_FloorTile.fbx");
 		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
 	}
+	mParentMat = _float4x4::Identity;
 	Set_Component();
 
 	return S_OK;
@@ -45,6 +46,9 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 _int CGameObject_3D_Static::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+	_float4x4 newMat = mComTransform->GetWorldFloat4x4() * mParentMat;
+	mComTransform->Set_WorldMat(newMat);
+
 	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
 	return UPDATENONE;
@@ -53,7 +57,7 @@ _int CGameObject_3D_Static::Tick(_double TimeDelta)
 _int CGameObject_3D_Static::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_FIRST, this);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
 	return UPDATENONE;
 }

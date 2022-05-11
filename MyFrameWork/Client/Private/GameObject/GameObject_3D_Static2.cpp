@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Static2.h"
+#include "GameObject/GameObject_MyTerrain.h"
 
 CGameObject_3D_Static2::CGameObject_3D_Static2(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -41,19 +42,30 @@ _int CGameObject_3D_Static2::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-	// 자식위치 업데이트
-	// Update_Hier();
-
 	if (meUpdateType == CGameObject_3D_Static2::E_UPDATETYPE_NONE)
 	{
 		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
-
 	}
+
 	else if (meUpdateType == CGameObject_3D_Static2::E_UPDATETYPE_PICK)
 	{
 		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_RED;
-	}
 
+		// 피킹오브젝트는 해당 지형에 매핑된다.
+		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+		if (terrain != nullptr)
+		{
+			if (terrain->Get_isPick())
+			{
+				_float3 worldPos = terrain->Get_PickWorldPos();
+				int index = terrain->Get_TileIndex(worldPos);
+
+				_float3 pickTilePos = terrain->Get_TileWorld(index);
+				mComTransform->Set_State(CTransform::STATE_POSITION, pickTilePos);
+				
+			}
+		}
+	}
 	FAILED_CHECK_NONERETURN(Tick_Child(TimeDelta));
 
 	return UPDATENONE;
@@ -64,9 +76,7 @@ _int CGameObject_3D_Static2::LateTick(_double TimeDelta)
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 	FAILED_CHECK_NONERETURN(LateTick_Child(TimeDelta));
 
-
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_FIRST, this);
-
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 	return UPDATENONE;
 }
 
@@ -165,6 +175,8 @@ HRESULT CGameObject_3D_Static2::Tick_Child(_double time)
 	// 자식 업데이트
 	for (auto& model : mVecChildObject)
 	{
+		model->Set_ParentMat(mComTransform->GetWorldMatrix());
+
 		if (0 > model->Tick(time))
 			return E_FAIL;
 	}
