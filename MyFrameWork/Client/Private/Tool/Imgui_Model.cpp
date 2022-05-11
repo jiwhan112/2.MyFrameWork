@@ -202,58 +202,50 @@ void CImgui_Model::RENDER_CREATE_PROTO()
 
 		IMGUI_TREE_END
 	}
+
+	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Proto_Parent"))
+	{
+		if (mProtoParentModelList == nullptr)
+			mProtoParentModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
+
+		static int selectObjectIndex = -1;
+		_uint cnt = 0;
+		static wstring selectObjectStr = L"";
+		for (auto& protoString : *mProtoParentModelList)
+		{
+			cnt++;
+
+			if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
+			{
+				selectObjectIndex = cnt;
+				selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
+			}
+		}
+
+		// 선택 원형 오브젝트 클론
+		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Create_Clone_Parent")))
+		{
+			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_OBJECT));
+		}
+
+		IMGUI_TREE_END
+	}
+
 }
 
 void CImgui_Model::RENDER_STATIC_MODE()
 {
 	FAILED_CHECK_NONERETURN(SAVER_MODE());
 
-	// 저장
-	//CObjectIO* Object_IO_Manager = GetSingle(CGameManager)->Get_ObjectIOManager();
-
-	// STATIC 저장
-	//IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "StaticSaver"))
-	//{
-	//	if (mCurrent_ModelStaticObject != nullptr)
-	//	{
-	//		static char ObjectName[128] = "";
-	//		ImGui::InputTextWithHint("savetext_static", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
-	//		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Save")))
-	//		{
-	//			// dat 파일 경로에 저장
-	//			string str = ObjectName;
-	//			wstring wstr = CHelperClass::Convert_str2wstr(str);
-	//			Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_ModelStaticObject);
-	//		}
-	//	}
-	//	IMGUI_TREE_END
-	//}
+	
 }
 
 void CImgui_Model::RENDER_DYNAMIC_MODE()
 {
 	FAILED_CHECK_NONERETURN(SAVER_MODE());
 
-	//// 저장
-	//CObjectIO* Object_IO_Manager = GetSingle(CGameManager)->Get_ObjectIOManager();
-
-	//// STATIC 저장
-	//IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "DynamicSaver"))
-	//{
-	//	if (mCurrent_ModelDynamicObject != nullptr)
-	//	{
-	//		static char ObjectName[128] = "";
-	//		ImGui::InputTextWithHint("savetext_dynamic", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
-	//		if (ImGui::Button("SaveTest"))
-	//		{
-	//			// dat 파일 경로에 저장
-	//			string str = ObjectName;
-	//			wstring wstr = CHelperClass::Convert_str2wstr(str);
-	//			Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_DYNAMIC, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_ModelDynamicObject);
-	//		}
-	//	}
-	//	IMGUI_TREE_END
-	//}
+	
 }
 
 void CImgui_Model::RENDER_STATIC_PARENT_MODE()
@@ -308,8 +300,7 @@ HRESULT CImgui_Model::SAVER_MODE()
 	// 저장
 	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "ObjectSaver"))
 	{
-		if (mCurrent_ModelStaticObject != nullptr)
-		{
+		
 			static char ObjectName[128] = "";
 			ImGui::InputTextWithHint("savetext_3DObj", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
 			if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Save")))
@@ -330,8 +321,8 @@ HRESULT CImgui_Model::SAVER_MODE()
 					break;
 				}
 
+
 			}
-		}
 		IMGUI_TREE_END
 	}
 	return S_OK;
@@ -701,4 +692,6 @@ void CImgui_Model::Free()
 	Safe_Delete(mProtoStaticModelList);
 	Safe_Delete(mFBX_Dynamic_pathList);
 	Safe_Delete(mProtoDynamicModelList);
+
+	Safe_Delete(mProtoParentModelList);
 }

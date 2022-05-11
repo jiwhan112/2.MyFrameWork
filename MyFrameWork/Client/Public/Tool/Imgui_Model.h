@@ -75,6 +75,7 @@ private:
 	// 만들어진 원본 이름
 	list<string>*					mProtoStaticModelList = nullptr;
 	list<string>*					mProtoDynamicModelList = nullptr;
+	list<string>*					mProtoParentModelList = nullptr;
 
 	// 텍스처 설정
 

@@ -17,7 +17,7 @@ HRESULT CObjectIO::NativeConstruct()
 
 HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject_Base* obj)
 {
-	// #INIT ObjectSave 추가
+	// #SAVE 오브젝트 저장
 
 	_ulong			dwByte = 0;
 	wstring path = FolderPath + L"\\" + filename;
@@ -49,6 +49,7 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	{
 		CGameObject_3D_Static* oobj = static_cast<CGameObject_3D_Static*>(obj);
 		WriteFile(hFile, &(oobj->Get_ModelDESC()), sizeof(MODEL_STATIC_DESC), &dwByte, nullptr);
+		WriteFile(hFile, &(oobj->Get_ColliderDESC()), sizeof(COLLIDER_DESC), &dwByte, nullptr);
 
 	}
 	break;
@@ -69,6 +70,7 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		for (auto& childObj: *childList)
 		{
 			WriteFile(hFile, &(childObj->Get_ModelDESC()), sizeof(MODEL_STATIC_DESC), &dwByte, nullptr);
+			WriteFile(hFile, &(childObj->Get_ColliderDESC()), sizeof(COLLIDER_DESC), &dwByte, nullptr);
 		}		
 	}
 	break;
@@ -113,6 +115,8 @@ HRESULT CObjectIO::LoadObject_Create(wstring FolderPath, wstring filename)
 
 bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 {
+	// #LOAD 저장된 객체 프로토타입으로 저장.
+
 	CGameManager* GameInstance = GetSingle(CGameManager);
 	CGameObject_Creater* creater =  GameInstance->Get_CreaterManager();
 
@@ -137,26 +141,79 @@ bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 		ReadFile(hFile, &texDesc, sizeof(TEXTURE_UI_DESC), &dwByte, nullptr);
 
 		if (dwByte == 0)
-			return true; // Navi데이터 예외
+			return false;
 
 		emptyObject = creater->CreateEmptyObject(GAMEOBJECT_2D);
-		CGameObject_2D* obj2D = static_cast<CGameObject_2D*>(emptyObject);
-		obj2D->Set_LoadUIDesc(uiDesc);
-		obj2D->Set_LoadTexDesc(texDesc);
+		CGameObject_2D* oobj = static_cast<CGameObject_2D*>(emptyObject);
+		oobj->Set_LoadUIDesc(uiDesc);
+		oobj->Set_LoadTexDesc(texDesc);
 	}
 		break;
 	case OBJECT_TYPE_3D_STATIC:
+	{
+		MODEL_STATIC_DESC modelDesc;
+		COLLIDER_DESC colDesc;
+
+		ReadFile(hFile, &modelDesc, sizeof(MODEL_STATIC_DESC), &dwByte, nullptr);
+		ReadFile(hFile, &colDesc, sizeof(COLLIDER_DESC), &dwByte, nullptr);
+
+		if (dwByte == 0)
+			return false;
+
+		emptyObject = creater->CreateEmptyObject(GAMEOBJECT_3D_STATIC);
+		CGameObject_3D_Static* oobj = static_cast<CGameObject_3D_Static*>(emptyObject);
+
+		oobj->Set_LoadModelDESC(modelDesc);
+		oobj->Set_LoadColliderDESC(colDesc);
+	}
 		break;
 	case OBJECT_TYPE_3D_STATIC_PARENT:
+	{
+		
+		while (true)
+		{
+			MODEL_STATIC_DESC modelDesc;
+			COLLIDER_DESC colDesc;
+
+
+			ReadFile(hFile, &modelDesc, sizeof(MODEL_STATIC_DESC), &dwByte, nullptr);
+			ReadFile(hFile, &colDesc, sizeof(COLLIDER_DESC), &dwByte, nullptr);
+			if (dwByte == 0)
+				break;
+			if(emptyObject == nullptr)
+				emptyObject = creater->CreateEmptyObject(GAMEOBJECT_3D_STATIC2);
+
+			CGameObject_3D_Static* newchildObj = static_cast<CGameObject_3D_Static*>(creater->CreateEmptyObject(GAMEOBJECT_3D_STATIC));
+			newchildObj->Set_LoadModelDESC(modelDesc);
+			newchildObj->Set_LoadColliderDESC(colDesc);
+
+			CGameObject_3D_Static2* oobj = static_cast<CGameObject_3D_Static2*>(emptyObject);
+
+			oobj->Add_StaticObejct(newchildObj);
+		}		
+	}
 		break;
 	case OBJECT_TYPE_3D_DYNAMIC:
+	{
+		//UI_DESC uiDesc;
+		//TEXTURE_UI_DESC texDesc;
+
+		//if (dwByte == 0)
+		//	return false;
+
+		//ReadFile(hFile, &uiDesc, sizeof(UI_DESC), &dwByte, nullptr);
+		//ReadFile(hFile, &texDesc, sizeof(TEXTURE_UI_DESC), &dwByte, nullptr);
+
+		//if (dwByte == 0)
+		//	return true; // Navi데이터 예외
+
+		//emptyObject = creater->CreateEmptyObject(GAMEOBJECT_2D);
+		//CGameObject_2D* obj2D = static_cast<CGameObject_2D*>(emptyObject);
+		//obj2D->Set_LoadUIDesc(uiDesc);
+		//obj2D->Set_LoadTexDesc(texDesc);
+	}
 		break;
-	case OBJECT_TYPE_MOUSE:
-		break;
-	case OBJECT_TYPE_TERRAIN:
-		break;
-	case OBJECT_TYPE_CAMERA:
-		break;
+
 	case OBJECT_TYPE_END:
 		break;
 	default:

@@ -10,7 +10,14 @@ CGameObject_3D_Static2::CGameObject_3D_Static2(ID3D11Device* pDevice, ID3D11Devi
 CGameObject_3D_Static2::CGameObject_3D_Static2(const CGameObject_3D_Static2& rhs)
 	: CGameObject_Base(rhs)
 
+
 {
+	// 깊은 복사 처리
+	for (auto& obj: rhs.mVecChildObject)
+	{
+		CGameObject_3D_Static* newchildobj = obj->Clone(nullptr);
+		Add_StaticObejct(newchildobj);
+	}
 
 }
 
