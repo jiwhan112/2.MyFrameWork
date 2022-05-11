@@ -1,5 +1,6 @@
 #include "Picking.h"
 #include "GameInstance.h"
+#include "DebugDraw.h"
 
 IMPLEMENT_SINGLETON(CPicking)
 CPicking::CPicking()
@@ -16,6 +17,8 @@ HRESULT CPicking::Initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 	Safe_AddRef(m_pDeviceContext);
 	mPickPos = _float3::Zero;
 	misPick = false;
+
+
 
 	return S_OK;
 }
@@ -120,6 +123,7 @@ _bool CPicking::isPick(_float3* pLocalPoint, _float3 *pOut)
 		return false;
 	}
 }
+
 
 //_bool CPicking::is_On_Rect(const _rect* TargetRect)
 //{

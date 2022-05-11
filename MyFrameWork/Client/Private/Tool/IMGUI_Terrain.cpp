@@ -5,6 +5,7 @@
 #include "Camera_Client.h"
 #include "GameObject/GameObject_MyTerrain.h"
 #include "GameObject/GameObject_3D_Static.h"
+#include "GameObject/GameObject_3D_Static2.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 
 // #TODO: 맵툴 제작
@@ -42,16 +43,11 @@ HRESULT CImgui_Terrain::Update(_double time)
 	if (SelectObject != nullptr)
 	{
 		E_OBJECT_TYPE type = SelectObject->Get_ObjectTypeID_Client();
-
-		//	mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
-
 		if (type == OBJECT_TYPE_TERRAIN)
 		{
 			mCurrent_TerrainObject = static_cast<CGameObject_MyTerrain*>(SelectObject);
-			meToolMode = CImgui_Terrain::E_TOOLMODE_TERRAIN_MAP;
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
 		}
-		else
-			SelectObject = nullptr;
 	}
 	else
 	{
@@ -62,9 +58,12 @@ HRESULT CImgui_Terrain::Update(_double time)
 
 		SelectObject = nullptr;
 		mCurrent_TerrainObject = nullptr;
+		Safe_Release(mCurrent_PickObject);
+
 		meToolMode = CImgui_Terrain::E_TOOLMODE_TERRAIN_END;
 	}
 
+	Tick_PickObject(time);
 	FAILED_CHECK(Render_UI());
 	SelectObject = nullptr;
 
@@ -82,18 +81,19 @@ HRESULT CImgui_Terrain::Render_UI()
 
 			// 파일 불러오기
 			RENDER_CREATE_PROTO();
+			
+			Combo_MapMode();
 
-			// 각 모드에 맞는 세팅
-			if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_MAP)
-			{
-				// 타입에 따라 저장
-				RENDER_MAP_MODE();
-			}
-
-			if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_OBJ)
-			{
-				RENDER_MAP_OBJ_MODE();
-			}
+			//// Terrain 수정
+			//if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_MAP)
+			//{
+			//	RENDER_MAP_MODE();
+			//}
+			//// Terrain에 오브젝트 넣기
+			//else if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_OBJ)
+			//{
+			//	RENDER_MAP_OBJ_MODE();
+			//}
 
 			ImGui::Checkbox("TerrainSetting", &mIsTerrainSetting);
 
@@ -110,6 +110,26 @@ HRESULT CImgui_Terrain::Render_UI()
 	}
 
 	return S_OK;
+}
+
+void CImgui_Terrain::Combo_MapMode()
+{
+	const char* items[] = { "Map", "ObjectMap" };
+	static int item_current = 0;
+
+	ImGui::Combo(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "MapMode"), &item_current, items, IM_ARRAYSIZE(items));
+	switch (item_current)
+	{
+	case 0:
+		meToolMode = CImgui_Terrain::E_TOOLMODE_TERRAIN_MAP;
+		break;
+	case 1:
+		meToolMode = CImgui_Terrain::E_TOOLMODE_TERRAIN_OBJ;
+		break;
+	default:
+		break;
+	}
+
 }
 
 void CImgui_Terrain::RENDER_CREATEEMPTY()
@@ -145,8 +165,24 @@ void CImgui_Terrain::WINDOW_TERRAIN()
 	{
 		// 선택된 TERRAIN 오브젝트 수정
 		FAILED_CHECK_NONERETURN(Edit_TERRAIN());
+
+		if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_OBJ)
+			FAILED_CHECK_NONERETURN(Edit_OBJECTS());
+	
+
 	}
 }
+
+void CImgui_Terrain::Tick_PickObject(_double time)
+{
+	if (mCurrent_PickObject)
+	{
+		mCurrent_PickObject->Tick(time);
+		mCurrent_PickObject->Render();
+	}
+}
+
+
 
 HRESULT CImgui_Terrain::Edit_TERRAIN()
 {
@@ -306,6 +342,68 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 	return S_OK;
 }
 
+HRESULT CImgui_Terrain::Edit_OBJECTS()
+{
+	// 만들어놓은 3D 깡통 오브젝트 배치 
+	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	CGameObject_3D_Static2* PickObject = nullptr;
+
+
+	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Objects")))
+	{
+		auto ProtoParentModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
+		if (ProtoParentModelList != nullptr)
+		{
+
+			static int selectObjectIndex = -1;
+			_uint cnt = 0;
+			static wstring selectObjectStr = L"";
+			for (auto& protoString : *ProtoParentModelList)
+			{
+				cnt++;
+
+				if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
+				{
+					selectObjectIndex = cnt;
+					selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
+
+					
+				}
+
+				if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Click_Create")))
+				{
+					_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+					CGameObject_Base* base = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(meCreateOBJ_Layer));
+					if (base != nullptr)
+						Create_PickObject(base);
+				}
+			}
+
+			// 피킹된 위치에 따라가게 둠
+
+
+			Safe_Delete(ProtoParentModelList);
+		}
+
+
+		
+
+	
+
+		ImGui::EndListBox();
+	}
+
+
+	return S_OK;
+}
+
+void CImgui_Terrain::Create_PickObject(CGameObject_Base* obj)
+{
+	Safe_Release(mCurrent_PickObject);
+	mCurrent_PickObject = obj;
+}
+
+
 CImgui_Terrain * CImgui_Terrain::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {
 	CImgui_Terrain*	pInstance = NEW CImgui_Terrain(deviec, context);
@@ -323,4 +421,6 @@ void CImgui_Terrain::Free()
 	__super::Free();
 	Safe_Release(mCameraClient);
 	Safe_Release(mCurrent_TerrainObject);
+	Safe_Release(mCurrent_PickObject);
+
 }

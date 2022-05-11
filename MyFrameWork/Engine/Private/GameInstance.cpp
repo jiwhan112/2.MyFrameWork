@@ -335,6 +335,14 @@ _bool CGameInstance::Get_isPick() const
 	return m_pPickMgr->Get_isPick();
 }
 
+_ray CGameInstance::Get_Ray_World() const
+{
+	NULL_CHECK_BREAK(m_pPickMgr);
+	return m_pPickMgr->Get_Ray_World();
+}
+
+
+
 _bool CGameInstance::IsIn_WorldSpace(_fvector vPoint, _float fRange)
 {
 	NULL_CHECK_BREAK(m_pFrstumMgr);

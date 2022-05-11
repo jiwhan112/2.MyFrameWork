@@ -57,7 +57,6 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Render_Level();
 
 	m_pGameManager->Render();
-
 	// 스왑체인
 	m_pGameInstance->Present();
 

@@ -106,6 +106,15 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_RED(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vColor.a = 1.0f;
+
+	return Out;
+}
+
 technique11		DefaultTechnique
 {
 	pass Default
@@ -118,5 +127,17 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT();
+	}
+
+	pass Red
+	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(ZTestAndWriteState, 0);
+		//	SetRasterizerState(CullMode_ccw);
+		SetRasterizerState(CullMode_None);
+
+		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_RED();
 	}
 }

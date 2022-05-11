@@ -13,7 +13,7 @@
 
 namespace DX
 {
-	void XM_CALLCONV Draw(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+	void XM_CALLCONV  Draw(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
 		const DirectX::BoundingSphere& sphere,
 		DirectX::FXMVECTOR color = DirectX::Colors::White);
 
@@ -38,7 +38,7 @@ namespace DX
 		DirectX::FXMVECTOR origin, DirectX::FXMVECTOR majorAxis, DirectX::FXMVECTOR minorAxis,
 		DirectX::GXMVECTOR color = DirectX::Colors::White);
 
-	void XM_CALLCONV DrawRay(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+	void ENGINE_DLL XM_CALLCONV  DrawRay(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
 		DirectX::FXMVECTOR origin, DirectX::FXMVECTOR direction, bool normalize = true,
 		DirectX::FXMVECTOR color = DirectX::Colors::White);
 

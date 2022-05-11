@@ -9,11 +9,10 @@ CGameObject_3D_Static2::CGameObject_3D_Static2(ID3D11Device* pDevice, ID3D11Devi
 
 CGameObject_3D_Static2::CGameObject_3D_Static2(const CGameObject_3D_Static2& rhs)
 	: CGameObject_Base(rhs)
-
-
+	, meUpdateType(rhs.meUpdateType)
 {
 	// 깊은 복사 처리
-	for (auto& obj: rhs.mVecChildObject)
+	for (auto& obj : rhs.mVecChildObject)
 	{
 		CGameObject_3D_Static* newchildobj = obj->Clone(nullptr);
 		Add_StaticObejct(newchildobj);
@@ -44,6 +43,16 @@ _int CGameObject_3D_Static2::Tick(_double TimeDelta)
 
 	// 자식위치 업데이트
 	// Update_Hier();
+
+	if (meUpdateType == CGameObject_3D_Static2::E_UPDATETYPE_NONE)
+	{
+		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
+
+	}
+	else if (meUpdateType == CGameObject_3D_Static2::E_UPDATETYPE_PICK)
+	{
+		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_RED;
+	}
 
 	FAILED_CHECK_NONERETURN(Tick_Child(TimeDelta));
 

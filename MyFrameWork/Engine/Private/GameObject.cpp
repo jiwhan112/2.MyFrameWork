@@ -3,10 +3,13 @@
 #include "Component.h"
 
 const _tchar* CGameObject::mComTag_Transform = TEXT("Com_Tranform");
+
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: m_pDevice(pDevice)
 	, m_pDeviceContext(pDeviceContext)
 {
+	mIsClone = false;
+
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
 }
@@ -18,17 +21,21 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, mIsRenderer(rhs.mIsRenderer)
 	, mObjectTypeid(rhs.mObjectTypeid)
 {
+	mIsClone = true;
+
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
 }
 
 CComponent * CGameObject::Get_Component(const _tchar * pComponentTag)
 {
+
 	return Find_Component(pComponentTag);
 }
 
 HRESULT CGameObject::NativeConstruct_Prototype()
 {
+
 	return S_OK;
 }
 

@@ -98,7 +98,7 @@ private:
 		// Á×À½ Ã¼Å©¿Í ·»´õ¸µ ¿©ºÎ
 		bool				mIsLife = true;
 		bool				mIsRenderer = true;
-
+		bool				mIsClone = false;
 		_uint				mObjectTypeid = 99;
 
 	protected:

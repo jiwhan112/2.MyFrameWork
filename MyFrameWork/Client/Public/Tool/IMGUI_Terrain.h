@@ -29,6 +29,7 @@ public:
 	HRESULT Render_UI();
 
 private:
+	void Combo_MapMode();
 
 	void RENDER_CREATEEMPTY();
 	void RENDER_CREATE_PROTO();
@@ -38,9 +39,16 @@ private:
 	//	void INIT_FBXPathList();
 
 	void WINDOW_TERRAIN();
+
+	void Tick_PickObject(_double time);
+
 private:
 
 	HRESULT Edit_TERRAIN();
+	HRESULT Edit_OBJECTS();
+
+	void Create_PickObject(CGameObject_Base* obj);
+
 
 private:
 	class CCamera_Client*			mCameraClient = nullptr;
@@ -48,16 +56,9 @@ private:
 	// 지형 오브젝트
 	class CGameObject_MyTerrain*	mCurrent_TerrainObject = nullptr;
 
-	// 수정될 오브젝트
-	// class Static*	mCurrent_TerrainObject = nullptr;
+	// 선택된 오브젝트
+	class CGameObject_Base*			mCurrent_PickObject = nullptr;
 
-//	// FBX파일 이름
-//	list<string>*					mFBX_Static_pathList = nullptr;
-//	list<string>*					mFBX_Dynamic_pathList = nullptr;
-//
-//	// 만들어진 원본 이름
-//	list<string>*					mProtoStaticModelList = nullptr;
-//	list<string>*					mProtoDynamicModelList = nullptr;
 
 private:
 	bool							mIsTerrainSetting = false;

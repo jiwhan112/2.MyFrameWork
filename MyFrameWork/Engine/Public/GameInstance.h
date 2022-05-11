@@ -81,6 +81,8 @@ public: // For. Picking
 	_bool isPick(_float3 * pLocalPoint, _float3 * pOut);
 	_float3 Get_PickPos() const;
 	_bool	 Get_isPick() const;
+	_ray	 Get_Ray_World() const;
+
 
 public: // For. Frestum
 	_bool IsIn_WorldSpace(_fvector vPoint, _float fRange = 0);

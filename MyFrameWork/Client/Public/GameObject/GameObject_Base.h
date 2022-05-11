@@ -40,6 +40,11 @@ public:
 			return true;
 		return false;
 	}
+	void Set_RenderPass(int i)
+	{
+		mCurrentShaderPass = i;
+	}
+
 
 public: // 컴포넌트 반환
 	CShader*		Get_ComShader() { return mComShader; }

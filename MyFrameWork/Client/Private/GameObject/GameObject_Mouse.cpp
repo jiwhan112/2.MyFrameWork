@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Mouse.h"
+#include "DebugDraw.h"
 
 CGameObject_Mouse::CGameObject_Mouse(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_2D(pDevice, pDeviceContext)
@@ -9,13 +10,41 @@ CGameObject_Mouse::CGameObject_Mouse(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 CGameObject_Mouse::CGameObject_Mouse(const CGameObject_Mouse& rhs)
 	: CGameObject_2D(rhs)
-
+#ifdef _DEBUG
+	, mBaseEffect(rhs.mBaseEffect)
+	, mBatch(rhs.mBatch)
+	, mInputLayout(rhs.mInputLayout)
+#endif // _DEBUG
 {
+
+
+#ifdef _DEBUG
+	Safe_AddRef(mInputLayout);
+#endif // _DEBUG
 }
 
 HRESULT CGameObject_Mouse::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
+
+#ifdef _DEBUG
+	mBaseEffect = new BasicEffect(m_pDevice);
+	mBaseEffect->SetVertexColorEnabled(true);
+
+	const void* pShaderByteCode = nullptr;
+	size_t		iShaderByteCodeLength = 0;
+
+	mBaseEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeLength);
+
+	FAILED_CHECK(m_pDevice->CreateInputLayout(DirectX::VertexPositionColor::InputElements, DirectX::VertexPositionColor::InputElementCount,
+		pShaderByteCode, iShaderByteCodeLength, &mInputLayout));
+
+	mBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
+
+
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
@@ -48,13 +77,19 @@ _int CGameObject_Mouse::Tick(_double TimeDelta)
 	mComTransform->Set_State(CTransform::STATE_POSITION,
 		XMVectorSet(mMousePos.x, mMousePos.y, 0.0f, 1.f));
 
+	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON))
+	{
+		mIsRender = !mIsRender;
+		mRay = GetSingle(CGameInstance)->Get_Ray_World();
+
+	}
 	return UPDATENONE;
 }
 
 _int CGameObject_Mouse::LateTick(_double TimeDelta)
 {
 	//	FAILED_UPDATE(__super::LateTick(TimeDelta));
-
+	
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return UPDATENONE;
@@ -68,6 +103,29 @@ HRESULT CGameObject_Mouse::Render()
 	FAILED_CHECK(Set_ConstantTable_Tex());
 
 	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
+
+#ifdef _DEBUG
+	if (mIsRender)
+	{
+		// 랜더링시 처리
+		m_pDeviceContext->IASetInputLayout(mInputLayout);
+		//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
+
+		
+		mBaseEffect->SetWorld(_float4x4::Identity);
+		mBaseEffect->SetView(XMLoadFloat4x4(&GetSingle(CGameInstance)->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+		mBaseEffect->SetProjection(XMLoadFloat4x4(&GetSingle(CGameInstance)->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
+		mBaseEffect->Apply(m_pDeviceContext);
+
+		// 배치 클래스의 Begin ~ End 까지 물체를 그린다.
+		mBatch->Begin();
+		DX::DrawRay(mBatch, mRay.position, mRay.direction, false, DirectX::Colors::Blue);
+
+
+		mBatch->End();
+	}
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -119,4 +177,13 @@ CGameObject_Mouse* CGameObject_Mouse::Clone(void* pArg)
 void CGameObject_Mouse::Free()
 {
 	__super::Free();
+
+#ifdef _DEBUG
+	Safe_Release(mInputLayout);
+	if (mIsClone == false)
+	{
+		Safe_Delete(mBaseEffect);
+		Safe_Delete(mBatch);
+	}
+#endif // _DEBUG
 }

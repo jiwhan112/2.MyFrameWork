@@ -14,7 +14,17 @@ BEGIN(Client)
 class CGameObject_3D_Static2  final:
 	public CGameObject_Base
 {
-	const static int mMaxCountModel = 4;
+public:
+	// 업데이트 모드
+	enum E_UPDATETYPE
+	{
+		// 기본
+		E_UPDATETYPE_NONE,
+
+		// 마우스 피킹시 
+		E_UPDATETYPE_PICK,
+		E_UPDATETYPE_END
+	};
 
 protected:
 	explicit CGameObject_3D_Static2(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -32,6 +42,7 @@ public:
 public:
 	HRESULT Add_StaticObejct(CGameObject_3D_Static* obj);
 	HRESULT Delefe_StaticObejct(int index);
+	void	Set_UpdateMode(E_UPDATETYPE mode) { meUpdateType = mode; }
 
 
 public:
@@ -49,7 +60,7 @@ protected:
 private:
 	// 자식객체로 사용
 	vector<CGameObject_3D_Static*>		mVecChildObject;
-
+	E_UPDATETYPE						meUpdateType = E_UPDATETYPE_NONE;
 
 
 public:
