@@ -72,15 +72,8 @@ HRESULT CGameObject_Creater::LoaderDatFile_For_PrototypeObject()
 	// Dat 파일 정보로 원형 생성
 	for (auto& path : *listDatpath)
 	{
-		E_OBJECT_TYPE type = OBJECT_TYPE_END;
-		char* buf = nullptr;
-
-		// buf에서 데이터가 넘어온다. / type정보로 오브젝트 원형제작
-		ObjectIoManager->LoadObject(STR_FILEPATH_RESOURCE_DAT_L, path->FileName, &buf, &type);
-
-		// 원형추가
-		FAILED_CHECK(Create_ObjectProto_Type(type, buf, path->FileName));
-		Safe_Delete_Array(buf);
+		// 파일을 불러와서 타입별로 원형객체 추가
+		ObjectIoManager->LoadObject_Create(STR_FILEPATH_RESOURCE_DAT_L, path->FileName);
 	}
 
 	return S_OK;
@@ -94,77 +87,77 @@ CGameObject_Base* CGameObject_Creater::CreateEmptyObject(const E_TAYGAMEOBJECT t
 	return EmptyObject;
 }
 
-HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char * data, wstring protoname)
-{
-	_uint offset = 0;
-	CGameInstance* GameInstance = GetSingle(CGameInstance);
-
-	CGameObject_Base* obj = nullptr;
-
-	switch (type)
-	{
-	case OBJECT_TYPE_2D:
-	{
-		offset = sizeof(UI_DESC);
-
-		UI_DESC UIDesc;
-		memcpy(&UIDesc, data, sizeof(UI_DESC));
-		TEXTURE_UI_DESC TexDesc;
-		memcpy(&TexDesc, data + offset, sizeof(TEXTURE_UI_DESC));
-
-		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
-		obj = CreateEmptyObject(GAMEOBJECT_2D);
-		CGameObject_2D* obj2D = static_cast<CGameObject_2D*>(obj);
-		obj2D->Set_LoadUIDesc(UIDesc);
-		obj2D->Set_LoadTexDesc(TexDesc);
-	}
-	break;
-
-	case OBJECT_TYPE_3D_STATIC:
-	{
-		MODEL_STATIC_DESC ModelDESC;
-		memcpy(&ModelDESC, data, sizeof(MODEL_STATIC_DESC));
-
-		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
-		obj = CreateEmptyObject(GAMEOBJECT_3D_STATIC);
-		CGameObject_3D_Static* obj3D = static_cast<CGameObject_3D_Static*>(obj);
-		obj3D->Set_LoadModelDESC(ModelDESC);
-	}
-	break;
-
-	case OBJECT_TYPE_3D_DYNAMIC:
-	{
-		MODEL_DYNAMIC_DESC ModelDESC;
-		memcpy(&ModelDESC, data, sizeof(MODEL_DYNAMIC_DESC));
-
-		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
-		obj = CreateEmptyObject(GAMEOBJECT_3D_STATIC);
-		CGameObject_3D_Dynamic* obj3D = static_cast<CGameObject_3D_Dynamic*>(obj);
-		obj3D->Set_LoadModelDynamicDESC(ModelDESC);
-	}
-	break;
-	case OBJECT_TYPE_TERRAIN:
-	{
-		//MODEL_STATIC_DESC ModelDESC;
-		//memcpy(&ModelDESC, data, sizeof(MODEL_STATIC_DESC));
-
-		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
-		obj = CreateEmptyObject(GAMEOBJECT_TERRAIN);
-		CGameObject_MyTerrain* obj3D = static_cast<CGameObject_MyTerrain*>(obj);
-	}
-	break;
-
-	case OBJECT_TYPE_END:
-		return E_FAIL;
-		break;
-	default:
-		return E_FAIL;
-		break;
-	}
-
-	mMap_GameObject2File_Proto.emplace(protoname, obj);
-	return S_OK;
-}
+//HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char * data, wstring protoname)
+//{
+//	_uint offset = 0;
+//	CGameInstance* GameInstance = GetSingle(CGameInstance);
+//
+//	CGameObject_Base* obj = nullptr;
+//
+//	switch (type)
+//	{
+//	case OBJECT_TYPE_2D:
+//	{
+//		offset = sizeof(UI_DESC);
+//
+//		UI_DESC UIDesc;
+//		memcpy(&UIDesc, data, sizeof(UI_DESC));
+//		TEXTURE_UI_DESC TexDesc;
+//		memcpy(&TexDesc, data + offset, sizeof(TEXTURE_UI_DESC));
+//
+//		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
+//		obj = CreateEmptyObject(GAMEOBJECT_2D);
+//		CGameObject_2D* obj2D = static_cast<CGameObject_2D*>(obj);
+//		obj2D->Set_LoadUIDesc(UIDesc);
+//		obj2D->Set_LoadTexDesc(TexDesc);
+//	}
+//	break;
+//
+//	case OBJECT_TYPE_3D_STATIC:
+//	{
+//		MODEL_STATIC_DESC ModelDESC;
+//		memcpy(&ModelDESC, data, sizeof(MODEL_STATIC_DESC));
+//
+//		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
+//		obj = CreateEmptyObject(GAMEOBJECT_3D_STATIC);
+//		CGameObject_3D_Static* obj3D = static_cast<CGameObject_3D_Static*>(obj);
+//		obj3D->Set_LoadModelDESC(ModelDESC);
+//	}
+//	break;
+//
+//	case OBJECT_TYPE_3D_DYNAMIC:
+//	{
+//		MODEL_DYNAMIC_DESC ModelDESC;
+//		memcpy(&ModelDESC, data, sizeof(MODEL_DYNAMIC_DESC));
+//
+//		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
+//		obj = CreateEmptyObject(GAMEOBJECT_3D_STATIC);
+//		CGameObject_3D_Dynamic* obj3D = static_cast<CGameObject_3D_Dynamic*>(obj);
+//		obj3D->Set_LoadModelDynamicDESC(ModelDESC);
+//	}
+//	break;
+//	case OBJECT_TYPE_TERRAIN:
+//	{
+//		//MODEL_STATIC_DESC ModelDESC;
+//		//memcpy(&ModelDESC, data, sizeof(MODEL_STATIC_DESC));
+//
+//		// 깡통오브젝트에 DESC정보를 클론 맵에 저장한다.
+//		obj = CreateEmptyObject(GAMEOBJECT_TERRAIN);
+//		CGameObject_MyTerrain* obj3D = static_cast<CGameObject_MyTerrain*>(obj);
+//	}
+//	break;
+//
+//	case OBJECT_TYPE_END:
+//		return E_FAIL;
+//		break;
+//	default:
+//		return E_FAIL;
+//		break;
+//	}
+//
+//	mMap_GameObject2File_Proto.emplace(protoname, obj);
+//	return S_OK;
+//}
 
 CGameObject_Base* CGameObject_Creater::Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag)
 {
@@ -177,6 +170,12 @@ CGameObject_Base* CGameObject_Creater::Create_ObjectClone_Prefab(_uint levelinde
 		return newObj;
 	}
 	return nullptr;
+}
+
+HRESULT CGameObject_Creater::Add_MapObject(wstring keyname, CGameObject_Base* obj)
+{
+	mMap_GameObject2File_Proto.emplace(keyname, obj);
+	return S_OK;
 }
 
 CGameObject_Base * CGameObject_Creater::Find_MapObject(wstring key)

@@ -43,6 +43,10 @@ private:
 
 	void RENDER_STATIC_MODE();
 	void RENDER_DYNAMIC_MODE();
+	void RENDER_STATIC_PARENT_MODE();
+	
+	HRESULT SAVER_MODE();
+
 
 	void INIT_FBXPathList();
 private:
@@ -62,7 +66,7 @@ private:
 	class CGameObject_3D_Dynamic*	mCurrent_ModelDynamicObject = nullptr;
 
 	// 모델2 오브젝트
-	class CGameObject_3D_Static2*	mCurrent_ModelStaticObject2 = nullptr;
+	class CGameObject_3D_Static2*	mCurrent_ModelStaticObject_Parent = nullptr;
 
 	// FBX파일 이름
 	list<string>*					mFBX_Static_pathList = nullptr;

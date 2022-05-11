@@ -71,9 +71,7 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
-	UI_DESC desc;;
 	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
-	static_cast<CGameObject_2D*>(obj)->Set_LoadUIDesc(desc);
 	return S_OK;
 }
 

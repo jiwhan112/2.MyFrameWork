@@ -28,7 +28,7 @@ public:
 	// 타입별로 키 리스트 반환
 	list<string>* Get_MapObject_Type(E_OBJECT_TYPE type);
 
-	// 기능 테스트용으로 public 시킴
+
 public:
 	// dat파일로 저장된 데이터를 로드해서 깡통객체에 정보를 입력해 클론 객체 생성
 	HRESULT LoaderDatFile_For_PrototypeObject();
@@ -37,12 +37,15 @@ public:
 	CGameObject_Base* CreateEmptyObject(const E_TAYGAMEOBJECT type);
 
 	// 불러온 데이터로 클론 오브젝트 생성하고 맵에 저장
-	HRESULT Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char* data, wstring protoname);
+//	HRESULT Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char* data, wstring protoname);
 
 	// 맵에 저장된 데이터로 씬에서 클론객체 생성해봄
 	CGameObject_Base* Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag);
 
 	//	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
+
+	HRESULT  Add_MapObject(wstring keyname,CGameObject_Base* obj);
+
 
 private:
 	CGameObject_Base* Find_MapObject(wstring key);
