@@ -12,10 +12,22 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	, mComVIBuffer(rhs.mComVIBuffer)
 	, mComTexture(rhs.mComTexture)
 	, mComNaviMesh(rhs.mComNaviMesh)
+	, mTerrainDESC(rhs.mTerrainDESC)
 {
 	Safe_AddRef(mComVIBuffer);
 	Safe_AddRef(mComTexture);
 	Safe_AddRef(mComNaviMesh);
+
+	// DESC깊은 복사
+	if (mTerrainDESC.mObjectSize != 0)
+	{
+		mTerrainDESC.mModelObjects = NEW MODEL_WORLD_DESC[mTerrainDESC.mObjectSize];
+		for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
+		{
+			memcpy(&mTerrainDESC.mModelObjects[i], &(rhs.mTerrainDESC.mModelObjects[i]), sizeof(MODEL_WORLD_DESC));
+
+		}
+	}
 
 	mVecTile = nullptr;
 }
@@ -33,8 +45,9 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 	FAILED_CHECK(Set_Component());
 	misPick = false;
 
-	// #TODO: 데이터로 받아오게 처리하자
-//	mComNaviMesh->SetUp_AutoMesh(mComVIBuffer);
+	Init_Map(TAGLAY(LAY_OBJECT));
+
+
 	return S_OK;
 }
 
@@ -100,10 +113,8 @@ HRESULT CGameObject_MyTerrain::Set_LoadTerrainDESC(const TERRAIN_DESC & desc)
 
 HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 {
-	if (mTerrainDESC.meTerrainSize == e)
-		return S_OK;
-
-	mTerrainDESC.meTerrainSize = e;
+	if (mTerrainDESC.meTerrainSize != e)
+		mTerrainDESC.meTerrainSize = e;
 
 	// 해당 모델 컴포넌트로 변경
 	if (mComVIBuffer != nullptr)
@@ -197,6 +208,61 @@ HRESULT CGameObject_MyTerrain::Set_ConstantTable_Tex()
 	return S_OK;
 }
 
+HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
+{
+
+	if (mTerrainDESC.mObjectSize <= 0)
+		return S_FALSE;
+	Set_TerrainMode(mTerrainDESC.meTerrainSize);
+
+
+
+	// static2 형태의 객체만 생성.
+	// 정보만 DESC로 읽고 해당 레이어에 생성한다.
+	CGameObject_Creater* creater = GetSingle(CGameManager)->Get_CreaterManager();
+	_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+
+	for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
+	{
+		string str = mTerrainDESC.mModelObjects[i].mProtoName;
+		wstring wstr = CHelperClass::Convert_str2wstr(str);
+		CGameObject_Base* cloneObject = creater->Create_ObjectClone_Prefab(idx, wstr, layertag);
+		if (cloneObject == nullptr)
+			return E_FAIL;
+		_float4x4 worlmat = mTerrainDESC.mModelObjects[i].mWorldMat;
+		cloneObject->Get_TransformCom()->Set_WorldMat(worlmat);
+	}
+	return S_OK;
+}
+
+HRESULT CGameObject_MyTerrain::SaveDESC_Objects(const list<MODEL_WORLD_DESC>& worldObjList)
+{
+	// worldMat
+	int size =  worldObjList.size();
+	if (size <= 0)
+		return E_FAIL;
+
+	if (mTerrainDESC.mObjectSize != 0)
+	{
+		Safe_Delete_Array(mTerrainDESC.mModelObjects); 
+		mTerrainDESC.mObjectSize = 0;
+	}
+	
+	mTerrainDESC.mObjectSize = size;
+	MODEL_WORLD_DESC* NewObjects = NEW MODEL_WORLD_DESC[size];
+	int count = 0;
+	for (auto& staticobj: worldObjList)
+	{
+		strcpy_s(NewObjects[count].mProtoName, staticobj.mProtoName);
+		NewObjects[count].mWorldMat = staticobj.mWorldMat;
+		count++;
+	}
+	mTerrainDESC.mModelObjects = NewObjects;
+
+	return S_OK;
+}
+
+
 void CGameObject_MyTerrain::Update_PickPos(_float3 pickPos)
 {
 	misPick = true;
@@ -272,4 +338,11 @@ void CGameObject_MyTerrain::Free()
 	}
 	mVecTile->clear();
 	Safe_Delete(mVecTile);
+
+	
+	if (mTerrainDESC.mModelObjects != nullptr)
+	{
+		Safe_Delete_Array(mTerrainDESC.mModelObjects);
+	}
+	
 }

@@ -238,8 +238,6 @@ void CImgui_Model::RENDER_CREATE_PROTO()
 void CImgui_Model::RENDER_STATIC_MODE()
 {
 	FAILED_CHECK_NONERETURN(SAVER_MODE());
-
-	
 }
 
 void CImgui_Model::RENDER_DYNAMIC_MODE()

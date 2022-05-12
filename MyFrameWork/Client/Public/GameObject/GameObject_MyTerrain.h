@@ -75,9 +75,16 @@ public:
 	_float3		Get_TileWorld(_uint index);
 	vector<MYTILE*>* Get_VecTile() { return mVecTile; }
 
+public: // DESC
+	HRESULT Init_Map(const _tchar* layertag); // 맵 데이터로 맵에 따른 객체생성
+	HRESULT SaveDESC_Objects(const list<MODEL_WORLD_DESC>& worldObjList); // 맵 데이터로 맵에 따른 객체생성
+
+
+
 protected:
 	virtual HRESULT Set_Component()override;
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
+
 
 private:
 	void Update_PickPos(_float3 pickPos);

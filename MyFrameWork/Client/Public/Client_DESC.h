@@ -80,14 +80,29 @@ typedef struct tag_COLLIDERODEL_DESC
 	_float3 mSize;
 }COLLIDER_DESC;
 
+
+
+typedef struct tag_MODELNAME_WORLD_DESC
+{
+	char mProtoName[MAX_STR] = "";
+	_float4x4 mWorldMat;
+
+}MODEL_WORLD_DESC;
+
 typedef struct tag_TERRAIN_DESC
 {
 	explicit tag_TERRAIN_DESC()
 	{
-		meTerrainSize = TERRAINSIZE_END;
+		meTerrainSize = TERRAINSIZE_16;
 		mTextureMultiSize = 30;
+		mObjectSize = 0;
+		mModelObjects = nullptr;
 	}
 
 	E_TERRAINSIZE			meTerrainSize;
 	_uint					mTextureMultiSize;
+
+	_uint					mObjectSize;
+	MODEL_WORLD_DESC*		mModelObjects;
+
 }TERRAIN_DESC;

@@ -181,6 +181,15 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 		mComTransform->GO_Right(TimeDelta);
 	}
 
+	if (pGameInstance->Get_DIKeyState(DIK_LEFT) & DIS_Press)
+	{
+		mComTransform->Turn(_float3::Up, TimeDelta);
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_RIGHT) & DIS_Press)
+	{
+		mComTransform->Turn(-_float3::Up,TimeDelta);
+	}
+
 	return S_OK;
 }
 

@@ -47,6 +47,8 @@ private:
 	HRESULT Edit_TERRAIN();
 	HRESULT Edit_OBJECTS();
 
+	HRESULT SAVER_MODE();
+
 	void Set_PickObject(CGameObject_Base* obj);
 
 
@@ -56,10 +58,15 @@ private:
 	// 지형 오브젝트
 	class CGameObject_MyTerrain*	mCurrent_TerrainObject = nullptr;
 
-	// 선택된 오브젝트
+	// 피킹 오브젝트
 	class CGameObject_Base*			mCurrent_PickObject = nullptr;
 
+	// 맵에 배치된 오브젝트
+	list<CGameObject_Base*>			mListWorldObjects;
+	list<MODEL_WORLD_DESC>			mListWorldObjects_Desc;
 
+	// 만들어진 원본 이름
+	list<string>*					mProtoMapObjectList = nullptr;
 private:
 	bool							mIsTerrainSetting = false;
 	E_TAYLAY						meCreateTERRAIN_Layer = LAY_TERRAIN;

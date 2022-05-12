@@ -77,10 +77,17 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 
 	case OBJECT_TYPE_TERRAIN:
 	{
-		//CGameObject_MyTerrain* oobj = static_cast<CGameObject_2D*>(obj);
-		//SaverData(&fWrite, OBJECT_TYPE_DATA_OBJECT, &(oobj->Get_ObjectTypeID()));
-		//SaverData(&fWrite, OBJECT_TYPE_DATA_UIDESC, &(oobj->Get_UIDesc()));
-		//SaverData(&fWrite, OBJECT_TYPE_DATA_TEXTUREDESC, &(oobj->Get_TextureDesc()));
+		CGameObject_MyTerrain* oobj = static_cast<CGameObject_MyTerrain*>(obj);
+		TERRAIN_DESC desc = (oobj->Get_TerrainDESC());
+		WriteFile(hFile, &desc.meTerrainSize, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
+		WriteFile(hFile, &desc.mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
+		WriteFile(hFile, &desc.mObjectSize, sizeof(_uint), &dwByte, nullptr);
+
+		for (int i =0; i< desc.mObjectSize;++i)
+		{
+			MODEL_WORLD_DESC dummy = desc.mModelObjects[i];
+			WriteFile(hFile, &dummy, sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
+		}
 	}
 	break;
 
@@ -213,6 +220,29 @@ bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 		//obj2D->Set_LoadTexDesc(texDesc);
 	}
 		break;
+	case OBJECT_TYPE_TERRAIN:
+	{
+		TERRAIN_DESC desc;	
+
+		ReadFile(hFile, &desc.meTerrainSize, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
+		ReadFile(hFile, &desc.mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &desc.mObjectSize, sizeof(_uint), &dwByte, nullptr);
+
+		if (dwByte == 0)
+			break;
+
+		int size = desc.mObjectSize;
+		desc.mModelObjects = NEW MODEL_WORLD_DESC[size];
+		for (int i =0 ; i < size;i++)
+		{
+			MODEL_WORLD_DESC dummy;
+			ReadFile(hFile, &dummy, sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
+			desc.mModelObjects[i] = dummy;
+		}
+		emptyObject = creater->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		CGameObject_MyTerrain* terrainobj = static_cast<CGameObject_MyTerrain*>(emptyObject);
+		terrainobj->Set_LoadTerrainDESC(desc);
+	}
 
 	case OBJECT_TYPE_END:
 		break;
