@@ -37,7 +37,6 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 		string str("room_Prison_FloorTile.fbx");
 		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
 	}
-	mParentMat = _float4x4::Identity;
 	Set_Component();
 
 	return S_OK;
@@ -46,9 +45,6 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 _int CGameObject_3D_Static::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-	_float4x4 newMat = mComTransform->GetWorldFloat4x4() * mParentMat;
-	mComTransform->Set_WorldMat(newMat);
-
 	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
 	return UPDATENONE;
@@ -146,6 +142,12 @@ HRESULT CGameObject_3D_Static::Set_LoadColliderDESC(const COLLIDER_DESC & desc)
 	}
 	mComCollider->SetScale(mCollider_Desc.mSize);
 	return S_OK;
+}
+
+void CGameObject_3D_Static::Update_CombinedTransformationMatrix(_fmatrix parentMat)
+{
+	// 부모 행렬을 넘겨서 자식객체에 업데이트 시켜준다.
+	mComTransform->UpdateMatrix(parentMat);
 }
 
 HRESULT CGameObject_3D_Static::Set_Component()

@@ -35,7 +35,17 @@ _float3 CTransform::GetScaleXYZ() const
 
 void CTransform::Set_State(E_STATE state, _fvector vec)
 {
+
 	XMStoreFloat4((_float4*)&mWorldMatrix.m[state][0], vec);
+	if (state == CTransform::STATE_POSITION)
+		mWorldMatrix.m[state][3] = 1;
+}
+
+void CTransform::Set_State_Local(E_STATE state, _fvector vec)
+{
+	XMStoreFloat4((_float4*)&mLocalMatrix.m[state][0], vec);
+	if (state == CTransform::STATE_POSITION)
+		mLocalMatrix.m[state][3] = 1;
 }
 
 HRESULT CTransform::NativeConstruct_Prototype()
@@ -68,6 +78,14 @@ HRESULT CTransform::Bind_OnShader(CShader * pShader, const char * pValueName)
 void CTransform::SetTransformDesc(const TRANSFORMDESC& desc)
 {
 	mDesc = desc;
+}
+
+HRESULT CTransform::UpdateMatrix(_float4x4 ParentMat)
+{
+	// 무보 행렬이 있다면 연산을 해서 최종 상태 행렬을 만든다.
+	mWorldMatrix = mLocalMatrix *  ParentMat;
+
+	return S_OK;
 }
 
 HRESULT CTransform::GO_Straight(_double deltatime)
@@ -264,6 +282,15 @@ HRESULT CTransform::LookAt(_fvector targetPos)
 
 	return S_OK;
 }
+HRESULT CTransform::LookAtZ(_fvector targetPos)
+{
+	_float3 TargetPos = targetPos;
+	_float3 vPos = mWorldMatrix.Translation();
+	_float3 vScale = GetScaleXYZ();
+	return E_FAIL;
+}
+
+
 
 HRESULT CTransform::Scaled(_fvector scale)
 {

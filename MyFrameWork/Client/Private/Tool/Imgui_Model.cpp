@@ -520,20 +520,19 @@ HRESULT CImgui_Model::Edit_FBX()
 			IMGUI_TREE_BEGIN("Parent_Transform")
 			{
 				CTransform* parentTrans = mCurrent_ModelStaticObject_Parent->Get_TransformCom();
-				_float4x4 Worldmat = parentTrans->GetWorldMatrix();
+				_float4x4	Worldmat = parentTrans->GetWorldMatrix();
 				_float3		position = Worldmat.Translation();
 
 				// 위치
 				ImGui::DragFloat3("Position", (float*)&position, 0.1f, -50, 50);
+				_float4x4 TransMat = _float4x4::CreateTranslation(position);
 
-				parentTrans->Set_State( CTransform::STATE_POSITION,position);
-
-
+				parentTrans->Set_WorldMat(TransMat);
 				IMGUI_TREE_END
 			}
 			// 선택 된 객체 위치 수정
 
-			IMGUI_TREE_BEGIN("Transform")
+			IMGUI_TREE_BEGIN("Child_Transform")
 			{
 				if (0 <= selectIndex)
 				{
@@ -541,13 +540,13 @@ HRESULT CImgui_Model::Edit_FBX()
 					CTransform* trnascom = SelectObjectChild->Get_TransformCom();
 
 
-					_float4x4 Worldmat = trnascom->GetWorldMatrix();
+					_float4x4 WorldLocalMat = trnascom->GetWorldLocalFloat4x4();
 					_float3		scale;
 					_float3		position;
 					_quaterion	rotaion;
 					// _float3		worldRot;
 
-					Worldmat.Decompose(scale,rotaion,position);
+					WorldLocalMat.Decompose(scale,rotaion,position);
 
 					// 위치
 					ImGui::DragFloat3("Position",(float*)&position,0.1f,-50,50);
@@ -564,7 +563,7 @@ HRESULT CImgui_Model::Edit_FBX()
 					
 
 					_float4x4 newWorldMat = scaleMat* TransMat;
-					trnascom->Set_WorldMat(newWorldMat);
+					trnascom->Set_WorldMat_Local(newWorldMat);
 					
 				}
 				IMGUI_TREE_END
@@ -596,7 +595,6 @@ HRESULT CImgui_Model::Edit_FBX()
 				SelectObjectChild->Set_LoadColliderDESC(desc);
 				IMGUI_TREE_END
 			}
-
 			ImGui::EndListBox();
 		}		
 

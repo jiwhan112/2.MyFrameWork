@@ -53,6 +53,7 @@ private:
 
 	_float4x4 mStartWorlMat;
 	CGameObject* mTargetObject = nullptr;
+	bool		mbTargetSet = false;
 
 public:
 	static CCamera_Client* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

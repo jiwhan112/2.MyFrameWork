@@ -29,6 +29,11 @@ HRESULT CLevel_Tool::NativeConstruct()
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 #endif
 
+	// 파일 원령객체 초기화
+	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	Create_Manager->LoaderDatFile_For_PrototypeObject();
+
+
 	return S_OK;
 }
 

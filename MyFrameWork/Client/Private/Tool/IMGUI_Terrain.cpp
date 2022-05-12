@@ -106,6 +106,7 @@ HRESULT CImgui_Terrain::Render_UI()
 				}
 			}
 		}
+
 		ImGui::End();
 	}
 
@@ -168,7 +169,6 @@ void CImgui_Terrain::WINDOW_TERRAIN()
 
 		if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_OBJ)
 			FAILED_CHECK_NONERETURN(Edit_OBJECTS());
-	
 
 	}
 }
@@ -307,10 +307,13 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 
 			ImGui::Text("NoTile");
 			{
-				// 피킹시 해당 타일 옵션 변경
-				CNavigation* navi = mCurrent_TerrainObject->Get_ComNavimesh();
+				// 피킹시 해당 타일 옵션 변경			
 
-				navi->Pick_ChangeCellOption(_float4x4::Identity, CCell::CELLTYPE_STOP);
+				if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON))
+				{
+					CNavigation* navi = mCurrent_TerrainObject->Get_ComNavimesh();
+					navi->Pick_ChangeCellOption(_float4x4::Identity, CCell::CELLTYPE_STOP);
+				}
 
 				//static char InputText[128] = "";
 				//ImGui::InputTextWithHint("savetext_Navi", "enter Navi Name", InputText, IM_ARRAYSIZE(InputText));
@@ -346,70 +349,59 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 {
 	// 만들어놓은 3D 깡통 오브젝트 배치 
 
-	//CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
-	//CGameObject_3D_Static2* PickObject = nullptr;
+	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	CGameObject_3D_Static2* PickObject = nullptr;
+
+	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Objects")))
+	{
+		auto ProtoParentModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
+		if (ProtoParentModelList != nullptr)
+		{
+			static int selectObjectIndex = -1;
+			_uint cnt = 0;
+			static wstring selectObjectStr = L"";
+			for (auto& protoString : *ProtoParentModelList)
+			{
+				cnt++;
+
+				if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
+				{
+					selectObjectIndex = cnt;
+					selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
 
 
-	//if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Objects")))
-	//{
-	//	auto ProtoParentModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
-	//	if (ProtoParentModelList != nullptr)
-	//	{
+				}
+			}
 
-	//		static int selectObjectIndex = -1;
-	//		_uint cnt = 0;
-	//		static wstring selectObjectStr = L"";
-	//		for (auto& protoString : *ProtoParentModelList)
-	//		{
-	//			cnt++;
+			if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "PickSetting")))
+			{
+				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+				CGameObject_Base* pickobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(meCreateOBJ_Layer));
+				static_cast<CGameObject_3D_Static2*>(pickobj)->Set_UpdateMode(CGameObject_3D_Static2::E_UPDATETYPE_PICK);
+				if (pickobj != nullptr)
+					Set_PickObject(pickobj);
+			}
 
-	//			if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
-	//			{
-	//				selectObjectIndex = cnt;
-	//				selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
-
-
-	//			}
-	//		}
-
-	//		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Click_Create")))
-	//		{
-	//			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	//			CGameObject_Base* base = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(meCreateOBJ_Layer));
-	//			static_cast<CGameObject_3D_Static2*>(base)->Set_UpdateMode(CGameObject_3D_Static2::E_UPDATETYPE_PICK);
-	//			if (base != nullptr)
-	//				Create_PickObject(base);
-	//		}
-
-
-	//		// 피킹된 위치에 따라가게 둠
-
-
-	//		Safe_Delete(ProtoParentModelList);
-	//	}
+			Safe_Delete(ProtoParentModelList);
+		}
 
 
 
+		ImGui::EndListBox();
+		return S_OK;
+	}
 
-
-
-	//	ImGui::EndListBox();
-
-
-	return S_OK;
 }
-
-void CImgui_Terrain::Create_PickObject(CGameObject_Base* obj)
+void CImgui_Terrain::Set_PickObject(CGameObject_Base* obj)
 {
-	Safe_Release(mCurrent_PickObject);
-	mCurrent_PickObject = obj;
-}
-
-void CImgui_Terrain::Update_Hier(_double time)
-{
-
-	// 자식 상태에 부모행렬을 넘겨준다.
-
+	if (mCurrent_PickObject != obj)
+	{
+		Safe_Release(mCurrent_PickObject);
+		if (mCurrent_PickObject)
+			mCurrent_PickObject->Set_Dead();
+		mCurrent_PickObject = obj;
+		Safe_AddRef(mCurrent_PickObject);
+	}
 }
 
 

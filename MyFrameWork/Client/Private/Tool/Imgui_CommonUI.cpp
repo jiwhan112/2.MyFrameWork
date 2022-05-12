@@ -12,6 +12,9 @@ HRESULT CImgui_CommonUI::NativeConstruct()
 {
 	PATHMODE_ALLLOAD();
 
+
+
+
 	dClock = 0;
 	mFrameCount = 0;
 	mCurrentFrame = 0;

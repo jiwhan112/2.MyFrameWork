@@ -26,17 +26,15 @@ public:
 	virtual HRESULT Render();
 
 public:
-
 	CModel*		Get_ComModel() const { return mComModel; }
 	const MODEL_STATIC_DESC& Get_ModelDESC() const { return mModelStatic_Desc; }
 	const COLLIDER_DESC& Get_ColliderDESC() const { return mCollider_Desc; }
 
 	HRESULT		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc);
 	HRESULT		Set_LoadColliderDESC(const COLLIDER_DESC& desc);
-	void		Set_ParentMat(_fmatrix parentmat)
-	{
-		mParentMat = parentmat;
-	}
+
+	void		Update_CombinedTransformationMatrix(_fmatrix combine);
+
 
 protected:
 	virtual HRESULT Set_Component()override;
@@ -52,9 +50,7 @@ protected: // 3D모델 Com / DESC 추가
 	MODEL_STATIC_DESC			mModelStatic_Desc;
 	COLLIDER_DESC				mCollider_Desc;
 
-	_float4x4					mParentMat;
-	// Diffuse 이외의 텍스처 연결
-	// TEXTURE_MODEL_DESC			mTexture_Model_DESC;
+
 
 public:
 	static CGameObject_3D_Static* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

@@ -88,10 +88,20 @@ HRESULT CCamera_Client::Render()
 
 void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, CGameObject * target)
 {
-	meCameraMode = e;
-	Safe_Release(mTargetObject);
-	mTargetObject = target;
-	Safe_AddRef(mTargetObject);
+	if (target == mTargetObject)
+	{
+		meCameraMode = e;
+	}
+	else
+	{
+		mbTargetSet = false;
+		meCameraMode = e;
+		Safe_Release(mTargetObject);
+		mTargetObject = target;
+		Safe_AddRef(mTargetObject);
+	}
+
+	
 }
 
 HRESULT CCamera_Client::Update_Default(_double TimeDelta)
@@ -141,11 +151,15 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 		return E_FAIL;
 
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+	if (mbTargetSet  == false)
+	{
+		CTransform* targetTrans = mTargetObject->Get_TransformCom();
+		_float3 targetPos = targetTrans->GetState(CTransform::STATE_POSITION);
 
-	CTransform* targetTrans = mTargetObject->Get_TransformCom();
-	_float3 targetPos = targetTrans->GetState(CTransform::STATE_POSITION);
+		mComTransform->LookAt(targetPos);
+		mbTargetSet = true;
+	}
 
-	mComTransform->LookAt(targetPos);
 
 	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
 	{

@@ -47,8 +47,7 @@ private:
 	HRESULT Edit_TERRAIN();
 	HRESULT Edit_OBJECTS();
 
-	void Create_PickObject(CGameObject_Base* obj);
-	void Update_Hier(_double time);
+	void Set_PickObject(CGameObject_Base* obj);
 
 
 private:

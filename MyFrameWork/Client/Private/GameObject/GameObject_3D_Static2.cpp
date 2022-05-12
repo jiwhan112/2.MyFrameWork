@@ -60,8 +60,10 @@ _int CGameObject_3D_Static2::Tick(_double TimeDelta)
 				_float3 worldPos = terrain->Get_PickWorldPos();
 				int index = terrain->Get_TileIndex(worldPos);
 
-				_float3 pickTilePos = terrain->Get_TileWorld(index);
-				mComTransform->Set_State(CTransform::STATE_POSITION, pickTilePos);
+				_float3 pickTilePos = terrain->Get_TileWorld(index);			
+
+				_float4x4 transmat = _float4x4::CreateTranslation(pickTilePos);
+				mComTransform->Set_State(CTransform::STATE_POSITION, transmat.Translation());
 				
 			}
 		}
@@ -74,9 +76,9 @@ _int CGameObject_3D_Static2::Tick(_double TimeDelta)
 _int CGameObject_3D_Static2::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
-	FAILED_CHECK_NONERETURN(LateTick_Child(TimeDelta));
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+	FAILED_CHECK_NONERETURN(LateTick_Child(TimeDelta));
 	return UPDATENONE;
 }
 
@@ -173,11 +175,11 @@ HRESULT CGameObject_3D_Static2::Render_Child()
 HRESULT CGameObject_3D_Static2::Tick_Child(_double time)
 {
 	// 자식 업데이트
-	for (auto& model : mVecChildObject)
+	_matrix parentMat = mComTransform->GetWorldMatrix();
+	for (auto& childObj : mVecChildObject)
 	{
-		model->Set_ParentMat(mComTransform->GetWorldMatrix());
-
-		if (0 > model->Tick(time))
+		childObj->Update_CombinedTransformationMatrix(parentMat);
+		if (0 > childObj->Tick(time))
 			return E_FAIL;
 	}
 	return S_OK;
