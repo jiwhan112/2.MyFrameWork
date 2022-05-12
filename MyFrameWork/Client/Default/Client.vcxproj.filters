@@ -154,6 +154,9 @@
     <Filter Include="02.GameObject\02.3DObject\3.GameObject_Tile">
       <UniqueIdentifier>{7e617e9d-d096-4639-89ac-1a7cc3c618d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameSystems\04.LevelMaster">
+      <UniqueIdentifier>{f8c7b46f-b883-4ea6-925c-893aa62b9d4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -309,6 +312,9 @@
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Static2.h">
       <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\System\LevelMaster.h">
+      <Filter>03.GameSystems\04.LevelMaster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -439,6 +445,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp">
       <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\System\LevelMaster.cpp">
+      <Filter>03.GameSystems\04.LevelMaster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

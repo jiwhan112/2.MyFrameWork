@@ -164,7 +164,6 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	{
 		if (IsName(mModelStatic_Desc.mModelName))
 		{
-
 			string strModel = mModelStatic_Desc.mModelName;
 			wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
 			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
@@ -178,8 +177,6 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	//{
 	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 	//}
-
-	
 
 	return S_OK;
 }

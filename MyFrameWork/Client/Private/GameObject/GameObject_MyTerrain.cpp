@@ -25,7 +25,6 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 		for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
 		{
 			memcpy(&mTerrainDESC.mModelObjects[i], &(rhs.mTerrainDESC.mModelObjects[i]), sizeof(MODEL_WORLD_DESC));
-
 		}
 	}
 

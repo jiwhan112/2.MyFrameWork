@@ -77,7 +77,7 @@ private:
 	list<string>*					mProtoDynamicModelList = nullptr;
 	list<string>*					mProtoParentModelList = nullptr;
 
-	// 텍스처 설정
+
 
 	
 private:

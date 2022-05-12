@@ -81,7 +81,7 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 	if (MODEL_NOANI == eModelType)
 		iFlag = aiProcess_PreTransformVertices | /*aiProcess_GlobalScale | */aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 	else
-		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
+		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 
 	m_pScene = m_Importer.ReadFile(szFullPath, iFlag);
 
@@ -91,7 +91,7 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 	m_eModelType = eModelType;
 	XMStoreFloat4x4(&m_TransformMatrix, TransformMatrix);
 
-	/* 모델의 머테리얼 정보를 셋ㅌ이한다. */
+	/* 모델의 머테리얼 정보. */
 	/* 머테리얼? 디퓨즈, 스펙큘러, 노멀, 이미시즈 */
 	/* 텍스쳐에 담아서 로드할것이다. */
 	/* 텍스쳐 로드한다. */

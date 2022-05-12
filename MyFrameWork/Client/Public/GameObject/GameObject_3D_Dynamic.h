@@ -13,12 +13,13 @@ class CGameObject_3D_Dynamic final :
 	public CGameObject_Base
 {
 public:
-	enum E_BASEAI
-	{
-		BASEAI_IDLE,
-		BASEAI_MOVE,
-		BASEAI_END,
-	};
+	//enum E_BASEAI
+	//{
+	//	BASEAI_IDLE,
+	//	BASEAI_MOVE,
+	//	BASEAI_END,
+	//};
+
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs);
@@ -37,24 +38,27 @@ public:
 	const MODEL_DYNAMIC_DESC& Get_ModelDESC() const { return mModelDesc; }
 
 	HRESULT		Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC& desc);
+	HRESULT		Setup_Colluder2(_float4x4 worldmat,_float scale);
+
 
 protected:
 	virtual HRESULT Set_Component() override;
 
-	void		GOMOVE(_double timer);
+//	void		GOMOVE(_double timer);
 
 protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
 	CCollider*					mComCollider = nullptr;
-	CNavigation*				mComNaviMesh = nullptr;
+	CCollider*					mComCollider2 = nullptr;
+//	CNavigation*				mComNaviMesh = nullptr;
 	MODEL_DYNAMIC_DESC			mModelDesc;
 
-	_float3						mGoalPosition;
-	_float3						mStartPosition;
-	_float						mTimer;
-	_float						mTimeMax;
+//	_float3						mGoalPosition;
+//	_float3						mStartPosition;
+//	_float						mTimer;
+//	_float						mTimeMax;
 
-	E_BASEAI					meAI;
+//	E_BASEAI					meAI;
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

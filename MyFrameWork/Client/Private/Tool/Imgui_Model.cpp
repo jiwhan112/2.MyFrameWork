@@ -7,6 +7,7 @@
 
 #include "Model.h"
 #include "Animation.h"
+#include "HierarchyNode.h"
 
 // #TODO: 모델 애니메이션 툴 제작
 // 모델은 충돌체 씌울 수 있게
@@ -380,8 +381,9 @@ HRESULT CImgui_Model::Edit_FBX()
 		if (mFBX_Static_pathList->empty())
 			return E_FAIL;
 
-		IMGUI_TREE_BEGIN("FbxFiles")
+		if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "FbxFiles")))
 		{
+
 			_uint cnt = 0;
 			string selectFBX = "";
 			static ImGuiTextFilter filter;
@@ -402,8 +404,10 @@ HRESULT CImgui_Model::Edit_FBX()
 					}
 				}
 			}
-			IMGUI_TREE_END
+
+			ImGui::EndListBox();
 		}
+	
 	}
 
 	// 동적 FBX 처리
@@ -413,7 +417,7 @@ HRESULT CImgui_Model::Edit_FBX()
 			return E_FAIL;
 
 		// FBX 파일
-		IMGUI_TREE_BEGIN("FbxFiles")
+		if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "FbxFiles")))
 		{
 			_uint cnt = 0;
 			string selectFBX = "";
@@ -435,7 +439,7 @@ HRESULT CImgui_Model::Edit_FBX()
 					}
 				}
 			}
-			IMGUI_TREE_END
+			ImGui::EndListBox();
 		}
 	}
 
@@ -488,7 +492,7 @@ HRESULT CImgui_Model::Edit_FBX()
 		// 선택 된 객체 모델 수정
 		if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Edit")))
 		{
-			IMGUI_TREE_BEGIN("FbxFiles")
+			IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "FbxFiles_Child"))
 			{
 				if (0 <= selectIndex)
 				{
@@ -515,7 +519,7 @@ HRESULT CImgui_Model::Edit_FBX()
 				IMGUI_TREE_END
 			}
 
-			IMGUI_TREE_BEGIN("Parent_Transform")
+			IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Parent_Transform"))
 			{
 				CTransform* parentTrans = mCurrent_ModelStaticObject_Parent->Get_TransformCom();
 				_float4x4	Worldmat = parentTrans->GetWorldMatrix();
@@ -528,9 +532,9 @@ HRESULT CImgui_Model::Edit_FBX()
 				parentTrans->Set_WorldMat(TransMat);
 				IMGUI_TREE_END
 			}
-			// 선택 된 객체 위치 수정
 
-			IMGUI_TREE_BEGIN("Child_Transform")
+			// 선택 된 객체 위치 수정
+			IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Child_Transform"))
 			{
 				if (0 <= selectIndex)
 				{
@@ -568,8 +572,7 @@ HRESULT CImgui_Model::Edit_FBX()
 			}
 
 			// 선택 된 객체 충돌박스 수정
-
-			IMGUI_TREE_BEGIN("Collider")
+			IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Collider"))
 			{
 				CGameObject_3D_Static* SelectObjectChild = mCurrent_ModelStaticObject_Parent->Get_ChildOfIndex(selectIndex);
 				COLLIDER_DESC desc = SelectObjectChild->Get_ColliderDESC();
@@ -607,19 +610,62 @@ HRESULT CImgui_Model::Edit_ANI()
 	if (meModelMode != CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
 		return S_FALSE;
 
-	// 애니메이션 에디터
-	// #TODO: 애니메이션 출력
-
+	// #TODO: 애니메이션 에디터
 	CModel* modelCom = mCurrent_ModelDynamicObject->Get_ComModel();
-	auto pVecAni = modelCom->Get_VecAnimations();
-	if (pVecAni == nullptr)
-		return S_FALSE;
 
-	static int selectedINT = -1;
-
-	IMGUI_TREE_BEGIN("AniFiles")
+	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Bones")))
 	{
+		auto pVecBones = modelCom->Get_VecHierarchy();
+		if (pVecBones == nullptr)
+			return S_FALSE;
+
+		// 선택된 모델의 뼈 정보 출력
+		static int selectBone = -1;
+		_uint cnt = 0;
+		string SelectStr = "";
+		static ImGuiTextFilter filter;
+		filter.Draw();
+
+		static _float4x4 mat = _float4x4::Identity;
+		
+		for (auto iter = pVecBones->begin(); iter != pVecBones->end(); ++cnt, iter++)
+		{
+			char bufName[256] = "";
+			strcpy_s(bufName, (*iter)->Get_Name());
+
+			if (filter.PassFilter(bufName))
+			{
+				if (ImGui::Selectable(bufName, selectBone == cnt))
+				{
+					selectBone = cnt;
+					SelectStr = bufName;
+				//	mat = (*iter)->Get_CombinedTransformationMatrix();
+				}
+			}
+		}
+
+		if (selectBone != -1)
+		{
+			mat = (*pVecBones)[selectBone]->Get_CombinedTransformationMatrix();
+			mCurrent_ModelDynamicObject->Setup_Colluder2(mat,0.1f);
+		}
+
+
+		ImGui::EndListBox();
+	}
+
+
+	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "AniFiles")))
+	{
+
+		auto pVecAni = modelCom->Get_VecAnimations();
+		if (pVecAni == nullptr)
+			return S_FALSE;
+
+
 		// 선택시 파일에 있는 애니메이션 출력
+		static int selectAni = -1;
+
 		_uint cnt = 0;
 		string SelectStr = "";
 		static ImGuiTextFilter filter;
@@ -627,15 +673,15 @@ HRESULT CImgui_Model::Edit_ANI()
 
 		for (auto iter = pVecAni->begin(); iter != pVecAni->end(); ++cnt, iter++)
 		{
-			char AniName[256] = "";
-			strcpy_s(AniName, (*iter)->Get_Name());
+			char bufName[256] = "";
+			strcpy_s(bufName, (*iter)->Get_Name());
 
-			if (filter.PassFilter(AniName))
+			if (filter.PassFilter(bufName))
 			{
-				if (ImGui::Selectable(AniName, selectedINT == cnt))
+				if (ImGui::Selectable(bufName, selectAni == cnt))
 				{
-					selectedINT = cnt;
-					SelectStr = AniName;
+					selectAni = cnt;
+					SelectStr = bufName;
 					mCurrent_ModelDynamicObject->Get_ComModel()->Set_AniString(SelectStr);
 
 					// MODEL_DYNAMIC_DESC fbx;
@@ -645,8 +691,9 @@ HRESULT CImgui_Model::Edit_ANI()
 			}
 		}
 
-		IMGUI_TREE_END
+		ImGui::EndListBox();
 	}
+
 
 	return S_OK;
 }
@@ -700,6 +747,7 @@ void CImgui_Model::Free()
 {
 	__super::Free();
 	Safe_Release(mCameraClient);
+
 	Safe_Delete(mFBX_Static_pathList);
 	Safe_Delete(mProtoStaticModelList);
 	Safe_Delete(mFBX_Dynamic_pathList);

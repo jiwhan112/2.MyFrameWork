@@ -19,6 +19,7 @@ public:
 	_uint Get_NumAnimations()const { return m_iNumAnimations; }
 
 	const vector<class CAnimation*>* Get_VecAnimations()const { return &m_Animations; }
+	const vector<class CHierarchyNode*>* Get_VecHierarchy()const { return &m_HierarchyNodes; }
 	HRESULT Set_AniString(string AniName);
 
 public:

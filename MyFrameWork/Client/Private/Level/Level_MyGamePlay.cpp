@@ -15,6 +15,11 @@ HRESULT CLevel_MyGamePlay::NativeConstruct()
 	FAILED_CHECK(__super::NativeConstruct());
 	Ready_IMGUI();
 
+	// 레벨 구성 객체로 게임 레벨을 세팅한다.
+	// 레벨 구성 객체(레벨을 구성하는 ) // 설정 / 초기 MAP / 초기 UI / 초기 SKYBOX Camera 
+	// Player 생성 수 / 위치 / 
+//	FAILED_CHECK(Ready_LEVEL());
+
 	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
