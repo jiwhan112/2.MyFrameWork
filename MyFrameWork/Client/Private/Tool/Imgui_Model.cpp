@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "Animation.h"
 #include "HierarchyNode.h"
+#include "Animatior.h"
 
 CImgui_Model::CImgui_Model(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -613,6 +614,7 @@ HRESULT CImgui_Model::Edit_ANI()
 	// 애니메이터 제작
 
 	CModel* modelCom = mCurrent_ModelDynamicObject->Get_ComModel();
+	CAnimatior* animator = modelCom->Get_Animaitor();
 
 	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Bones")))
 	{
@@ -659,7 +661,8 @@ HRESULT CImgui_Model::Edit_ANI()
 	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "AniFiles")))
 	{
 
-		auto pVecAni = modelCom->Get_VecAnimations();
+		auto pVecAni = animator->Get_VecAnimaions();
+
 		if (pVecAni == nullptr)
 			return S_FALSE;
 
@@ -683,7 +686,7 @@ HRESULT CImgui_Model::Edit_ANI()
 				{
 					selectAni = cnt;
 					SelectStr = bufName;
-					modelCom->Set_AniString(SelectStr);
+					animator->Set_AniString(SelectStr);
 
 					// MODEL_DYNAMIC_DESC fbx;
 					//	strcpy_s(fbx.mModelName, selectFBX.c_str());
@@ -692,12 +695,15 @@ HRESULT CImgui_Model::Edit_ANI()
 			}
 		}
 
-		_float blendTime = modelCom->Get_BlendMaxTime();
-		ImGui::DragFloat("BLENDTIMER", &blendTime,0.01f,0.01f,10.f);
-		modelCom->Set_BlendMaxTime(blendTime);
-
+		
 		ImGui::EndListBox();
+
+		_float blendTime = animator->Get_BlendMaxTime();
+		ImGui::DragFloat("BLENDTIMER", &blendTime, 0.01f, 0.01f, 10.f);
+		animator->Set_BlendMaxTime(blendTime);
 	}
+
+	
 
 
 	return S_OK;

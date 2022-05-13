@@ -61,12 +61,12 @@ _int CGameObject_FBX_Ani::Tick(_double TimeDelta)
 	}
 	static int Index = 0;
 
-	if (pGameInstance->Get_DIKeyState(DIK_F) & DIS_Down)
-	{
-		int max = mComModel->Get_NumAnimations();
-		Index++;
-		Index %= max;
-	}
+	//if (pGameInstance->Get_DIKeyState(DIK_F) & DIS_Down)
+	//{
+	//	int max = mComModel->Get_NumAnimations();
+	//	Index++;
+	//	Index %= max;
+	//}
 
 	mComModel->SetUp_AnimIndex(Index);
 
