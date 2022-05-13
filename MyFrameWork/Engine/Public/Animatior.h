@@ -6,7 +6,7 @@ BEGIN(Engine)
 
 // 모델에 애니메이션 클립 데이터를 이용해 제어할 수 있는 애니메이션 상태를 만든다.
 
-class CAnimation;
+class CAnimationClip;
 class CMeshContainer;
 class CHierarchyNode;
 
@@ -26,7 +26,7 @@ public: // Get Set
 	HRESULT SetUp_AnimIndex(_uint index);
 	HRESULT Set_AniString(string AniName);
 
-	const vector<CAnimation*>* Get_VecAnimaions() const
+	const vector<CAnimationClip*>* Get_VecAnimaions() const
 	{
 		return &m_Animations;
 	}
@@ -71,8 +71,7 @@ private: // 애니메이션 클립
 	_uint									m_iCurrentAniIndex = 0;
 	_uint									m_iNewAniIndex = 0;
 	_uint									m_iNumAnimations;
-	vector<CAnimation*>				m_Animations;
-	typedef vector<CAnimation*>		ANIMATIONS;
+	vector<CAnimationClip*>					m_Animations;
 
 
 

@@ -1,6 +1,6 @@
 #include "Animatior.h"
 #include "HierarchyNode.h"
-#include "Animation.h"
+#include "AnimationClip.h"
 #include "Channel.h"
 #include "MeshContainer.h"
 
@@ -157,7 +157,7 @@ HRESULT CAnimatior::Ready_Animation()
 	{
 		aiAnimation*	pAIAnimation = m_pScene->mAnimations[i];
 
-		CAnimation*		pAnimation = CAnimation::Create(pAIAnimation->mName.data, pAIAnimation->mDuration, pAIAnimation->mTicksPerSecond);
+		CAnimationClip*		pAnimation = CAnimationClip::Create(pAIAnimation->mName.data, pAIAnimation->mDuration, pAIAnimation->mTicksPerSecond);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 

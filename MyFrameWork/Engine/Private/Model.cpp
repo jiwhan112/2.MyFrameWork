@@ -2,8 +2,6 @@
 #include "MeshContainer.h"
 #include "Texture.h"
 #include "HierarchyNode.h"
-//#include "Animation.h"
-//#include "Channel.h"
 #include "Animatior.h"
 #include "Shader.h"
 
@@ -22,6 +20,7 @@ CModel::CModel(const CModel & rhs)
 	, m_Materials(rhs.m_Materials)
 //	, m_iCurrentAniIndex(rhs.m_iCurrentAniIndex)
 	, m_TransformMatrix(rhs.m_TransformMatrix)
+	, m_HierarchyNodes(rhs.m_HierarchyNodes)
 {
 	// 모델과 재질은 얕은 복사로 사용한다.
 	for (auto& pMaterial : m_Materials)
@@ -37,6 +36,12 @@ CModel::CModel(const CModel & rhs)
 			for (auto& pMeshContainer : m_pMeshContainers[i])
 				Safe_AddRef(pMeshContainer);
 		}
+	}
+
+	// 애니메이션에서 사용하는 계층이 아니기 때문에 복사해둔다.
+	for (auto& hier : m_HierarchyNodes)
+	{
+		Safe_AddRef(hier);
 	}
 }
 
@@ -602,8 +607,7 @@ void CModel::Free()
 
 	Safe_Release(mAnimator);
 
-	//for (auto& pAnimation : m_Animations)
-	//	Safe_Release(pAnimation);
+
 
 	for (auto& pMaterial : m_Materials)
 	{

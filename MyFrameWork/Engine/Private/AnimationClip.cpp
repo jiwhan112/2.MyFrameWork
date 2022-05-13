@@ -1,16 +1,16 @@
-#include "..\Public\Animation.h"
+#include "..\Public\AnimationClip.h"
 #include "Channel.h"
 
-CAnimation::CAnimation()
+CAnimationClip::CAnimationClip()
 {
 }
 
-const char * CAnimation::Get_Name()
+const char * CAnimationClip::Get_Name()
 {
 	return m_szName;
 }
 
-HRESULT CAnimation::NativeConstruct(const char* pName, _double Duration, _double TickPerSecond)
+HRESULT CAnimationClip::NativeConstruct(const char* pName, _double Duration, _double TickPerSecond)
 {
 	strcpy_s(m_szName, pName);
 
@@ -20,7 +20,7 @@ HRESULT CAnimation::NativeConstruct(const char* pName, _double Duration, _double
 	return S_OK;
 }
 
-HRESULT CAnimation::Update_TransformMatrices(_double TimeDelta)
+HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 {
 	/* 현재 내 애니메이션의 재생 위치. */
 	m_PlayTimeAcc += m_TickPerSecond * TimeDelta;
@@ -95,19 +95,19 @@ HRESULT CAnimation::Update_TransformMatrices(_double TimeDelta)
 	return S_OK;
 }
 
-CAnimation * CAnimation::Create(const char* pName, _double Duration, _double TickPerSecond)
+CAnimationClip * CAnimationClip::Create(const char* pName, _double Duration, _double TickPerSecond)
 {
-	CAnimation*	pInstance = new CAnimation();
+	CAnimationClip*	pInstance = new CAnimationClip();
 
 	if (FAILED(pInstance->NativeConstruct(pName, Duration, TickPerSecond)))
 	{
-		MSGBOX("Failed to Created CAnimation");
+		MSGBOX("Failed to Created CAnimationClip");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CAnimation::Free()
+void CAnimationClip::Free()
 {
 	for (auto& pChannel : m_Channels)
 		Safe_Release(pChannel);

@@ -32,9 +32,6 @@ public:
 	HRESULT Bind_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pValueName);
 	HRESULT Render(class CShader* pShader, _uint iPassIndex, _uint iMaterialIndex, const char* pBoneValueName = nullptr);
 
-public: // Animaion
-
-
 private:
 	const aiScene*				m_pScene = nullptr;
 	Importer					m_Importer;

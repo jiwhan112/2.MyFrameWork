@@ -6,11 +6,11 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CAnimation final : public CBase
+class ENGINE_DLL CAnimationClip final : public CBase
 {
 private:
-	CAnimation();
-	virtual ~CAnimation() = default;
+	CAnimationClip();
+	virtual ~CAnimationClip() = default;
 
 public:
 	void Reserve(_uint iNumChannels)
@@ -60,7 +60,7 @@ private:
 	_bool		m_isFinished = false;
 
 public:
-	static CAnimation* Create(const char* pName, _double Duration, _double TickPerSecond);
+	static CAnimationClip* Create(const char* pName, _double Duration, _double TickPerSecond);
 	virtual void Free() override;
 };
 

@@ -6,7 +6,7 @@
 #include "GameObject/GameObject_3D_Static2.h"
 
 #include "Model.h"
-#include "Animation.h"
+#include "AnimationClip.h"
 #include "HierarchyNode.h"
 #include "Animatior.h"
 

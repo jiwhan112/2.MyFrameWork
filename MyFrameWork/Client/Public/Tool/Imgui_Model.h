@@ -2,7 +2,7 @@
 
 BEGIN(Engine)
 class CModel;
-class CAnimation;
+class CAnimationClip;
 END
 BEGIN(Client)
 

@@ -157,7 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Animatior.h" />
-    <ClInclude Include="..\Public\Animation.h" />
+    <ClInclude Include="..\Public\AnimationClip.h" />
     <ClInclude Include="..\Public\Frstum.h" />
     <ClInclude Include="..\Public\Base.h" />
     <ClInclude Include="..\Public\Camera.h" />
@@ -209,7 +209,7 @@
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\Animation.cpp" />
+    <ClCompile Include="..\Private\AnimationClip.cpp" />
     <ClCompile Include="..\Private\Animatior.cpp" />
     <ClCompile Include="..\Private\Frstum.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />

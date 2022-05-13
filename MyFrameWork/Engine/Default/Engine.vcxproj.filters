@@ -240,9 +240,6 @@
     <ClCompile Include="..\Private\MeshContainer.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Animation.cpp">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Model.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
     </ClCompile>
@@ -272,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Animatior.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\04.Animatior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimationClip.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,9 +395,6 @@
     <ClInclude Include="..\Public\MeshContainer.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\01.MeshContainer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Animation.h">
-      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Model.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model</Filter>
     </ClInclude>
@@ -427,6 +424,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Animatior.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\04.Animatior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimationClip.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
