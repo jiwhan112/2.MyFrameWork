@@ -7,8 +7,10 @@ BEGIN(Client)
 // IMGUI 사용할 것만 업데이트
 
 // IMGUI 창 DEFINE
-#define IMGUI_TREE_BEGIN(x)	if(ImGui::TreeNode(x))
-#define IMGUI_TREE_END		ImGui::TreePop();
+#define IMGUI_TREE_BEGIN(x)		if(ImGui::TreeNode(x))
+#define IMGUI_TREE_END			ImGui::TreePop();
+#define IMGUI_LISTBOX_BEGIN(x)	if(ImGui::ListBox(x))
+#define IMGUI_LISTBOX_END		ImGui::EndListBox();
 #define IM_MIN(A, B)            (((A) < (B)) ? (A) : (B))
 #define IM_MAX(A, B)            (((A) >= (B)) ? (A) : (B))
 #define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V))

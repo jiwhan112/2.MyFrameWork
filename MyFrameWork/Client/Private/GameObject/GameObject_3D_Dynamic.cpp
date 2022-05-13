@@ -158,7 +158,6 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
 
 	// 모델 타입에 따라 정적모델 동적모델 처리
-
 	if (mComModel == nullptr)
 	{
 		// 동적 모델은 자동으로 동적으로 컴포넌트가 적용된다.

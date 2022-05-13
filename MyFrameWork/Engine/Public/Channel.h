@@ -30,7 +30,10 @@ public:
 	{
 		m_iCurrentKeyFrame = iKeyFrameIndex;
 	}
-
+	_uint Get_CurrentKeyIndex() const
+	{
+		return m_iCurrentKeyFrame;
+	}
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix);
 
 	void Set_HierarchyNodePtr(class CHierarchyNode* pNode);
@@ -45,6 +48,20 @@ public:
 	{
 		m_KeyFrames.push_back(pKeyFrame);
 	}
+
+	const KEYFRAME* Get_StartFrame()
+	{
+		return m_KeyFrames[0];
+	}
+
+	const KEYFRAME* Get_EndFrame()
+	{
+		if (m_iNumKeyFrames == 0)
+			return m_KeyFrames[0];
+
+		return m_KeyFrames[m_iNumKeyFrames - 1];
+	}
+
 
 public:
 	HRESULT NativeConstruct(const char* pName/*, class CHierarchyNode* pNode*/);

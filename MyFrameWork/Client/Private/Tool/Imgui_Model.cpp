@@ -9,10 +9,6 @@
 #include "Animation.h"
 #include "HierarchyNode.h"
 
-// #TODO: 모델 애니메이션 툴 제작
-// 모델은 충돌체 씌울 수 있게
-// 애니메이션은 각 애니메이션 재생할 수 있게.
-
 CImgui_Model::CImgui_Model(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
 {
@@ -611,6 +607,11 @@ HRESULT CImgui_Model::Edit_ANI()
 		return S_FALSE;
 
 	// #TODO: 애니메이션 에디터
+	// 애니메이션 시간에 따라 확인
+	// 애니메이션 블랜딩 확인
+	// 애니메이션 합쳐서 새로운 애니메이션 클립 만들기
+	// 애니메이터 제작
+
 	CModel* modelCom = mCurrent_ModelDynamicObject->Get_ComModel();
 
 	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Bones")))
@@ -682,7 +683,7 @@ HRESULT CImgui_Model::Edit_ANI()
 				{
 					selectAni = cnt;
 					SelectStr = bufName;
-					mCurrent_ModelDynamicObject->Get_ComModel()->Set_AniString(SelectStr);
+					modelCom->Set_AniString(SelectStr);
 
 					// MODEL_DYNAMIC_DESC fbx;
 					//	strcpy_s(fbx.mModelName, selectFBX.c_str());
@@ -690,6 +691,10 @@ HRESULT CImgui_Model::Edit_ANI()
 				}
 			}
 		}
+
+		_float blendTime = modelCom->Get_BlendMaxTime();
+		ImGui::DragFloat("BLENDTIMER", &blendTime,0.01f,0.01f,10.f);
+		modelCom->Set_BlendMaxTime(blendTime);
 
 		ImGui::EndListBox();
 	}

@@ -156,6 +156,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Animatior.h" />
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\Frstum.h" />
     <ClInclude Include="..\Public\Base.h" />
@@ -209,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Animation.cpp" />
+    <ClCompile Include="..\Private\Animatior.cpp" />
     <ClCompile Include="..\Private\Frstum.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />

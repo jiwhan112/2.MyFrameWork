@@ -90,7 +90,7 @@ HRESULT CVIBuffer::Create_IndexBuffer()
 
 _bool CVIBuffer::Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut)
 {
-	// #TODO: 버퍼로 충돌하지 말고 콜라이더 / 네비메시충돌로 변경해보자.
+	// 버퍼로 충돌하지 말고 콜라이더 / 네비메시충돌로 변경해보자.
 
 	CPicking*		pPicking = GetSingle(CPicking);
 

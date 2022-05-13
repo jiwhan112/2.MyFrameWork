@@ -139,6 +139,9 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\Point_Instance">
       <UniqueIdentifier>{01687584-6ccf-4164-9366-97261d78692a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\04.Animatior">
+      <UniqueIdentifier>{984f7b80-8f1d-4cc1-9474-99bc0e69f09b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -266,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Point_Instance.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Point_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animatior.cpp">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\04.Animatior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -418,6 +424,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\Point_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animatior.h">
+      <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\04.Animatior</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

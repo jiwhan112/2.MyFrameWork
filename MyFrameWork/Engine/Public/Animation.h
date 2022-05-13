@@ -25,6 +25,11 @@ public:
 	}
 	const char* Get_Name();
 
+	void Set_AniMationTime(_float timer)
+	{
+		m_PlayTimeAcc = timer;
+	}
+
 public:
 	HRESULT NativeConstruct(const char* pName, _double Duration, _double TickPerSecond);
 	HRESULT Update_TransformMatrices(_double TimeDelta);

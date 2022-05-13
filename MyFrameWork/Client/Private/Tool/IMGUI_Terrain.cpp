@@ -8,11 +8,7 @@
 #include "GameObject/GameObject_3D_Static2.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 
-// #TODO: 맵툴 제작
-// 맵 버텍스 수정
-// 맵 저장 불러오기
-// 맵 오브젝트 배치
-// 큐브 셀 깔기
+
 
 CImgui_Terrain::CImgui_Terrain(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)

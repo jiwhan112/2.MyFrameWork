@@ -19,9 +19,10 @@ CModel::CModel(const CModel & rhs)
 	, m_eModelType(rhs.m_eModelType)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
-	, m_iCurrentAnim(rhs.m_iCurrentAnim)
+	, m_iCurrentAniIndex(rhs.m_iCurrentAniIndex)
 	, m_TransformMatrix(rhs.m_TransformMatrix)
 {
+	// 모델과 재질은 얕은 복사로 사용한다.
 	for (auto& pMaterial : m_Materials)
 	{
 		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
@@ -109,31 +110,34 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 		});
 	}
 
+	// 메쉬의 버퍼를 생성한다. // VIBuffer를 상속받는다.
+	// 애니메이션 객체라면 뼈의 정보도 같이 세팅
 	if (FAILED(Ready_MeshContainers()))
 		return E_FAIL;
 
-	//if (TYPE_NONANIM == m_eModelType)
-	//{
-	//	for (_uint i = 0; i < m_iNumMaterials; ++i)
-	//	{
-	//		for (auto& pMeshContainer : m_pMeshContainers[i])
-	//			pMeshContainer->Ready_VertexIndexBuffer(m_eModelType, TransformMatrix);
-	//	}
-	//
-	//	return S_OK;
-	//}
+	// 재질의 개수 == 메쉬의 모델 개수
+	
+	// 매쉬 컨테이너의 정점 버퍼를 세팅한다.
+	// 정적 오브젝트는 버퍼를 정점만큼 버퍼를 생성한다. == 기존과 비슷하다.
 
+	// 동적 오브젝트는 ㅇ 오브젝트는 추가적으로 BlendIndex를 추가한다.
+	// BlendIndex는 애니메이션에서 영향을 주는 뼈의 가중치를 세팅 한다.
+	
 	for (_uint i = 0; i < m_iNumMaterials; ++i)
 	{
 		for (auto& pMeshContainer : m_pMeshContainers[i])
 			pMeshContainer->Ready_VertexIndexBuffer(m_eModelType, TransformMatrix);
 	}
-
 	return S_OK;
 }
 
 HRESULT CModel::NativeConstruct(void * pArg)
 {
+	// 복사시에 세팅 
+	// 애니메이션에 해당하는 데이터는 사본에서도 개별적으로 수행되어야한다. 
+	// 따라서 애니메이션에 해당하는 데이터는 사본에서 설정한다.
+
+	// 1. 다시 계층 설정
 	if (FAILED(Ready_HierarchyNodes(m_pScene->mRootNode, nullptr, 0)))
 		return E_FAIL;
 
@@ -142,12 +146,18 @@ HRESULT CModel::NativeConstruct(void * pArg)
 		return pSour->Get_Depth() < pDest->Get_Depth();
 	});
 
+	// 2. 뼈의 이름을 가져와서 현재 계층구조에 동일한지 판단하고 OffsetMat 데이터를 계층에 넣어준다.
 	if (FAILED(Ready_OffsetMatrices()))
 		return E_FAIL;
-
+	
+	// 3.pAnimation 객체로 애니메이션에 해당하는 채널(뼈)의 값을 프레임단으로 넣어준다.
+	// 각 애니메이션 객체에 이 키값이 있다.
 	if (FAILED(Ready_Animation()))
 		return E_FAIL;
 
+	// 4. 3에서 세팅한 각 애니메이션 내부에 채널을 계층노드와 링크를 시켜준다.
+	// 해당 채널(뼈)의 이름을 계층(뼈)의 이름과 같다면 애니메이션 진행중에 같은 뼈를 움직여야하기 때문에 계층데이터를 넣어준다.
+	// 계층 데이터에는 부모에 따른 최종 행렬 정보가 들어있다.
 	if (FAILED(Link_ChannelToNode()))
 		return E_FAIL;
 
@@ -158,20 +168,39 @@ HRESULT CModel::SetUp_AnimIndex(_uint iAnimIndex)
 {
 	if (iAnimIndex >= m_iNumAnimations)
 		return E_FAIL;
+	if (misBlend)
+		return S_FALSE;
 
-	m_iCurrentAnim = iAnimIndex;
-
+	m_iNewAniIndex = iAnimIndex;
+	if (m_iCurrentAniIndex != m_iNewAniIndex)
+	{
+		misBlend = true;
+	}
+	else
+	{
+		m_iCurrentAniIndex = iAnimIndex;
+	}
 	return S_OK;
 }
 
 HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 {
-	/* 모든 뼈들의 혅2ㅐ 시간에 맞는 상태를 저장시킨다.(채널에)  */
-	m_Animations[m_iCurrentAnim]->Update_TransformMatrices(TimeDelta);
+	// 애니메이션 블랜딩 
+	if (misBlend)
+	{
+		AniMationBlend(m_iCurrentAniIndex, m_iNewAniIndex, TimeDelta);
+	}
 
+	else
+	{
+		// 현재 애니메이션을 시간에 맞게 업데이트를 시켜준다.
+		// 애니메이션 채널의 해당 시간에 따른 뼈 위치 갱신
+		m_Animations[m_iCurrentAniIndex]->Update_TransformMatrices(TimeDelta);
+	}
+
+	// 갱신된 뼈행렬을 계층으로 업데이트 시켜준다.
 	for (auto& pHierarchyNode : m_HierarchyNodes)
 	{
-		/* 부모로부터 자식까지 행렬상태를 누적시키며 셋팅해준다. */
 		pHierarchyNode->Update_CombinedTransformationMatrix();
 	}
 
@@ -252,7 +281,6 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 	if (nullptr == m_pScene)
 		return E_FAIL;
 
-	/* */
 	m_iNumMaterials = m_pScene->mNumMaterials;
 
 	for (_uint i = 0; i < m_iNumMaterials; ++i)
@@ -368,6 +396,7 @@ HRESULT CModel::Ready_Animation()
 			if (nullptr == pChannel)
 				return E_FAIL;
 
+			// 가장 큰 프레임으로 
 			_uint		iNumKeyFrames = max(pAIChannel->mNumScalingKeys, pAIChannel->mNumRotationKeys);
 			iNumKeyFrames = max(iNumKeyFrames, pAIChannel->mNumPositionKeys);
 
@@ -378,6 +407,7 @@ HRESULT CModel::Ready_Animation()
 			_float3		vPosition;
 			_double		Time;
 
+			// 각 프레임에 맞는 값을 넣어준다.
 			for (_uint k = 0; k < iNumKeyFrames; ++k)
 			{
 				KEYFRAME*			pKeyFrame = new KEYFRAME;
@@ -417,7 +447,6 @@ HRESULT CModel::Ready_Animation()
 
 		m_Animations.push_back(pAnimation);
 	}
-
 	return S_OK;
 }
 
@@ -432,11 +461,112 @@ HRESULT CModel::Link_ChannelToNode()
 			CHierarchyNode* pNode = Find_HierarchyNode(pChannel->Get_Name());
 			if (nullptr == pNode)
 				return E_FAIL;
-
 			pChannel->Set_HierarchyNodePtr(pNode);
 		}
 	}
+	return S_OK;
+}
 
+HRESULT CModel::AniMationBlend(int startindex, int endindex, _double delta)
+{
+	if (startindex >= m_iNumAnimations ||
+		endindex >= m_iNumAnimations)
+		return E_FAIL;
+
+	// 1. 1번 애니의 시작과 1번 애니의 끝과 2번애니의 끝의 위치를 가져와야한다.
+	// 1번 애니 2번 애니메이션의 채널리스트를 가져온다.
+	auto VecStart_AniChannel = m_Animations[startindex]->Get_Channels();
+	auto VecEnd_AniChannel = m_Animations[endindex]->Get_Channels();
+//	m_HierarchyNodes
+
+	if (VecStart_AniChannel == nullptr||
+		VecEnd_AniChannel == nullptr)
+		return E_FAIL;
+
+	// 2. 시간 처리
+	mBlendTimer += delta;
+
+	if (mBlendTimer >= mBlendMaxTime)
+	{
+		mBlendTimer = 0.0;
+		misBlend = false;
+		m_iCurrentAniIndex = endindex;
+		m_Animations[startindex]->Set_AniMationTime(0);
+		m_Animations[endindex]->Set_AniMationTime(0);
+	}
+		
+	_float3			vScale;
+	_quaterion		vRotation;
+	_float3			vPosition;
+
+	// 현재 프레임에 해당하는 위치와 블랜딩 시킨다.
+	_uint boneSize = VecStart_AniChannel->size();
+
+	for (_uint i = 0; i < boneSize; ++i)
+	{
+		// 1. 각 뼈의 키프레임
+		const vector<KEYFRAME*>*	pKeyCurrentFrames = (*VecStart_AniChannel)[i]->Get_KeyFrames();
+		const vector<KEYFRAME*>*	pKeyNewFrames = (*VecEnd_AniChannel)[i]->Get_KeyFrames();
+		
+		// 현재 위치의 키 인덱스 가져오기
+		_uint CurrentFrameIndex = (*VecStart_AniChannel)[i]->Get_CurrentKeyFrame();
+
+		if (misBlend == false)
+		{
+			// pKeyNewFrames의 시작 프레임으로 이동
+			vScale = (*pKeyNewFrames)[0]->vScale;
+			vRotation = (*pKeyNewFrames)[0]->vRotation;
+			vPosition = (*pKeyNewFrames)[0]->vPosition;	
+			(*VecStart_AniChannel)[i]->Set_CurrentKeyFrame(0);
+			(*VecEnd_AniChannel)[i]->Set_CurrentKeyFrame(0);			
+		}
+
+		// 현재 프레임의 뼈들의 프레임을 가져와서 해당 키프레임의 위치로 업데이트
+		else
+		{
+			_double		Ratio = mBlendTimer / mBlendMaxTime;
+
+			_float3		vSourScale, vDestScale;
+			_quaterion	vSourRotation, vDestRotation;
+			_float3		vSourPosition, vDestPosition;
+
+			// mVec_CurrentAniEndFrame
+			vSourScale = (*pKeyCurrentFrames)[CurrentFrameIndex]->vScale;
+			vSourRotation = (*pKeyCurrentFrames)[CurrentFrameIndex]->vRotation;
+			vSourPosition = (*pKeyCurrentFrames)[CurrentFrameIndex]->vPosition;
+
+			// mVec_NewAniStartFrame
+			vDestScale = (*pKeyNewFrames)[0]->vScale;
+			vDestRotation = (*pKeyNewFrames)[0]->vRotation;
+			vDestPosition = (*pKeyNewFrames)[0]->vPosition;
+
+			vScale = _float3::Lerp(vSourScale, vDestScale, _float(Ratio));
+			vRotation = _quaterion::Slerp(vSourRotation, vDestRotation, _float(Ratio));
+			vPosition = _float3::Lerp(vSourPosition, vDestPosition, _float(Ratio));
+		}
+
+		_float4x4 newMat;
+		newMat = _float4x4::CreateScale(vScale) * _float4x4::CreateFromQuaternion(vRotation) * _float4x4::CreateTranslation(vPosition);
+		(*VecEnd_AniChannel)[i]->Set_TransformationMatrix(newMat);
+
+	}
+	int a = 5;
+
+}
+
+HRESULT CModel::Set_BlendFrame(int startindex, int endindex)
+{
+
+	//Safe_Delete(mVec_CurrentAniEndFrame);
+	//Safe_Delete(mVec_NewAniStartFrame);
+
+	//// 하이어라키 정보가 없다..
+	//mVec_CurrentAniEndFrame = m_Animations[startindex]->Get_End_VecChannel();
+	//mVec_NewAniStartFrame = m_Animations[endindex]->Get_Start_VecChannel();
+	//mBlendTimer = 0;
+	//if (mVec_CurrentAniEndFrame == nullptr ||
+	//	mVec_NewAniStartFrame == nullptr)
+	//	return E_FAIL;
 	return S_OK;
 }
 

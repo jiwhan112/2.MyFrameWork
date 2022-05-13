@@ -21,6 +21,8 @@ public:
 	const vector<class CAnimation*>* Get_VecAnimations()const { return &m_Animations; }
 	const vector<class CHierarchyNode*>* Get_VecHierarchy()const { return &m_HierarchyNodes; }
 	HRESULT Set_AniString(string AniName);
+	void	Set_BlendMaxTime(_double time) { mBlendMaxTime = time; }
+	_double	Get_BlendMaxTime() { return mBlendMaxTime; }
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);
@@ -32,33 +34,44 @@ public:
 	HRESULT Bind_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pValueName);
 	HRESULT Render(class CShader* pShader, _uint iPassIndex, _uint iMaterialIndex, const char* pBoneValueName = nullptr);
 
+public: // Animaion
+
+
 private:
 	const aiScene*				m_pScene = nullptr;
 	Importer					m_Importer;
 
-private:
+private: // 모델
 	_uint									m_iNumMeshContainers = 0;
 	vector<class CMeshContainer*>*			m_pMeshContainers = nullptr;
 	typedef vector<class CMeshContainer*>	MESHCONTAINERS;
 	E_MODEL_TYPE							m_eModelType = MODEL_END;
 	_float4x4								m_TransformMatrix;
 
-private:
+private: // 텍스처
 	_uint									m_iNumMaterials = 0;
 	vector<MESHMATERIALDESC*>				m_Materials;
 	typedef vector<MESHMATERIALDESC*>		MATERIALS;
 
-	// 애니메이션 영역
-private:
+private: // 애니메이션
+	
 	// 계층
 	vector<class CHierarchyNode*>			m_HierarchyNodes;
 	typedef vector<class CHierarchyNode*>	HIERARCHYNODES;
 
-	// 애니메이션
-	_uint									m_iCurrentAnim = 0;
+	// 애니메이션 클립
+	_uint									m_iCurrentAniIndex = 0;
+	_uint									m_iNewAniIndex = 0;
 	_uint									m_iNumAnimations;
 	vector<class CAnimation*>				m_Animations;
 	typedef vector<class CAnimation*>		ANIMATIONS;
+
+	// 애니메이션 제어
+	bool									misBlend = false;
+	_double									mBlendMaxTime = 0.5f;
+	_double									mBlendTimer = 0;
+
+	// 에니메이터 
 
 private:
 	HRESULT Ready_MeshContainers();
@@ -67,6 +80,9 @@ private:
 	HRESULT Ready_OffsetMatrices();
 	HRESULT Ready_Animation();
 	HRESULT Link_ChannelToNode();
+
+	HRESULT AniMationBlend(int startindex, int endindex, _double timer);
+	HRESULT Set_BlendFrame(int startindex, int endindex);
 
 private:
 	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr);
