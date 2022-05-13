@@ -2,13 +2,6 @@
 
 #include "GameObject_3D_Static.h"
 
-
-
-//BEGIN(Engine)
-//class CModel;
-//class CCollider;
-//END
-
 BEGIN(Client)
 // 자식이 있는 오브젝트
 class CGameObject_3D_Static2  final:

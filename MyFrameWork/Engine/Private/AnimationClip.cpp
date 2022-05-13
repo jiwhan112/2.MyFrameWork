@@ -10,6 +10,19 @@ const char * CAnimationClip::Get_Name()
 	return m_szName;
 }
 
+void CAnimationClip::Set_AniMationTime(_float timer)
+{
+	if (m_Duration <= timer)
+		m_PlayTimeAcc = m_Duration;
+
+	m_PlayTimeAcc = timer;
+	for (_uint i = 0; i < m_iNumChannels; ++i)
+	{
+		m_Channels[i]->Set_CurrentKeyFrame(m_PlayTimeAcc);
+	}
+
+}
+
 HRESULT CAnimationClip::NativeConstruct(const char* pName, _double Duration, _double TickPerSecond)
 {
 	strcpy_s(m_szName, pName);

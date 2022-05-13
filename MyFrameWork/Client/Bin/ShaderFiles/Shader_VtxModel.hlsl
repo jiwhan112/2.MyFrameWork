@@ -110,6 +110,8 @@ PS_OUT PS_MAIN_RED(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
+	Out.vColor.rgba = 0.0f;
+	Out.vColor.r = 1.0f;
 	Out.vColor.a = 1.0f;
 
 	return Out;

@@ -18,7 +18,6 @@ CGameObject_3D_Static2::CGameObject_3D_Static2(const CGameObject_3D_Static2& rhs
 		CGameObject_3D_Static* newchildobj = obj->Clone(nullptr);
 		Add_StaticObejct(newchildobj);
 	}
-
 }
 
 HRESULT CGameObject_3D_Static2::NativeConstruct_Prototype()
@@ -167,6 +166,7 @@ HRESULT CGameObject_3D_Static2::Render_Child()
 	// 자식 업데이트
 	for (auto& model : mVecChildObject)
 	{
+		model->Set_RenderPass(mCurrentShaderPass);
 		model->Render();
 	}
 	return S_OK;

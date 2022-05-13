@@ -1,7 +1,6 @@
 #pragma
 
 // OTHER Data
-
 enum E_TERRAINSIZE
 {
 	TERRAINSIZE_16,

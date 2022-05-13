@@ -14,6 +14,17 @@ class CHierarchyNode;
 class ENGINE_DLL CAnimatior final 
 	: public CBase
 {
+public:
+	typedef struct tag_AniMationNODE
+	{
+		CAnimationClip* clip;
+
+		tag_AniMationNODE* aniLeft = nullptr;
+		tag_AniMationNODE* aniRight = nullptr;
+
+
+	}ANIMATIONNODE;
+
 private:
 	CAnimatior(const aiScene* _aiscene);
 	virtual ~CAnimatior() = default;
@@ -40,7 +51,11 @@ public: // Get Set
 		return mBlendMaxTime;
 	}
 
-public: // 관리할 애니메이션을 넣는다.
+	void Set_CurrentAnimaionTime(_float time);
+
+	CAnimationClip* Get_CurrentAnimaion()const;
+
+public: 
 	HRESULT NativeConstruct(const vector<CMeshContainer*>* meshcon);
 
 public:
@@ -72,8 +87,6 @@ private: // 애니메이션 클립
 	_uint									m_iNewAniIndex = 0;
 	_uint									m_iNumAnimations;
 	vector<CAnimationClip*>					m_Animations;
-
-
 
 private: // 애니메이터
 	bool									misBlend = false;

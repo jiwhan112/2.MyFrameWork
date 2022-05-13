@@ -3,6 +3,7 @@
 #include "Base.h"
 BEGIN(Engine)
 class CGameInstance;
+class CGameObject;
 END
 
 BEGIN(Client)
@@ -49,6 +50,7 @@ public:
 
 	// 카메라나 플레이어 가져올때 좀더 편하게 가져옴
 	CGameObject* Get_LevelObject_LayerTag(const wchar_t* layerTag, _uint index = 0);
+	const list<CGameObject*>* Get_LevelObjectList(const wchar_t* layerTag);
 
 private:
 	// 경로 저장

@@ -157,6 +157,21 @@
     <Filter Include="03.GameSystems\04.LevelMaster">
       <UniqueIdentifier>{f8c7b46f-b883-4ea6-925c-893aa62b9d4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\01.Static">
+      <UniqueIdentifier>{41aac060-6861-44bc-a8a6-640c0393ca82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic">
+      <UniqueIdentifier>{7ef2d507-7428-4c82-a438-a77ad4b4c0e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\03.Parent">
+      <UniqueIdentifier>{b96323f4-d0db-46dd-af11-ea3ce12682f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\1.Terrain\Daungon">
+      <UniqueIdentifier>{da7601c8-a44f-43ee-825d-ef8a84f0d19a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\1.Terrain\OutWorld">
+      <UniqueIdentifier>{df4d321e-f567-4d20-90a5-8cfe69d09003}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -264,12 +279,6 @@
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h">
-      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h">
-      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Level\01.GamePlay\01.StudyGameScene</Filter>
     </ClInclude>
@@ -309,11 +318,23 @@
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static2.h">
-      <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\System\LevelMaster.h">
       <Filter>03.GameSystems\04.LevelMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static2.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\03.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Tiles.h">
+      <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain_Daungon.h">
+      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -398,12 +419,6 @@
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp">
-      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp">
-      <Filter>02.GameObject\02.3DObject\0.Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
       <Filter>01.Level\01.GamePlay\01.StudyGameScene</Filter>
     </ClCompile>
@@ -443,11 +458,23 @@
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp">
       <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp">
-      <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\System\LevelMaster.cpp">
       <Filter>03.GameSystems\04.LevelMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\03.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Tiles.cpp">
+      <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain_Daungon.cpp">
+      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

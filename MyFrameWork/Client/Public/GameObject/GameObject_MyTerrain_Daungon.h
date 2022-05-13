@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameObject_Base.h"
+#include "GameObject_MyTerrain.h"
 
 BEGIN(Engine)
 class CVIBuffer;
@@ -10,44 +10,15 @@ END
 
 BEGIN(Client)
 
-// 지형
-//
-class CGameObject_MyTerrain  :
-	public CGameObject_Base
+// 던전 지형
+class CGameObject_MyTerrain_Daungon final :
+	public CGameObject_MyTerrain
 {
-public:
-	enum E_TILE_MODE
-	{
-		TILEMODE_NONE,
-		TILEMODE_X,
-		TILEMODE_XX,
-		TILEMODE_XXX,
-		TILEMODE_END
-	};
-
-	typedef struct tag_MyTile
-	{
-		explicit tag_MyTile()
-		{
-			mTileIndex = -1;
-			mTileMode = TILEMODE_END;
-		}
-		explicit tag_MyTile(int index, E_TILE_MODE e)
-		{
-			mTileIndex = index;
-			mTilePre = index;
-			mTileMode = e;
-		}
-
-		int mTileIndex;
-		int mTilePre;
-		E_TILE_MODE mTileMode;
-	}MYTILE;
 
 protected:
-	explicit CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	explicit CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs);
-	virtual ~CGameObject_MyTerrain() = default;
+	explicit CGameObject_MyTerrain_Daungon(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CGameObject_MyTerrain_Daungon(const CGameObject_MyTerrain_Daungon& rhs);
+	virtual ~CGameObject_MyTerrain_Daungon() = default;
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -85,6 +56,11 @@ protected:
 	virtual HRESULT Set_Component()override;
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
 
+protected:
+	// 상하좌우 검사 해서 큐브 타일 배치
+	HRESULT Update_TerrainTile();
+
+
 
 private:
 	void Update_PickPos(_float3 pickPos);
@@ -104,8 +80,8 @@ protected:
 	vector<MYTILE*>*			mVecTile = nullptr;
 
 public:
-	static CGameObject_MyTerrain* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
-	virtual CGameObject_MyTerrain* Clone(void* pArg);
+	static CGameObject_MyTerrain_Daungon* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
+	virtual CGameObject_MyTerrain_Daungon* Clone(void* pArg);
 	virtual void Free() override;
 };
 

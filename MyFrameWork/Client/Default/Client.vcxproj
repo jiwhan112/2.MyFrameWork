@@ -177,8 +177,10 @@
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Static2.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Tiles.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Base.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain_Daungon.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -241,9 +243,11 @@
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Tiles.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain_Daungon.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

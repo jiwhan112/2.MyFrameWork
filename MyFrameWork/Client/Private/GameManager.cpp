@@ -160,6 +160,15 @@ CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _
 	return (*iter);
 }
 
+const list<CGameObject*>* CGameManager::Get_LevelObjectList(const wchar_t * layerTag)
+{
+	_uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	const list<CGameObject*>* GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(levelIndex, layerTag);
+	if (GameObjectList == nullptr)
+		return nullptr;
+	return GameObjectList;
+}
+
 HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, const char * filetype)
 {
 	if (outPathList->empty())

@@ -25,10 +25,15 @@ public:
 	}
 	const char* Get_Name();
 
-	void Set_AniMationTime(_float timer)
+	void Set_AniMationTime(_float timer);
+	_float Get_AniMationTime()const { return m_PlayTimeAcc; }
+
+	_float Get_MaxAnimaionTime()const
 	{
-		m_PlayTimeAcc = timer;
+		return m_Duration;
 	}
+
+
 
 public:
 	HRESULT NativeConstruct(const char* pName, _double Duration, _double TickPerSecond);
@@ -38,6 +43,7 @@ public:
 	{
 		m_Channels.push_back(pChannel);
 	}
+
 
 private:
 	char		m_szName[MAX_PATH] = "";
@@ -58,6 +64,7 @@ private:
 	typedef vector<class CChannel*>	CHANNELS;
 
 	_bool		m_isFinished = false;
+
 
 public:
 	static CAnimationClip* Create(const char* pName, _double Duration, _double TickPerSecond);

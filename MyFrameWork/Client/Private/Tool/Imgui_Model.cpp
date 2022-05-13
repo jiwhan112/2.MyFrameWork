@@ -608,10 +608,8 @@ HRESULT CImgui_Model::Edit_ANI()
 		return S_FALSE;
 
 	// #TODO: 애니메이션 에디터
-	// 애니메이션 시간에 따라 확인
-	// 애니메이션 블랜딩 확인
+	// 애니메이션 시간에 따라 애니메이션 확인
 	// 애니메이션 합쳐서 새로운 애니메이션 클립 만들기
-	// 애니메이터 제작
 
 	CModel* modelCom = mCurrent_ModelDynamicObject->Get_ComModel();
 	CAnimatior* animator = modelCom->Get_Animaitor();
@@ -697,6 +695,11 @@ HRESULT CImgui_Model::Edit_ANI()
 
 		
 		ImGui::EndListBox();
+
+
+		_float currentTime = animator->Get_CurrentAnimaion()->Get_AniMationTime();
+		ImGui::SliderFloat("ANIMATIONTIME",&currentTime, 0, animator->Get_CurrentAnimaion()->Get_MaxAnimaionTime());
+	///	animator->Get_CurrentAnimaion()->Set_AniMationTime(currentTime);
 
 		_float blendTime = animator->Get_BlendMaxTime();
 		ImGui::DragFloat("BLENDTIMER", &blendTime, 0.01f, 0.01f, 10.f);

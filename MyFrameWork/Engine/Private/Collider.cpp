@@ -40,17 +40,17 @@ HRESULT CCollider::NativeConstruct_Prototype(E_COLLIDER_TYPE eType)
 
 	// 각 타입별로 크기 1인 충돌체 생성
 	meType = eType;
-
+	const _float fDefault = 0.5f;
 	switch (meType)
 	{
 	case COL_AABB:
-		mAABB = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(1.f, 1.f, 1.f));
+		mAABB = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(fDefault, fDefault, fDefault));
 		break;
 	case COL_OBB:
-		mOBB = new BoundingOrientedBox(_float3(0.f, 0.f, 0.f), _float3(1.f, 1.f, 1.f), _float4(0.f, 0.f, 0.f, 1.f));
+		mOBB = new BoundingOrientedBox(_float3(0.f, 0.f, 0.f), _float3(fDefault, fDefault, fDefault), _float4(0.f, 0.f, 0.f, 1.f));
 		break;
 	case COL_SPHERE:
-		mSphere = new BoundingSphere(_float3(0.f, 0.f, 0.f), 1.f);
+		mSphere = new BoundingSphere(_float3(0.f, 0.f, 0.f), fDefault);
 		break;
 	}
 

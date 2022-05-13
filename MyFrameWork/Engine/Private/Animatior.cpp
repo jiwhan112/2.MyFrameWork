@@ -127,7 +127,15 @@ HRESULT CAnimatior::Set_AniString(string AniName)
 	return S_OK;
 }
 
+void CAnimatior::Set_CurrentAnimaionTime(_float time)
+{
+	m_Animations[m_iCurrentAniIndex]->Set_AniMationTime(time);
+}
 
+CAnimationClip* CAnimatior::Get_CurrentAnimaion() const
+{
+	return m_Animations[m_iCurrentAniIndex];
+}
 
 HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 {
@@ -149,8 +157,7 @@ HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 }
 
 HRESULT CAnimatior::Ready_Animation()
-{;
-
+{
 	m_iNumAnimations = m_pScene->mNumAnimations;
 
 	for (_uint i = 0; i < m_iNumAnimations; ++i)
@@ -291,9 +298,7 @@ HRESULT CAnimatior::AniMationBlend(int startindex, int endindex, _double delta)
 			// pKeyNewFrames의 시작 프레임으로 이동
 			vScale = (*pKeyNewFrames)[0]->vScale;
 			vRotation = (*pKeyNewFrames)[0]->vRotation;
-			vPosition = (*pKeyNewFrames)[0]->vPosition;	
-			(*VecStart_AniChannel)[i]->Set_CurrentKeyFrame(0);
-			(*VecEnd_AniChannel)[i]->Set_CurrentKeyFrame(0);			
+			vPosition = (*pKeyNewFrames)[0]->vPosition;				
 		}
 
 		// 현재 프레임의 뼈들의 프레임을 가져와서 해당 키프레임의 위치로 업데이트
