@@ -37,7 +37,9 @@ HRESULT CLevel_Logo::Render()
 	FAILED_CHECK(__super::Render());
 
 #ifdef  _DEBUG
-	SetWindowText(g_hWnd, TEXT("LOGO Level"));
+//	GetSingle(CGameInstance)->Render_Font(TAGFONT(FONT_ARIAL),L"LOGO",_float2(0,0),_float4(0,0,0,0));
+
+	// SetWindowText(g_hWnd, TEXT("LOGO Level"));
 
 #endif //  _DEBUG
 	return S_OK;

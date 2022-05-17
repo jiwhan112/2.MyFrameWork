@@ -87,6 +87,13 @@ CGameObject_Base* CGameObject_Creater::CreateEmptyObject(const E_TAYGAMEOBJECT t
 	return EmptyObject;
 }
 
+HRESULT CGameObject_Creater::PushObject(CGameObject_Base** obj, _uint levelInex, wstring layertag)
+{
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(levelInex, layertag.c_str(), *obj));
+
+	return S_OK;
+}
+
 //HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char * data, wstring protoname)
 //{
 //	_uint offset = 0;
@@ -170,6 +177,12 @@ CGameObject_Base* CGameObject_Creater::Create_ObjectClone_Prefab(_uint levelinde
 		return newObj;
 	}
 	return nullptr;
+}
+
+CGameObject_Base * CGameObject_Creater::Create_ObjectClone_Prefab_NoPush(wstring cloneName)
+{
+	CGameObject_Base* findobject = Find_MapObject(cloneName);
+	return findobject;
 }
 
 HRESULT CGameObject_Creater::Add_MapObject(wstring keyname, CGameObject_Base* obj)

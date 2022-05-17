@@ -11,10 +11,6 @@ CImgui_CommonUI::CImgui_CommonUI(ID3D11Device * device, ID3D11DeviceContext * co
 HRESULT CImgui_CommonUI::NativeConstruct()
 {
 	PATHMODE_ALLLOAD();
-
-
-
-
 	dClock = 0;
 	mFrameCount = 0;
 	mCurrentFrame = 0;
@@ -47,6 +43,13 @@ HRESULT CImgui_CommonUI::Render_UI()
 			FAILED_CHECK(Update_ObjectList());
 			ImGui::End();
 		}
+
+		{
+			// DebugText
+			_float3 pos =  GetSingle(CGameManager)->Get_PickPos();
+			ImGui::DragFloat3("MousePick",(float*)&pos);
+		}
+
 
 		// Frame
 
@@ -145,11 +148,11 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 		static _int selectIndex = -1;
 		_uint cnt = 0;
 
-		for (auto& map : *objmap)
+		for (auto& pair : *objmap)
 		{
-			wstring wstr = map.first;
+			wstring wstr = pair.first;
 			string str = CHelperClass::Convert_Wstr2str(wstr);
-			auto objectList = map.second->Get_GameObjectList();
+			auto objectList = pair.second->Get_GameObjectList();
 			if (objectList == nullptr)
 				continue;
 
@@ -173,6 +176,26 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 			mSelectObject = nullptr;
 		}
 	}
+	if (ImGui::Button("Delect All"))
+	{
+		for (auto& pair : *objmap)
+		{
+
+			if (pair.first == TAGLAY(LAY_CAMERA))
+				continue;
+			else
+			{
+				auto objectList = pair.second->Get_GameObjectList();
+
+				for (auto& obj : *objectList)
+				{
+					obj->Set_Dead();
+				}
+			}
+		}	
+
+	}
+
 
 	/*if (ImGui::BeginListBox("ObjectListBox"))
 	{

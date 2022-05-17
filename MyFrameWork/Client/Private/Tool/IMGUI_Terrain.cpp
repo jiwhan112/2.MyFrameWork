@@ -2,13 +2,7 @@
 #include "Tool/Imgui_Terrain.h"
 #include "Cell.h"
 
-#include "Camera_Client.h"
-#include "GameObject/GameObject_MyTerrain.h"
-#include "GameObject/GameObject_3D_Static.h"
-#include "GameObject/GameObject_3D_Static2.h"
-#include "GameObject/GameObject_3D_Dynamic.h"
-
-
+#include "GameObject/Client_Object.h"
 
 CImgui_Terrain::CImgui_Terrain(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -42,7 +36,7 @@ HRESULT CImgui_Terrain::Update(_double time)
 		if (type == OBJECT_TYPE_TERRAIN)
 		{
 			mCurrent_TerrainObject = static_cast<CGameObject_MyTerrain*>(SelectObject);
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_MAP, SelectObject);
 		}
 	}
 	else
@@ -131,6 +125,23 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 		// 이미 만들어진 오브젝트 추가
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), createobj);
 	}
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Daungeon")))
+	{
+		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		CGameObject* terrainobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	
+		// 이미 만들어진 오브젝트 추가
+		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), terrainobj);
+		GetSingle(CGameManager)->Get_DaungonManager()->Setup_Terrain((CGameObject_MyTerrain*)terrainobj);
+
+	}
+	/*if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Delete_Daungeon")))
+	{
+		GetSingle(CGameManager)->Get_DaungonManager()->Release_DaungonData();
+
+	}*/
+	
 }
 
 void CImgui_Terrain::RENDER_CREATE_PROTO()
@@ -479,7 +490,7 @@ HRESULT CImgui_Terrain::SAVER_MODE()
 			string str = ObjectName;
 			wstring wstr = CHelperClass::Convert_str2wstr(str);
 			mCurrent_TerrainObject->SaveDESC_Objects(mListWorldObjects_Desc);
-			FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_TERRAIN, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_TerrainObject));
+			FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_TERRAIN, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrent_TerrainObject));
 		}
 		IMGUI_TREE_END
 	}

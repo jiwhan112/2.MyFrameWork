@@ -27,6 +27,7 @@ public:
 
 public:
 	CModel*		Get_ComModel() const { return mComModel; }
+	CCollider*	Get_ComCollider() const { return mComCollider; }
 	const MODEL_STATIC_DESC& Get_ModelDESC() const { return mModelStatic_Desc; }
 	const COLLIDER_DESC& Get_ColliderDESC() const { return mCollider_Desc; }
 

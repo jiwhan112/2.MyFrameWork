@@ -37,6 +37,10 @@ public:
 	bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);
 	int  PickForCellIndex(const _float4x4& WorldMatrixInverse);
 	void Pick_ChangeCellOption(const _float4x4& WorldMatrixInverse, CCell::E_CELLTYPE type);
+	const vector<CCell*>* Get_CellVector() const
+	{
+		return &mVecCells;
+	}
 	
 	HRESULT SetUp_NewNaviMesh(list<_float3*>& vpointlist);
 	HRESULT SetUp_AutoMesh(class CVIBuffer_Terrain* terrain);

@@ -142,6 +142,15 @@
     <Filter Include="01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\04.Animatior">
       <UniqueIdentifier>{984f7b80-8f1d-4cc1-9474-99bc0e69f09b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\12.Font">
+      <UniqueIdentifier>{14ed490b-9eb1-4849-af24-f3bd14926d5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\12.Font\Font">
+      <UniqueIdentifier>{41d20310-33da-4e03-b415-a6b1ec2c8b4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\12.Font\Mgr">
+      <UniqueIdentifier>{1945b592-fd31-498f-a4ab-46634627599e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -272,6 +281,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AnimationClip.cpp">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Font.cpp">
+      <Filter>01.Utility\12.Font\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FontMgr.cpp">
+      <Filter>01.Utility\12.Font\Mgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -427,6 +442,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\AnimationClip.h">
       <Filter>01.Utility\06.ComponentMgr\02.VIBuffers\01.Model\02.Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Font.h">
+      <Filter>01.Utility\12.Font\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FontMgr.h">
+      <Filter>01.Utility\12.Font\Mgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

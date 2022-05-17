@@ -35,12 +35,14 @@ public:
 
 	// 빈오브젝트 생성 ObjectManager 와 같은기능
 	CGameObject_Base* CreateEmptyObject(const E_TAYGAMEOBJECT type);
+	HRESULT PushObject(CGameObject_Base** obj,_uint levelInex,wstring layertag);
 
 	// 불러온 데이터로 클론 오브젝트 생성하고 맵에 저장
 //	HRESULT Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char* data, wstring protoname);
 
 	// 맵에 저장된 데이터로 씬에서 클론객체 생성해봄
 	CGameObject_Base* Create_ObjectClone_Prefab(_uint levelindex, wstring cloneName, wstring layertag);
+	CGameObject_Base* Create_ObjectClone_Prefab_NoPush(wstring cloneName);
 
 	//	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
 

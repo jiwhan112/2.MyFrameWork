@@ -20,9 +20,13 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	// #SAVE 오브젝트 저장
 
 	_ulong			dwByte = 0;
-	wstring path = FolderPath + L"\\" + filename;
+	wstring datPath = FolderPath + L"\\" + filename + L".dat";
 
-	HANDLE			hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+//	SaverObject_DESC(type,FolderPath,filename);
+
+
+
+	HANDLE			hFile = CreateFile(datPath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -99,6 +103,24 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	}
 
 	// 3. 파일 닫기
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CObjectIO::SaverObject_DESC(wstring FolderPath, wstring filename, void* desc, _uint size)
+{
+	// #SAVE 데이터 저장
+	_ulong			dwByte = 0;
+
+
+	wstring DescPath = FolderPath + L"\\DESC\\" + filename;
+
+	HANDLE			hFile = CreateFile(DescPath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	WriteFile(hFile, &desc, sizeof(size), &dwByte, nullptr);
 	CloseHandle(hFile);
 
 	return S_OK;

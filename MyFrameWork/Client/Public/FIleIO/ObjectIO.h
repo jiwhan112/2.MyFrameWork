@@ -23,19 +23,23 @@ public:
 	// 오브젝트 타입별로 저장 수행
 	HRESULT SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring filename, CGameObject_Base* obj);
 
+
 	// 데이터를 불러와서 생성기에 넘김
 	HRESULT LoadObject_Create(wstring FolderPath, wstring filename);
 
 	// Creater 맵에 원형 저장
 	bool Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname);
 	
+private:
+	// 오브젝트를 desc타입 별로 나눠서 저장한다.
+	HRESULT SaverObject_DESC(wstring FolderPath, wstring filename, void* desc, _uint size);
 
 
 private:
 	// 임의 데이터 맴버 저장
-	E_OBJECT_TYPE		mObjectType;
-	UI_DESC				mUIDesc;
-	TEXTURE_UI_DESC			mTexDesc;
+	E_OBJECT_TYPE					mObjectType;
+	UI_DESC							mUIDesc;
+	TEXTURE_UI_DESC					mTexDesc;
 
 public:
 	static CObjectIO* Create();

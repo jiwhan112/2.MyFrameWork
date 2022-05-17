@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "Tool/Imgui_Model.h"
-#include "Camera_Client.h"
-#include "GameObject/GameObject_3D_Static.h"
-#include "GameObject/GameObject_3D_Dynamic.h"
-#include "GameObject/GameObject_3D_Static2.h"
+#include "GameObject/Client_Object.h"
+
 
 #include "Model.h"
 #include "AnimationClip.h"
@@ -58,6 +56,12 @@ HRESULT CImgui_Model::Update(_double time)
 			mCurrent_ModelStaticObject_Parent = static_cast<CGameObject_3D_Static2*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_STATIC_PARENT;
 		}
+		else if (type == OBJECT_TYPE_3D_STATIC_TILES)
+		{
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
+			mCurrent_Model_Tiles = static_cast<CGameObject_3D_Tile*>(SelectObject);
+			meModelMode = CImgui_Model::TOOLMODE_MODEL_TILE;
+		}
 
 		else
 			SelectObject = nullptr;
@@ -72,6 +76,8 @@ HRESULT CImgui_Model::Update(_double time)
 		mCurrent_ModelStaticObject = nullptr;
 		mCurrent_ModelDynamicObject = nullptr;
 		mCurrent_ModelStaticObject_Parent = nullptr;
+		mCurrent_Model_Tiles = nullptr;
+
 		meModelMode = CImgui_Model::TOOLMODE_MODEL_END;
 	}
 
@@ -265,8 +271,6 @@ void CImgui_Model::RENDER_CREATEEMPTY()
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
 	}
 
-	ImGui::SameLine();
-
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Dynamic")))
 	{
 		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
@@ -276,8 +280,6 @@ void CImgui_Model::RENDER_CREATEEMPTY()
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
 	}
 
-	ImGui::SameLine();
-
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Static2")))
 	{
 		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
@@ -286,6 +288,16 @@ void CImgui_Model::RENDER_CREATEEMPTY()
 		// 이미 만들어진 오브젝트 추가
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
 	}
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_TILE")))
+	{
+		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_TILE);
+		// 이미 만들어진 오브젝트 추가
+		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
+
+	}
+
 
 }
 
@@ -308,13 +320,13 @@ HRESULT CImgui_Model::SAVER_MODE()
 				switch (meModelMode)
 				{
 				case CImgui_Model::TOOLMODE_MODEL_STATIC:
-					FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_ModelStaticObject));
+					FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrent_ModelStaticObject));
 					break;
 				case CImgui_Model::TOOLMODE_MODEL_DYNAMIC:
-					FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_DYNAMIC, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_ModelDynamicObject));
+					FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_DYNAMIC, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrent_ModelDynamicObject));
 					break;
 				case CImgui_Model::TOOLMODE_MODEL_STATIC_PARENT:
-					FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC_PARENT, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrent_ModelStaticObject_Parent));
+					FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_3D_STATIC_PARENT, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrent_ModelStaticObject_Parent));
 					break;
 				}
 
@@ -481,7 +493,7 @@ HRESULT CImgui_Model::Edit_FBX()
 
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "DeleteChild")))
 		{
-			mCurrent_ModelStaticObject_Parent->Delefe_StaticObejct(selectIndex);
+			mCurrent_ModelStaticObject_Parent->Delete_StaticObejct(selectIndex);
 			selectIndex = -1;
 
 		}
@@ -761,6 +773,11 @@ void CImgui_Model::Free()
 {
 	__super::Free();
 	Safe_Release(mCameraClient);
+
+	Safe_Release(mCurrent_ModelStaticObject);
+	Safe_Release(mCurrent_ModelDynamicObject);
+	Safe_Release(mCurrent_ModelStaticObject_Parent);
+	Safe_Release(mCurrent_Model_Tiles);
 
 	Safe_Delete(mFBX_Static_pathList);
 	Safe_Delete(mProtoStaticModelList);

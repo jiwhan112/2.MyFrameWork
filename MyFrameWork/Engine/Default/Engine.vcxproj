@@ -198,7 +198,9 @@
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Texture_map.h" />
+    <ClInclude Include="..\Public\Font.h" />
     <ClInclude Include="..\Public\Timer.h" />
+    <ClInclude Include="..\Public\FontMgr.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
@@ -243,7 +245,9 @@
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Texture_map.cpp" />
+    <ClCompile Include="..\Private\Font.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
+    <ClCompile Include="..\Private\FontMgr.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />

@@ -83,10 +83,8 @@ _int CGameObject_3D_Static2::LateTick(_double TimeDelta)
 
 HRESULT CGameObject_3D_Static2::Render()
 {
-	FAILED_CHECK(Set_ConstantTable_World());
-	FAILED_CHECK(Set_ConstantTable_Light());
-
-	FAILED_CHECK(Render_Child());
+	//FAILED_CHECK(Set_ConstantTable_World());
+	//FAILED_CHECK(Set_ConstantTable_Light());
 
 	return S_OK;
 }
@@ -98,7 +96,7 @@ HRESULT CGameObject_3D_Static2::Add_StaticObejct(CGameObject_3D_Static* obj)
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Static2::Delefe_StaticObejct(int index)
+HRESULT CGameObject_3D_Static2::Delete_StaticObejct(int index)
 {
 	if (index >= mVecChildObject.size())
 		return E_FAIL;
@@ -117,6 +115,9 @@ HRESULT CGameObject_3D_Static2::Delefe_StaticObejct(int index)
 
 CGameObject_3D_Static * CGameObject_3D_Static2::Get_ChildOfIndex(_uint index) const
 {
+	if (mVecChildObject.empty())
+		return nullptr;
+
 	return mVecChildObject[index];
 }
 
@@ -155,20 +156,20 @@ HRESULT CGameObject_3D_Static2::Render_Child()
 
 
 	// 부모 업데이트
-	/*_uint iNumMaterials = mComModel->Get_NumMaterials();
+	//_uint iNumMaterials = mComModel->Get_NumMaterials();
 
-	for (int i = 0; i < iNumMaterials; ++i)
-	{
-		mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
-		FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
-	}*/
+	//for (int i = 0; i < iNumMaterials; ++i)
+	//{
+	//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+	//	FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
+	//}
 
 	// 자식 업데이트
-	for (auto& model : mVecChildObject)
-	{
-		model->Set_RenderPass(mCurrentShaderPass);
-		model->Render();
-	}
+//	for (auto& model : mVecChildObject)
+//	{
+//		model->Set_RenderPass(mCurrentShaderPass);
+//		model->Render();
+//	}
 	return S_OK;
 }
 

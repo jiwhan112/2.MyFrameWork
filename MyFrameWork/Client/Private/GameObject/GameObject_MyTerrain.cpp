@@ -43,7 +43,6 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	FAILED_CHECK(Set_Component());
 	misPick = false;
-
 	Init_Map(TAGLAY(LAY_OBJECT));
 
 
@@ -54,30 +53,27 @@ _int CGameObject_MyTerrain::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-	_float3 pick;
+	// 지형이라면 네비메시 타입으로 충돌체를 넣는다.
+
+	// 네비게이셔 충돌 기능 -> 충돌 매니저로 옮기자
+
+	GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::COLLIDEROBJ_TERRAIN, this);
+
 
 	// 네비 메시 충돌
-	if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
-	{
-		Update_PickPos(pick);
-	}
-
-	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON) & DIS_Down)
+	//if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
 	//{
-	//	_float3 pick;
-
-	//	// 네비 메시 충돌
-	//	if (true == mComNaviMesh->Pick(mComTransform->GetWorldFloat4x4().Invert(), &pick))
-	//	{
-	//		Update_PickPos(pick);
-	//	}
+	//	Update_PickPos(pick);
 	//}
+
 	return UPDATENONE;
 }
 
 _int CGameObject_MyTerrain::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	_float3 pos =  GetSingle(CGameManager)->Get_PickPos();
+
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_FIRST, this);
 	return UPDATENONE;
@@ -175,6 +171,27 @@ _float3 CGameObject_MyTerrain::Get_TileWorld(_uint index)
 	return mComVIBuffer->Get_TileWorldPos(index);
 }
 
+_uint CGameObject_MyTerrain::GetMapSize()
+{
+	switch (mTerrainDESC.meTerrainSize)
+	{
+	case TERRAINSIZE_16:
+		return 16;
+	case TERRAINSIZE_32:
+		return 32;
+	case TERRAINSIZE_64:
+		return 64;
+	case TERRAINSIZE_128:
+		return 128;
+	case TERRAINSIZE_END:
+		return 0;
+	default:
+		return 0;
+	}
+	
+	return 0;
+}
+
 HRESULT CGameObject_MyTerrain::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -183,8 +200,6 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 	// 모델 타입에 따라 정적모델 동적모델 처리
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
-
-	
 
 	if (mComTexture == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR), TEXT("Com_Texture"), (CComponent**)&mComTexture));

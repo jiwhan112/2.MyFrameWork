@@ -3,6 +3,9 @@
 #include "../Public/Tool/ImguiMgr.h"
 #include "../Public/FIleIO/GameObject_Creater.h"
 #include "../Public/FIleIO/ObjectIO.h"
+#include "../Public/GameObject/Daungon_Manager.h"
+#include "../Public/System/ColliderManager.h"
+
 
 #include "Level_Logo.h"
 #include "Level_Loader.h"
@@ -31,6 +34,11 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 	if (mObjectIoManager == nullptr)
 		mObjectIoManager = CObjectIO::Create();
 
+	if (mDaungonManager == nullptr)
+		mDaungonManager = CDaungon_Manager::Create();
+	if (mColliderManager == nullptr)
+		mColliderManager = CColliderManager::Create();
+
 	if (mGameInstance == nullptr)
 	{
 		mGameInstance = GetSingle(CGameInstance);
@@ -40,25 +48,32 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 	return S_OK;
 }
 
-HRESULT CGameManager::Update(_double timer)
+HRESULT CGameManager::Tick(_double timer)
 {
+	mColliderManager->Tick_ColliderCheck(timer);
+	mDaungonManager->Tick(timer);
 	mIMGUIManager->Update(timer);
 
 	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
 
 	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & DIS_Down)
 	{
-	//	FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
+		//	FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
 	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+	int idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	if (idx == E_LEVEL::LEVEL_LOGO)
 	{
-		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_TOOL)));
+		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+			// 엔진에서 클리어 하기전에 한번 해준다. 
+			LevelLoading(LEVEL_TOOL);
+
+		if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
+			LevelLoading(LEVEL_MYGAMEPLAY);
 	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
+	else
 	{
-		FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_MYGAMEPLAY)));
+		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+			LevelLoading(LEVEL_LOGO);
 	}
 
 	return S_OK;
@@ -81,6 +96,17 @@ CImguiMgr * CGameManager::Get_ImGuiManager()
 CObjectIO * CGameManager::Get_ObjectIOManager()
 {
 	return mObjectIoManager;
+}
+CDaungon_Manager * CGameManager::Get_DaungonManager()
+{
+	return mDaungonManager;
+}
+CColliderManager * CGameManager::Get_ColliderManager()
+{
+	if (mColliderManager == nullptr)
+		return nullptr;
+
+	return mColliderManager;
 }
 const list<MYFILEPATH*>* CGameManager::Get_PathList(E_PATHTYPE type) const
 {
@@ -168,6 +194,38 @@ const list<CGameObject*>* CGameManager::Get_LevelObjectList(const wchar_t * laye
 		return nullptr;
 	return GameObjectList;
 }
+const _float3 & CGameManager::Get_PickPos() const
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	if (mColliderManager == nullptr)
+		return _float3();
+
+	return mColliderManager->Get_PickPos();
+}
+const _bool & CGameManager::Get_IsMousePick() const
+{
+	if (mColliderManager == nullptr)
+		return false;
+
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	return mColliderManager->Get_IsMousePick();
+}
+HRESULT CGameManager::Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE e, CGameObject_Base * col)
+{
+	if (mColliderManager != nullptr)
+		return mColliderManager->Add_ColliderObject(e, col);
+
+	return E_FAIL;
+}
+HRESULT CGameManager::ClearLevel()
+{
+	if (mDaungonManager != nullptr)
+		mDaungonManager->Release_DaungonData();
+	if (mColliderManager != nullptr)
+		mColliderManager->ReleaseObjects();
+
+	return S_OK;
+}
 
 HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, const char * filetype)
 {
@@ -197,6 +255,17 @@ HRESULT CGameManager::Safe_Delete_Path(list<MYFILEPATH*>* outData)
 	return S_OK;
 }
 
+HRESULT CGameManager::LevelLoading(E_LEVEL nextLevel)
+{
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+
+	FAILED_CHECK(ClearLevel());
+	FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, nextLevel)));
+
+
+	return S_OK;
+}
+
 void CGameManager::Free()
 {
 	// Path 데이터 삭제
@@ -209,5 +278,7 @@ void CGameManager::Free()
 	Safe_Release(mCreaterManager);
 	Safe_Release(mIMGUIManager);
 	Safe_Release(mObjectIoManager);
+	Safe_Release(mDaungonManager);
+	Safe_Release(mColliderManager);
 	Safe_Release(mGameInstance);
 }

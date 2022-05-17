@@ -94,7 +94,7 @@ void CImgui_UI::UI_CREATEMODE()
 				// dat 파일 경로에 저장
 				string str = ObjectName;
 				wstring wstr = CHelperClass::Convert_str2wstr(str);
-				Object_IO_Manager->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, wstr + L".dat", mCurrentUIObject);
+				Object_IO_Manager->SaverObject(OBJECT_TYPE_2D, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrentUIObject);
 			}
 		}
 		IMGUI_TREE_END

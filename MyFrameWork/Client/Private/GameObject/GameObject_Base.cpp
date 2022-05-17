@@ -49,6 +49,35 @@ HRESULT CGameObject_Base::Render()
 	return S_OK;
 }
 
+HRESULT CGameObject_Base::Set_Position(_float4 position)
+{
+	mComTransform->Set_State(CTransform::STATE_POSITION, position);
+
+	return S_OK;
+}
+
+HRESULT CGameObject_Base::Set_Position(_float3 position)
+{
+	_float4 pos;
+	pos = position;
+	pos.w = 1;
+	mComTransform->Set_State(CTransform::STATE_POSITION, pos);
+
+	return E_NOTIMPL;
+}
+
+HRESULT CGameObject_Base::Set_Transform(_float4x4 mat)
+{
+	mComTransform->Set_WorldMat(mat);
+	return S_OK;
+}
+
+HRESULT CGameObject_Base::Set_Transform_Local(_float4x4 mat)
+{
+	mComTransform->Set_WorldMat(mat);
+	return S_OK;
+}
+
 HRESULT CGameObject_Base::Set_ConstantTable_World()
 {
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);

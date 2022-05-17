@@ -172,6 +172,9 @@
     <Filter Include="02.GameObject\02.3DObject\1.Terrain\OutWorld">
       <UniqueIdentifier>{df4d321e-f567-4d20-90a5-8cfe69d09003}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameSystems\05.ColliderManager">
+      <UniqueIdentifier>{ceb9ec37-4f7a-407b-aa5b-037be24cf2ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -330,11 +333,17 @@
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Static2.h">
       <Filter>02.GameObject\02.3DObject\0.Base\03.Parent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_3D_Tiles.h">
+    <ClInclude Include="..\Public\GameObject\Client_Object.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\Daungon_Manager.h">
+      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Tile.h">
       <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain_Daungon.h">
-      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
+    <ClInclude Include="..\Public\System\ColliderManager.h">
+      <Filter>03.GameSystems\05.ColliderManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -470,11 +479,14 @@
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\03.Parent</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_3D_Tiles.cpp">
+    <ClCompile Include="..\Private\GameObject\Daungon_Manager.cpp">
+      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Tile.cpp">
       <Filter>02.GameObject\02.3DObject\3.GameObject_Tile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain_Daungon.cpp">
-      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
+    <ClCompile Include="..\Private\System\ColliderManager.cpp">
+      <Filter>03.GameSystems\05.ColliderManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

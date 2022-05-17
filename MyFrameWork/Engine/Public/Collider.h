@@ -11,6 +11,7 @@ class ENGINE_DLL CCollider final : public CComponent
 public:
 	enum E_COLLIDER_TYPE { COL_AABB, COL_OBB, COL_SPHERE, COL_END };
 
+
 public:
 	typedef struct tagOBBDesc
 	{
@@ -36,7 +37,8 @@ public:
 	virtual HRESULT NativeConstruct_Prototype(E_COLLIDER_TYPE eType);
 	virtual HRESULT NativeConstruct(void* pArg);
 	virtual HRESULT Update_Transform(_float4x4 TransformMatrix);
-	virtual bool Update_Collider(CCollider* TargetCollider);
+	virtual bool ColliderCheck(CCollider* TargetCollider);
+	virtual bool ColliderCheck(_ray worldDIr,_float& dist);
 
 public:
 	void SetScale(_float3 size);
@@ -70,6 +72,12 @@ private:
 	bool Update_OBB(CCollider* TargetCollider);
 	bool Update_SPHERE(CCollider* TargetCollider);
 
+	bool Update_AABB(_ray RatDIr, _float& dist);
+	bool Update_OBB(_ray RatDIr, _float& dist);
+	bool Update_SPHERE(_ray RatDIr, _float& dist);
+
+
+
 	bool Update_MY_AABB(CCollider* TargetCollider);
 	bool Update_MY_OBB(CCollider* TargetCollider);
 
@@ -95,6 +103,7 @@ private:
 	// 기본적인 <정점버퍼> 제공
 	PrimitiveBatch<DirectX::VertexPositionColor>*	mBatch = nullptr;
 #endif // _DEBUG
+
 
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, E_COLLIDER_TYPE eType);

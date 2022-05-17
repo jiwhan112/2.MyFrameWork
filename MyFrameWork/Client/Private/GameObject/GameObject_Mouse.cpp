@@ -77,12 +77,11 @@ _int CGameObject_Mouse::Tick(_double TimeDelta)
 	mComTransform->Set_State(CTransform::STATE_POSITION,
 		XMVectorSet(mMousePos.x, mMousePos.y, 0.0f, 1.f));
 
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON))
-	{
-		mIsRender = !mIsRender;
-		mRay = GetSingle(CGameInstance)->Get_Ray_World();
+	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON))
+	//{
+	//	mIsRender = !mIsRender;
 
-	}
+	//}
 	return UPDATENONE;
 }
 

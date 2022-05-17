@@ -51,6 +51,12 @@ public: // 컴포넌트 반환
 	CRenderer*		Get_ComRenderer() { return mComRenderer; }
 	E_OBJECT_TYPE	Get_ObjectTypeID_Client() { return (E_OBJECT_TYPE)mObjectTypeid; }
 
+ public: // 공통 도움 함수
+	 HRESULT Set_Position(_float4 position);
+	 HRESULT Set_Position(_float3 position);
+	 HRESULT Set_Transform(_float4x4 mat);
+	 HRESULT Set_Transform_Local(_float4x4 mat);
+
 protected:
 	// 월드 셰이더 세팅
 	virtual HRESULT Set_ConstantTable_World();
@@ -60,6 +66,7 @@ protected:
 
 protected:
 	_uint			mCurrentShaderPass = 0;
+//	E_LEVEL			mCurrentLevel = LEVEL_END;
 
 	// 모든 클라이언트 오브젝트 기본 컴포넌트
 	CShader*		mComShader = nullptr;

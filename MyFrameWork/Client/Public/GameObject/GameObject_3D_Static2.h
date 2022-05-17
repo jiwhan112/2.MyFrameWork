@@ -34,7 +34,7 @@ public:
 
 public:
 	HRESULT Add_StaticObejct(CGameObject_3D_Static* obj);
-	HRESULT Delefe_StaticObejct(int index);
+	HRESULT Delete_StaticObejct(int index);
 	void	Set_UpdateMode(E_UPDATETYPE mode) { meUpdateType = mode; }
 
 
@@ -50,7 +50,7 @@ protected:
 	HRESULT Tick_Child(_double time);
 	HRESULT LateTick_Child(_double time);
 
-private:
+protected:
 	// 자식객체로 사용
 	vector<CGameObject_3D_Static*>		mVecChildObject;
 	E_UPDATETYPE						meUpdateType = E_UPDATETYPE_NONE;

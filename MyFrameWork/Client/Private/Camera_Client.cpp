@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Camera_Client.h"
+#include "GameObject/Client_Object.h"
 
 CCamera_Client::CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CCamera(pDevice, pDeviceContext)
@@ -55,7 +56,7 @@ _int CCamera_Client::Tick(_double TimeDelta)
 	case CCamera_Client::CAMERA_MODE_MAP:
 		if (mTargetObject)
 		{
-			FAILED_CHECK_NONERETURN(Update_Target_Unit(TimeDelta));
+			FAILED_CHECK_NONERETURN(Update_Target_Terrain(TimeDelta));
 		}
 		break;
 	case CCamera_Client::CAMERA_MODE_GAME_D:
@@ -151,7 +152,7 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 		return E_FAIL;
 
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
-	if (mbTargetSet  == false)
+	if (mbTargetSet == false)
 	{
 		CTransform* targetTrans = mTargetObject->Get_TransformCom();
 		_float3 targetPos = targetTrans->GetState(CTransform::STATE_POSITION);
@@ -195,6 +196,62 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 
 HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 {
+	if (mTargetObject == nullptr)
+		return E_FAIL;
+
+	if (mbTargetSet == false)
+	{
+		_uint size =  static_cast<CGameObject_MyTerrain*>(mTargetObject)->GetMapSize();
+		size *= 0.3f;
+
+		_float3 Postition = _float3(size, 5, size);
+
+		_float3 Dir = _float3(-1,-1.5f,1);
+
+		mComTransform->Set_State(CTransform::STATE_POSITION, Postition);
+		mComTransform->LookAtDir(Dir);
+
+		mbTargetSet = true;
+	}
+
+
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
+	{
+		mComTransform->GO_WorldVec(_float3(0, 0, 1), -45, CTransform::ROTTYPE_Y, TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
+	{
+		mComTransform->GO_WorldVec(_float3(0, 0, -1), -45, CTransform::ROTTYPE_Y, TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_A) & DIS_Press)
+	{
+		mComTransform->GO_Left(TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_D) & DIS_Press)
+	{
+		mComTransform->GO_Right(TimeDelta);
+	}
+
+	const _float MouseSpeed = 4.0f;
+	long MouseMove = pGameInstance->Get_DIMouseMoveState(CInput_Device::MMS_WHEEL);
+
+	if (MouseMove > 0)
+	{
+		// 범위 제한
+		// mTargetObject;
+
+		mComTransform->GO_Straight(TimeDelta * MouseSpeed);
+	}
+
+	if (MouseMove < 0)
+	{
+		mComTransform->GO_Backward(TimeDelta * MouseSpeed);
+	}
 	return S_OK;
 }
 

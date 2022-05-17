@@ -11,7 +11,7 @@ class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND_FIRST,RENDER_NONBLEND_SECOND, RENDER_BLEND, RENDER_UI, RENDER_END };
-public:
+private:
 	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~CRenderer() = default;
 

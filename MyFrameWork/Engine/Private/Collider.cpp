@@ -115,7 +115,7 @@ HRESULT CCollider::Update_Transform(_float4x4 TransformMatrix)
 
 	return S_OK;
 }
-bool CCollider::Update_Collider(CCollider* TargetCollider)
+bool CCollider::ColliderCheck(CCollider* TargetCollider)
 {
 	if (TargetCollider == nullptr || meType == CCollider::COL_END)
 		return false;
@@ -129,6 +129,15 @@ bool CCollider::Update_Collider(CCollider* TargetCollider)
 		return Update_SPHERE(TargetCollider);
 
 	return false;
+}
+bool CCollider::ColliderCheck(_ray worldDIr, _float& dist)
+{
+	if (meType == CCollider::COL_AABB)
+		return Update_AABB(worldDIr, dist);
+	else if (meType == CCollider::COL_OBB)
+		return Update_OBB(worldDIr, dist);
+	else if (meType == CCollider::COL_SPHERE)
+		return Update_SPHERE(worldDIr, dist);
 }
 void CCollider::SetScale(_float3 size)
 {
@@ -252,6 +261,22 @@ bool CCollider::Update_SPHERE(CCollider * TargetCollider)
 		return  mSphere->Intersects(*targetSPHERE);
 
 	return false;
+}
+bool CCollider::Update_AABB(_ray RatDIr,_float& dist)
+{
+
+	return mAABB->Intersects(RatDIr.position, RatDIr.direction, dist);
+
+}
+bool CCollider::Update_OBB(_ray RatDIr, _float& dist)
+{
+	return mOBB->Intersects(RatDIr.position, RatDIr.direction, dist);
+
+}
+bool CCollider::Update_SPHERE(_ray RatDIr, _float& dist)
+{
+	return mSphere->Intersects(RatDIr.position, RatDIr.direction, dist);
+
 }
 bool CCollider::Update_MY_AABB(CCollider * TargetCollider)
 {

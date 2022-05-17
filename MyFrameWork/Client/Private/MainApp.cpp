@@ -3,20 +3,9 @@
 
 #include "Level_Logo.h"
 #include "Level_Loader.h"
+#include "GameObject/Client_Object.h""
 
-#include "Camera_Client.h"
-#include "GameObject/GameObject_2D.h"
-#include "GameObject/GameObject_MyTerrain.h"
-#include "GameObject/Camera_Game.h"
-#include "GameObject/GameObject_Mouse.h"
-#include "GameObject/GameObject_3D_Static.h"
-#include "GameObject/GameObject_3D_Dynamic.h"
-#include "GameObject/GameObject_3D_Static2.h"
 
-#include "GameObject_Skybox.h"
-#include "GameObject_Terrain.h"
-#include "GameObject_FBX.h"
-#include "GameObject_FBX_Ani.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -39,8 +28,9 @@ HRESULT CMainApp::NativeConstruct()
 _int CMainApp::Tick(_double TimeDelta)
 {
 	m_pGameInstance->Tick_Engine(TimeDelta);
+	m_pGameManager->Tick(TimeDelta);
 
-	m_pGameManager->Update(TimeDelta);
+	m_pGameInstance->LateTick_Engine(TimeDelta);
 	return _int();
 }
 
@@ -57,6 +47,11 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Render_Level();
 
 	m_pGameManager->Render();
+
+//	GetSingle(CGameInstance)->Render_Font(TAGFONT(FONT_ARIAL),L"LOGO_테스트",_float2(0,0),_float4(1,0,0,1));
+//	GetSingle(CGameInstance)->Render_Font(TAGFONT(FONT_BRID), L"LOGO_테스트", _float2(0, 0), _float4(1, 0, 0, 1));
+//	GetSingle(CGameInstance)->Render_Font(TAGFONT(FONT_CALIBRI), L"LOGO_테스트", _float2(0, 0), _float4(1, 0, 0, 1));
+
 	// 스왑체인
 	m_pGameInstance->Present();
 
@@ -99,6 +94,15 @@ HRESULT CMainApp::Ready_Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pDeviceContext)))
 		return E_FAIL;
 
+	// 폰트 추가
+	
+//	GetSingle(CGameInstance)->Add_Font(m_pDevice, m_pDeviceContext, TAGFONT(FONT_ARIAL),
+//		L"../bin/Resources/Font/Arial.spritefont");
+//	GetSingle(CGameInstance)->Add_Font(m_pDevice, m_pDeviceContext, TAGFONT(FONT_BRID), 
+//		L"../bin/Resources/Font/Brid.spritefont");
+//	GetSingle(CGameInstance)->Add_Font(m_pDevice, m_pDeviceContext, TAGFONT(FONT_CALIBRI), 
+//		L"../bin/Resources/Font/Calibri.spritefont");
+//
 	return S_OK;
 }
 
@@ -210,7 +214,7 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 	const list<MYFILEPATH*>* listFBXpath_Static = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX_STATIC);
 
 	_float4x4		DefaultTransform;
-	DefaultTransform = _float4x4::CreateScale(1.f) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	DefaultTransform = _float4x4::CreateScale(0.8f) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
 	for (auto& path : *listFBXpath_Static)
 	{
@@ -338,6 +342,16 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	// 지형 깡통
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
 		CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
+
+
+	// 구체화 오브젝트 초기화
+	// 깡통 오브젝트로 만들어진 구체화 오브젝트
+
+	// 타일
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_TILE),
+		CGameObject_3D_Tile::Create(m_pDevice, m_pDeviceContext)));
+
+
 
 	return S_OK;
 }

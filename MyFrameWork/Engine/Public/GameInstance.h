@@ -11,6 +11,7 @@
 #include "FileInfo.h"
 #include "Picking.h"
 #include "Frstum.h"
+#include "FontMgr.h"
 
 BEGIN(Engine)
 
@@ -23,7 +24,10 @@ private:
 
 public:
 	HRESULT Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC& GraphicDesc, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppDeviceContextOut);
+	
 	_int Tick_Engine(_double TimeDelta);
+	_int LateTick_Engine(_double TimeDelta);
+
 	HRESULT Clear_LevelResource(_uint iLevelIndex);
 
 public: /* For.Graphic_Device */
@@ -83,10 +87,14 @@ public: // For. Picking
 	_bool	 Get_isPick() const;
 	_ray	 Get_Ray_World() const;
 
-
 public: // For. Frestum
 	_bool IsIn_WorldSpace(_fvector vPoint, _float fRange = 0);
 	_bool IsIn_LocalSpace(_fvector vPoint, _float fRange = 0);
+
+public: // For, Font
+	HRESULT Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _tchar* pFontTag, const _tchar* pFontFilePath);
+	HRESULT Render_Font(const _tchar* pFontTag, const _tchar* pText, _float2 vPosition, _fvector vColor);
+
 
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;
@@ -100,6 +108,7 @@ private:
 	CFileInfo*					m_pFileMgr = nullptr;
 	CPicking*					m_pPickMgr = nullptr;
 	CFrustum*					m_pFrstumMgr = nullptr;
+	CFontMgr*					m_pFontMgr = nullptr;
 
 public:
 	static void Release_Engine();

@@ -74,6 +74,7 @@ public:
 	int			Get_TileIndex(_float3 worldPos);
 	_float3		Get_TileWorld(_uint index);
 	vector<MYTILE*>* Get_VecTile() { return mVecTile; }
+	_uint		GetMapSize();
 
 public: // DESC
 	HRESULT Init_Map(const _tchar* layertag); // ¸Ê µ¥ÀÌÅÍ·Î ¸Ê¿¡ µû¸¥ °´Ã¼»ý¼º

@@ -20,6 +20,9 @@ unsigned int APIENTRY ThreadFunction(void* pArg)
 
 	switch (pLoader->Get_LevelID())
 	{
+	case LEVEL_LOGO:
+		pLoader->Loading_ForMyGamePlay();
+		break;
 	case LEVEL_GAMEPLAY:
 		pLoader->Loading_ForGamePlay();
 		break;

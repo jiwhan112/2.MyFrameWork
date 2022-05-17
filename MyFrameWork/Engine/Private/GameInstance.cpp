@@ -14,6 +14,7 @@ CGameInstance::CGameInstance()
 	, m_pFileMgr(CFileInfo::GetInstance())
 	, m_pPickMgr(CPicking::GetInstance())
 	, m_pFrstumMgr(CFrustum::GetInstance())
+	, m_pFontMgr(CFontMgr::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -26,6 +27,8 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pFileMgr);
 	Safe_AddRef(m_pPickMgr);
 	Safe_AddRef(m_pFrstumMgr);
+	Safe_AddRef(m_pFontMgr);
+	
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -40,7 +43,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	FAILED_CHECK(m_pObject_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
-	m_pFrstumMgr->Initialize();
+	FAILED_CHECK(m_pFrstumMgr->Initialize());
 	return S_OK;
 }
 
@@ -62,8 +65,21 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 
 	// Frstum
 	m_pFrstumMgr->Tick();
+
 	// PipeLine
 	FAILED_CHECK(m_pPipeLine->Tick());
+
+
+	return 0;
+}
+
+_int CGameInstance::LateTick_Engine(_double TimeDelta)
+{
+
+	if (nullptr == m_pLevel_Manager ||
+		nullptr == m_pObject_Manager)
+		return -1;
+
 
 	// LateTick
 	FAILED_CHECK(m_pLevel_Manager->LateTick(TimeDelta));
@@ -357,6 +373,20 @@ _bool CGameInstance::IsIn_LocalSpace(_fvector vPoint, _float fRange)
 	return m_pFrstumMgr->IsIn_LocalSpace(vPoint, fRange);
 }
 
+HRESULT CGameInstance::Add_Font(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * pFontTag, const _tchar * pFontFilePath)
+{
+	NULL_CHECK_BREAK(m_pFontMgr);
+
+	return m_pFontMgr->Add_Font(pDevice,pDeviceContext,pFontTag,pFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Font(const _tchar * pFontTag, const _tchar * pText, _float2 vPosition, _fvector vColor)
+{
+	NULL_CHECK_BREAK(m_pFontMgr);
+
+	return m_pFontMgr->Render_Font(pFontTag, pText, vPosition, vColor);
+}
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -389,6 +419,9 @@ void CGameInstance::Release_Engine()
 	if (0 != CFrustum::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CFrustum");
 
+	if (0 != CFontMgr::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CFontMgr");
+
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
 
@@ -409,4 +442,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pFileMgr);
 	Safe_Release(m_pPickMgr);
 	Safe_Release(m_pFrstumMgr);
+	Safe_Release(m_pFontMgr);
+
 }

@@ -40,6 +40,9 @@ _int CLevel_Loader::LateTick(_double TimeDelta)
 
 		switch (mNextLevel)
 		{
+		case LEVEL_LOGO:
+			pLevel = CLevel_Logo::Create(m_pDevice, m_pDeviceContext);
+			break;
 		case LEVEL_GAMEPLAY:
 			pLevel = CLevel_GamePlay::Create(m_pDevice, m_pDeviceContext);
 			break;
