@@ -62,14 +62,14 @@ void CDaungon_Manager::Release_DaungonData()
 HRESULT CDaungon_Manager::Init_Tile()
 {
 	_uint* TileXZ = mDaungonTerrain->Get_TerrainBuffer()->Get_XZ();
-	_uint TileX = TileXZ[0];
-	_uint TileZ = TileXZ[1];
+	mSizeX = TileXZ[0];
+	mSizeZ = TileXZ[1];
 
 	// #DEBUG DebugCode
-	TileX = TileZ = 8;
-	static int TileCount = CGameObject_3D_Tile::TILETYPE_TOP;
+//	mSizeX = mSizeZ = 8;
+//	static _int TileCount = CGameObject_3D_Tile::TILETYPE_TOP;
 
-	if (TileX <= 0)
+	if (mSizeX <= 0)
 		return E_FAIL;
 
 	if (mVecTiles == nullptr)
@@ -77,17 +77,19 @@ HRESULT CDaungon_Manager::Init_Tile()
 
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	for (int z = 0; z < TileZ; ++z)
+	for (_int z = 0; z < mSizeZ-1; ++z)
 	{
-		for (int x = 0; x < TileX; ++x)
+		for (_int x = 0; x < mSizeX-1; ++x)
 		{
-			int iIndex = z * TileX + x;
+			_int iIndex = z * mSizeX + x;
 			CGameObject_3D_Tile* tileObj = (CGameObject_3D_Tile*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_TILE);
 			_float3 CreatePosition = mDaungonTerrain->Get_TileWorld(iIndex);
 			CreatePosition.y += 0.01f;
+			
 			tileObj->Set_Position(CreatePosition);
-			TileCount = (TileCount +1)% (int)CGameObject_3D_Tile::TILETYPE_END;
-			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::E_TILETYPE)TileCount);
+			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::TILETYPE_TOP));
+			tileObj->Set_TileIndex(iIndex);
+
 			Create_Manager->PushObject((CGameObject_Base**)&tileObj, levelindex, TAGLAY(LAY_CUBETILE));
 			mVecTiles->push_back(tileObj);
 			Safe_AddRef(tileObj);
@@ -102,12 +104,112 @@ HRESULT CDaungon_Manager::Init_Tile()
 
 HRESULT CDaungon_Manager::Set_Neigbor_Tile()
 {
+	// 타일의 이웃설정하기
+	// 1. 타일 인덱스로 찾기 
+
+	// 전체를 돌리면서 해당 타일의 인덱스가 있는지 확인
+	// 있다면 넣고 없다면 -1;
+
+	int sizeXZ = mSizeX * mSizeZ;
+
+	for (auto& obj: *mVecTiles)
+	{
+		_int currentIndex = obj->Get_TileIndex();
+		
+		// 상하좌우 끝의 타일은 무조건 -1을 받아둔다.
+		// 해당 인덱스가 유효한지 검사 // 없는곳에 -1을 넣고 나머지는 그대로 한다.
+			// 0 ~ SizeX-1 // 아래쪽
+			// index%=SizeX == 0 // 왼쪽
+			// index%=SizeX-1 == 0 // 오른쪽
+			// (SizeX*(SizeZ-1)) ~((SizeX*SizeZ)-1) // 위쪽
+		
+		// 특정 위치의 인덱스에는 유호한 타일 값을 무조건 -1을 넣는다.
+
+		_int iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_END] =
+		{
+			currentIndex - 1,
+			currentIndex + mSizeX,
+			currentIndex + 1,
+			currentIndex - mSizeX
+		};
+
+		//bool bIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_END] =
+		//{
+		//	false,false,false,false
+		//};
+
+		// 해당 인덱스여 따라 예외처리
+
+		// (index % SizeX) == 0 // 왼쪽
+		if ((currentIndex % mSizeX) == 0)
+		{
+			if (iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_LEFT] > 0)
+				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_LEFT] = -1;
+			else
+				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_LEFT] = -1;
+
+		}
+
+
+		// (SizeX*(SizeZ-1)) ~((SizeX*SizeZ)-1) // 위쪽
+		if ( ((mSizeX*(mSizeZ - 1)) <= currentIndex) && (currentIndex <= sizeXZ - 1))
+		{
+
+			if (iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_TOP] >= sizeXZ)
+				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_TOP] = -1;
+			else
+				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_TOP] = -1;
+
+		}
+		// (index % (SizeX-1) == 0 // 오른쪽
+		if ((currentIndex!=0) && ((currentIndex % (mSizeX-1)) == 0) )
+		{
+			iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_RIGHT] = -1;
+
+		}
+
+		// 0 ~ SizeX-1 // 아래쪽
+		if (0 <= currentIndex && currentIndex <= mSizeX - 1)
+		{
+			if (iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_BOTTOM] < 0)
+				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_BOTTOM] = -1;
+			else
+				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_BOTTOM] = -1;
+		}
+
+		// 다음 루프에서는 유효한 인덱스인지 확인
+		for (auto& searchobj : *mVecTiles)
+		{
+			
+			_int SearchIndex = searchobj->Get_TileIndex();
+			for (int i = 0; i< CGameObject_3D_Tile::NEIGHBOR_TILE_END;++i)
+			{
+				if (iIndex[i] < 0 || iIndex[i] >= sizeXZ)
+				{
+					obj->Set_TileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, -1);
+				}
+
+				if ( iIndex[i] == SearchIndex)
+				{
+					obj->Set_TileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, SearchIndex);
+				}
+			}
+		}
+
+		
+	}
 	return S_OK;
 }
 
 
 HRESULT CDaungon_Manager::Update_TerrainTile()
 {
+
+	// 타일 검사해서 연결된 타일에 따라 자신의 타일 상태를 결정한다.
+	
+	// 타일이 변경되면 수행한다.
+	// 객체로 넘길까 생각중
+
 	// _uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 	// 
 	// auto baselist = GetSingle(CGameManager)->Get_LevelObjectList(TAGLAY(LAY_CUBETILE));

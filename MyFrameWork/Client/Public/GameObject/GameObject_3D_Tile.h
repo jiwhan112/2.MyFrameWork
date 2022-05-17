@@ -53,19 +53,21 @@ public:
 
 	//virtual HRESULT Render();
 	HRESULT Set_LoadNewFBX(E_TILETYPE type);
-	
-	
+	void Set_TileIndex(_int index) { mIndex = index; }
+	_int Get_TileIndex()const { return mIndex; }
+
+	void Set_TileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
+
+
 
 protected:
-//	HRESULT Create_Model();
-//	virtual HRESULT Set_Component() override;
+	// 타일 인덱스
+	_int mIndex = -1;
 
-
-private:
-	// 이웃하는 타일
-	// CGameObject_3D_Tiles* mTileObject[NEIGHBOR_TILE_END] = { nullptr, };
-
-	// 타일 FBX 이름
+	// 이웃하는 타일 인덱스
+	_int mNeighborIndex[NEIGHBOR_TILE_END] = { -1,-1,-1,-1 };
+	
+	// 타일 FBX 이름	
 	string mTileNames[TILETYPE_END];
 
 

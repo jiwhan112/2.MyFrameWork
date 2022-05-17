@@ -239,6 +239,28 @@ HRESULT CTransform::Rotation(_fvector vAxis, _float fRadian)
 	return S_OK;
 }
 
+HRESULT CTransform::Rotation_Add(_fvector vAxis, _float fRadian)
+{
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(GetState(CTransform::STATE_RIGHT)));
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(GetState(CTransform::STATE_UP)));
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVectorGetX(XMVector3Length(GetState(CTransform::STATE_LOOK)));
+
+	_float4x4		NewMat = mWorldMatrix;
+
+	_float4x4		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
+	NewMat = NewMat * RotationMatrix;
+
+	vRight = XMVector4Transform(vRight, NewMat);
+	vUp = XMVector4Transform(vUp, NewMat);
+	vLook = XMVector4Transform(vLook, NewMat);
+
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);
+
+	return S_OK;
+}
+
 HRESULT CTransform::Chase(_fvector TargetPos, _double time)
 {
 	return S_OK;

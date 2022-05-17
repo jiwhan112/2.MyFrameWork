@@ -65,8 +65,18 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 	   
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
 	{
-		
-		mCurrentShaderPass = 1;
+		if (mCurrentShaderPass == 0)
+			mCurrentShaderPass = 1;
+		else
+			mCurrentShaderPass = 0;
+	}
+
+	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+	{
+		/// 타일 변경
+
+		// 타일 돌리기
+		mComTransform->Rotation_Add(_float3(0, 1, 0), XMConvertToRadians(90));
 	}
 
 	return S_OK;

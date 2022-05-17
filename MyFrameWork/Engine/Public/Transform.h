@@ -88,7 +88,9 @@ public:
 
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);
-	HRESULT Rotation(_fvector vAxis,_float fRadian);
+	HRESULT Rotation(_fvector vAxis, _float fRadian);
+	HRESULT Rotation_Add(_fvector vAxis, _float fRadian);
+	
 
 	HRESULT Chase(_fvector TargetPos, _double time);
 	HRESULT LookAt(_fvector TargetPos, _double time);

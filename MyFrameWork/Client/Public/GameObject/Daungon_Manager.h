@@ -48,6 +48,8 @@ private:
 //	void Update_TileVec(int x, int z);
 
 protected:
+	_uint mSizeX=0;
+	_uint mSizeZ=0;
 
 	// 积己等 Terrain 历厘
 	CGameObject_MyTerrain*					mDaungonTerrain = nullptr;
