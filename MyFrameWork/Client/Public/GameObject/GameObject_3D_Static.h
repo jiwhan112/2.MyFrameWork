@@ -25,6 +25,10 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
+	// 충돌 함수
+	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist);
+
+
 public:
 	CModel*		Get_ComModel() const { return mComModel; }
 	CCollider*	Get_ComCollider() const { return mComCollider; }

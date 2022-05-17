@@ -23,6 +23,9 @@ public:
 	HRESULT Update(_double time);
 	HRESULT Render();
 
+	HRESULT ClearScene();
+
+
 public:
 	class CImgui_Base* Get_IMGUI(_uint index);
 	CGameObject* Get_SelectObject() const;

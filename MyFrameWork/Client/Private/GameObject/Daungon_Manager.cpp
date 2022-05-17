@@ -65,17 +65,18 @@ HRESULT CDaungon_Manager::Init_Tile()
 	_uint TileX = TileXZ[0];
 	_uint TileZ = TileXZ[1];
 
+	// #DEBUG DebugCode
+	TileX = TileZ = 8;
+	static int TileCount = CGameObject_3D_Tile::TILETYPE_TOP;
+
 	if (TileX <= 0)
 		return E_FAIL;
 
 	if (mVecTiles == nullptr)
 		mVecTiles = NEW vector<CGameObject_3D_Tile*>;
 
-
-
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-
 	for (int z = 0; z < TileZ; ++z)
 	{
 		for (int x = 0; x < TileX; ++x)
@@ -83,8 +84,10 @@ HRESULT CDaungon_Manager::Init_Tile()
 			int iIndex = z * TileX + x;
 			CGameObject_3D_Tile* tileObj = (CGameObject_3D_Tile*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_TILE);
 			_float3 CreatePosition = mDaungonTerrain->Get_TileWorld(iIndex);
+			CreatePosition.y += 0.01f;
 			tileObj->Set_Position(CreatePosition);
-			tileObj->Set_LoadNewFBX(CGameObject_3D_Tile::TILETYPE_TOP);
+			TileCount = (TileCount +1)% (int)CGameObject_3D_Tile::TILETYPE_END;
+			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::E_TILETYPE)TileCount);
 			Create_Manager->PushObject((CGameObject_Base**)&tileObj, levelindex, TAGLAY(LAY_CUBETILE));
 			mVecTiles->push_back(tileObj);
 			Safe_AddRef(tileObj);

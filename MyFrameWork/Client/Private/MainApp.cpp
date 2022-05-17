@@ -214,7 +214,7 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 	const list<MYFILEPATH*>* listFBXpath_Static = m_pGameManager->Get_PathList(CGameManager::PATHTYPE_FBX_STATIC);
 
 	_float4x4		DefaultTransform;
-	DefaultTransform = _float4x4::CreateScale(0.8f) * _float4x4::CreateRotationY(XMConvertToRadians(180));
+	DefaultTransform = _float4x4::CreateScale(0.7f) * _float4x4::CreateRotationY(XMConvertToRadians(180));
 
 	for (auto& path : *listFBXpath_Static)
 	{

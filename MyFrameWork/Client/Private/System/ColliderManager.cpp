@@ -49,6 +49,7 @@ HRESULT CColliderManager::ReleaseObjects()
 
 HRESULT CColliderManager::ColCheck_OBJECTS()
 {
+	// 오브젝트 끼리의 충돌
 	return S_OK;
 }
 
@@ -98,8 +99,10 @@ bool CColliderManager::Check_Mouse_Object(_ray worldRay)
 
 		// 충돌체랑 체크
 		CCollider* ComCollider = staticobj->Get_ComCollider();
-		if (ComCollider->ColliderCheck(worldRay.direction, &mWorldPickPos))
+		_float dist;
+		if (ComCollider->ColliderCheck(worldRay, dist))
 		{
+			staticobj->CollisionFunc(mWorldPickPos, dist);
 			return true;
 		}
 	}
@@ -110,8 +113,14 @@ bool CColliderManager::Check_Mouse_Object(_ray worldRay)
 		if (dynamicobj == nullptr)
 			continue;
 
-		// 충돌체랑 체크
-
+		return false;
+		// 동적 오브젝트는 콜라이더 리스트로 변경
+		/*CCollider* ComCollider = dynamicobj->Get_ComModel();
+		_float dist;
+		if (ComCollider->ColliderCheck(worldRay, dist))
+		{
+			return true;
+		}*/
 	}
 	return false;
 }

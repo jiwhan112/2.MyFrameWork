@@ -56,7 +56,6 @@ _int CGameObject_MyTerrain::Tick(_double TimeDelta)
 	// 지형이라면 네비메시 타입으로 충돌체를 넣는다.
 
 	// 네비게이셔 충돌 기능 -> 충돌 매니저로 옮기자
-
 	GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::COLLIDEROBJ_TERRAIN, this);
 
 
@@ -128,11 +127,9 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 		mTerrainDESC.mTextureMultiSize = 16;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 		Update_TileVec(17, 17);
-		
 		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME16);
-		
-		
 		break;
+
 	case TERRAINSIZE_32:
 		mTerrainDESC.mTextureMultiSize = 32;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
@@ -146,6 +143,7 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 		Update_TileVec(65, 65);
 		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME64);
 		break;
+
 	case TERRAINSIZE_128:
 		mTerrainDESC.mTextureMultiSize = 128;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));

@@ -76,10 +76,9 @@ private:
 	bool Update_OBB(_ray RatDIr, _float& dist);
 	bool Update_SPHERE(_ray RatDIr, _float& dist);
 
-
-
 	bool Update_MY_AABB(CCollider* TargetCollider);
 	bool Update_MY_OBB(CCollider* TargetCollider);
+
 
 private: // 충돌체 정보
 	// 충돌체에 따라서 처리

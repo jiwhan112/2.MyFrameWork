@@ -48,6 +48,7 @@ protected:
 
 protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
+	// 콜라이더 리스트로 할것
 	CCollider*					mComCollider = nullptr;
 	CCollider*					mComCollider2 = nullptr;
 //	CNavigation*				mComNaviMesh = nullptr;

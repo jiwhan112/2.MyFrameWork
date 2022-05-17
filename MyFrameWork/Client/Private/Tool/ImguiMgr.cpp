@@ -141,6 +141,8 @@ HRESULT CImguiMgr::Update(_double time)
 
 	for (auto& gui : mVecIMGUI)
 	{
+		if (gui == nullptr)
+			continue;;
 		gui->Update(time);
 	}
 
@@ -159,6 +161,18 @@ HRESULT CImguiMgr::Render()
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	}
 
+	return S_OK;
+}
+
+HRESULT CImguiMgr::ClearScene()
+{
+	// Common 이외 다 지움
+	for (auto& gui: mVecIMGUI)
+	{
+		if (mCommonUI == gui)
+			continue;
+		Safe_Release(gui);
+	}
 	return S_OK;
 }
 

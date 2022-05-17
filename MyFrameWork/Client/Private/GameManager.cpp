@@ -219,8 +219,12 @@ HRESULT CGameManager::Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE e,
 }
 HRESULT CGameManager::ClearLevel()
 {
+	if (mIMGUIManager != nullptr)
+		mIMGUIManager->ClearScene();
+
 	if (mDaungonManager != nullptr)
 		mDaungonManager->Release_DaungonData();
+
 	if (mColliderManager != nullptr)
 		mColliderManager->ReleaseObjects();
 

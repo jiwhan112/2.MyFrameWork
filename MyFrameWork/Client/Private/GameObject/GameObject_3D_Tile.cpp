@@ -23,10 +23,11 @@ HRESULT CGameObject_3D_Tile::NativeConstruct_Prototype()
 
 	// 이름 정의
 	mTileNames[TILETYPE_TOP] = "tileset_GreyRock_TOP.fbx";
-	mTileNames[TILETYPE_ONEWALL] = "tileset_GreyRock_CO_01.fbx";
-	mTileNames[TILETYPE_TOWWALL] = "tileset_GreyRock_2U_00.fbx";
-
+	mTileNames[TILETYPE_WALL] = "tileset_GreyRock_1U_00.fbx";
+	mTileNames[TILETYPE_CONER] = "tileset_GreyRock_CO_00.fbx";
+	mTileNames[TILETYPE_FLOOR] = "tileset_GreyRock_FLOOR.fbx";
 	mCurrentShaderPass = 0;
+
 	return S_OK;
 }
 
@@ -36,7 +37,7 @@ HRESULT CGameObject_3D_Tile::NativeConstruct(void* pArg)
 
 	mCollider_Desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
 	float size = 0.5f;
-	mCollider_Desc.mSize = _float3(size, 2.0f, size);
+	mCollider_Desc.mSize = _float3(size, 0.5f, size);
 	Set_LoadColliderDESC(mCollider_Desc);
 	Set_Component();
 	
@@ -58,31 +59,27 @@ _int CGameObject_3D_Tile::Tick(_double TimeDelta)
 	return UPDATENONE;
 }
 
+HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
+{
+	FAILED_CHECK(__super::CollisionFunc(PickPosition,dist));
+	   
+	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
+	{
+		
+		mCurrentShaderPass = 1;
+	}
+
+	return S_OK;
+}
+
+
+
 HRESULT CGameObject_3D_Tile::Set_LoadNewFBX(E_TILETYPE type)
 {
 	MODEL_STATIC_DESC desc;
 	strcpy_s(desc.mModelName, mTileNames[type].c_str());
+	Set_LoadModelDESC(desc);
 
-	switch (type)
-	{
-	case Client::CGameObject_3D_Tile::TILETYPE_TOP:
-		Set_LoadModelDESC(desc);
-
-		break;
-	case Client::CGameObject_3D_Tile::TILETYPE_ONEWALL:
-		Set_LoadModelDESC(desc);
-
-		break;
-	case Client::CGameObject_3D_Tile::TILETYPE_TOWWALL:
-		Set_LoadModelDESC(desc);
-
-		break;
-	case Client::CGameObject_3D_Tile::TILETYPE_END:
-		break;
-	default:
-		break;
-
-	}
 	return S_OK;
 }
 

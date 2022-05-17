@@ -87,6 +87,13 @@ HRESULT CGameObject_3D_Static::Render()
 	return S_OK;
 }
 
+HRESULT CGameObject_3D_Static::CollisionFunc(_float3 PickPosition, _float dist)
+{
+	int i = 5;
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Static::Set_LoadModelDESC(const MODEL_STATIC_DESC & desc)
 {
 	memcpy(&mModelStatic_Desc, &desc, sizeof(MODEL_STATIC_DESC));

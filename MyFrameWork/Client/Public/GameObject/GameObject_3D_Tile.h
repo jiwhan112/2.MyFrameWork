@@ -21,8 +21,9 @@ public:
 	enum E_TILETYPE
 	{
 		TILETYPE_TOP,
-		TILETYPE_ONEWALL,
-		TILETYPE_TOWWALL,
+		TILETYPE_WALL,
+		TILETYPE_CONER,
+		TILETYPE_FLOOR,
 		TILETYPE_END
 	};
 
@@ -47,11 +48,13 @@ public:
 
 	virtual _int Tick(_double TimeDelta);
 	//virtual _int LateTick(_double TimeDelta);
-	//
+	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist) override;
+
+
 	//virtual HRESULT Render();
 	HRESULT Set_LoadNewFBX(E_TILETYPE type);
 	
-
+	
 
 protected:
 //	HRESULT Create_Model();
