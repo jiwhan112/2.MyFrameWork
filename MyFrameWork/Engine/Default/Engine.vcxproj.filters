@@ -151,6 +151,15 @@
     <Filter Include="01.Utility\12.Font\Mgr">
       <UniqueIdentifier>{1945b592-fd31-498f-a4ab-46634627599e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\13.RenderTarget">
+      <UniqueIdentifier>{c8f27c4a-09a0-499d-813a-280dc32f3ac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\13.RenderTarget\01.Manager">
+      <UniqueIdentifier>{86a896d1-6a44-49f3-8053-adf9c8e842ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\13.RenderTarget\02.RenderTarget">
+      <UniqueIdentifier>{178f3d48-cd3c-4d8d-aee0-aa0b61943511}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -287,6 +296,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\FontMgr.cpp">
       <Filter>01.Utility\12.Font\Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTargetMgr.cpp">
+      <Filter>01.Utility\13.RenderTarget\01.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>01.Utility\13.RenderTarget\02.RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -448,6 +463,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\FontMgr.h">
       <Filter>01.Utility\12.Font\Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTargetMgr.h">
+      <Filter>01.Utility\13.RenderTarget\01.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>01.Utility\13.RenderTarget\02.RenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

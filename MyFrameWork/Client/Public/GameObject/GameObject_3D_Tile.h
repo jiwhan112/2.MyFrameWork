@@ -58,6 +58,8 @@ public:
 
 	void Set_TileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
 
+	// 타일의 이웃정보에 따라 자신의 상태 변경
+	HRESULT Update_NeighborTile();
 
 
 protected:
