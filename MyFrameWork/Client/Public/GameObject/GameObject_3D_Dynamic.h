@@ -34,38 +34,46 @@ public:
 	virtual HRESULT Render();
 
 public:
-	CModel*		Get_ComModel() const { return mComModel; }
-	const MODEL_DYNAMIC_DESC& Get_ModelDESC() const { return mModelDesc; }
+	CModel*						Get_ComModel() const { return mComModel; }
+	const list<CCollider*>*		Get_ComListCollider() const { return mComListCollider; }
+	CNavigation*				Get_ComNaviMesh() const { return mComNaviMesh; }
+
+	const MODEL_DYNAMIC_DESC&	Get_ModelDESC() const { return mModelDesc; }
 
 	HRESULT		Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC& desc);
 	HRESULT		Setup_Colluder2(_float4x4 worldmat, _float scale);
 
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC desc);
+	HRESULT		Add_ColliderDesc(COLLIDER_DESC* desc,int size);
+
+public:
+	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
 
 
 protected:
 	virtual HRESULT Set_Component() override;
 	HRESULT Update_Collider();
 
+
 //	void		GOMOVE(_double timer);
 
 protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
 
-	// 콜라이더 리스트 추가
+	// 콜라이더 리스트 추가 / 콜라이더는 맵에 넣지 않고 여기서만 관리한다.
 	list<CCollider*>*			mComListCollider = nullptr;
+	CNavigation*				mComNaviMesh = nullptr;
 
-	//	CCollider*				mCollider_Debug = nullptr;
-	//	CNavigation*			mComNaviMesh = nullptr;
+	// CMove*						mCOmMove;
 
 	MODEL_DYNAMIC_DESC			mModelDesc;
 	list<COLLIDER_DESC>			mListColliderDesc;
 
-//	_float3						mGoalPosition;
-//	_float3						mStartPosition;
-//	_float						mTimer;
-//	_float						mTimeMax;
-
+	_float3						mGoalPosition;
+	_float3						mStartPosition;
+	_float						mTimer;
+	_float						mTimeMax;
+	bool						mIsMove = false;
 //	E_BASEAI					meAI;
 
 public:

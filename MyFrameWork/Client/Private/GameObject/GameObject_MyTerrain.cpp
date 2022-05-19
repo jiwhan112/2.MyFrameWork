@@ -27,8 +27,6 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 			memcpy(&mTerrainDESC.mModelObjects[i], &(rhs.mTerrainDESC.mModelObjects[i]), sizeof(MODEL_WORLD_DESC));
 		}
 	}
-
-	mVecTile = nullptr;
 }
 
 HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
@@ -126,28 +124,25 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 	case TERRAINSIZE_16:
 		mTerrainDESC.mTextureMultiSize = 16;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-		Update_TileVec(17, 17);
 		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME16);
 		break;
 
 	case TERRAINSIZE_32:
 		mTerrainDESC.mTextureMultiSize = 32;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-		Update_TileVec(33, 33);
 		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME32);
 		break;
 
 	case TERRAINSIZE_64:
 		mTerrainDESC.mTextureMultiSize = 64;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-		Update_TileVec(65, 65);
 		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME64);
 		break;
 
 	case TERRAINSIZE_128:
 		mTerrainDESC.mTextureMultiSize = 128;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-		Update_TileVec(129, 129);
+		// Update_TileVec(129, 129);
 
 		break;
 	case TERRAINSIZE_END:
@@ -283,32 +278,6 @@ void CGameObject_MyTerrain::Update_PickPos(_float3 pickPos)
 	mPickWorldPos = mComVIBuffer->Get_TileWorldPos(iIndex);
 }
 
-void CGameObject_MyTerrain::Update_TileVec(int xx, int zz)
-{
-	if (mVecTile == nullptr)
-		mVecTile = NEW vector<MYTILE *>;
-	else
-	{
-		for (auto tile : *mVecTile)
-		{
-			Safe_Delete(tile);
-		}
-		mVecTile->clear();
-	}
-
-	mVecTile->reserve(xx*zz);
-
-	for (int z = 0; z < zz; ++z)
-	{
-		for (int x = 0; x < xx; ++x)
-		{
-			int iIndex = z * xx + x;
-			MYTILE* newtile = NEW MYTILE(iIndex, TILEMODE_NONE);
-			mVecTile->push_back(newtile);
-		}
-	}
-}
-
 CGameObject_MyTerrain * CGameObject_MyTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
 	CGameObject_MyTerrain*	pInstance = NEW CGameObject_MyTerrain(pDevice, pDeviceContext);
@@ -340,16 +309,6 @@ void CGameObject_MyTerrain::Free()
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
 	Safe_Release(mComNaviMesh);
-
-	if (mVecTile == nullptr)
-		return;
-
-	for (auto tile : *mVecTile)
-	{
-		Safe_Delete(tile);
-	}
-	mVecTile->clear();
-	Safe_Delete(mVecTile);
 
 	
 	if (mTerrainDESC.mModelObjects != nullptr)

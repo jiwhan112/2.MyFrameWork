@@ -49,6 +49,8 @@ public:
 	_bool Move_OnNavigation(_fvector vPos);
 
 public:
+	HRESULT Update_AbleCell(); // 갈 수 있는 셀의 정보를 업데이트 한다.
+
 	HRESULT Save_NaviMeshData(wstring wpath);
 	HRESULT Load_NaviMeshData(wstring wpath);
 	HRESULT Remove_NaviMeshData();
@@ -85,7 +87,7 @@ private:
 	HRESULT ReadyNaviMeshForListData(list<_float3*>& vpointlist);
 	HRESULT SetUp_Neighbor();
 
-	void ReadyDefault();
+//	void ReadyDefault();
 public:
 	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _tchar* pNaviDataFilePath);
 	virtual CComponent* Clone(void* pArg) override;

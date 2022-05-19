@@ -99,7 +99,7 @@ bool CColliderManager::Check_Mouse_Object(_ray worldRay)
 
 		// 충돌체랑 체크
 		CCollider* ComCollider = staticobj->Get_ComCollider();
-		_float dist;
+		_float dist = -1;
 		if (ComCollider->ColliderCheck(worldRay, dist))
 		{
 			staticobj->CollisionFunc(mWorldPickPos, dist);
@@ -107,20 +107,29 @@ bool CColliderManager::Check_Mouse_Object(_ray worldRay)
 		}
 	}
 
-	for (auto& obj : mListColliders[COLLIDEROBJ_STATIC])
+	for (auto& obj : mListColliders[COLLIDEROBJ_DYNAMIC])
 	{
 		CGameObject_3D_Dynamic* dynamicobj = static_cast<CGameObject_3D_Dynamic*>(obj);
 		if (dynamicobj == nullptr)
 			continue;
 
-		return false;
-		// 동적 오브젝트는 콜라이더 리스트로 변경
-		/*CCollider* ComCollider = dynamicobj->Get_ComModel();
-		_float dist;
-		if (ComCollider->ColliderCheck(worldRay, dist))
+		// 콜라이더 리스트와 충돌체크
+		auto listCollider =  dynamicobj->Get_ComListCollider();
+		if (listCollider == nullptr)
+			continue;
+
+		
+		for (auto& col : *listCollider)
 		{
-			return true;
-		}*/
+			_float dist = -1;
+			_uint ColIndex = 0;
+			if (col->ColliderCheck(worldRay, dist))
+			{
+				dynamicobj->CollisionFunc(mWorldPickPos, dist, ColIndex);
+				ColIndex++;
+				return true;
+			}
+		}
 	}
 	return false;
 }
@@ -156,7 +165,7 @@ bool CColliderManager::ColCheck_MOUSE()
 	// 1차적으로 월드의 모든 오브젝트와 비교한다.
 	// 후 구현
 
-	// Static  / Dynamic
+	// Static / Dynamic
 	if (mIsMousePick = Check_Mouse_Object(worldRay))
 	{
 		return mIsMousePick;

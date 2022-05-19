@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "System/Astar.h"
 
-//CAstar::CAstar(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-//{
-//}
-
 CAstar::CAstar()
 {
 }
@@ -33,50 +29,50 @@ CAstar * CAstar::Create()
 
 void CAstar::Free()
 {
-	if (mListBest.empty() == false)
-	{
-		for (auto tile : mListBest)
-		{
-			Safe_Delete(tile);
-		}
+	//if (mListBest.empty() == false)
+	//{
+	//	for (auto tile : mListBest)
+	//	{
+	//		Safe_Delete(tile);
+	//	}
 
-		mListBest.clear();
-	}
+	//	mListBest.clear();
+	//}
 }
 
 void CAstar::Start_AStar(const _float3& vStart, const _float3& vGoal)
 {
-	mListOpen.clear();
-	mListClose.clear();
-	mListBest.clear();
+	//mListOpen.clear();
+	//mListClose.clear();
+	//mListBest.clear();
 
-	CGameObject_MyTerrain* pterrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
-	if (pterrain == nullptr)
-		return;
+	//CGameObject_MyTerrain* pterrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+	//if (pterrain == nullptr)
+	//	return;
 
-	auto vecTile = pterrain->Get_VecTile();
-	if (vecTile == nullptr)
-		return;
+	///*auto vecTile = pterrain->Get_VecTile();
+	//if (vecTile == nullptr)
+	//	return;*/
 
-	// 시작 지점의 타일 인덱스를 구한다.
-	miStartIndex = pterrain->Get_TileIndex(vStart);
+	//// 시작 지점의 타일 인덱스를 구한다.
+	//miStartIndex = pterrain->Get_TileIndex(vStart);
 
-	int	iGoalIndex = pterrain->Get_TileIndex(vGoal);
+	//int	iGoalIndex = pterrain->Get_TileIndex(vGoal);
 
-	if (0 > miStartIndex || 0 > iGoalIndex)
-		return;
+	//if (0 > miStartIndex || 0 > iGoalIndex)
+	//	return;
 
-	if (miStartIndex == iGoalIndex)
-		return;
+	//if (miStartIndex == iGoalIndex)
+	//	return;
 
-	// 목표 지점이 못가는 곳이면 astar 탐색 중지
-	if ((*vecTile)[iGoalIndex]->mTileMode == CGameObject_MyTerrain::TILEMODE_XXX ||
-		(*vecTile)[iGoalIndex]->mTileMode == CGameObject_MyTerrain::TILEMODE_END)
-		return;
+	//// 목표 지점이 못가는 곳이면 astar 탐색 중지
+	////if ((*vecTile)[iGoalIndex]->mTileMode == CGameObject_MyTerrain::TILEMODE_XXX ||
+	////	(*vecTile)[iGoalIndex]->mTileMode == CGameObject_MyTerrain::TILEMODE_END)
+	////	return;
 
-	// 경로 찾기
-	//if (true == MakeRoute(miStartIndex, iGoalIndex))
-	//	MakeBestList(iGoalIndex);
+	//// 경로 찾기
+	////if (true == MakeRoute(miStartIndex, iGoalIndex))
+	////	MakeBestList(iGoalIndex);
 }
 
 void CAstar::MakeBestList(int iGoalIndex)
@@ -86,23 +82,23 @@ void CAstar::MakeBestList(int iGoalIndex)
 	if (pterrain == nullptr)
 		return;
 
-	auto vecTile = pterrain->Get_VecTile();
+	/*auto vecTile = pterrain->Get_VecTile();
 	if (vecTile == nullptr)
-		return;
+		return;*/
 
-	mListBest.push_front((*vecTile)[iGoalIndex]);
+	// mListBest.push_front((*vecTile)[iGoalIndex]);
 
-	int	iRouteIndex = (*vecTile)[iGoalIndex]->mTilePre;
+	// int	iRouteIndex = (*vecTile)[iGoalIndex]->mTilePre;
 
-	while (true)
-	{
-		if (iRouteIndex == miStartIndex)
-			break;
+	//while (true)
+	//{
+	//	if (iRouteIndex == miStartIndex)
+	//		break;
 
-		// 부모 타일을 역추적하면서 앞에서부터 bestlist 값을 채워 나간다.
-		mListBest.push_front((*vecTile)[iRouteIndex]);
-		iRouteIndex = (*vecTile)[iRouteIndex]->mTilePre;
-	}
+	//	// 부모 타일을 역추적하면서 앞에서부터 bestlist 값을 채워 나간다.
+	//	mListBest.push_front((*vecTile)[iRouteIndex]);
+	//	iRouteIndex = (*vecTile)[iRouteIndex]->mTilePre;
+	//}
 }
 
 //bool CAstar::MakeRoute(int iStartIndex, int iGoalIndex)

@@ -16,33 +16,7 @@ class CGameObject_MyTerrain  :
 	public CGameObject_Base
 {
 public:
-	enum E_TILE_MODE
-	{
-		TILEMODE_NONE,
-		TILEMODE_X,
-		TILEMODE_XX,
-		TILEMODE_XXX,
-		TILEMODE_END
-	};
 
-	typedef struct tag_MyTile
-	{
-		explicit tag_MyTile()
-		{
-			mTileIndex = -1;
-			mTileMode = TILEMODE_END;
-		}
-		explicit tag_MyTile(int index, E_TILE_MODE e)
-		{
-			mTileIndex = index;
-			mTilePre = index;
-			mTileMode = e;
-		}
-
-		int mTileIndex;
-		int mTilePre;
-		E_TILE_MODE mTileMode;
-	}MYTILE;
 
 protected:
 	explicit CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -73,7 +47,6 @@ public:
 	bool		Get_isPick() const { return misPick; };
 	int			Get_TileIndex(_float3 worldPos);
 	_float3		Get_TileWorld(_uint index);
-	vector<MYTILE*>* Get_VecTile() { return mVecTile; }
 	_uint		GetMapSize();
 
 public: // DESC
@@ -89,7 +62,6 @@ protected:
 
 private:
 	void Update_PickPos(_float3 pickPos);
-	void Update_TileVec(int x, int z);
 
 protected:
 	CVIBuffer_Terrain*		mComVIBuffer = nullptr;
@@ -101,8 +73,7 @@ protected:
 	bool misPick = false;
 	_float3 mPickWorldPos = _float3(0, 0, 0);
 
-	// 타일 벡터를 저장해서 여기서 길찾기 수행
-	vector<MYTILE*>*			mVecTile = nullptr;
+
 
 public:
 	static CGameObject_MyTerrain* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

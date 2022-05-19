@@ -35,23 +35,63 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	mComModel->SetUp_AnimIndex(0);
+
+	// #DEBUGCODE 
+	COLLIDER_DESC desc[3];
+	desc[0].meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
+	desc[1].meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc[2].meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc[1].mOffset = _float3(2, 0, 0);
+	desc[1].mSize = _float3(0.5f, 0.5f, 0.5f);;
+	desc[2].mOffset = _float3(-2, 0, 0);
+	desc[2].mSize = _float3(1, 1, 1);;
+	Add_ColliderDesc(desc,3);
+	Update_Collider();
+
 //	meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
 
 //	mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
 
+	mIsMove = false;
 	return S_OK;
 }
 
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-//	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
-	//E_LEVEL Getindex = (E_LEVEL)GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	if (mComListCollider != nullptr)
+	{
+		for (auto& col : *mComListCollider)
+		{
+			col->Update_Transform(mComTransform->GetWorldFloat4x4());
+			GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
+		}
 
-	//// 이동
-	//if (Getindex == LEVEL_MYGAMEPLAY)
-	//	GOMOVE(TimeDelta);
+	}
+
+	if (mIsMove)
+	{
+		mComModel->SetUp_AnimIndex(29);
+
+		mComTransform->LookAt(mGoalPosition);
+
+		mTimer += TimeDelta;
+		if (mTimer > mTimeMax)
+			mIsMove = false;
+
+		_float3 CurrentPos = _float3::Lerp(mStartPosition, mGoalPosition, mTimer / mTimeMax);
+		_float4 CurrentPos4;
+		CurrentPos4 = CurrentPos;
+		CurrentPos4.w = 1;
+
+		if (mComNaviMesh->Move_OnNavigation(CurrentPos4))
+		{
+			mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPos4);
+		}
+
+		
+	}
 
 	return UPDATENONE;
 }
@@ -60,23 +100,24 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	//CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
-	//if (terrain != nullptr)
-	//{
-	//	if (terrain->Get_isPick())
-	//	{
-	//		_float3 worldPos = terrain->Get_PickWorldPos();
-	//		int index = terrain->Get_TileIndex(worldPos);
-	//		mGoalPosition = terrain->Get_TileWorld(index);
-	//		mStartPosition = mComTransform->GetState(CTransform::STATE_POSITION);
+	CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+	if (terrain != nullptr)
+	{
+		
 
-	//		mTimer = 0;
-	//		mTimeMax = _float3::Distance(mStartPosition, mGoalPosition);
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
+		{
+			_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
+			int index = terrain->Get_TileIndex(worldPos);
+			mGoalPosition = terrain->Get_TileWorld(index);
+			mStartPosition = mComTransform->GetState(CTransform::STATE_POSITION);
 
-	//		meAI = CGameObject_3D_Dynamic::BASEAI_MOVE;
-	//	}
-	//	//	mComTransform->Set_State(CTransform::STATE_POSITION, pos);
-	//}
+			mTimer = 0;
+			mTimeMax = _float3::Distance(mStartPosition, mGoalPosition);
+			mIsMove = true;
+		}
+
+	}
 
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
@@ -103,11 +144,16 @@ HRESULT CGameObject_3D_Dynamic::Render()
 		}
 	}
 #ifdef _DEBUG
-//	mComCollider->Render();
-//
-//	mComCollider2->Render();
-//	CTransform* terraintrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN))->Get_TransformCom();
-//	mComNaviMesh->Render(terraintrans);
+	if (mComListCollider != nullptr)
+	{
+		for (auto obj : *mComListCollider)
+		{
+			obj->Render();
+		}
+	}
+
+	CTransform* terraintrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN))->Get_TransformCom();
+	mComNaviMesh->Render(terraintrans);
 #endif // _DEBUG
 
 	return S_OK;
@@ -136,8 +182,23 @@ HRESULT CGameObject_3D_Dynamic::Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DES
 HRESULT CGameObject_3D_Dynamic::Add_ColliderDesc(COLLIDER_DESC desc)
 {
 	mListColliderDesc.push_back(desc);
+	return S_OK;
+}
 
-	Update_Collider();
+HRESULT CGameObject_3D_Dynamic::Add_ColliderDesc(COLLIDER_DESC * desc, int size)
+{
+	for (int i =0; i<size;++i)
+	{
+		Add_ColliderDesc(desc[i]);
+	}
+
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex)
+{
+	// 잘된다.
+
 
 	return S_OK;
 }
@@ -159,66 +220,59 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 	}
 
-//	if (mComNaviMesh == nullptr)
-//		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
+	if (mComNaviMesh == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
+		mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
 
+	}
 	return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::Update_Collider()
 {
-	// 현재 Collider Desc List 정보로 충돌체 자동 추가
+	// Desc 정보로 리스트를 새로 정의한다.
 	if (mComListCollider == nullptr)
 		mComListCollider = NEW list<CCollider*>;
+	else
+	{
+		for (auto& col : *mComListCollider)
+		{
+			Safe_Release(col);
+		}
+		mComListCollider->clear();
+	}
 
+	// Desc 정보로 복수의 충돌체 정의
+	for (auto& desc : mListColliderDesc)
+	{
+		CCollider* com = nullptr;
 
-//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(CO), TEXT("Com_Shader"), (CComponent**)&mComShader));
+		switch (desc.meColliderType)
+		{
+		case CCollider::COL_AABB:
+			com = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB));
+			break;
+		case CCollider::COL_OBB:
+			com = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_OBB));
+			break;
+		case CCollider::COL_SPHERE:
+			com = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE));
+			break;
+		default:
+			break;
+		}
 
+		if (com == nullptr)
+			return E_FAIL;
 
+		com->Set_Offset(desc.mOffset);
+		com->Set_Scale(desc.mSize);
+		mComListCollider->push_back(static_cast<CCollider*>(com));
+	}
 
-//	mComListCollider->push_back();
-
-	return E_NOTIMPL;
+	return S_OK;
 }
-
-//void CGameObject_3D_Dynamic::GOMOVE(_double delta)
-//{
-//	switch (meAI)
-//	{
-//	case Client::CGameObject_3D_Dynamic::BASEAI_IDLE:
-//		mComModel->SetUp_AnimIndex(25);
-//		break;
-//	case Client::CGameObject_3D_Dynamic::BASEAI_MOVE:
-//	{
-//		mComTransform->LookAt(mGoalPosition);
-//
-//		mComModel->SetUp_AnimIndex(29);
-//		mTimer += delta;
-//		_float3 CurrentPos = _float3::Lerp(mStartPosition, mGoalPosition, mTimer / mTimeMax);
-//		_float4 CurrentPos4;
-//		CurrentPos4 = CurrentPos;
-//		CurrentPos4.w = 1;
-//
-//		if (mComNaviMesh->Move_OnNavigation(CurrentPos4))
-//		{
-//			mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPos4);
-//		}
-//		else
-//			meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
-//
-//		//	_float distance =  _float3::Distance(CurrentPos, mGoalPosition);
-//
-//		if (mTimer > mTimeMax)
-//			meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
-//	}
-//
-//	break;
-//	case Client::CGameObject_3D_Dynamic::BASEAI_END:
-//		break;
-//	default:
-//		break;
-//	}
-//}
 
 CGameObject_3D_Dynamic * CGameObject_3D_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -251,5 +305,15 @@ void CGameObject_3D_Dynamic::Free()
 
 	Safe_Release(mComModel);
 	
-	//	Safe_Release(mComNaviMesh);
+	if (mComListCollider != nullptr)
+	{
+		for (auto& col : *mComListCollider)
+		{
+			Safe_Release(col);
+		}
+		mComListCollider->clear();
+		Safe_Delete(mComListCollider);
+	}
+
+	Safe_Release(mComNaviMesh);
 }

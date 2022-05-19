@@ -15,7 +15,7 @@ private:
 public:
 	HRESULT NativeConstruct_Prototype();
 
-	list<CGameObject_MyTerrain::MYTILE*>&	GetBestList() { return mListBest; }
+//	const list<CCell*>&		GetBestList() { return mListBest; }
 
 public:
 	void		Start_AStar(const _float3& vStart, const _float3& vGoal);
@@ -30,10 +30,10 @@ private:
 	//bool		CheckOpen(int iIndex);
 
 private:
-	list<_int>										mListOpen;
-	list<_int>										mListClose;
+	list<_uint>										mListOpen;
+	list<_uint>										mListClose;
 
-	list<CGameObject_MyTerrain::MYTILE*>			mListBest;
+//	list<CCell*>									mListBest;
 
 	int												miStartIndex;
 

@@ -208,7 +208,7 @@ HRESULT CCollider::Render()
 	if (nullptr != mOBB)
 		DX::Draw(mBatch, *mOBB, DirectX::Colors::Green);
 	if (nullptr != mSphere)
-		DX::Draw(mBatch, *mSphere, DirectX::Colors::Green);
+		DX::Draw(mBatch, *mSphere, DirectX::Colors::Blue);
 
 	mBatch->End();
 

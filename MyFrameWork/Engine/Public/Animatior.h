@@ -90,7 +90,7 @@ private: // 애니메이션 클립
 
 private: // 애니메이터
 	bool									misBlend = false;
-	_double									mBlendMaxTime = 0.5f;
+	_double									mBlendMaxTime = 0.2f;
 	_double									mBlendTimer = 0;
 
 

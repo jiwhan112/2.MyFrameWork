@@ -246,6 +246,14 @@ _bool CNavigation::Move_OnNavigation(_fvector vPosition)
 		return true;
 }
 
+HRESULT CNavigation::Update_AbleCell()
+{
+	/// 갈 수 있는 
+
+
+	return S_OK;
+}
+
 HRESULT CNavigation::Save_NaviMeshData(wstring wpath)
 {
 
@@ -497,48 +505,48 @@ HRESULT CNavigation::SetUp_Neighbor()
 	return S_OK;
 }
 
-void CNavigation::ReadyDefault()
-{
-	_float3			vPoints[3];
-	CCell*		pCell = nullptr;
-	_float newY = 0.1f;
-
-	vPoints[0] = _float3(0.f, newY, 5.f);
-	vPoints[1] = _float3(5.f, newY, 0.f);
-	vPoints[2] = _float3(0.f, newY, 0.f);
-
-	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
-	if (nullptr == pCell)
-		return;
-	mVecCells.push_back(pCell);
-
-	vPoints[0] = _float3(0.f, newY, 5.f);
-	vPoints[1] = _float3(5.f, newY, 5.f);
-	vPoints[2] = _float3(5.f, newY, 0.f);
-
-	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
-	if (nullptr == pCell)
-		return;
-	mVecCells.push_back(pCell);
-
-	vPoints[0] = _float3(0.f, newY, 10.f);
-	vPoints[1] = _float3(5.f, newY, 5.f);
-	vPoints[2] = _float3(0.f, newY, 5.f);
-
-	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
-	if (nullptr == pCell)
-		return;
-	mVecCells.push_back(pCell);
-
-	vPoints[0] = _float3(5.f, newY, 5.f);
-	vPoints[1] = _float3(10.f, newY, 0.f);
-	vPoints[2] = _float3(5.f, newY, 0.f);
-
-	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
-	if (nullptr == pCell)
-		return;
-	mVecCells.push_back(pCell);
-}
+//void CNavigation::ReadyDefault()
+//{
+//	_float3			vPoints[3];
+//	CCell*		pCell = nullptr;
+//	_float newY = 0.1f;
+//
+//	vPoints[0] = _float3(0.f, newY, 5.f);
+//	vPoints[1] = _float3(5.f, newY, 0.f);
+//	vPoints[2] = _float3(0.f, newY, 0.f);
+//
+//	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+//	if (nullptr == pCell)
+//		return;
+//	mVecCells.push_back(pCell);
+//
+//	vPoints[0] = _float3(0.f, newY, 5.f);
+//	vPoints[1] = _float3(5.f, newY, 5.f);
+//	vPoints[2] = _float3(5.f, newY, 0.f);
+//
+//	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+//	if (nullptr == pCell)
+//		return;
+//	mVecCells.push_back(pCell);
+//
+//	vPoints[0] = _float3(0.f, newY, 10.f);
+//	vPoints[1] = _float3(5.f, newY, 5.f);
+//	vPoints[2] = _float3(0.f, newY, 5.f);
+//
+//	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+//	if (nullptr == pCell)
+//		return;
+//	mVecCells.push_back(pCell);
+//
+//	vPoints[0] = _float3(5.f, newY, 5.f);
+//	vPoints[1] = _float3(10.f, newY, 0.f);
+//	vPoints[2] = _float3(5.f, newY, 0.f);
+//
+//	pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+//	if (nullptr == pCell)
+//		return;
+//	mVecCells.push_back(pCell);
+//}
 
 CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * pNaviDataFilePath)
 {

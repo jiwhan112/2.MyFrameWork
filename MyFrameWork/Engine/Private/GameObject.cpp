@@ -95,6 +95,16 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTa
 	return S_OK;
 }
 
+CComponent * CGameObject::Create_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+	CComponent*			pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+	if (nullptr == pComponent)
+		return nullptr;
+
+	return pComponent;
+}
+
 HRESULT CGameObject::Release_Component(const _tchar * pComponentTag)
 {
 	CComponent* releasecom = Find_Component(pComponentTag);

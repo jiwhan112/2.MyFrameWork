@@ -20,7 +20,6 @@ public:
 		COLLIDEROBJ_STATIC, COLLIDEROBJ_DYNAMIC, COLLIDEROBJ_TERRAIN, COLLIDEROBJ_END
 	};
 
-
 private:
 	explicit CColliderManager();
 	virtual ~CColliderManager() = default;
