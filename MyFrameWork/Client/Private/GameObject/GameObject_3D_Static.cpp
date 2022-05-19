@@ -147,7 +147,9 @@ HRESULT CGameObject_3D_Static::Set_LoadColliderDESC(const COLLIDER_DESC & desc)
 	case CCollider::COL_END:
 		break;
 	}
-	mComCollider->SetScale(mCollider_Desc.mSize);
+	mComCollider->Set_Scale(mCollider_Desc.mSize);
+	mComCollider->Set_Offset(mCollider_Desc.mOffset);
+
 	return S_OK;
 }
 

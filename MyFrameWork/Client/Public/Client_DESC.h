@@ -117,8 +117,11 @@ typedef struct tag_COLLIDERODEL_DESC
 	{
 		meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 		mSize = _float3(1, 1, 1);
+		mOffset = _float3(0,0,0);
 	}
+
 	CCollider::E_COLLIDER_TYPE meColliderType;
+	_float3 mOffset;
 	_float3 mSize;
 }COLLIDER_DESC;
 

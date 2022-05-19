@@ -14,7 +14,10 @@ HRESULT CDaungon_Manager::NativeConstruct_Prototype()
 
 _int CDaungon_Manager::Tick(_double TimeDelta)
 {
-	return _int();
+
+
+
+	return UPDATENONE;
 }
 
 HRESULT CDaungon_Manager::Init_TileSet()
@@ -66,7 +69,7 @@ HRESULT CDaungon_Manager::Init_Tile()
 	mSizeZ = TileXZ[1];
 
 	// #DEBUG DebugCode
-//	mSizeX = mSizeZ = 8;
+//	mSizeX = mSizeZ = 5;
 //	static _int TileCount = CGameObject_3D_Tile::TILETYPE_TOP;
 
 	if (mSizeX <= 0)
@@ -81,9 +84,11 @@ HRESULT CDaungon_Manager::Init_Tile()
 	{
 		for (_int x = 0; x < mSizeX-1; ++x)
 		{
-			_int iIndex = z * mSizeX + x;
+
 			CGameObject_3D_Tile* tileObj = (CGameObject_3D_Tile*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_TILE);
-			_float3 CreatePosition = mDaungonTerrain->Get_TileWorld(iIndex);
+			_float3 CreatePosition = mDaungonTerrain->Get_TerrainBuffer()->Get_TileWorldPos(x, z);
+			_int iIndex = mDaungonTerrain->Get_TerrainBuffer()->Get_TilIndex(x, z);
+
 			CreatePosition.y += 0.01f;
 			
 			tileObj->Set_Position(CreatePosition);
@@ -99,6 +104,8 @@ HRESULT CDaungon_Manager::Init_Tile()
 	// 이웃 타일 넣기
 	Set_Neigbor_Tile();
 
+	// 초기 세팅
+	Update_TileState();
 	return S_OK;
 }
 
@@ -162,7 +169,9 @@ HRESULT CDaungon_Manager::Set_Neigbor_Tile()
 
 		}
 		// (index % (SizeX-1) == 0 // 오른쪽
-		if ((currentIndex!=0) && ((currentIndex % (mSizeX-1)) == 0) )
+
+		int h = currentIndex * mSizeX;
+		if ((currentIndex!=0) && ((currentIndex % ((mSizeX * h)-1)) == 0) )
 		{
 			iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_RIGHT] = -1;
 
@@ -202,22 +211,45 @@ HRESULT CDaungon_Manager::Set_Neigbor_Tile()
 }
 
 
-HRESULT CDaungon_Manager::Update_TerrainTile()
+
+
+HRESULT CDaungon_Manager::Update_TileState(_int tileIndex)
 {
+	// 타일 인덱스가 없다면 전체 타일 업데이트
+	if (mVecTiles == nullptr)
+		return E_FAIL;
 
-	// 타일 검사해서 연결된 타일에 따라 자신의 타일 상태를 결정한다.
-	
-	// 타일이 변경되면 수행한다.
-	// 객체로 넘길까 생각중
+	bool isFind = false;
+	if (tileIndex == -1)
+	{
+		isFind = true;
+		for (auto& tile : *mVecTiles)
+		{
+			// 타일 정보로 
+			tile->Update_NeighborTile();
+			
+		}
+	}
+	else
+	{
+		for (auto& tile : *mVecTiles)
+		{
+			// 타일 정보로 
+			if (tileIndex == tile->Get_TileIndex())
+			{
+				tile->Update_NeighborTile();
+				isFind = true;
+				return S_OK;
+			}
+		}
+	}
 
-	// _uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	// 
-	// auto baselist = GetSingle(CGameManager)->Get_LevelObjectList(TAGLAY(LAY_CUBETILE));
-
-	// 이웃하는 타일을 기준으로 자신의 상태를 결정한다.
 
 
-	return S_OK;
+	if (isFind)
+		return S_OK;
+	else
+		return E_FAIL;
 }
 
 CDaungon_Manager * CDaungon_Manager::Create()

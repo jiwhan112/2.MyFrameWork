@@ -27,6 +27,15 @@ public:
 		TILETYPE_END
 	};
 
+	// 보이는 면만 깐다.
+	enum E_TILESTATE_TYPE
+	{
+		TILESTATE_TYPE_NONE,		// 상하좌우가 다 있을떄
+		TILESTATE_TYPE_WALLSTATE,	// 상하좌우 중 하나가 없을떄 
+		TILESTATE_TYPE_CONERSTATE,	// 상하좌우 중 두개 가 없을떄 
+		TILESTATE_TYPE_END, // 
+	};
+
 	enum E_NEIGHBOR_TILE
 	{
 		NEIGHBOR_TILE_LEFT,
@@ -57,6 +66,7 @@ public:
 	_int Get_TileIndex()const { return mIndex; }
 
 	void Set_TileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
+
 
 	// 타일의 이웃정보에 따라 자신의 상태 변경
 	HRESULT Update_NeighborTile();

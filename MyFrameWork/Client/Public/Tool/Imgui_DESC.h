@@ -17,6 +17,7 @@ public:
 		TOOLMODE_DESC_NONE,
 		TOOLMODE_DESC_END,
 	};
+
 private:
 	explicit CImgui_DESC(ID3D11Device* device, ID3D11DeviceContext* context);
 	explicit CImgui_DESC(const CImgui_DESC& rhs);

@@ -144,7 +144,7 @@ HRESULT CGameObject_3D_Dynamic::Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DES
 HRESULT CGameObject_3D_Dynamic::Setup_Colluder2(_float4x4 worldmat,_float scale)
 {
 	mComCollider2->Update_Transform(worldmat);
-	mComCollider2->SetScale(_float3(scale, scale, scale));
+	mComCollider2->Set_Scale(_float3(scale, scale, scale));
 
 	return S_OK;
 }

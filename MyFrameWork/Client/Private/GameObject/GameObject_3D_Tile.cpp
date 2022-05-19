@@ -36,8 +36,9 @@ HRESULT CGameObject_3D_Tile::NativeConstruct(void* pArg)
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
 	mCollider_Desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
-	float size = 0.5f;
-	mCollider_Desc.mSize = _float3(size, 0.5f, size);
+	float size = 0.4f;
+	mCollider_Desc.mOffset = _float3(0, 1.3f, 0);
+	mCollider_Desc.mSize = _float3(size, size, size);
 	Set_LoadColliderDESC(mCollider_Desc);
 	Set_Component();
 	
@@ -73,10 +74,18 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
 	{
-		/// 타일 변경
+		// 상하좌우에 연결된 타일이 있다면 자신의 인덱스를 지운다.
+		// 타일 리스트 가져오기
 
-		// 타일 돌리기
-		mComTransform->Rotation_Add(_float3(0, 1, 0), XMConvertToRadians(90));
+		for (int i =0;i< NEIGHBOR_TILE_END;++i)
+		{
+			if(mNeighborIndex[i] == -1)
+				continue;
+
+
+		}
+
+		
 	}
 
 	return S_OK;
@@ -93,24 +102,111 @@ HRESULT CGameObject_3D_Tile::Set_LoadNewFBX(E_TILETYPE type)
 	return S_OK;
 }
 
-//HRESULT CGameObject_3D_Tile::Create_Model()
-//{
-//	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
-//
-//	_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-//
-//	// 참조로 넣어야한다.
-//	for (int i =0;i< TILETYPE_END; i++)
-//	{
-//		CGameObject_3D_Static2* tileobj = (CGameObject_3D_Static2*)Create_Manager->
-//			Create_ObjectClone_Prefab(idx, mTileNames[i].c_str(), TAGLAY(LAY_CUBETILE));
-//
-//		mTileObject[i] = tileobj;
-//		Safe_AddRef(mTileObject[i]);
-//	}	
-//
-//	return S_OK;
-//}
+HRESULT CGameObject_3D_Tile::Update_NeighborTile()
+{
+	// 타일이 삭제됐다고 가정하고 -1인 지점에 따라 타일이 변경된다.
+	
+	// 타일이 하나가 없다면 위아래를 비교하고 설정한다.
+
+	// L
+	if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
+	{
+		if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+		}
+		else if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+		}
+		else
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+
+		}
+
+		return S_OK;
+	}
+	// R
+	if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1)
+	{
+		if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+		}
+		else if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+		}
+		else
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+		}
+
+		return S_OK;
+	}
+
+	// T
+	if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
+	{
+		if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+
+		}
+		else if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+
+		}
+		else
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+
+		}
+
+		return S_OK;
+	}
+
+	// B
+	if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1)
+	{
+		if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+
+
+		}
+		else if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1)
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+
+		}
+		else
+		{
+			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+
+		}
+
+		return S_OK;
+	}
+
+
+	// 두개 없을 떄 
+
+	return S_OK;
+}
+
 
 
 CGameObject_3D_Tile * CGameObject_3D_Tile::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)

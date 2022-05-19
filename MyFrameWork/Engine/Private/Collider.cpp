@@ -106,12 +106,14 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 HRESULT CCollider::Update_Transform(_float4x4 TransformMatrix)
 {
 	// 해당 컴포넌트 위치
+	_float3 tasnData = TransformMatrix.Translation();
+	tasnData += mOffset;
 	if (nullptr != mAABB)
-		mAABB->Center = TransformMatrix.Translation();
+		mAABB->Center = tasnData;
 	if (nullptr != mOBB)
 		mOBB->Transform(*mOBB, TransformMatrix);
 	if (nullptr != mSphere)
-		mSphere->Center = TransformMatrix.Translation();
+		mSphere->Center = tasnData;
 
 	return S_OK;
 }
@@ -139,7 +141,7 @@ bool CCollider::ColliderCheck(_ray worldDIr, _float& dist)
 	else if (meType == CCollider::COL_SPHERE)
 		return Update_SPHERE(worldDIr, dist);
 }
-void CCollider::SetScale(_float3 size)
+void CCollider::Set_Scale(_float3 size)
 {
 	// 일단 대입방식
 	if (nullptr != mAABB)
@@ -149,6 +151,11 @@ void CCollider::SetScale(_float3 size)
 	if (nullptr != mSphere)
 		mSphere->Radius = size.x;
 }
+void CCollider::Set_Offset(_float3 offset)
+{
+	mOffset = offset;
+}
+
 
 CCollider::OBBDESC CCollider::Get_Compute_OBBDesc()
 {

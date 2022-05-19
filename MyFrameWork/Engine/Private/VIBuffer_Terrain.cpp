@@ -248,6 +248,35 @@ _float3 CVIBuffer_Terrain::Get_TileWorldPos(_uint TileIndex)
 
 	return _float3(fCenterX, 0, fCenterZ);
 }
+_float3 CVIBuffer_Terrain::Get_TileWorldPos(_uint x,_uint z)
+{
+	if (x >= miNumX && z >= miNumZ)
+		return _float3(-1, 0, -1);
+
+	int iIndex = z * miNumX + x;
+	// 타일의 월드 위치 반환
+	_uint Indeces[] = {
+		iIndex + miNumX,
+		iIndex + miNumX + 1,
+		iIndex + 1 ,
+		iIndex
+	};
+
+	_float fWidth = mpVertexPos[Indeces[1]].x - mpVertexPos[Indeces[0]].x;
+	_float fDeoth = mpVertexPos[Indeces[0]].z - mpVertexPos[Indeces[3]].z;
+
+	_float fCenterX = mpVertexPos[iIndex].x + fWidth * 0.5f;
+	_float fCenterZ = mpVertexPos[iIndex].z + fDeoth * 0.5f;;
+
+	return _float3(fCenterX, 0, fCenterZ);
+}
+
+_int CVIBuffer_Terrain::Get_TilIndex(_uint x, _uint z)
+{
+	if (x >= miNumX && z >= miNumZ)
+		return -1;
+	return z * miNumX + x;
+}
 
 HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z, const _tchar * newHeight)
 {

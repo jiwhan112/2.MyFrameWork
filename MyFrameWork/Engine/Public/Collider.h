@@ -41,7 +41,8 @@ public:
 	virtual bool ColliderCheck(_ray worldDIr,_float& dist);
 
 public:
-	void SetScale(_float3 size);
+	void Set_Scale(_float3 size);
+	void Set_Offset(_float3 offset);
 	E_COLLIDER_TYPE Get_Type()
 	{
 		return meType;
@@ -89,6 +90,8 @@ private: // 충돌체 정보
 	// 타입과 DESC
 	E_COLLIDER_TYPE				meType = COL_END;
 	COLLIDERDESC				mColliderDesc;
+
+	_float3						mOffset = _float3(0,0,0);
 
 	// Draw 관련
 #ifdef _DEBUG

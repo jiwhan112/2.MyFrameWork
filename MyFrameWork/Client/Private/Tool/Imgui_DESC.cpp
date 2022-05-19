@@ -17,12 +17,8 @@ HRESULT CImgui_DESC::NativeConstruct()
 
 HRESULT CImgui_DESC::Update(_double time)
 {
-
 //	CGameObject_Base* SelectObject = (CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();	
-
 	FAILED_CHECK(Render_UI());
-
-
 	return S_OK;
 }
 
@@ -32,7 +28,6 @@ HRESULT CImgui_DESC::Render_UI()
 	{
 		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_DESC, "DESC")))
 		{
-
 			ImGui::Checkbox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_DESC, "DescSetting"), &mIsDesc);
 			if (mIsDesc)
 			{
@@ -139,9 +134,6 @@ HRESULT CImgui_DESC::Edit_DESC()
 			}
 		}
 	}
-	
-
-
 	return S_OK;
 }
 

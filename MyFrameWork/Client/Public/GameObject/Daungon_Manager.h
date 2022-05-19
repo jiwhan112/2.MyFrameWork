@@ -33,13 +33,12 @@ public: // DESC
 protected:
 	HRESULT Init_Tile();
 	HRESULT Set_Neigbor_Tile();
+	HRESULT Update_TileState(_int TileIndex = -1); 
 
 
 protected:
 	// 상하좌우 검사 해서 큐브 타일 설정
-	HRESULT Init_TileSet(); // 전체 타일을 검사
-	HRESULT Update_TileSet(); // 해당 타일만 검사
-	HRESULT Update_TerrainTile();
+	HRESULT Init_TileSet(); // 전체 타일 초기화
 
 
 

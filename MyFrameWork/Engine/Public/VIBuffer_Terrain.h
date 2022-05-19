@@ -22,6 +22,8 @@ public:
 	// 피킹 타일 인덱스 반환
 	_uint Get_TileIndex(_float3 worldPos);
 	_float3 Get_TileWorldPos(_uint TileIndex);
+	_float3 Get_TileWorldPos(_uint x, _uint z);
+	_int Get_TilIndex(_uint x, _uint z);
 	_uint* Get_XZ() { _uint r[2] = { miNumX ,miNumZ }; return r; };
 
 	HRESULT INIT_Default_VIBuffer(_uint x, _uint z, const _tchar* newHeight = L"");
