@@ -31,16 +31,15 @@ HRESULT CDaungon_Manager::Init_TileSet()
 
 
 
-HRESULT CDaungon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain)
+HRESULT CDaungon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain , E_LEVEL level)
 {
-
 	mDaungonTerrain = terrain;
 	Safe_AddRef(mDaungonTerrain);
 	
 	if (terrain == nullptr)
 		return  E_FAIL;
 
-	FAILED_CHECK(Init_Tile());
+	FAILED_CHECK(Init_Tile(level));
 	FAILED_CHECK(Set_Neigbor_Tile());
 
 	return S_OK;
@@ -51,32 +50,53 @@ void CDaungon_Manager::Release_DaungonData()
 	Safe_Release(mDaungonTerrain);
 	mDaungonTerrain = nullptr;
 
-	if (mVecTiles != nullptr)
+	if (mListVecTiles != nullptr)
 	{
-		for (auto& obj: *mVecTiles) 
+		for (auto& obj: *mListVecTiles) 
 		{
 			Safe_Release(obj);
 		}
-		mVecTiles->clear();
-		Safe_Delete(mVecTiles);
+		mListVecTiles->clear();
+		Safe_Delete(mListVecTiles);
 	}
 }
 
-HRESULT CDaungon_Manager::Init_Tile()
+CGameObject_3D_Tile * CDaungon_Manager::FInd_TIleForIndex(_int TileIndex) const
+{
+	for (auto& obj: *mListVecTiles)
+	{
+		if (obj->Get_TileIndex() == TileIndex)
+		{
+			return obj;
+		}
+	}
+
+	return nullptr;
+}
+
+HRESULT CDaungon_Manager::RemoveTile(CGameObject_3D_Tile * pTIle)
+{
+	if (mListVecTiles == nullptr)
+		return E_FAIL;
+
+	mListVecTiles->remove(pTIle);
+	Safe_Release(pTIle);
+
+	return S_OK;
+}
+
+HRESULT CDaungon_Manager::Init_Tile(E_LEVEL level)
 {
 	_uint* TileXZ = mDaungonTerrain->Get_TerrainBuffer()->Get_XZ();
 	mSizeX = TileXZ[0];
 	mSizeZ = TileXZ[1];
 
-	// #DEBUG DebugCode
-//	mSizeX = mSizeZ = 5;
-//	static _int TileCount = CGameObject_3D_Tile::TILETYPE_TOP;
 
 	if (mSizeX <= 0)
 		return E_FAIL;
 
-	if (mVecTiles == nullptr)
-		mVecTiles = NEW vector<CGameObject_3D_Tile*>;
+	if (mListVecTiles == nullptr)
+		mListVecTiles = NEW list<CGameObject_3D_Tile*>;
 
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
@@ -95,8 +115,8 @@ HRESULT CDaungon_Manager::Init_Tile()
 			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::TILETYPE_TOP));
 			tileObj->Set_TileIndex(iIndex);
 
-			Create_Manager->PushObject((CGameObject_Base**)&tileObj, levelindex, TAGLAY(LAY_CUBETILE));
-			mVecTiles->push_back(tileObj);
+			Create_Manager->PushObject((CGameObject_Base**)&tileObj, level, TAGLAY(LAY_CUBETILE));
+			mListVecTiles->push_back(tileObj);
 			Safe_AddRef(tileObj);
 		}
 	}
@@ -119,7 +139,7 @@ HRESULT CDaungon_Manager::Set_Neigbor_Tile()
 
 	int sizeXZ = mSizeX * mSizeZ;
 
-	for (auto& obj: *mVecTiles)
+	for (auto& obj: *mListVecTiles)
 	{
 		_int currentIndex = obj->Get_TileIndex();
 		
@@ -187,7 +207,7 @@ HRESULT CDaungon_Manager::Set_Neigbor_Tile()
 		}
 
 		// 다음 루프에서는 유효한 인덱스인지 확인
-		for (auto& searchobj : *mVecTiles)
+		for (auto& searchobj : *mListVecTiles)
 		{
 			
 			_int SearchIndex = searchobj->Get_TileIndex();
@@ -216,14 +236,14 @@ HRESULT CDaungon_Manager::Set_Neigbor_Tile()
 HRESULT CDaungon_Manager::Update_TileState(_int tileIndex)
 {
 	// 타일 인덱스가 없다면 전체 타일 업데이트
-	if (mVecTiles == nullptr)
+	if (mListVecTiles == nullptr)
 		return E_FAIL;
 
 	bool isFind = false;
 	if (tileIndex == -1)
 	{
 		isFind = true;
-		for (auto& tile : *mVecTiles)
+		for (auto& tile : *mListVecTiles)
 		{
 			// 타일 정보로 
 			tile->Update_NeighborTile();
@@ -232,7 +252,7 @@ HRESULT CDaungon_Manager::Update_TileState(_int tileIndex)
 	}
 	else
 	{
-		for (auto& tile : *mVecTiles)
+		for (auto& tile : *mListVecTiles)
 		{
 			// 타일 정보로 
 			if (tileIndex == tile->Get_TileIndex())

@@ -24,27 +24,23 @@ public:
 
 public: // DESC
 	// 타일 생성
-	HRESULT Setup_Terrain(CGameObject_MyTerrain* terrain);
+	HRESULT Setup_Terrain(CGameObject_MyTerrain* terrain,E_LEVEL level);
 
 	// 레벨 나갈떄마다
 	void Release_DaungonData();
 
+	// 타일 찾기
+	CGameObject_3D_Tile* FInd_TIleForIndex(_int TileIndex) const;
+	// 타일 지우기
+	HRESULT RemoveTile(CGameObject_3D_Tile* pTIle);
 
-protected:
-	HRESULT Init_Tile();
+private:
+	HRESULT Init_Tile(E_LEVEL level);
 	HRESULT Set_Neigbor_Tile();
 	HRESULT Update_TileState(_int TileIndex = -1); 
 
-
-protected:
 	// 상하좌우 검사 해서 큐브 타일 설정
 	HRESULT Init_TileSet(); // 전체 타일 초기화
-
-
-
-private:
-//	void Update_PickPos(_float3 pickPos);
-//	void Update_TileVec(int x, int z);
 
 protected:
 	_uint mSizeX=0;
@@ -54,7 +50,7 @@ protected:
 	CGameObject_MyTerrain*					mDaungonTerrain = nullptr;
 
 	// 타일객체 벡터 저장
-	vector<CGameObject_3D_Tile*>*			mVecTiles = nullptr;
+	list<CGameObject_3D_Tile*>*			mListVecTiles = nullptr;
 
 
 public:

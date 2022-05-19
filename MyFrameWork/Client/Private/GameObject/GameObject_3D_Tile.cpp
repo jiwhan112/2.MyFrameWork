@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "GameObject/Daungon_Manager.h"
 #include "GameObject/GameObject_3D_Tile.h"
 #include "GameObject/GameObject_3D_Static2.h"
 
@@ -15,6 +16,7 @@ CGameObject_3D_Tile::CGameObject_3D_Tile(const CGameObject_3D_Tile& rhs)
 	{
 		mTileNames[i] = rhs.mTileNames[i];
 	}
+	//mComModel_deco = nullptr;
 }
 
 HRESULT CGameObject_3D_Tile::NativeConstruct_Prototype()
@@ -26,6 +28,9 @@ HRESULT CGameObject_3D_Tile::NativeConstruct_Prototype()
 	mTileNames[TILETYPE_WALL] = "tileset_GreyRock_1U_00.fbx";
 	mTileNames[TILETYPE_CONER] = "tileset_GreyRock_CO_00.fbx";
 	mTileNames[TILETYPE_FLOOR] = "tileset_GreyRock_FLOOR.fbx";
+	mTileNames[TILETYPE_BEHIND] = "tileset_GreyRock_CC_Cap.fbx";
+	mTileNames[TILETYPE_DIAG] = "tileset_GreyRock_DIAG_00.fbx";
+
 	mCurrentShaderPass = 0;
 
 	return S_OK;
@@ -52,12 +57,32 @@ _int CGameObject_3D_Tile::Tick(_double TimeDelta)
 	// #TODO: 충돌 매니저 만들기
 	// 중복 충돌 막기
 	// 마우스 충돌은 한 프레임에 한번만 하게 수정
-
 	GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_STATIC, this);
 
-
-
 	return UPDATENONE;
+}
+
+HRESULT CGameObject_3D_Tile::Render()
+{
+	FAILED_CHECK(__super::Render());
+	
+	//if (mComModel_deco != nullptr)
+	//{
+	//	_uint iNumMaterials = mComModel_deco->Get_NumMaterials();
+
+	//	// 재질 개수만큼 루프
+	//	for (int i = 0; i < iNumMaterials; ++i)
+	//	{
+	//		// 1. Diffuse 텍스처 설정
+	//		mComModel_deco->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+
+	//		// 2. 랜더링
+	//		// 여기서 뼈를 넘긴다.
+	//		FAILED_CHECK(mComModel_deco->Render(mComShader, mCurrentShaderPass, 0));
+	//	}
+
+	//}
+	return S_OK;
 }
 
 HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
@@ -72,6 +97,11 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 			mCurrentShaderPass = 0;
 	}
 
+	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_WHEEL)& DIS_Down)
+	{
+		Update_Debug_TILESTATE();
+	}
+
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
 	{
 		// 상하좌우에 연결된 타일이 있다면 자신의 인덱스를 지운다.
@@ -79,15 +109,20 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 
 		for (int i =0;i< NEIGHBOR_TILE_END;++i)
 		{
-			if(mNeighborIndex[i] == -1)
-				continue;
+			if (mNeighborIndex[i] != -1)
+			{
+				CGameObject_3D_Tile* findtile = GetSingle(CGameManager)->Get_DaungonManager()->FInd_TIleForIndex(mNeighborIndex[i]);
+				if(findtile == nullptr)
+					continue;
 
-
-		}
-
-		
+				findtile->Set_EmptySearchNeighbor(mIndex);
+				findtile->Update_NeighborTile();
+				
+			}
+		}	
+		GetSingle(CGameManager)->Get_DaungonManager()->RemoveTile(this);
+		Set_Dead();
 	}
-
 	return S_OK;
 }
 
@@ -98,116 +133,249 @@ HRESULT CGameObject_3D_Tile::Set_LoadNewFBX(E_TILETYPE type)
 	MODEL_STATIC_DESC desc;
 	strcpy_s(desc.mModelName, mTileNames[type].c_str());
 	Set_LoadModelDESC(desc);
-
 	return S_OK;
+}
+
+//HRESULT CGameObject_3D_Tile::Set_LoadModel_Deco_DESC(E_TILETYPE tileIndex)
+//{
+//	if (tileIndex > TILETYPE_END)
+//		return -1;
+//
+//	// 해당 모델 컴포넌트로 변경
+//	if (mComModel_deco != nullptr)
+//	{
+//		Safe_Release(mComModel_deco);
+//		mComModel_deco = nullptr;
+//	}
+//	FAILED_CHECK(__super::Release_Component(TEXT("Com_Model_Deco")));
+//
+//	if (tileIndex == TILETYPE_END)
+//		return S_OK;
+//
+//	string strModel = mTileNames[tileIndex];
+//	wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
+//
+//	
+//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model_Deco"), (CComponent**)&mComModel_deco));
+//	return S_OK;
+//}
+
+bool CGameObject_3D_Tile::Set_EmptySearchNeighbor(int searchIndex)
+{
+	for (int i = 0; i < NEIGHBOR_TILE_END; ++i)
+	{
+		if (searchIndex == mNeighborIndex[i])
+		{
+			mNeighborIndex[i] = -1;
+			return false;
+		}
+	}
+	return false;
 }
 
 HRESULT CGameObject_3D_Tile::Update_NeighborTile()
 {
-	// 타일이 삭제됐다고 가정하고 -1인 지점에 따라 타일이 변경된다.
-	
-	// 타일이 하나가 없다면 위아래를 비교하고 설정한다.
+	// 타일이 삭제됐다고 가정하고 -1인 지점에 따라 타일이 변경된다.	
+
+	// 타일 상태 결정
+	meTileState = CGameObject_3D_Tile::TILESTATE_TOP;
+
 
 	// L
 	if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
 	{
 		if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_LT;
 		}
 		else if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_LB;
 		}
 		else
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
-
+			meTileState = CGameObject_3D_Tile::TILESTATE_WALL_LEFT;
 		}
 
-		return S_OK;
 	}
 	// R
-	if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1)
+	else if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1)
 	{
 		if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_RT;
+
 		}
 		else if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_RB;
+
 		}
 		else
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+			meTileState = CGameObject_3D_Tile::TILESTATE_WALL_RIGHT;
+
 		}
 
-		return S_OK;
 	}
 
 	// T
-	if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
+	else if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
 	{
 		if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_LT;
+
 
 		}
 		else if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_RT;
 
 		}
 		else
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+			meTileState = CGameObject_3D_Tile::TILESTATE_WALL_TOP;
+
 
 		}
 
-		return S_OK;
 	}
 
 	// B
-	if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1)
+	else if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1)
 	{
 		if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
-
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_LB;
 
 		}
 		else if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1)
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+			meTileState = CGameObject_3D_Tile::TILESTATE_CONER_RB;
 
 		}
 		else
 		{
-			Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
-			mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
-
+			meTileState = CGameObject_3D_Tile::TILESTATE_WALL_BOTTOM;
 		}
 
-		return S_OK;
 	}
 
 
-	// 두개 없을 떄 
+	Update_TILESTATE();
+
 
 	return S_OK;
 }
 
+void CGameObject_3D_Tile::Update_TILESTATE()
+{
+	switch (meTileState)
+	{
+	case Client::CGameObject_3D_Tile::TILESTATE_TOP:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_TOP);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(0));
 
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_WALL_LEFT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(0));
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_WALL_TOP:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_WALL_RIGHT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_WALL_BOTTOM:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_WALL);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_CONER_LB:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(0));
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_CONER_LT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_CONER_RT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_CONER_RB:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_CONER);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+		break;
+	case CGameObject_3D_Tile::TILESTATE_FLOOR:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_FLOOR);
+		break;
+
+	case Client::CGameObject_3D_Tile::TILESTATE_BEHIND_LEFT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_BEHIND);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(0));
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_BEHIND_TOP:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_BEHIND);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_BEHIND_RIGHT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_BEHIND);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_BEHIND_BOTTOM:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_BEHIND);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+		break;
+
+	case Client::CGameObject_3D_Tile::TILESTATE_DIAGTEST_LEFT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_DIAG);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(0));
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_DIAGTEST_TOP:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_DIAG);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(90));
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_DIAGTEST_RIGHT:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_DIAG);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(180));
+
+		break;
+	case Client::CGameObject_3D_Tile::TILESTATE_DIAGTEST_BOTTOM:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_DIAG);
+		mComTransform->Rotation(_float3(0, 1, 0), XMConvertToRadians(270));
+
+		break;
+
+	default:
+		Set_LoadNewFBX(CGameObject_3D_Tile::E_TILETYPE::TILETYPE_TOP);
+		break;
+	}
+}
+
+void CGameObject_3D_Tile::Update_Debug_TILESTATE()
+{
+	int enumTIle = meTileState;
+	enumTIle++;
+	enumTIle %= (E_TILESTATE)TILESTATE_END;
+	meTileState = (E_TILESTATE)enumTIle;
+	Update_TILESTATE();
+}
 
 CGameObject_3D_Tile * CGameObject_3D_Tile::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -237,4 +405,7 @@ CGameObject_3D_Tile* CGameObject_3D_Tile::Clone(void* pArg)
 void CGameObject_3D_Tile::Free()
 {
 	__super::Free();
+
+//	Safe_Release(mComModel_deco);
+
 }

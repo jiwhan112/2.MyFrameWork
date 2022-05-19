@@ -133,7 +133,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 	
 		// 이미 만들어진 오브젝트 추가
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), terrainobj);
-		GetSingle(CGameManager)->Get_DaungonManager()->Setup_Terrain((CGameObject_MyTerrain*)terrainobj);
+		GetSingle(CGameManager)->Get_DaungonManager()->Setup_Terrain((CGameObject_MyTerrain*)terrainobj, (E_LEVEL)levelindex);
 
 	}
 	/*if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Delete_Daungeon")))
@@ -470,6 +470,7 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 
 		return S_OK;
 	}
+	return S_OK;
 }
 
 HRESULT CImgui_Terrain::SAVER_MODE()

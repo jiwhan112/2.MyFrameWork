@@ -207,7 +207,7 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 
 	if (mComVIBuffer == nullptr)
 	{
-		Set_TerrainMode(TERRAINSIZE_16);
+		Set_TerrainMode(TERRAINSIZE_32);
 	}
 
 	return S_OK;

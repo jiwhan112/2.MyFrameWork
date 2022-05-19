@@ -4,6 +4,8 @@
 #include "Tool/Imgui_InGame.h"
 #include "Camera_Client.h"
 
+#include "GameObject/Client_Object.h"
+
 CLevel_MyGamePlay::CLevel_MyGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice, pDeviceContext)
 {
@@ -13,22 +15,22 @@ CLevel_MyGamePlay::CLevel_MyGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext*
 HRESULT CLevel_MyGamePlay::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
-	Ready_IMGUI();
-
-	// 레벨 구성 객체로 게임 레벨을 세팅한다.
-	// 레벨 구성 객체(레벨을 구성하는 ) // 설정 / 초기 MAP / 초기 UI / 초기 SKYBOX Camera 
-	// Player 생성 수 / 위치 / 
-//	FAILED_CHECK(Ready_LEVEL());
-
-	FAILED_CHECK(Ready_Light());
-	FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
-	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
-	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 
 #ifdef _DEBUG
-	// IMGUI 생성
-	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_InGame::Create(m_pDevice, m_pDeviceContext));
+	FAILED_CHECK(Ready_IMGUI());
 #endif
+	// 주면 지형 생성
+	FAILED_CHECK(Ready_Light());
+	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
+	FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
+
+
+	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
+
+	// 기본 게임 레벨 생성
+	FAILED_CHECK(Ready_Level_BaseGame());
+
+	
 
 	return S_OK;
 }
@@ -65,10 +67,9 @@ HRESULT CLevel_MyGamePlay::Ready_Prototype_GameObject()
 HRESULT CLevel_MyGamePlay::Ready_IMGUI()
 {
 	// IMGUI 생성
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_InGame::Create(m_pDevice, m_pDeviceContext));
 
 //	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_MyDemo::Create(m_pDevice, m_pDeviceContext));
-
-//	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_InGame::Create(m_pDevice, m_pDeviceContext));
 	return S_OK;
 }
 
@@ -81,9 +82,10 @@ HRESULT CLevel_MyGamePlay::Ready_Light()
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 
 	LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+//	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
 
 	LightDesc.vDirection = _float4(1, -1.f, 1, 0.f);
 
@@ -127,10 +129,34 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_Mouse(const _tchar * pLayerTag)
 HRESULT CLevel_MyGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_TERRAIN), TAGOBJ(GAMEOBJECT_MYTERRAIN)));
-	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_3D_DYNAMIC)));
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_SKY)));
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_TERRAIN), TAGOBJ(GAMEOBJECT_MYTERRAIN)));
+//	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_3D_DYNAMIC)));
 
+	return S_OK;
+}
+
+HRESULT CLevel_MyGamePlay::Ready_Level_BaseGame()
+{
+	CDaungon_Manager*	 pDaungonManager =  GetSingle(CGameManager)->Get_DaungonManager();
+	CGameObject_Creater* pCreateManager = GetSingle(CGameManager)->Get_CreaterManager();
+
+	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_BACKGROUND), TAGOBJ(GAMEOBJECT_SKY)));
+
+	// 맵 생성
+	CGameObject_Base* terrainobj = pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+
+	// 타일 추가
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mLevelIndex, TAGLAY(LAY_TERRAIN), terrainobj));
+	FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Setup_Terrain((CGameObject_MyTerrain*)terrainobj, (E_LEVEL)mLevelIndex));
+
+	// 플레이어 객체 생성
+	CGameObject_Base* mineobj = pCreateManager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mLevelIndex, TAGLAY(LAY_OBJECT), mineobj));
+
+	
+
+	// 그외
 	return S_OK;
 }
 

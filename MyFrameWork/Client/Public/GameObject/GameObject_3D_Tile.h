@@ -2,6 +2,10 @@
 
 #include "GameObject_3D_Static.h"
 
+BEGIN(Engine)
+class CModel;
+END
+
 BEGIN(Client)
 
 // 타일 오브젝트
@@ -24,16 +28,37 @@ public:
 		TILETYPE_WALL,
 		TILETYPE_CONER,
 		TILETYPE_FLOOR,
+		TILETYPE_BEHIND,
+		TILETYPE_DIAG,
 		TILETYPE_END
 	};
 
 	// 보이는 면만 깐다.
-	enum E_TILESTATE_TYPE
+	enum E_TILESTATE
 	{
-		TILESTATE_TYPE_NONE,		// 상하좌우가 다 있을떄
-		TILESTATE_TYPE_WALLSTATE,	// 상하좌우 중 하나가 없을떄 
-		TILESTATE_TYPE_CONERSTATE,	// 상하좌우 중 두개 가 없을떄 
-		TILESTATE_TYPE_END, // 
+		TILESTATE_TOP,
+		TILESTATE_WALL_LEFT,
+		TILESTATE_WALL_TOP,
+		TILESTATE_WALL_RIGHT,
+		TILESTATE_WALL_BOTTOM,
+		TILESTATE_CONER_LB,
+		TILESTATE_CONER_LT,
+		TILESTATE_CONER_RT,
+		TILESTATE_CONER_RB,
+		TILESTATE_FLOOR,
+
+		TILESTATE_BEHIND_LEFT,
+		TILESTATE_BEHIND_TOP,
+		TILESTATE_BEHIND_RIGHT,
+		TILESTATE_BEHIND_BOTTOM,
+
+		TILESTATE_DIAGTEST_LEFT,
+		TILESTATE_DIAGTEST_TOP,
+		TILESTATE_DIAGTEST_RIGHT,
+		TILESTATE_DIAGTEST_BOTTOM,
+
+
+		TILESTATE_END, 
 	};
 
 	enum E_NEIGHBOR_TILE
@@ -57,19 +82,26 @@ public:
 
 	virtual _int Tick(_double TimeDelta);
 	//virtual _int LateTick(_double TimeDelta);
+	virtual HRESULT Render()override;
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist) override;
 
 
-	//virtual HRESULT Render();
 	HRESULT Set_LoadNewFBX(E_TILETYPE type);
 	void Set_TileIndex(_int index) { mIndex = index; }
 	_int Get_TileIndex()const { return mIndex; }
 
 	void Set_TileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
+	bool Set_EmptySearchNeighbor(int searchIndex);
 
+//	HRESULT Set_LoadModel_Deco_DESC(E_TILETYPE tileIndex);
+public:
 
 	// 타일의 이웃정보에 따라 자신의 상태 변경
 	HRESULT Update_NeighborTile();
+
+protected:
+	void Update_TILESTATE();
+	void Update_Debug_TILESTATE();
 
 
 protected:
@@ -81,6 +113,10 @@ protected:
 	
 	// 타일 FBX 이름	
 	string mTileNames[TILETYPE_END];
+
+	E_TILESTATE	meTileState = TILESTATE_TOP;
+
+//	CModel* mComModel_deco = nullptr;
 
 
 
