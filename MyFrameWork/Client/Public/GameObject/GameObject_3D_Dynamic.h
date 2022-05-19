@@ -38,11 +38,14 @@ public:
 	const MODEL_DYNAMIC_DESC& Get_ModelDESC() const { return mModelDesc; }
 
 	HRESULT		Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC& desc);
-	HRESULT		Setup_Colluder2(_float4x4 worldmat,_float scale);
+	HRESULT		Setup_Colluder2(_float4x4 worldmat, _float scale);
+
+	HRESULT		Add_ColliderDesc(COLLIDER_DESC desc);
 
 
 protected:
 	virtual HRESULT Set_Component() override;
+	HRESULT Update_Collider();
 
 //	void		GOMOVE(_double timer);
 
@@ -52,11 +55,11 @@ protected: // 3D모델 Com / DESC 추가
 	// 콜라이더 리스트 추가
 	list<CCollider*>*			mComListCollider = nullptr;
 
-//	CCollider*					mCollider_Debug = nullptr;
-	
+	//	CCollider*				mCollider_Debug = nullptr;
 	//	CNavigation*			mComNaviMesh = nullptr;
 
 	MODEL_DYNAMIC_DESC			mModelDesc;
+	list<COLLIDER_DESC>			mListColliderDesc;
 
 //	_float3						mGoalPosition;
 //	_float3						mStartPosition;

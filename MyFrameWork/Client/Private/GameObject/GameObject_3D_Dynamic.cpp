@@ -133,6 +133,15 @@ HRESULT CGameObject_3D_Dynamic::Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DES
 	return S_OK;
 }
 
+HRESULT CGameObject_3D_Dynamic::Add_ColliderDesc(COLLIDER_DESC desc)
+{
+	mListColliderDesc.push_back(desc);
+
+	Update_Collider();
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Dynamic::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -154,6 +163,22 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 //		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
 
 	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Update_Collider()
+{
+	// 현재 Collider Desc List 정보로 충돌체 자동 추가
+	if (mComListCollider == nullptr)
+		mComListCollider = NEW list<CCollider*>;
+
+
+//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(CO), TEXT("Com_Shader"), (CComponent**)&mComShader));
+
+
+
+//	mComListCollider->push_back();
+
+	return E_NOTIMPL;
 }
 
 //void CGameObject_3D_Dynamic::GOMOVE(_double delta)
