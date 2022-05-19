@@ -30,6 +30,7 @@ public:
 		IMGUI_TITLE_FBX_ANI, // FBX_ANI 세팅창
 		IMGUI_TITLE_TERRAIN, // TERRAIAN 세팅창
 		IMGUI_TITLE_INGAME, // INGAME 세팅창
+		IMGUI_TITLE_DESC, // DESC 세팅창
 		IMGUI_TITLE_END, //
 	};
 
@@ -51,6 +52,10 @@ public:
 			return "IMGUI_TITLE_FBX_ANI";
 		case IMGUI_TITLE_TERRAIN:
 			return "IMGUI_TITLE_TERRAIN";
+		case IMGUI_TITLE_INGAME:
+			return "IMGUI_TITLE_INGAME";
+		case IMGUI_TITLE_DESC:
+			return "IMGUI_TITLE_DESC";
 		case IMGUI_TITLE_END:
 			return "IMGUI_TITLE_END";
 		default:
@@ -76,6 +81,10 @@ public:
 			return "ANI";
 		case IMGUI_TITLE_TERRAIN:
 			return "TERRAIN";
+		case IMGUI_TITLE_INGAME:
+			return "INGAME";
+		case IMGUI_TITLE_DESC:
+			return "DESC";
 		case IMGUI_TITLE_END:
 			return "ERROR";
 		default:

@@ -32,7 +32,7 @@ public:
 	
 private:
 	// 오브젝트를 desc타입 별로 나눠서 저장한다.
-	HRESULT SaverObject_DESC(wstring FolderPath, wstring filename, void* desc, _uint size);
+	HRESULT Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* desc, _uint size);
 
 
 private:

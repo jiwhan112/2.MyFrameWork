@@ -304,7 +304,7 @@ void CFileInfo::FileOpenTest(wstring savetxtName)
 	//	fWrite.close();
 }
 
-list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
+list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe,bool bflag)
 {
 	list<MYFILEPATH*> pngPathList;
 
@@ -320,10 +320,16 @@ list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe)
 		vector<string> vecStr = StringSplit(line, '|');
 		if (vecStr.size() != 4)
 			continue;
-
-		if (vecStr[2] != exe)
-			continue;
-
+		if (bflag)
+		{
+			if (vecStr[2] != exe)
+				continue;
+		}
+		else
+		{
+			if (vecStr[2] == exe)
+				continue;
+		}
 		MYFILEPATH* path = NEW MYFILEPATH;
 
 		vector<wstring>  vecWStr;

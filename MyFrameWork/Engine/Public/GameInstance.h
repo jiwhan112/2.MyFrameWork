@@ -77,7 +77,7 @@ public: // For. Light
 public: // For. File
 	HRESULT FolderFinder(const wstring& FileFolder);
 	void SaveVectorToDat(const wstring& savetxtName, wstring exename = L"");
-	list<MYFILEPATH*> Load_ExtensionList(const wstring& txtfilepath, string exe);
+	list<MYFILEPATH*> Load_ExtensionList(const wstring& txtfilepath, string exe,bool bFlag);
 	wstring Get_PathData(wstring Fullpath);
 
 public: // For. Picking

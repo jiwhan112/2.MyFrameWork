@@ -19,6 +19,9 @@ private:
 	ID3D11DeviceContext*	mDeviceContext = nullptr;
 	
 
+	// 2D 랜더 타깃
+	ID3D11Texture2D*				mTexture2D = nullptr;
+
 	// 랜더타깃 처리 클래스
 	ID3D11RenderTargetView*			mRTV = nullptr;
 	// 리소스로 넘길 수 있는 클래스

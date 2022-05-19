@@ -30,7 +30,7 @@ public:
 	// 스프라이트 3D데이터 바이너리 사운드...
 	enum E_PATHTYPE
 	{
-		PATHTYPE_SPRITE, PATHTYPE_FBX_STATIC, PATHTYPE_FBX_DYNAMIC, PATHTYPE_FBXTEX, PATHTYPE_DATA, PATHTYPE_SOUND, PATHTYPE_END
+		PATHTYPE_SPRITE, PATHTYPE_FBX_STATIC, PATHTYPE_FBX_DYNAMIC, PATHTYPE_FBXTEX, PATHTYPE_DATA, PATHTYPE_DESC, PATHTYPE_SOUND, PATHTYPE_END
 	};
 
 private:
@@ -67,7 +67,7 @@ public: // Collider
 private:
 	// 경로 저장
 	HRESULT Initialize_PathData();
-	HRESULT Set_PathData(list<MYFILEPATH*>* outData, wstring str, const char* filetype);
+	HRESULT Set_PathData(list<MYFILEPATH*>* outData, wstring str, const char* filetype, bool bFlag = true);
 	HRESULT Safe_Delete_Path(list<MYFILEPATH*>* outData);
 
 private:

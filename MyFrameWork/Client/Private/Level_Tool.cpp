@@ -8,6 +8,7 @@
 #include "Tool/Imgui_UI.h"
 #include "Tool/Imgui_Model.h"
 #include "Tool/IMGUI_Terrain.h"
+#include "Tool/Imgui_DESC.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice, pDeviceContext)
@@ -68,6 +69,7 @@ HRESULT CLevel_Tool::Ready_Tools()
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_UI::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Model::Create(m_pDevice, m_pDeviceContext));
 	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_Terrain::Create(m_pDevice, m_pDeviceContext));
+	GetSingle(CGameManager)->Get_ImGuiManager()->Add_IMGUI(CImgui_DESC::Create(m_pDevice, m_pDeviceContext));
 #endif
 
 	// 오브젝트 생성

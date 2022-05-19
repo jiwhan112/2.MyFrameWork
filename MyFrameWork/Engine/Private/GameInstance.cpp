@@ -311,10 +311,10 @@ void CGameInstance::SaveVectorToDat(const wstring&  savetxtName, wstring exename
 	m_pFileMgr->SaveVectorToDat(savetxtName, exename);
 }
 
-list<MYFILEPATH*> CGameInstance::Load_ExtensionList(const wstring& txtfilepath, string exe)
+list<MYFILEPATH*> CGameInstance::Load_ExtensionList(const wstring& txtfilepath, string exe, bool bFlag)
 {
 	NULL_CHECK_BREAK(m_pFileMgr);
-	return m_pFileMgr->Load_ExtensionList(txtfilepath, exe);
+	return m_pFileMgr->Load_ExtensionList(txtfilepath, exe, bFlag);
 }
 
 wstring CGameInstance::Get_PathData(wstring Fullpath)

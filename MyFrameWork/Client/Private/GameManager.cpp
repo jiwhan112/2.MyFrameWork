@@ -123,6 +123,7 @@ HRESULT CGameManager::Initialize_PathData()
 	Set_PathData(&mListPath[PATHTYPE_FBX_DYNAMIC], STR_FILEPATH_RESOURCE_3DPATHTXT_DYNAMIC_L, "fbx");
 	Set_PathData(&mListPath[PATHTYPE_FBXTEX], STR_FILEPATH_RESOURCE_3DTEXPATHHTXT_L, "png");
 	Set_PathData(&mListPath[PATHTYPE_DATA], STR_FILEPATH_RESOURCE_DATPATHTXT_L, "dat");
+	Set_PathData(&mListPath[PATHTYPE_DESC], STR_FILEPATH_RESOURCE_DATPATHTXT_L, "dat", false);
 
 	return S_OK;
 }
@@ -148,6 +149,9 @@ HRESULT CGameManager::Set_ReListPath(E_PATHTYPE type)
 
 	case Client::CGameManager::PATHTYPE_DATA:
 		Set_PathData(&mListPath[PATHTYPE_DATA], STR_FILEPATH_RESOURCE_DATPATHTXT_L, "dat");
+		break;
+	case Client::CGameManager::PATHTYPE_DESC:
+		Set_PathData(&mListPath[PATHTYPE_DESC], STR_FILEPATH_RESOURCE_DATPATHTXT_L, "dat",false);
 		break;
 
 	case Client::CGameManager::PATHTYPE_END:
@@ -231,10 +235,10 @@ HRESULT CGameManager::ClearLevel()
 	return S_OK;
 }
 
-HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, const char * filetype)
+HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, const char * filetype , bool bFlag)
 {
 	if (outPathList->empty())
-		*outPathList = mGameInstance->Load_ExtensionList(str, filetype);
+		*outPathList = mGameInstance->Load_ExtensionList(str, filetype, bFlag);
 	else
 	{
 		for (auto pathdata : *outPathList)
@@ -242,7 +246,7 @@ HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, 
 			Safe_Delete(pathdata);
 		}
 		outPathList->clear();
-		*outPathList = mGameInstance->Load_ExtensionList(str, filetype);
+		*outPathList = mGameInstance->Load_ExtensionList(str, filetype, bFlag);
 	}
 
 	return S_OK;

@@ -12,6 +12,49 @@ enum E_TERRAINSIZE
 
 // DESC DATA
 
+// DESC 정보 구분
+enum E_DESC_DATA
+{
+	DESC_DATA_WORLD, // 월드 행렬
+	DESC_DATA_TEXTURENAME, // 텍스처이름 모음
+	DESC_DATA_STRNAME, // 모델 이름
+	DESC_DATA_COLLIDER, // Collider 
+	DESC_DATA_TERRAIN, // Terrain
+	DESC_DATA_NONE1,
+	DESC_DATA_NONE2,
+	DESC_DATA_END,
+};
+
+// 확장자 반환
+static const _tchar* STR_DATADESC_EXE(E_DESC_DATA type)
+{
+	switch (type)
+	{
+	case DESC_DATA_WORLD:
+		return L".matdat";
+		break;
+	case DESC_DATA_TEXTURENAME:
+		return L".texdat";;
+	case DESC_DATA_STRNAME:
+		return L".strdat";;
+	case DESC_DATA_COLLIDER:
+		return L".coldat";;
+	case DESC_DATA_TERRAIN:
+		return L".terrdat";
+	default:
+		return L"";
+		break;
+
+	}
+	return L"";
+}
+
+
+#define  DESCEXE		STR_DATADESC_EXE
+
+
+
+
 // UI 정보
 typedef struct tag_UIDESC
 {

@@ -175,6 +175,9 @@
     <Filter Include="03.GameSystems\05.ColliderManager">
       <UniqueIdentifier>{ceb9ec37-4f7a-407b-aa5b-037be24cf2ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="10.Imgui\02.Tools\05.Desc_Tool">
+      <UniqueIdentifier>{900a595a-35f9-470e-a14b-f6f98bcd2dc8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -345,6 +348,9 @@
     <ClInclude Include="..\Public\System\ColliderManager.h">
       <Filter>03.GameSystems\05.ColliderManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_DESC.h">
+      <Filter>10.Imgui\02.Tools\05.Desc_Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -487,6 +493,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\System\ColliderManager.cpp">
       <Filter>03.GameSystems\05.ColliderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_DESC.cpp">
+      <Filter>10.Imgui\02.Tools\05.Desc_Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

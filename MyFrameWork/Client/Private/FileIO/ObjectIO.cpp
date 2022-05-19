@@ -22,7 +22,6 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	_ulong			dwByte = 0;
 	wstring datPath = FolderPath + L"\\" + filename + L".dat";
 
-//	SaverObject_DESC(type,FolderPath,filename);
 
 
 
@@ -36,6 +35,8 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	// 2. 오브젝트 별로 저장할 데이터 분기
 
 	// 타입 저장
+
+	// 오브젝트 저장시 각 데이터도 따로 저장한다. Save_DESC();
 
 	switch (type)
 	{
@@ -55,12 +56,19 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		WriteFile(hFile, &(oobj->Get_ModelDESC()), sizeof(MODEL_STATIC_DESC), &dwByte, nullptr);
 		WriteFile(hFile, &(oobj->Get_ColliderDESC()), sizeof(COLLIDER_DESC), &dwByte, nullptr);
 
+		// desc
+		Save_DESC(DESC_DATA_STRNAME, FolderPath, filename, (void*) &(oobj->Get_ModelDESC()), sizeof(MODEL_STATIC_DESC));
+		Save_DESC(DESC_DATA_COLLIDER, FolderPath, filename, (void*)&(oobj->Get_ColliderDESC()), sizeof(COLLIDER_DESC));
+
 	}
 	break;
 	case OBJECT_TYPE_3D_DYNAMIC:
 	{
 		CGameObject_3D_Dynamic* oobj = static_cast<CGameObject_3D_Dynamic*>(obj);
 		WriteFile(hFile, &(oobj->Get_ModelDESC()), sizeof(MODEL_DYNAMIC_DESC), &dwByte, nullptr);
+
+		// desc
+		Save_DESC(DESC_DATA_STRNAME, FolderPath, filename, (void*)&(oobj->Get_ModelDESC()), sizeof(MODEL_DYNAMIC_DESC));
 
 	}
 	break;
@@ -108,13 +116,16 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	return S_OK;
 }
 
-HRESULT CObjectIO::SaverObject_DESC(wstring FolderPath, wstring filename, void* desc, _uint size)
+// 1. 객체를 저장할 떄 같이 저장
+// 2. 따로 저장/수정 가능하게 IMGUI 판다.
+HRESULT CObjectIO::Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* desc, _uint size)
 {
-	// #SAVE 데이터 저장
+	// #SAVE DESC 정보 저장
+	// 확장자로 나누기 // ㅇ 
 	_ulong			dwByte = 0;
 
-
-	wstring DescPath = FolderPath + L"\\DESC\\" + filename;
+	wstring ExeName = DESCEXE(descid);
+	wstring DescPath = FolderPath + L"\\DESC\\" + filename + ExeName;
 
 	HANDLE			hFile = CreateFile(DescPath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
@@ -140,6 +151,8 @@ HRESULT CObjectIO::LoadObject_Create(wstring FolderPath, wstring filename)
 		return E_FAIL;
 
 	CloseHandle(hFile);
+
+	return S_OK;
 }
 
 bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
