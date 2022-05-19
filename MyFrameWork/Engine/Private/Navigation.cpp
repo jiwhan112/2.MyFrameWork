@@ -5,6 +5,7 @@
 #include "PipeLine.h"
 #include "Transform.h"
 #include "DebugDraw.h"
+#include "GameInstance.h"
 
 CNavigation::CNavigation(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -398,7 +399,8 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 {
 	if (mVecCells.empty())
 		return S_FALSE;
-
+	if (GetSingle(CGameInstance)->Get_IsColliderRender() == false)
+		return S_OK;
 	// 랜더링시 처리
 	m_pDeviceContext->IASetInputLayout(mInputLayout);
 	//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());

@@ -9,7 +9,7 @@ END
 // 애니메이션 3D 오브젝트 출력
 BEGIN(Client)
 
-class CGameObject_3D_Dynamic final :
+class CGameObject_3D_Dynamic  :
 	public CGameObject_Base
 {
 public:
@@ -48,10 +48,14 @@ protected:
 
 protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
-	// 콜라이더 리스트로 할것
-	CCollider*					mComCollider = nullptr;
-	CCollider*					mComCollider2 = nullptr;
-//	CNavigation*				mComNaviMesh = nullptr;
+
+	// 콜라이더 리스트 추가
+	list<CCollider*>*			mComListCollider = nullptr;
+
+//	CCollider*					mCollider_Debug = nullptr;
+	
+	//	CNavigation*			mComNaviMesh = nullptr;
+
 	MODEL_DYNAMIC_DESC			mModelDesc;
 
 //	_float3						mGoalPosition;

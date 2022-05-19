@@ -6,6 +6,9 @@
 #include "PipeLine.h"
 #include "DebugDraw.h"
 
+#include "GameInstance.h"
+
+
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
 {
@@ -183,6 +186,9 @@ CCollider::OBBDESC CCollider::Get_Compute_OBBDesc()
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {
+	if (GetSingle(CGameInstance)->Get_IsColliderRender() == false)
+		return S_OK;
+
 	// 랜더링시 처리
 	m_pDeviceContext->IASetInputLayout(mInputLayout);
 	//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());

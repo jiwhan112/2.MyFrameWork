@@ -660,7 +660,7 @@ HRESULT CImgui_Model::Edit_ANI()
 		if (selectBone != -1)
 		{
 			mat = (*pVecBones)[selectBone]->Get_CombinedTransformationMatrix();
-			mCurrent_ModelDynamicObject->Setup_Colluder2(mat,0.1f);
+			// mCurrent_ModelDynamicObject->Setup_Colluder2(mat,0.1f);
 		}
 
 
@@ -713,7 +713,7 @@ HRESULT CImgui_Model::Edit_ANI()
 		ImGui::SliderFloat("ANIMATIONTIME",&currentTime, 0, animator->Get_CurrentAnimaion()->Get_MaxAnimaionTime());
 	///	animator->Get_CurrentAnimaion()->Set_AniMationTime(currentTime);
 
-		_float blendTime = animator->Get_BlendMaxTime();
+		_float blendTime = (_float)animator->Get_BlendMaxTime();
 		ImGui::DragFloat("BLENDTIMER", &blendTime, 0.01f, 0.01f, 10.f);
 		animator->Set_BlendMaxTime(blendTime);
 	}

@@ -46,7 +46,7 @@ public: // Get Set
 		mBlendMaxTime = time;
 	}
 
-	_float Get_BlendMaxTime() const
+	_double Get_BlendMaxTime() const
 	{
 		return mBlendMaxTime;
 	}

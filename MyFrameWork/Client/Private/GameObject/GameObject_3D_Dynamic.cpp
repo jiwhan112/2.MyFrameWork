@@ -10,17 +10,9 @@ CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11Devi
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs)
 	: CGameObject_Base(rhs)
-	, mComModel(rhs.mComModel)
 	, mModelDesc(rhs.mModelDesc)
-//	, mComNaviMesh(rhs.mComNaviMesh)
-, mComCollider(rhs.mComCollider)
-, mComCollider2(rhs.mComCollider2)
 
 {
-	Safe_AddRef(mComModel);
-	Safe_AddRef(mComCollider);
-	Safe_AddRef(mComCollider2);
-//	Safe_AddRef(mComNaviMesh);
 }
 
 HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
@@ -53,7 +45,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
+//	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
 	//E_LEVEL Getindex = (E_LEVEL)GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 
@@ -111,9 +103,9 @@ HRESULT CGameObject_3D_Dynamic::Render()
 		}
 	}
 #ifdef _DEBUG
-	mComCollider->Render();
-
-	mComCollider2->Render();
+//	mComCollider->Render();
+//
+//	mComCollider2->Render();
 //	CTransform* terraintrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN))->Get_TransformCom();
 //	mComNaviMesh->Render(terraintrans);
 #endif // _DEBUG
@@ -141,14 +133,6 @@ HRESULT CGameObject_3D_Dynamic::Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DES
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Setup_Colluder2(_float4x4 worldmat,_float scale)
-{
-	mComCollider2->Update_Transform(worldmat);
-	mComCollider2->Set_Scale(_float3(scale, scale, scale));
-
-	return S_OK;
-}
-
 HRESULT CGameObject_3D_Dynamic::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -165,11 +149,6 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 	}
-
-	if (mComCollider == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
-	if (mComCollider2 == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider2"), (CComponent**)&mComCollider2));
 
 //	if (mComNaviMesh == nullptr)
 //		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
@@ -246,8 +225,6 @@ void CGameObject_3D_Dynamic::Free()
 	__super::Free();
 
 	Safe_Release(mComModel);
-	Safe_Release(mComCollider);
-	Safe_Release(mComCollider2);
 	
 	//	Safe_Release(mComNaviMesh);
 }

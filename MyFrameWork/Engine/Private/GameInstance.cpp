@@ -28,6 +28,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPickMgr);
 	Safe_AddRef(m_pFrstumMgr);
 	Safe_AddRef(m_pFontMgr);
+	mIsRender_Collider = true;
 	
 }
 
@@ -52,6 +53,10 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pObject_Manager)
 		return -1;
+
+#ifdef _DEBUG
+	Update_Debug();
+#endif // _DEBUG
 
 	// INPUT
 	FAILED_CHECK(m_pInput_Device->SetUp_InputDeviceState(TimeDelta));
@@ -385,6 +390,14 @@ HRESULT CGameInstance::Render_Font(const _tchar * pFontTag, const _tchar * pText
 	NULL_CHECK_BREAK(m_pFontMgr);
 
 	return m_pFontMgr->Render_Font(pFontTag, pText, vPosition, vColor);
+}
+
+void CGameInstance::Update_Debug()
+{
+	if (m_pInput_Device->Get_DIKeyState(DIK_1)& DIS_Down)
+	{
+		mIsRender_Collider = !mIsRender_Collider;
+	}
 }
 
 void CGameInstance::Release_Engine()

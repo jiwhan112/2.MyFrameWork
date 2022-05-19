@@ -95,6 +95,13 @@ public: // For, Font
 	HRESULT Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _tchar* pFontTag, const _tchar* pFontFilePath);
 	HRESULT Render_Font(const _tchar* pFontTag, const _tchar* pText, _float2 vPosition, _fvector vColor);
 
+public: // FOR.DEBUG
+	bool Get_IsColliderRender() const { return mIsRender_Collider; }
+
+private: // FOR.DEBUG
+	void	Update_Debug();
+	bool	mIsRender_Collider = true;
+
 
 private:
 	CGraphic_Device*			m_pGraphic_Device = nullptr;
