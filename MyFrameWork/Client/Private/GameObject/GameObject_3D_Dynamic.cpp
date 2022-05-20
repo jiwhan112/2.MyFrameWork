@@ -49,6 +49,8 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	Update_Collider();
 
 	mIsMove = false;
+
+
 	return S_OK;
 }
 
@@ -274,29 +276,30 @@ HRESULT CGameObject_3D_Dynamic::Update_Collider()
 	// Desc 정보로 복수의 충돌체 정의
 	for (auto& desc : mListColliderDesc)
 	{
-		CCollider* com = nullptr;
+		CCollider* col = nullptr;
 
 		switch (desc.meColliderType)
 		{
 		case CCollider::COL_AABB:
-			com = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB));
+			col = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB));
 			break;
 		case CCollider::COL_OBB:
-			com = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_OBB));
+			col = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_OBB));
 			break;
 		case CCollider::COL_SPHERE:
-			com = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE));
+			col = (CCollider*)Create_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE));
 			break;
 		default:
 			break;
 		}
 
-		if (com == nullptr)
+		if (col == nullptr)
 			return E_FAIL;
 
-		com->Set_Offset(desc.mOffset);
-		com->Set_Scale(desc.mSize);
-		mComListCollider->push_back(static_cast<CCollider*>(com));
+		col->Set_Offset(desc.mOffset);
+		col->Set_Scale(desc.mSize);
+		col->Update_Transform(mComTransform->GetWorldFloat4x4());
+		mComListCollider->push_back(static_cast<CCollider*>(col));
 	}
 
 	return S_OK;

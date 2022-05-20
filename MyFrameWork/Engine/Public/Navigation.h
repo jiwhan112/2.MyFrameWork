@@ -54,8 +54,6 @@ public:
 	_bool Move_OnNavigation(_fvector vPos);
 
 public:
-	HRESULT Update_AbleCell(); // 갈 수 있는 셀의 정보를 업데이트 한다.
-
 	HRESULT Save_NaviMeshData(wstring wpath);
 	HRESULT Load_NaviMeshData(wstring wpath);
 	HRESULT Remove_NaviMeshData();

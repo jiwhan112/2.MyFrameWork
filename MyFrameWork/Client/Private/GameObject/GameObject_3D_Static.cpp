@@ -149,6 +149,7 @@ HRESULT CGameObject_3D_Static::Set_LoadColliderDESC(const COLLIDER_DESC & desc)
 	}
 	mComCollider->Set_Scale(mCollider_Desc.mSize);
 	mComCollider->Set_Offset(mCollider_Desc.mOffset);
+	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
 	return S_OK;
 }

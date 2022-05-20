@@ -57,6 +57,11 @@ public: // 컴포넌트 반환
 	 HRESULT Set_Transform(_float4x4 mat);
 	 HRESULT Set_Transform_Local(_float4x4 mat);
 
+	 _float3 Get_WorldPostition()const
+	 {
+		 return mComTransform->GetState(CTransform::STATE_POSITION);
+	 }
+
 protected:
 	// 월드 셰이더 세팅
 	virtual HRESULT Set_ConstantTable_World();

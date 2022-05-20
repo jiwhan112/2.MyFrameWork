@@ -262,14 +262,6 @@ _bool CNavigation::Move_OnNavigation(_fvector vPosition)
 		return true;
 }
 
-HRESULT CNavigation::Update_AbleCell()
-{
-	/// 갈 수 있는 
-
-
-	return S_OK;
-}
-
 HRESULT CNavigation::Save_NaviMeshData(wstring wpath)
 {
 
@@ -601,6 +593,8 @@ bool CNavigation::MakeRoute_INDEX(_uint StartTileIndex, _uint GoalTileIndex, CCe
 	if (mListOpen.empty())
 		return false;
 
+	if (mListClose.size()>1000)
+		return false;
 	// 오름차순
 
 	_float3 OriStartCenter = mVecCells[oriStartCell->Get_Index()]->Get_CenterPoint();

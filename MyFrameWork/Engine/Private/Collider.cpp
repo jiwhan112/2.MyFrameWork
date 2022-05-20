@@ -135,6 +135,18 @@ bool CCollider::ColliderCheck(CCollider* TargetCollider)
 
 	return false;
 }
+
+bool CCollider::ColliderCheck(_float3 point1, _float3 point2, _float3 point3)
+{
+	if (meType == CCollider::COL_AABB)
+		return mAABB->Intersects(point1, point2, point3);
+	else if (meType == CCollider::COL_OBB)
+		return mOBB->Intersects(point1, point2, point3);
+	else if (meType == CCollider::COL_SPHERE)
+		return mSphere->Intersects(point1, point2, point3);
+	return false;
+}
+
 bool CCollider::ColliderCheck(_ray worldDIr, _float& dist)
 {
 	if (meType == CCollider::COL_AABB)

@@ -21,7 +21,7 @@ HRESULT CColliderManager::Tick_ColliderCheck(_double Timer)
 
 	// 2. 객체들의 충돌 체크
 
-
+	// 오브젝트 지우기
 	ReleaseObjects();
 
 	return S_OK;

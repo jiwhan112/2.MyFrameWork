@@ -42,11 +42,13 @@ HRESULT CGameObject_3D_Tile::NativeConstruct(void* pArg)
 
 	mCollider_Desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
 	float size = 0.4f;
-	mCollider_Desc.mOffset = _float3(0, 1.3f, 0);
-	mCollider_Desc.mSize = _float3(size, size, size);
+	float sizet = 0.6f;
+	mCollider_Desc.mOffset = _float3(0, 0.8f, 0);
+	mCollider_Desc.mSize = _float3(size, size*2.5f, size);
+//	mCollider_Desc.mOffset = _float3(0, 1.3f, 0);
+//	mCollider_Desc.mSize = _float3(size, size*2.0f, size);
 	Set_LoadColliderDESC(mCollider_Desc);
-	Set_Component();
-	
+	Set_Component();	
 	return S_OK;
 }
 
@@ -105,7 +107,8 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 				
 			}
 		}	
-		GetSingle(CGameManager)->Get_DaungonManager()->RemoveTile(this);
+		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Update_NaviMesh_STOPSetting(mIndex));
+		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->RemoveTile(this));
 		Set_Dead();
 	}
 	return S_OK;
@@ -132,6 +135,11 @@ bool CGameObject_3D_Tile::Set_EmptySearchNeighbor(int searchIndex)
 		}
 	}
 	return false;
+}
+
+void CGameObject_3D_Tile::Set_ColliderPosition()
+{
+	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 }
 
 HRESULT CGameObject_3D_Tile::Update_NeighborTile()
@@ -222,11 +230,7 @@ HRESULT CGameObject_3D_Tile::Update_NeighborTile()
 		}
 
 	}
-
-
 	Update_TILESTATE();
-
-
 	return S_OK;
 }
 

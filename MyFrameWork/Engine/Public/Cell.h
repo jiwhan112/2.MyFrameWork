@@ -63,7 +63,8 @@ public:
 	{
 		return mCenterPoint;
 	}
-	
+
+
 
 public:
 	HRESULT NativeConstruct(const _float3* pPoints, _uint iIndex);

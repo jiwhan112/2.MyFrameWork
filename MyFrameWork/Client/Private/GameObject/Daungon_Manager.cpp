@@ -29,6 +29,44 @@ HRESULT CDaungon_Manager::Init_TileSet()
 	return S_OK;
 }
 
+HRESULT CDaungon_Manager::Update_NaviMesh_STOPSetting(_uint TileIndex)
+{
+	if (mListVecTiles == nullptr)
+		return E_FAIL;
+
+	// 네비 메시와 충돌체 충돌..
+	CGameObject_3D_Tile* tile =  FInd_TIleForIndex(TileIndex);
+	if (tile == nullptr)
+		return E_FAIL;
+
+
+	_float3 tilePos = tile->Get_TransformCom()->GetState(CTransform::STATE_POSITION);
+	CNavigation* navi = mDaungonTerrain->Get_ComNavimesh();
+	auto VecCell = navi->Get_CellVector();
+	if (VecCell == nullptr)
+		return E_FAIL;
+	for (auto& cell : *VecCell)
+	{
+		_float3 point1 = cell->Get_Point(CCell::POINT_A);
+		if (_float3::Distance(point1, tilePos) > 3)
+			continue;
+
+		_float3 point2 = cell->Get_Point(CCell::POINT_B);
+		_float3 point3 = cell->Get_Point(CCell::POINT_C);
+
+		CCollider* col = tile->Get_ComCollider();
+		if (col == nullptr)
+			return E_FAIL;
+		if (col->ColliderCheck(point1, point2, point3))
+		{
+			cell->Set_TileType(CCell::CELLTYPE_NONE);
+		}
+	}
+
+
+	return S_OK;
+}
+
 
 
 HRESULT CDaungon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain , E_LEVEL level)
@@ -41,6 +79,7 @@ HRESULT CDaungon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain , E_LEVEL
 
 	FAILED_CHECK(Init_Tile(level));
 	FAILED_CHECK(Set_Neigbor_Tile());
+	FAILED_CHECK(Init_NaviMesh_STOPSetting());
 
 	return S_OK;
 }
@@ -114,6 +153,7 @@ HRESULT CDaungon_Manager::Init_Tile(E_LEVEL level)
 			tileObj->Set_Position(CreatePosition);
 			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::TILETYPE_TOP));
 			tileObj->Set_TileIndex(iIndex);
+			tileObj->Set_ColliderPosition();
 
 			Create_Manager->PushObject((CGameObject_Base**)&tileObj, level, TAGLAY(LAY_CUBETILE));
 			mListVecTiles->push_back(tileObj);
@@ -126,6 +166,42 @@ HRESULT CDaungon_Manager::Init_Tile(E_LEVEL level)
 
 	// 초기 세팅
 	Update_TileState();
+	return S_OK;
+}
+
+HRESULT CDaungon_Manager::Init_NaviMesh_STOPSetting()
+{
+	if (mListVecTiles == nullptr)
+		return E_FAIL;
+
+
+	CNavigation* navi =  mDaungonTerrain->Get_ComNavimesh();
+	auto VecCell =  navi->Get_CellVector();
+
+	for (auto& tile : *mListVecTiles)
+	{
+		_float3 tileworldPos = tile->Get_WorldPostition();
+
+		for (auto& cell : *VecCell)
+		{
+			_float3 point1 = cell->Get_Point(CCell::POINT_A);
+			if (_float3::Distance(point1, tileworldPos) >  3)
+				continue;
+
+			_float3 point2 = cell->Get_Point(CCell::POINT_B);
+			_float3 point3 = cell->Get_Point(CCell::POINT_C);
+
+			CCollider* col = tile->Get_ComCollider();
+			if (col == nullptr)
+				continue;
+			if (col->ColliderCheck(point1, point2, point3))
+			{
+				cell->Set_TileType(CCell::CELLTYPE_STOP);
+			}
+		}
+	}
+
+
 	return S_OK;
 }
 

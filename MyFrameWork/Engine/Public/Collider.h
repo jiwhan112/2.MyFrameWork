@@ -38,7 +38,8 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);
 	virtual HRESULT Update_Transform(_float4x4 TransformMatrix);
 	virtual bool ColliderCheck(CCollider* TargetCollider);
-	virtual bool ColliderCheck(_ray worldDIr,_float& dist);
+	virtual bool ColliderCheck(_ray worldDIr, _float& dist);
+	virtual bool ColliderCheck(_float3 point1, _float3 point2, _float3 point3);
 
 public:
 	void Set_Scale(_float3 size);

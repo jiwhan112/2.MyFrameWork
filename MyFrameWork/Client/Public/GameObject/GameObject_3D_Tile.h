@@ -92,6 +92,7 @@ public:
 
 	void Set_TileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
 	bool Set_EmptySearchNeighbor(int searchIndex);
+	void Set_ColliderPosition();
 
 //	HRESULT Set_LoadModel_Deco_DESC(E_TILETYPE tileIndex);
 public:
