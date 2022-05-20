@@ -29,7 +29,6 @@ CGameObject::CGameObject(const CGameObject & rhs)
 
 CComponent * CGameObject::Get_Component(const _tchar * pComponentTag)
 {
-
 	return Find_Component(pComponentTag);
 }
 

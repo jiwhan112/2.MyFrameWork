@@ -36,7 +36,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	mComModel->SetUp_AnimIndex(0);
 
-	// #DEBUGCODE 
+	// #TESTCODE 
 	COLLIDER_DESC desc[3];
 	desc[0].meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
 	desc[1].meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
@@ -48,10 +48,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	Add_ColliderDesc(desc,3);
 	Update_Collider();
 
-//	meAI = CGameObject_3D_Dynamic::BASEAI_IDLE;
-
-//	mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
-
 	mIsMove = false;
 	return S_OK;
 }
@@ -59,6 +55,16 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+
+	if (mComNaviMesh == nullptr)
+	{
+		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+		if (terrain != nullptr)
+		{
+			mComNaviMesh = (CNavigation*)terrain->Get_ComNavimesh()->Clone(nullptr);
+			mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
+		}
+	}
 
 	if (mComListCollider != nullptr)
 	{
@@ -102,19 +108,31 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 	CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
 	if (terrain != nullptr)
-	{
-		
+	{	
 
 		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
 		{
-			_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
-			int index = terrain->Get_TileIndex(worldPos);
-			mGoalPosition = terrain->Get_TileWorld(index);
-			mStartPosition = mComTransform->GetState(CTransform::STATE_POSITION);
-
-			mTimer = 0;
-			mTimeMax = _float3::Distance(mStartPosition, mGoalPosition);
-			mIsMove = true;
+			// #TESTCODE 네비메시 길찾기
+			_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
+			_uint StartIndex = mComNaviMesh->Get_CurrentCellIndex();
+			_uint GoalIndex = StartIndex;
+			
+			if (mComNaviMesh->Get_PickPosForIndex(worldPickPos, &GoalIndex))
+			{
+				auto pathList = mComNaviMesh->AstartPathFind(StartIndex, GoalIndex);
+				for (auto& cell : pathList)
+				{
+					cell->Set_TileType(CCell::CELLTYPE_DEBUG);
+				}
+			}
+			//_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
+			//int index = terrain->Get_TileIndex(worldPos);
+			//mGoalPosition = terrain->Get_TileWorld(index);
+			//mStartPosition = mComTransform->GetState(CTransform::STATE_POSITION);
+			//
+			//mTimer = 0;
+			//mTimeMax = _float3::Distance(mStartPosition, mGoalPosition);
+			//mIsMove = true;
 		}
 
 	}
@@ -143,6 +161,7 @@ HRESULT CGameObject_3D_Dynamic::Render()
 			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, i, STR_BONES));
 		}
 	}
+
 #ifdef _DEBUG
 	if (mComListCollider != nullptr)
 	{
@@ -152,8 +171,13 @@ HRESULT CGameObject_3D_Dynamic::Render()
 		}
 	}
 
-	CTransform* terraintrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN))->Get_TransformCom();
-	mComNaviMesh->Render(terraintrans);
+	CGameObject* obj = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+	if (obj != nullptr&& mComNaviMesh !=nullptr) 
+	{
+		CTransform* terraintrans = obj->Get_TransformCom();
+		mComNaviMesh->Render(terraintrans);
+	}
+	
 #endif // _DEBUG
 
 	return S_OK;
@@ -222,9 +246,13 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 
 	if (mComNaviMesh == nullptr)
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH), TEXT("Com_Navimesh"), (CComponent**)&mComNaviMesh));
-		mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
-
+		// 현재 Terrain의 네비 메시를 가져와야한다.
+		CGameObject_MyTerrain* terrain =  (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+		if (terrain != nullptr)
+		{
+			mComNaviMesh = (CNavigation*)terrain->Get_ComNavimesh()->Clone(nullptr);
+			mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
+		}
 	}
 	return S_OK;
 }

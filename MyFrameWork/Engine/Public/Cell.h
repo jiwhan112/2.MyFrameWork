@@ -11,13 +11,22 @@ public:
 	// 점 3개와 이웃하는 선분을 정의.
 	enum E_POINTS { POINT_A, POINT_B, POINT_C, POINT_END };
 	enum E_LINES { LINE_AB, LINE_BC, LINE_CA, LINE_END };
-	enum E_CELLTYPE { CELLTYPE_NONE, CELLTYPE_STOP, CELLTYPE_END };
+	enum E_CELLTYPE { CELLTYPE_NONE, CELLTYPE_DEBUG, CELLTYPE_STOP, CELLTYPE_END };
 
 private:
 	CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~CCell() = default;
 
 public:
+	void Set_ParentIndex(int idx)
+	{
+		mParentIndex = idx;
+	}
+	_int Get_ParentIndex()
+	{
+		return mParentIndex;
+	}
+	
 	_uint Get_Index()
 	{
 		return mIndex;
@@ -46,8 +55,14 @@ public:
 	{
 		return meCellType;
 	}
-
-
+	const _int* Get_ArrayNeighborIndex() const
+	{
+		return mNeighborIndex;
+	}
+	const _float3& Get_CenterPoint() const
+	{
+		return mCenterPoint;
+	}
 	
 
 public:
@@ -55,6 +70,10 @@ public:
 	_bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 	// 현재 인덱스
 	_bool isIn(_fvector vPosition, _int* pNeighborIndex);
+	CCell* isIn_Cell(_fvector vPosition);
+
+	_float3 Get_MeshCenter();
+
 
 private:
 	ID3D11Device*				m_pDevice = nullptr;
@@ -67,11 +86,16 @@ private:
 	// 현재 인덱스
 	_uint			mIndex = 0;
 
+	// 이전 인덱스
+	_int			mParentIndex = -1;
+
 	// 이웃하는 인덱스
 	_int			mNeighborIndex[LINE_END] = { -1, -1, -1 };
 
 	// 점의 위치
 	_float3			mPoints[POINT_END];
+	_float3			mCenterPoint;
+
 	// 라인의 위치
 	_float3			mLineDir[LINE_END];
 	

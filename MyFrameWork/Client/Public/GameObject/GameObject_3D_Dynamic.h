@@ -62,9 +62,11 @@ protected: // 3D모델 Com / DESC 추가
 
 	// 콜라이더 리스트 추가 / 콜라이더는 맵에 넣지 않고 여기서만 관리한다.
 	list<CCollider*>*			mComListCollider = nullptr;
+
+	// 생성시 무조건 Terrain 정보가 있어야한다.
+//	CGameObject_Base*			mGameObjectTerrain = nullptr;
 	CNavigation*				mComNaviMesh = nullptr;
 
-	// CMove*						mCOmMove;
 
 	MODEL_DYNAMIC_DESC			mModelDesc;
 	list<COLLIDER_DESC>			mListColliderDesc;

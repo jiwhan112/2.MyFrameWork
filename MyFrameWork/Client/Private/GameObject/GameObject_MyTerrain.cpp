@@ -9,14 +9,8 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11Device
 
 CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	: CGameObject_Base(rhs)
-	, mComVIBuffer(rhs.mComVIBuffer)
-	, mComTexture(rhs.mComTexture)
-	, mComNaviMesh(rhs.mComNaviMesh)
 	, mTerrainDESC(rhs.mTerrainDESC)
 {
-	Safe_AddRef(mComVIBuffer);
-	Safe_AddRef(mComTexture);
-	Safe_AddRef(mComNaviMesh);
 
 	// DESC±Ì¿∫ ∫πªÁ
 	if (mTerrainDESC.mObjectSize != 0)
@@ -39,7 +33,6 @@ HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
 HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	FAILED_CHECK(Set_Component());
 	misPick = false;
 	Init_Map(TAGLAY(LAY_OBJECT));
 
@@ -143,7 +136,6 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 		mTerrainDESC.mTextureMultiSize = 128;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 		// Update_TileVec(129, 129);
-
 		break;
 	case TERRAINSIZE_END:
 		break;

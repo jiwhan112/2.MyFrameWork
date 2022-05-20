@@ -93,6 +93,22 @@ bool CNavigation::Pick(const _float4x4 & WorldMatrixInverse, _float3 * pOut)
 	return false;
 }
 
+_bool CNavigation::Get_PickPosForIndex(_float3 PickPos , _uint* outIndex )
+{
+
+	// 네비 메시 정점이랑 충돌
+	for (auto cell : mVecCells)
+	{
+
+		if (nullptr != cell->isIn_Cell(PickPos))
+		{
+			*outIndex = cell->Get_Index();
+			return true;
+		}	
+	}
+	return false;
+}
+
 
 void CNavigation::Pick_ChangeCellOption(const _float4x4 & WorldMatrixInverse,CCell::E_CELLTYPE type)
 {
@@ -379,6 +395,357 @@ HRESULT CNavigation::Remove_NaviMeshData()
 	return S_OK;
 }
 
+const list<CCell*>& CNavigation::AstartPathFind(_uint StartTileIndex, _uint GoalTileIndex)
+{
+	// 사용한 것 초기화....
+	mListPathList.clear();
+	mListOpen.clear();
+	mListClose.clear();
+	if (MakeRoute_INDEX(StartTileIndex, GoalTileIndex, Get_TileForIndex(StartTileIndex)))
+	{
+		CCell* GoalCell = mVecCells[GoalTileIndex];
+		if (GoalCell == nullptr)
+			return mListPathList;
+
+		CCell* ParentCell = GoalCell;
+	
+
+		while(true)
+		{
+			mListPathList.push_front(ParentCell);
+			_int parentIndex = ParentCell->Get_ParentIndex();
+			ParentCell->Set_ParentIndex(-1);
+			if (parentIndex == -1 || parentIndex == StartTileIndex)
+				break;
+
+			ParentCell = mVecCells[parentIndex];
+		}
+	}
+	return mListPathList;
+}
+
+//bool CNavigation::MakeRoute(_uint StartTileIndex, _uint GoalTileIndex, CCell* oriStartCell, CCell* oriGoalCell)
+//{
+//	// 해당 네비 메시 정보로 탐색
+//	if (mVecCells.empty())
+//		return false;
+//	if (oriStartCell == nullptr || oriGoalCell == nullptr)
+//		return false;
+//
+//	
+//
+//	// 큐의 형식으로 동작하는 너비 우선탐색의 특성 상 가장 먼저 들어온 노드를 오픈 리스트에 제거
+//	if (!mListOpen.empty())
+//		mListOpen.pop_front();
+//
+//	// 시작지점은 바로 넣는다.
+//	mListClose.push_back(StartTileIndex);
+//
+//	// 인접한 타일 정보로 가까운 경로 찾기
+//
+//	const CCell* cell = Get_TileForIndex(StartTileIndex);
+//	if (cell == nullptr)
+//		return false;
+//
+//	const _int* VecNeighors = cell->Get_ArrayNeighborIndex();
+//	if (VecNeighors == nullptr)
+//	{
+//
+//	}
+//	else
+//	{
+//		for (int i = 0; i < 3; ++i)
+//		{
+//			// 찾은 경로가 골 지점에 도달했을 경우
+//			_int NearIndex  = VecNeighors[i];
+//			if (NearIndex == -1)
+//				return false;
+//
+//			if (GoalTileIndex == NearIndex)
+//			{
+//				// 도달할 경우 이전 인덱스 저장
+//				Get_TileForIndex(GoalTileIndex)->Set_ParentIndex(StartTileIndex);
+//				return true;
+//			}
+//
+//			// 인접한 타일 조사
+//			// Close 이미 조사한 노드
+//			// Open 조사할 대상 노드
+//			if (false == Check_Close(NearIndex) &&
+//				false == Check_Open(NearIndex))
+//			{
+//				// 갈 수 있는 길인지 판단
+//				CCell* NearCell = mVecCells[NearIndex];
+//				if (NearCell)
+//				{
+//					if (NearCell->Get_CellType() == CCell::CELLTYPE_STOP)
+//					{
+//						// 갈 수 없다.
+//						NearCell->Set_ParentIndex(-1);
+//						mListClose.push_back(NearIndex);
+//					}
+//					else
+//					{
+//						// 간다.
+//						NearCell->Set_ParentIndex(StartTileIndex);
+//						mListOpen.push_back(NearIndex);
+//					}
+//
+//				}
+//			}
+//		}
+//	}
+//
+//	// 갈 수 없음
+//	if (mListOpen.empty())
+//		return false;
+//
+//	// OpenList의 가중치 비교해서 다음 지점 선택
+//	// F = g+h
+//	// 가중치는 목표지점과의 거리로 결정된다.
+//	// 가중치 = (시작->현재지점) + (현재지점->목표지점)
+//
+//	// 오름차순
+//	_uint	iOriginStart = StartTileIndex;
+//
+//	mListOpen.sort([&](int iDest, int iSour)
+//	{
+//		CCell::E_POINTS ePointA =  CCell::E_POINTS::POINT_A;
+//		CCell* destCel = Get_TileForIndex(iDest);
+//		CCell* sourCel = Get_TileForIndex(iSour);
+//
+//
+//		// 시작 ~ 현재
+//		_float3 vSCost1 = destCel->Get_Point(ePointA) - oriStartCell->Get_Point(ePointA);
+//		// 현재 ~ 골
+//		_float3 vGCost1 = destCel->Get_Point(ePointA) - oriGoalCell->Get_Point(ePointA);
+//		_float Cost1 = vSCost1.Length() + vGCost1.Length();
+//
+//		// 비교대상
+//		_float3 vSCost2 = sourCel->Get_Point(ePointA) - oriStartCell->Get_Point(ePointA);
+//		_float3 vGCost2 = sourCel->Get_Point(ePointA) - oriGoalCell->Get_Point(ePointA);
+//		_float Cost2 = vSCost2.Length() + vGCost2.Length();
+//
+//
+//		return Cost1 < Cost2;
+//	});
+//
+//	// 깊이 우선탐색처럼 도착지점을 찾을 때까지 계속 탐색
+//	return MakeRoute(mListOpen.front(), GoalTileIndex,oriStartCell,oriGoalCell);
+//}
+
+bool CNavigation::MakeRoute_INDEX(_uint StartTileIndex, _uint GoalTileIndex, CCell* oriStartCell)
+{
+	if (mVecCells.empty())
+		return false;
+	if (oriStartCell == nullptr)
+		return false;
+
+
+	if (!mListOpen.empty())
+		mListOpen.pop_front();
+
+	mListClose.push_back(StartTileIndex);
+
+
+	const CCell* cell = mVecCells[StartTileIndex];
+	if (cell == nullptr)
+		return false;
+
+	const _int* VecNeighors = cell->Get_ArrayNeighborIndex();
+	if (VecNeighors != nullptr)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			_int NearIndex = VecNeighors[i];
+
+			if (NearIndex < 0) 
+				continue;
+
+			if (GoalTileIndex == NearIndex)
+			{
+				// 찾은 경로가 골 지점에 도달했을 경우
+				mVecCells[GoalTileIndex]->Set_ParentIndex(StartTileIndex);
+				return true;
+			}
+
+			// 인접한 타일 조사
+			// Close 이미 조사한 노드
+			// Open 조사할 대상 노드
+			if (false == Check_Close(NearIndex) &&
+				false == Check_Open(NearIndex))
+			{
+				// 갈 수 있는 길인지 판단
+				CCell* NearCell = mVecCells[NearIndex];
+
+				if (NearCell)
+				{
+					if (NearCell->Get_CellType() == CCell::CELLTYPE_STOP)
+					{
+						// 갈 수 없다.
+						mListClose.push_back(NearIndex);
+					}
+					else
+					{
+						// 간다.
+						NearCell->Set_ParentIndex(StartTileIndex);
+						mListOpen.push_back(NearIndex);
+					}
+
+				}
+			}
+		}
+	}
+
+	// 갈 수 없음
+	if (mListOpen.empty())
+		return false;
+
+	// 오름차순
+
+	_float3 OriStartCenter = mVecCells[oriStartCell->Get_Index()]->Get_CenterPoint();
+//	_float3 newStartCenter = mVecCells[StartTileIndex]->Get_CenterPoint();
+	_float3 GoalCenter = mVecCells[GoalTileIndex]->Get_CenterPoint();
+
+	mListOpen.sort([&](int iDest, int iSour)
+	{
+		// 현재 위치
+		_float3 DestCenter = mVecCells[iDest]->Get_CenterPoint();
+		_float3 SourCenter = mVecCells[iSour]->Get_CenterPoint();
+
+
+		// 시작 ~ 현재
+		_float3 vSCost1 = DestCenter - OriStartCenter;
+		// 현재 ~ 골
+		_float3 vGCost1 = GoalCenter - DestCenter;
+		_float Cost1 = vSCost1.Length() + vGCost1.Length();
+
+		// 비교대상
+		_float3 vSCost2 = SourCenter - OriStartCenter;
+		_float3 vGCost2 = GoalCenter - SourCenter;
+		_float Cost2 = vSCost2.Length() + vGCost2.Length();
+
+		// 오름차순 가까운 지점부터 정렬
+		return Cost1 < Cost2;
+	});
+
+	// 깊이 우선탐색처럼 도착지점을 찾을 때까지 계속 탐색
+	return MakeRoute_INDEX(mListOpen.front(), GoalTileIndex, oriStartCell);
+
+}
+
+//bool CNavigation::MakeRoute_LINE(_uint StartTileIndex, _uint GoalTileIndex, CCell* oriStartCell, CCell* oriGoalCell)
+//{
+//	// 인접한 선을 중심으로 탐색해 나간다.
+//
+//	if (mVecCells.empty())
+//		return false;
+//	if (oriStartCell == nullptr || oriGoalCell == nullptr)
+//		return false;
+//
+//
+//
+//	// 큐의 형식으로 동작하는 너비 우선탐색의 특성 상 가장 먼저 들어온 노드를 오픈 리스트에 제거
+//	if (!mListOpen.empty())
+//		mListOpen.pop_front();
+//
+//	// 시작지점은 바로 넣는다.
+//	mListClose.push_back(StartTileIndex);
+//
+//	// 인접한 타일 정보로 가까운 경로 찾기
+//
+//	const CCell* cell = Get_TileForIndex(StartTileIndex);
+//	if (cell == nullptr)
+//		return false;
+//
+//	// 인접 인덱스 가져오기
+//	const _int* VecNeighors = cell->Get_ArrayNeighborIndex();
+//	if (VecNeighors == nullptr)
+//	{
+//
+//	}
+//
+//	else
+//	{
+//		for (int i = 0; i < 3; ++i)
+//		{
+//			// 찾은 경로가 골 지점에 도달했을 경우
+//			_int NearIndex = VecNeighors[i];
+//			if (GoalTileIndex == NearIndex)
+//			{
+//				// 도달할 경우 이전 인덱스 저장
+//				Get_TileForIndex(GoalTileIndex)->Set_ParentIndex(StartTileIndex);
+//				return true;
+//			}
+//
+//			// 인접한 타일 조사
+//			// Close 이미 조사한 노드
+//			// Open 조사할 대상 노드
+//			if (false == Check_Close(NearIndex) &&
+//				false == Check_Open(NearIndex))
+//			{
+//				// 갈 수 있는 길인지 판단
+//				CCell* NearCell = Get_TileForIndex(NearIndex);
+//				if (NearCell)
+//				{
+//					if (NearCell->Get_CellType() == CCell::CELLTYPE_STOP)
+//					{
+//						// 갈 수 없다.
+//						mListClose.push_back(NearIndex);
+//					}
+//					else
+//					{
+//						// 간다.
+//						NearCell->Set_ParentIndex(StartTileIndex);
+//						mListOpen.push_back(NearIndex);
+//					}
+//
+//				}
+//			}
+//		}
+//	}
+//
+//	// 갈 수 없음
+//	if (mListOpen.empty())
+//		return false;
+//
+//	// OpenList의 가중치 비교해서 다음 지점 선택
+//	// F = g+h
+//	// 가중치는 목표지점과의 거리로 결정된다.
+//	// 가중치 = (시작->현재지점) + (현재지점->목표지점)
+//
+//	// 오름차순
+//	_uint	iOriginStart = StartTileIndex;
+//
+//	mListOpen.sort([&](int iDest, int iSour)
+//	{
+//		CCell::E_POINTS ePointA = CCell::E_POINTS::POINT_A;
+//		CCell* destCel = Get_TileForIndex(iDest);
+//		CCell* sourCel = Get_TileForIndex(iSour);
+//
+//
+//		// 시작 ~ 현재
+//		_float3 vSCost1 = destCel->Get_Point(ePointA) - oriStartCell->Get_Point(ePointA);
+//		// 현재 ~ 골
+//		_float3 vGCost1 = destCel->Get_Point(ePointA) - oriGoalCell->Get_Point(ePointA);
+//		_float Cost1 = vSCost1.Length() + vGCost1.Length();
+//
+//		// 비교대상
+//		_float3 vSCost2 = sourCel->Get_Point(ePointA) - oriStartCell->Get_Point(ePointA);
+//		_float3 vGCost2 = sourCel->Get_Point(ePointA) - oriGoalCell->Get_Point(ePointA);
+//		_float Cost2 = vSCost2.Length() + vGCost2.Length();
+//
+//
+//		return Cost1 < Cost2;
+//	});
+//
+//	// 깊이 우선탐색처럼 도착지점을 찾을 때까지 계속 탐색
+//
+//
+//	return MakeRoute_LINE(mListOpen.front(), GoalTileIndex, oriStartCell, oriGoalCell);
+//}
+
+
 HRESULT CNavigation::ReadyNaviMeshForListData(list<_float3*>& vpointlist)
 {
 	_float newY = 0.01f;
@@ -389,7 +756,7 @@ HRESULT CNavigation::ReadyNaviMeshForListData(list<_float3*>& vpointlist)
 		for (int i = 0; i < 3; ++i)
 		{
 			_float3 newPoint = point[i];
-			newPoint.y += newY;
+			newPoint.y = newY;
 			vPoints[i] = newPoint;
 		}
 
@@ -430,6 +797,8 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 		{
 			if(cell->Get_CellType() == CCell::E_CELLTYPE::CELLTYPE_STOP)
 				debugColor = DirectX::Colors::Red;
+			else if (cell->Get_CellType() == CCell::E_CELLTYPE::CELLTYPE_DEBUG)
+				debugColor = DirectX::Colors::Blue;
 			else
 				debugColor = DirectX::Colors::White;
 
@@ -503,6 +872,40 @@ HRESULT CNavigation::SetUp_Neighbor()
 	}
 
 	return S_OK;
+}
+
+CCell * CNavigation::Get_TileForIndex(_uint index) const
+{
+	if (mVecCells.empty())
+		return nullptr;
+
+	for (auto cell: mVecCells)
+	{
+		if (index == cell->Get_Index())
+			return cell;
+	}
+	return nullptr;
+}
+
+bool CNavigation::Check_Close(_uint index)
+{	
+	for (_uint& iCloseIndex : mListClose)
+	{
+		if (index == iCloseIndex)
+			return true;
+	}
+	return false;
+}
+
+
+bool CNavigation::Check_Open(_uint index)
+{
+	for (_uint& iOpenIndex : mListOpen)
+	{
+		if (index == iOpenIndex)
+			return true;
+	}
+	return false;
 }
 
 //void CNavigation::ReadyDefault()

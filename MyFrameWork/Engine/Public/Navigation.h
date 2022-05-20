@@ -35,8 +35,13 @@ public:
 public:
 	void Set_NaviObjType(E_NAVI_OBJTYPE t) { meNaviType = t; }
 	bool Pick(const _float4x4& WorldMatrixInverse, _float3 * pOut);
-	int  PickForCellIndex(const _float4x4& WorldMatrixInverse);
+
+	_bool  Get_PickPosForIndex(_float3 PickPos,_uint* outIndex);
+
 	void Pick_ChangeCellOption(const _float4x4& WorldMatrixInverse, CCell::E_CELLTYPE type);
+	
+	_uint Get_CurrentCellIndex()const { return mCurrentIndex; }
+	
 	const vector<CCell*>* Get_CellVector() const
 	{
 		return &mVecCells;
@@ -55,18 +60,12 @@ public:
 	HRESULT Load_NaviMeshData(wstring wpath);
 	HRESULT Remove_NaviMeshData();
 
-
+	const list<CCell*>& AstartPathFind(_uint StartTileIndex, _uint GoalTileIndex);
+	
 
 #ifdef _DEBUG
 public:
 	HRESULT Render(class CTransform* pTransform);
-#endif // _DEBUG
-
-private: // 셀 저장
-	vector<CCell*>			mVecCells;
-	typedef vector<CCell*>	CELLS;
-
-#ifdef _DEBUG
 private:
 	// 기본 셰이더 제공
 	BasicEffect*									mBaseEffect = nullptr;
@@ -77,15 +76,39 @@ private:
 	PrimitiveBatch<DirectX::VertexPositionColor>*	mBatch = nullptr;
 #endif // _DEBUG
 
+private: // 길찾기
+	//bool MakeRoute(_uint StartTileIndex, _uint GoalTileIndex,
+	//	CCell* oriStartCell, CCell* oriGoalCell);
+	bool MakeRoute_INDEX(_uint StartTileIndex, _uint GoalTileIndex,
+		CCell* oriStartCell);
+	//bool MakeRoute_LINE(_uint StartTileIndex, _uint GoalTileIndex,
+	//	CCell* oriStartCell, CCell* oriGoalCell);
+
+	CCell*	Get_TileForIndex(_uint index) const;
+	bool	Check_Close(_uint index);
+	bool	Check_Open(_uint index);
+
+
+private:
+	// 네비 메시 제작하기 위함 
+	HRESULT ReadyNaviMeshForListData(list<_float3*>& vpointlist);
+	HRESULT SetUp_Neighbor();
+
+private: // 셀 저장
+	vector<CCell*>			mVecCells;
+	typedef vector<CCell*>	CELLS;
+
+private: // 네비메시 길찾기
+	list<_uint>			mListClose;
+	list<_uint>			mListOpen;
+	list<CCell*>		mListPathList;
+
 private:
 	// 현재 컴포넌트 객체의 셀 인덱스
 	_uint				mCurrentIndex = 0;
 	E_NAVI_OBJTYPE		meNaviType = NAVI_OBJTYPE_NONE;
 
-private:
-	// 포인트 리스트로 초기화
-	HRESULT ReadyNaviMeshForListData(list<_float3*>& vpointlist);
-	HRESULT SetUp_Neighbor();
+
 
 //	void ReadyDefault();
 public:
