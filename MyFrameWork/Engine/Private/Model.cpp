@@ -1,8 +1,7 @@
-#include "..\Public\Model.h"
+#include "Model.h"
 #include "MeshContainer.h"
 #include "Texture.h"
 #include "HierarchyNode.h"
-#include "Animatior.h"
 #include "Shader.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
@@ -19,7 +18,7 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 //	, m_iCurrentAniIndex(rhs.m_iCurrentAniIndex)
-	, m_TransformMatrix(rhs.m_TransformMatrix)
+	, mDefaultMatrix(rhs.mDefaultMatrix)
 	, m_HierarchyNodes(rhs.m_HierarchyNodes)
 {
 	// 모델과 재질은 얕은 복사로 사용한다.
@@ -74,7 +73,25 @@ _uint CModel::Get_NumMaterials() const
 //	return returnIndex;
 //}
 
-HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * pModelFilePath, const char * pModelFileName, _fmatrix TransformMatrix)
+
+CModel::BONEMATRIX_PTR CModel::Get_BoneMatrixPtr(string bonename) 
+{
+	BONEMATRIX_PTR		BoneMatrixPtr;
+	ZeroMemory(&BoneMatrixPtr, sizeof(BONEMATRIX_PTR));
+
+
+	CHierarchyNode * 		pNode = Find_HierarchyNode(bonename.c_str());
+
+	if (nullptr == pNode)
+		return BONEMATRIX_PTR();
+
+	BoneMatrixPtr.pOffsetMatrix = pNode->Get_OffsetMatrix();
+	BoneMatrixPtr.pCombinedMatrix = pNode->Get_CombinedTransformationMatrix();
+
+	return BoneMatrixPtr;
+}
+
+HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * pModelFilePath, const char * pModelFileName, _fmatrix defaultMatrix)
 {
 	char	szFullPath[MAX_PATH] = "";
 
@@ -96,7 +113,7 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 		return E_FAIL;
 
 	m_eModelType = eModelType;
-	XMStoreFloat4x4(&m_TransformMatrix, TransformMatrix);
+	XMStoreFloat4x4(&mDefaultMatrix, defaultMatrix);
 
 	/* 모델의 머테리얼 정보. */
 	/* 머테리얼? 디퓨즈, 스펙큘러, 노멀, 이미시즈 */
@@ -132,7 +149,7 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 	for (_uint i = 0; i < m_iNumMaterials; ++i)
 	{
 		for (auto& pMeshContainer : m_pMeshContainers[i])
-			pMeshContainer->Ready_VertexIndexBuffer(m_eModelType, TransformMatrix);
+			pMeshContainer->Ready_VertexIndexBuffer(m_eModelType, defaultMatrix);
 	}
 	return S_OK;
 }
@@ -201,6 +218,18 @@ HRESULT CModel::SetUp_AnimIndex(_uint iAnimIndex)
 	return S_OK;
 }
 
+HRESULT CModel::SetUp_AnimEnum(CAnimatior::E_COMMON_ANINAME e)
+{
+	mAnimator->Set_AniEnum(e);
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_AnimName(string tag)
+{
+	mAnimator->Set_AniString(tag);
+	return S_OK;
+}
+
 HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 {
 	// 애니메이션 블랜딩 
@@ -235,7 +264,7 @@ HRESULT CModel::Render(CShader * pShader, _uint iPassIndex, _uint iMaterialIndex
 		{
 			ZeroMemory(&BoneMatrices, sizeof(_float4x4) * MAX_BONES);
 
-			pMeshContainer->SetUp_Matrices(BoneMatrices, &mAnimator->Get_HierarchyNode(), m_TransformMatrix);
+			pMeshContainer->SetUp_Matrices(BoneMatrices, &mAnimator->Get_HierarchyNode(), mDefaultMatrix);
 
 			pShader->Set_RawValue(pBoneValueName, BoneMatrices, sizeof(_float4x4) * MAX_BONES);
 		}

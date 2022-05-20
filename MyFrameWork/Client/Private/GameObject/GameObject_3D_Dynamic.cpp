@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_MyTerrain.h"
+#include "Animatior.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -50,6 +51,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 
 	mIsMove = false;
 
+	mComModel->Get_Animaitor()->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 	return S_OK;
 }

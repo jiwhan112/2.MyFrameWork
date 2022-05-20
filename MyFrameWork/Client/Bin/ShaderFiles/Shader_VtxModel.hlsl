@@ -5,6 +5,13 @@
 texture2D g_DiffuseTexture;
 //texture2D g_NormalTexture;
 
+// ╪рдо
+cbuffer SocketMatrix
+{
+	matrix		g_SocketMatrix;
+};
+
+
 // VS
 struct VS_IN
 {
@@ -35,6 +42,25 @@ VS_OUT VS_MAIN_DEFAULT(VS_IN In)
 	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vNormal = normalize(mul(vector(In.vNormal, 0.0f), g_WorldMatrix));
 	//	Out.vTangent = normalize(mul(vector(In.vTangent, 0.0f), g_WorldMatrix));
+	Out.vTexUV = In.vTexUV;
+	return Out;
+}
+VS_OUT VS_MAIN_SOCKET(VS_IN In)
+{
+	VS_OUT			Out = (VS_OUT)0;
+
+	matrix			matWV, matWVP;
+
+	matrix			WorldMatrix = g_SocketMatrix;
+
+
+	matWV = mul(WorldMatrix, g_ViewMatrix);
+	matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+	Out.vWorldPos = mul(vector(In.vPosition, 1.f), WorldMatrix);
+	Out.vNormal = normalize(mul(vector(In.vNormal, 0.0f), WorldMatrix));
+	//	Out.vTangent = normalize(mul(vector(In.vTangent, 0.0f), WorldMatrix));
 	Out.vTexUV = In.vTexUV;
 	return Out;
 }
@@ -141,5 +167,17 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_RED();
+	}
+
+	pass SOCKET
+	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(ZTestAndWriteState, 0);
+		//	SetRasterizerState(CullMode_ccw);
+		SetRasterizerState(CullMode_None);
+
+		VertexShader = compile vs_5_0 VS_MAIN_SOCKET();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT();
 	}
 }

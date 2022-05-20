@@ -200,8 +200,6 @@ HRESULT CDaungon_Manager::Init_NaviMesh_STOPSetting()
 			}
 		}
 	}
-
-
 	return S_OK;
 }
 

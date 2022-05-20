@@ -10,10 +10,48 @@ class CAnimationClip;
 class CMeshContainer;
 class CHierarchyNode;
 
-// 블랜드 / 
+// 블랜드 / 애니메이션 상황에 따라 태그화
 class ENGINE_DLL CAnimatior final 
 	: public CBase
 {
+public:
+	enum E_COMMON_ANINAME
+	{
+		// 걷기 달리기 공격같은 공통 이름 정의
+		E_COMMON_ANINAME_WALK,
+		E_COMMON_ANINAME_IDLE,
+		E_COMMON_ANINAME_RUN,
+		E_COMMON_ANINAME_DANCE,
+		E_COMMON_ANINAME_SLEEPING,
+		E_COMMON_ANINAME_DRAG,
+		E_COMMON_ANINAME_MELEE,
+		E_COMMON_ANINAME_END,
+	};
+
+	const char* STR_CommonAniName(E_COMMON_ANINAME e)
+	{
+		switch (e)
+		{
+		case E_COMMON_ANINAME_WALK:
+			return "walk";
+		case E_COMMON_ANINAME_IDLE:
+			return "idle";
+		case E_COMMON_ANINAME_RUN:
+			return "run";
+		case E_COMMON_ANINAME_DANCE:
+			return "dance";
+		case E_COMMON_ANINAME_SLEEPING:
+			return "sleeping";
+		case E_COMMON_ANINAME_DRAG:
+			return "drag";
+		case E_COMMON_ANINAME_MELEE:
+			return "melee";
+		default:
+			return "";
+		}
+	}
+
+
 public:
 	typedef struct tag_AniMationNODE
 	{
@@ -21,7 +59,6 @@ public:
 
 		tag_AniMationNODE* aniLeft = nullptr;
 		tag_AniMationNODE* aniRight = nullptr;
-
 
 	}ANIMATIONNODE;
 
@@ -34,12 +71,18 @@ public: // Get Set
 	{
 		return m_HierarchyNodes;
 	}
+	//const vector<CHierarchyNode*>& Get_BoneMatrix()const
+	//{
+	//	return m_HierarchyNodes;
+	//}
+
 	HRESULT SetUp_AnimIndex(_uint index);
 	HRESULT Set_AniString(string AniName);
+	HRESULT Set_AniEnum(E_COMMON_ANINAME AniName);
 
 	const vector<CAnimationClip*>* Get_VecAnimaions() const
 	{
-		return &m_Animations;
+		return &mVecAnimations;
 	}
 	void Set_BlendMaxTime(_float time)
 	{
@@ -52,8 +95,10 @@ public: // Get Set
 	}
 
 	void Set_CurrentAnimaionTime(_float time);
-
 	CAnimationClip* Get_CurrentAnimaion()const;
+
+
+
 
 public: 
 	HRESULT NativeConstruct(const vector<CMeshContainer*>* meshcon);
@@ -86,7 +131,11 @@ private: // 애니메이션 클립
 	_uint									m_iCurrentAniIndex = 0;
 	_uint									m_iNewAniIndex = 0;
 	_uint									m_iNumAnimations;
-	vector<CAnimationClip*>					m_Animations;
+	
+	vector<CAnimationClip*>					mVecAnimations;
+
+	// 멀티 애니메이션으로 하드코딩
+
 
 private: // 애니메이터
 	bool									misBlend = false;

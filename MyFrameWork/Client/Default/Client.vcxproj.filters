@@ -187,6 +187,9 @@
     <Filter Include="02.GameObject\02.3DObject\0.Base\01.Static\00.Base">
       <UniqueIdentifier>{0acc7c3d-5e6c-4ace-a6d5-f082b8baa844}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\01.Static\02.Socket">
+      <UniqueIdentifier>{0e08cee5-eac8-4f0e-b938-55b48dfb2582}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -363,6 +366,9 @@
     <ClInclude Include="..\Public\GameObject\GameObject_Mine.h">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\01.Mine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Socket.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static\02.Socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -511,6 +517,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_Mine.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\01.Mine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Socket.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static\02.Socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

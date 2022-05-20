@@ -25,10 +25,10 @@ public:
 	}
 	const char* Get_Name();
 
-	void Set_AniMationTime(_float timer);
-	_float Get_AniMationTime()const { return m_PlayTimeAcc; }
+	void Set_AniMationTime(_double timer);
+	_double Get_AniMationTime()const { return m_PlayTimeAcc; }
 
-	_float Get_MaxAnimaionTime()const
+	_double Get_MaxAnimaionTime()const
 	{
 		return m_Duration;
 	}

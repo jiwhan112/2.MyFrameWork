@@ -73,8 +73,8 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 
 	_float3						mGoalPosition;
 	_float3						mStartPosition;
-	_float						mTimer;
-	_float						mTimeMax;
+	_double						mTimer;
+	_double						mTimeMax;
 	bool						mIsMove = false;
 //	E_BASEAI					meAI;
 

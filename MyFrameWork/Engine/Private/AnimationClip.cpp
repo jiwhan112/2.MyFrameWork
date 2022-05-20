@@ -10,7 +10,7 @@ const char * CAnimationClip::Get_Name()
 	return m_szName;
 }
 
-void CAnimationClip::Set_AniMationTime(_float timer)
+void CAnimationClip::Set_AniMationTime(_double timer)
 {
 	if (m_Duration <= timer)
 		m_PlayTimeAcc = m_Duration;

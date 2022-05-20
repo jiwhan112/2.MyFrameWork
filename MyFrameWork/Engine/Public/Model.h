@@ -1,12 +1,19 @@
 #pragma once
 
 #include "Component.h"
+#include "Animatior.h"
 
 BEGIN(Engine)
 
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
+	// 소켓에 해당 뼈 행렬 넘길떄 사용
+	typedef struct tagBoneMatrixPtr
+	{
+		_float4x4			pOffsetMatrix;
+		_float4x4			pCombinedMatrix;
+	}BONEMATRIX_PTR;
 
 	enum E_MODEL_TYPE { MODEL_NOANI, MODEL_ANI, MODEL_END };
 private:
@@ -21,6 +28,9 @@ public:
 	{
 		return mAnimator;
 	}
+	const _float4x4& Get_DefaultMatrix() const { return mDefaultMatrix; }
+	BONEMATRIX_PTR Get_BoneMatrixPtr(string bonename);
+	
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);
@@ -28,6 +38,9 @@ public:
 
 public:
 	HRESULT SetUp_AnimIndex(_uint iAnimIndex);
+	HRESULT SetUp_AnimName(string tag);
+	HRESULT SetUp_AnimEnum(CAnimatior::E_COMMON_ANINAME e);
+
 	HRESULT Update_CombinedTransformationMatrices(_double TimeDelta);
 	HRESULT Bind_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pValueName);
 	HRESULT Render(class CShader* pShader, _uint iPassIndex, _uint iMaterialIndex, const char* pBoneValueName = nullptr);
@@ -41,7 +54,7 @@ private: // 메시
 	vector<class CMeshContainer*>*			m_pMeshContainers = nullptr;
 	typedef vector<class CMeshContainer*>	MESHCONTAINERS;
 	E_MODEL_TYPE							m_eModelType = MODEL_END;
-	_float4x4								m_TransformMatrix;
+	_float4x4								mDefaultMatrix;
 
 
 	// 계층 // 영향을 주는 뼈정보 세팅 // 메시프로토 생성시 필요

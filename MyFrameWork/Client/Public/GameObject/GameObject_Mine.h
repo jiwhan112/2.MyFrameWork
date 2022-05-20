@@ -13,6 +13,8 @@ class CGameObject_Mine final :
 	public CGameObject_3D_Dynamic
 {
 public:
+	// 마인 AI 설정
+
 	//enum E_BASEAI
 	//{
 	//	BASEAI_IDLE,
@@ -33,9 +35,11 @@ public:
 	// virtual _int LateTick(_double TimeDelta);
 	// virtual HRESULT Render();
 
+	// 모델 구현 
+
+
 
 protected:
-
 
 public:
 	static CGameObject_Mine* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

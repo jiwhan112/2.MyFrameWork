@@ -716,6 +716,27 @@ HRESULT CImgui_Model::Edit_ANI()
 		_float blendTime = (_float)animator->Get_BlendMaxTime();
 		ImGui::DragFloat("BLENDTIMER", &blendTime, 0.01f, 0.01f, 10.f);
 		animator->Set_BlendMaxTime(blendTime);
+
+
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Walk")))
+		{
+			animator->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_WALK);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "run")))
+		{
+			animator->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN);
+
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "idle")))
+		{
+			animator->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
+
+		}
+
+
 	}
 
 	

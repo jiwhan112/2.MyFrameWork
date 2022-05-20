@@ -58,6 +58,7 @@ using namespace DirectX;
 #include <process.h>
 
 #include <string>
+#include <sstream>
 #include <fstream>
 #include <tchar.h>
 #include <vector>

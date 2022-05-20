@@ -54,7 +54,7 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices(_double timer)
 	{
 		// 현재 애니메이션을 시간에 맞게 업데이트를 시켜준다.
 		// 애니메이션 채널의 해당 시간에 따른 뼈 위치 갱신
-		m_Animations[m_iCurrentAniIndex]->Update_TransformMatrices(timer);
+		mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices(timer);
 	}
 
 	// 갱신된 뼈행렬을 계층으로 업데이트 시켜준다.
@@ -129,12 +129,12 @@ HRESULT CAnimatior::Set_AniString(string AniName)
 
 void CAnimatior::Set_CurrentAnimaionTime(_float time)
 {
-	m_Animations[m_iCurrentAniIndex]->Set_AniMationTime(time);
+	mVecAnimations[m_iCurrentAniIndex]->Set_AniMationTime(time);
 }
 
 CAnimationClip* CAnimatior::Get_CurrentAnimaion() const
 {
-	return m_Animations[m_iCurrentAniIndex];
+	return mVecAnimations[m_iCurrentAniIndex];
 }
 
 HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
@@ -154,6 +154,33 @@ HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 		m_iCurrentAniIndex = iAnimIndex;
 	}
 	return S_OK;
+}
+
+HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName)
+{
+	// 공통적인 애니메이션 재성
+	if (mVecAnimations.empty())
+		return E_FAIL;
+	string aniname = STR_CommonAniName(AniName);
+	int index = 0;
+	for (auto& ani:mVecAnimations)
+	{
+		string STR_FullNames = ani->Get_Name();
+		vector<string> Name = CHelperClass::String_Split(STR_FullNames, '@');
+		string ModelName = Name[0];
+		string Full_AniNames = Name[1];
+
+		vector<string> AniNames = CHelperClass::String_Split(Full_AniNames, '_');
+
+		if (aniname == AniNames[0])
+		{
+			SetUp_AnimIndex(index);
+			return S_OK;
+		}
+		index++;
+	}
+
+	return E_FAIL;
 }
 
 HRESULT CAnimatior::Ready_Animation()
@@ -227,14 +254,14 @@ HRESULT CAnimatior::Ready_Animation()
 			pAnimation->Add_Channel(pChannel);
 		}
 
-		m_Animations.push_back(pAnimation);
+		mVecAnimations.push_back(pAnimation);
 	}
 	return S_OK;
 }
 
 HRESULT CAnimatior::Link_ChannelToNode()
 {
-	for (auto& pAnimation : m_Animations)
+	for (auto& pAnimation : mVecAnimations)
 	{
 		const vector<CChannel*>* pChannels = pAnimation->Get_Channels();
 
@@ -257,8 +284,8 @@ HRESULT CAnimatior::AniMationBlend(int startindex, int endindex, _double delta)
 
 	// 1. 1번 애니의 시작과 1번 애니의 끝과 2번애니의 끝의 위치를 가져와야한다.
 	// 1번 애니 2번 애니메이션의 채널리스트를 가져온다.
-	auto VecStart_AniChannel = m_Animations[startindex]->Get_Channels();
-	auto VecEnd_AniChannel = m_Animations[endindex]->Get_Channels();
+	auto VecStart_AniChannel = mVecAnimations[startindex]->Get_Channels();
+	auto VecEnd_AniChannel = mVecAnimations[endindex]->Get_Channels();
 //	m_HierarchyNodes
 
 	if (VecStart_AniChannel == nullptr||
@@ -273,8 +300,8 @@ HRESULT CAnimatior::AniMationBlend(int startindex, int endindex, _double delta)
 		mBlendTimer = 0.0;
 		misBlend = false;
 		m_iCurrentAniIndex = endindex;
-		m_Animations[startindex]->Set_AniMationTime(0);
-		m_Animations[endindex]->Set_AniMationTime(0);
+		mVecAnimations[startindex]->Set_AniMationTime(0);
+		mVecAnimations[endindex]->Set_AniMationTime(0);
 	}
 		
 	_float3			vScale;
@@ -330,8 +357,7 @@ HRESULT CAnimatior::AniMationBlend(int startindex, int endindex, _double delta)
 		(*VecEnd_AniChannel)[i]->Set_TransformationMatrix(newMat);
 
 	}
-	int a = 5;
-
+	return S_OK;
 }
 
 CHierarchyNode * CAnimatior::Find_HierarchyNode(const char * pName, _uint* pOut) const
@@ -361,7 +387,7 @@ _int  CAnimatior::Find_Animation(string AniName) const
 
 	for (_uint i = 0; i < m_iNumAnimations; i++)
 	{
-		string name = m_Animations[i]->Get_Name();
+		string name = mVecAnimations[i]->Get_Name();
 		if (AniName.compare(name) == 0)
 		{
 			returnIndex = i;
@@ -386,7 +412,7 @@ CAnimatior * CAnimatior::Create(const aiScene* scene, const vector<class CMeshCo
 
 void CAnimatior::Free()
 {
-	for (auto& pAnimation : m_Animations)
+	for (auto& pAnimation : mVecAnimations)
 		Safe_Release(pAnimation);
 
 	for (auto& pHier : m_HierarchyNodes)
