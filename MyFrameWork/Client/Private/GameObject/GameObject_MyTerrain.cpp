@@ -12,15 +12,7 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	, mTerrainDESC(rhs.mTerrainDESC)
 {
 
-	// DESC깊은 복사
-	if (mTerrainDESC.mObjectSize != 0)
-	{
-		mTerrainDESC.mModelObjects = NEW MODEL_WORLD_DESC[mTerrainDESC.mObjectSize];
-		for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
-		{
-			memcpy(&mTerrainDESC.mModelObjects[i], &(rhs.mTerrainDESC.mModelObjects[i]), sizeof(MODEL_WORLD_DESC));
-		}
-	}
+	// Desc 내부의 동적오브젝트는 Load 함수호출로 생성;
 }
 
 HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
@@ -223,40 +215,60 @@ HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
 
 	for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
 	{
-		string str = mTerrainDESC.mModelObjects[i].mProtoName;
+		string str = mTerrainDESC.mArrayModelObjects[i].mProtoName;
 		wstring wstr = CHelperClass::Convert_str2wstr(str);
 		CGameObject_Base* cloneObject = creater->Create_ObjectClone_Prefab(idx, wstr, layertag);
 		if (cloneObject == nullptr)
 			return E_FAIL;
-		_float4x4 worlmat = mTerrainDESC.mModelObjects[i].mWorldMat;
+		_float4x4 worlmat = mTerrainDESC.mArrayModelObjects[i].mWorldMat;
 		cloneObject->Get_ComTransform()->Set_WorldMat(worlmat);
 	}
 	return S_OK;
 }
 
-HRESULT CGameObject_MyTerrain::SaveDESC_Objects(const list<MODEL_WORLD_DESC>& worldObjList)
+HRESULT CGameObject_MyTerrain::SaveDESC_Objects(const list<_uint>& uintList, const list<MODEL_WORLD_DESC>& worldObjList)
 {
-	// worldMat
-	int size =  worldObjList.size();
-	if (size <= 0)
-		return E_FAIL;
+	//Safe_Delete_Array(mTerrainDESC.mArrayModelObjects);
+	//Safe_Delete_Array(mTerrainDESC.mArrayIndes);
+	mTerrainDESC.mNoTileSize = 0;
+	mTerrainDESC.mObjectSize = 0;
 
-	if (mTerrainDESC.mObjectSize != 0)
+	// 정보 업데이트 및 저장
+	int tilesize = uintList.size();
+	int objectsize = worldObjList.size();
+
+	if (tilesize > 0)
 	{
-		Safe_Delete_Array(mTerrainDESC.mModelObjects); 
-		mTerrainDESC.mObjectSize = 0;
+		_uint* NoTileArray = NEW _uint[tilesize];
+
+		_uint count = 0;
+		for (auto& index : uintList)
+		{
+			NoTileArray[count]= index;
+			count++;
+		}
+
+		mTerrainDESC.mNoTileSize = tilesize;
+		mTerrainDESC.mArrayIndes = NoTileArray;
+
 	}
-	
-	mTerrainDESC.mObjectSize = size;
-	MODEL_WORLD_DESC* NewObjects = NEW MODEL_WORLD_DESC[size];
-	int count = 0;
-	for (auto& staticobj: worldObjList)
+
+	if (objectsize > 0)
 	{
-		strcpy_s(NewObjects[count].mProtoName, staticobj.mProtoName);
-		NewObjects[count].mWorldMat = staticobj.mWorldMat;
-		count++;
+		mTerrainDESC.mObjectSize = objectsize;
+		MODEL_WORLD_DESC* ObjectsArray = NEW MODEL_WORLD_DESC[objectsize];
+
+		_uint count = 0;
+		for (auto& staticobj : worldObjList)
+		{
+			strcpy_s(ObjectsArray[count].mProtoName, staticobj.mProtoName);
+			ObjectsArray[count].mWorldMat = staticobj.mWorldMat;
+			count++;
+		}
+
+		mTerrainDESC.mObjectSize = objectsize;
+		mTerrainDESC.mArrayModelObjects = ObjectsArray;
 	}
-	mTerrainDESC.mModelObjects = NewObjects;
 
 	return S_OK;
 }
@@ -301,11 +313,5 @@ void CGameObject_MyTerrain::Free()
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
 	Safe_Release(mComNaviMesh);
-
-	
-	if (mTerrainDESC.mModelObjects != nullptr)
-	{
-		Safe_Delete_Array(mTerrainDESC.mModelObjects);
-	}
 	
 }

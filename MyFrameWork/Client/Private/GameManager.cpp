@@ -35,7 +35,7 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 		mObjectIoManager = CObjectIO::Create();
 
 	if (mDaungonManager == nullptr)
-		mDaungonManager = CDungeon_Manager::Create();
+		mDaungonManager = CDungeon_Manager::Create(d,c);
 	if (mColliderManager == nullptr)
 		mColliderManager = CColliderManager::Create();
 

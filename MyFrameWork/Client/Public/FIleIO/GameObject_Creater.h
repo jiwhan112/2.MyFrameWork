@@ -46,25 +46,30 @@ public:
 
 	//	HRESULT Create_ObjectClone_Prefab_AllData(_uint levelindex, wstring layertag);
 
-	HRESULT  Add_MapObject(wstring keyname,CGameObject_Base* obj);
+	HRESULT  Add_MapObject(wstring keyname, CGameObject_Base* obj);
+	HRESULT  Add_MapTerrainDesc(wstring keyname, TERRAIN_DESC* terraindesc);
 
 
 public: // 특정 오브젝트 생성
 //	CGameObject_Base* Create_SocketObject();
-
+	TERRAIN_DESC*	Find_TerrainData(wstring key);
 
 private:
 	CGameObject_Base* Find_MapObject(wstring key);
 
 private:
-	// 데이터 로드
-//	class CObjectIO* mObjectIoManager = nullptr;
-
-	// 데이터 기반으로 생성된 깡통 오브젝트의 클론 정보를 보관한다.
+	// 컴포넌트 기반으로 생성된 깡통 오브젝트의 클론 정보를 보관한다.
 	map<wstring, CGameObject_Base*> mMap_GameObject2File_Proto;
 
-	ID3D11Device*			m_pDevice = nullptr;
-	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+	// DESC 기반으로 각 정보를 기반으로 저장한다.
+	// 확장자 기반으로 해석
+	// map<wstring, void*>*			mMap_DescData;
+
+	// DESC 나누려면 작업이 걸려서 일단 맵 정보만 먼저 맵에저장한다.
+	map<wstring, TERRAIN_DESC*>				mMap_TerrainDESC;
+
+	ID3D11Device*							m_pDevice = nullptr;
+	ID3D11DeviceContext*					m_pDeviceContext = nullptr;
 
 public:
 	static CGameObject_Creater* Create(ID3D11Device* d, ID3D11DeviceContext* c);

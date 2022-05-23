@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "Tool/Imgui_Terrain.h"
-#include "Cell.h"
+#include "Tool/Imgui_DESC.h"
 
+#include "Cell.h"
 #include "GameObject/Client_Object.h"
+#include "GameObject/Dungeon_Objects.h"
 
 CImgui_Terrain::CImgui_Terrain(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -70,7 +72,7 @@ HRESULT CImgui_Terrain::Render_UI()
 			RENDER_CREATEEMPTY();
 
 			// 파일 불러오기
-			RENDER_CREATE_PROTO();
+			CREATE_LOAD_DESC();
 
 
 			ImGui::Checkbox("TerrainSetting", &mIsTerrainSetting);
@@ -117,7 +119,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 	// 빈 오브젝트 클론
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
-	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Terrain")))
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
 	{
 		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
@@ -126,56 +128,91 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), createobj);
 	}
 
-	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Daungeon")))
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_DungeonMap")))
 	{
+
 		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-		CGameObject* terrainobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	
+		CGameObject_MyTerrain* createobj = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+
+		// 타일 초기화
+		GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain_Tool(createobj);
+
 		// 이미 만들어진 오브젝트 추가
-		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), terrainobj);
-		GetSingle(CGameManager)->Get_DaungonManager()->Setup_Terrain((CGameObject_MyTerrain*)terrainobj, (E_LEVEL)levelindex);
+		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), createobj);
 
 	}
-	/*if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Delete_Daungeon")))
-	{
-		GetSingle(CGameManager)->Get_DaungonManager()->Release_DaungonData();
 
-	}*/
+
+	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
+	//{
+	//
+	//}
 	
 }
 
-void CImgui_Terrain::RENDER_CREATE_PROTO()
+void CImgui_Terrain::CREATE_LOAD_DESC()
 {
+	// Terrain Desc 정보로 불러오기
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
+	//IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Create_Terrain"))
+	//{
+	//	mDescList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_TERRAIN);
 
-	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Proto_Parent"))
-	{
-		if (mProtoMapObjectList == nullptr)
-			mProtoMapObjectList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_TERRAIN);
+	//	static int selectObjectIndex = -1;
+	//	_uint cnt = 0;
+	//	static wstring selectObjectStr = L"";
+	//	for (auto& protoString : *mDescList)
+	//	{
+	//		if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
+	//		{
+	//			selectObjectIndex = cnt;
+	//			selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
+	//		}
+	//		cnt++;
+	//	}
 
-		static int selectObjectIndex = -1;
-		_uint cnt = 0;
-		static wstring selectObjectStr = L"";
-		for (auto& protoString : *mProtoMapObjectList)
-		{
-			if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
-			{
-				selectObjectIndex = cnt;
-				selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
-			}
-			cnt++;
-		}
+	//	// 선택 원형 오브젝트 클론
+	//	if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Create_Terrain_DESC")))
+	//	{
+	//		_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 
-		// 선택 원형 오브젝트 클론
-		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Create_Clone_Map")))
-		{
-			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_TERRAIN));
-		}
+	//		// 빈오브젝트에 생성하는 방법
 
-		IMGUI_TREE_END
-	}
+	//	}
+
+	//	IMGUI_TREE_END
+	//}
+	
+	// 이전 코드
+	//IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Proto_Parent"))
+	//{
+	//	if (mProtoMapObjectList == nullptr)
+	//		mProtoMapObjectList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_TERRAIN);
+
+	//	static int selectObjectIndex = -1;
+	//	_uint cnt = 0;
+	//	static wstring selectObjectStr = L"";
+	//	for (auto& protoString : *mProtoMapObjectList)
+	//	{
+	//		if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
+	//		{
+	//			selectObjectIndex = cnt;
+	//			selectObjectStr = CHelperClass::Convert_str2wstr(protoString);
+	//		}
+	//		cnt++;
+	//	}
+
+	//	// 선택 원형 오브젝트 클론
+	//	if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Create_Clone_Map")))
+	//	{
+	//		_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	//		Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_TERRAIN));
+	//	}
+
+	//	IMGUI_TREE_END
+	//}
 }
 
 void CImgui_Terrain::RENDER_MAP_MODE()
@@ -192,11 +229,15 @@ void CImgui_Terrain::WINDOW_TERRAIN()
 	{
 		// Terrain Object 설정 
 		if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_MAP)
+		{
 			FAILED_CHECK_NONERETURN(Edit_TERRAIN());
+		}
 
 		// 맵 만들기
-		if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_OBJ)
+		else if (meToolMode == CImgui_Terrain::E_TOOLMODE_TERRAIN_OBJ)
+		{
 			FAILED_CHECK_NONERETURN(Edit_OBJECTS());
+		}
 
 	}
 }
@@ -376,39 +417,44 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 HRESULT CImgui_Terrain::Edit_OBJECTS()
 {
 	// 만들어놓은 3D 깡통 오브젝트 배치 
-
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	CGameObject_3D_Static2* PickObject = nullptr;
 
+	// 타일 모드랑 오브젝트 모드 나눠서 구현
+
+	// Object 정보
 	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Objects")))
 	{
-		auto ProtoParentModelList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
-		if (ProtoParentModelList != nullptr)
+		if (mProtoParentObjectList == nullptr)
+			mProtoParentObjectList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
+		if (mProtoParentObjectList != nullptr)
 		{
+			// 객체 선택
 			static int selectObjectIndex = -1;
 			_uint cnt = 0;
 			static wstring selectObjectWStr = L"";
 			static string selectObjectStr = "";
-			for (auto& protoString : *ProtoParentModelList)
+			for (auto& protoString : *mProtoParentObjectList)
 			{
 				cnt++;
-
 				if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
 				{
 					selectObjectIndex = cnt;
 					selectObjectStr = protoString;
 					selectObjectWStr = CHelperClass::Convert_str2wstr(protoString);
+
+					// 선택 객체 생성
+					if (selectObjectIndex != -1)
+					{
+						_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+						CGameObject_Base* pickobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
+						static_cast<CGameObject_3D_Static2*>(pickobj)->Set_UpdateMode(CGameObject_3D_Static2::E_UPDATETYPE_PICK);
+						Set_PickObject(pickobj);
+					}
+
 				}
 			}
-
-			if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "PickSetting")))
-			{
-				_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-				CGameObject_Base* pickobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
-				static_cast<CGameObject_3D_Static2*>(pickobj)->Set_UpdateMode(CGameObject_3D_Static2::E_UPDATETYPE_PICK);
-				if (pickobj != nullptr)
-					Set_PickObject(pickobj);
-			}
+			ImGui::EndListBox();
 
 			if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "DeletePick")))
 			{
@@ -420,15 +466,19 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 				}
 			}
 
-			static bool PickChecking = false;
-			ImGui::Checkbox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "MAP_PICK"), &PickChecking);
+			// 객체 배치
+			static bool bBatchAble = false;
+			ImGui::Checkbox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "MAP_PICK"), &bBatchAble);
 
-			if (PickChecking && mCurrent_PickObject)
+			// 현재 픽 오브젝트
+			if (bBatchAble && mCurrent_PickObject)
 			{
 				if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_LBUTTON)& DIS_Down)
 				{
 					// 맵에 배치 시킨다.
 					_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+
+
 					CGameObject_Base* cloneObject = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
 					cloneObject->Get_ComTransform()->Set_WorldMat(mCurrent_PickObject->Get_ComTransform()->GetWorldFloat4x4());
 					mListWorldObjects.push_front(cloneObject);
@@ -442,7 +492,8 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 				}
 			}
 
-			if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_RBUTTON)& DIS_Down)
+
+			/*if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_RBUTTON)& DIS_Down)
 			{
 				if (mListWorldObjects.empty() == false)
 				{
@@ -450,28 +501,34 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 					mListWorldObjects.pop_front();
 					Safe_Release(removeObj);
 					removeObj->Set_Dead();
-
 					mListWorldObjects_Desc.pop_front();
 				}
+			}*/
+
+			
+
+			if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Map_SelectLoadButton")))
+			{
+				wstring keyname = CHelperClass::Convert_str2wstr(CImgui_DESC::mStrSelectName[E_DESC_DATA::DESC_DATA_TERRAIN]);
+				TERRAIN_DESC* DungeonDesc =  Create_Manager->Find_TerrainData(keyname);
+				GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->ResetTile_Tool(DungeonDesc);
+
+							   
 			}
 
+			if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Map_Saver")))
+			{
+			
+				FAILED_CHECK(SAVER_MODE());
+			}
 
-
-			Safe_Delete(ProtoParentModelList);
 		}
-
-		ImGui::EndListBox();
-
-		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Map_Saver")))
-		{
-
-			FAILED_CHECK(SAVER_MODE());
-		}
-
-		return S_OK;
 	}
 	return S_OK;
+
 }
+
+
 
 HRESULT CImgui_Terrain::SAVER_MODE()
 {
@@ -483,6 +540,7 @@ HRESULT CImgui_Terrain::SAVER_MODE()
 	{
 		// 맵 저장
 
+		// 오브젝트
 		static char ObjectName[128] = "";
 		ImGui::InputTextWithHint("savetext_3DObj", "enter Obj Name", ObjectName, IM_ARRAYSIZE(ObjectName));
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Save")))
@@ -490,7 +548,10 @@ HRESULT CImgui_Terrain::SAVER_MODE()
 			// dat 파일 경로에 저장
 			string str = ObjectName;
 			wstring wstr = CHelperClass::Convert_str2wstr(str);
-			mCurrent_TerrainObject->SaveDESC_Objects(mListWorldObjects_Desc);
+			
+			// 오브젝트랑 타일정보는 툴의 정보를 기반으로 새로 저장
+			auto removeList =  GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListRemoveTile();
+			mCurrent_TerrainObject->SaveDESC_Objects(*removeList,mListWorldObjects_Desc);
 			FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_TERRAIN, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrent_TerrainObject));
 		}
 		IMGUI_TREE_END
@@ -530,7 +591,7 @@ void CImgui_Terrain::Free()
 	Safe_Release(mCurrent_TerrainObject);
 	Safe_Release(mCurrent_PickObject);
 
-	Safe_Delete(mProtoMapObjectList);
+	Safe_Delete(mProtoParentObjectList);
 	
 	for (auto& obj: mListWorldObjects)
 	{

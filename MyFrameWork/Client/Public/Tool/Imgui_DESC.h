@@ -6,7 +6,8 @@ class CAnimationClip;
 END
 BEGIN(Client)
 
-// DESC 툴 
+
+// #TODO: 데이터 저장 싱글턴으로 변경하자
 
 class CImgui_DESC final :
 	public CImgui_Base
@@ -40,19 +41,21 @@ private:
 private:
 	HRESULT Edit_DESC();
 
-	wstring Get_EXEDescName(E_DESC_DATA descid);
+	wstring			Get_EXEDescName(E_DESC_DATA descid);
+	static string	Get_String(E_DESC_DATA descid);
 
 
 private:
 	// 경로 이름 모두 저장해둔다.
 	list<MYFILEPATH*>*				mListFilePath = nullptr;
-//	list<string>					mListDescNameSTR;
 
 	list<string>					mListDescFileNameSTR[E_DESC_DATA::DESC_DATA_END];
 	int								mSelectIndex[E_DESC_DATA::DESC_DATA_END] = { -1, };
-
 	bool							mIsDesc = false;
-	
+
+public:
+	static string					mStrSelectName[E_DESC_DATA::DESC_DATA_END];
+
 private:
 	E_TOOLMODE_DESC				meModelMode = TOOLMODE_DESC_END;
 

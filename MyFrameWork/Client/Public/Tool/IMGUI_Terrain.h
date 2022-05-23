@@ -32,7 +32,7 @@ private:
 	void Combo_MapMode();
 
 	void RENDER_CREATEEMPTY();
-	void RENDER_CREATE_PROTO();
+	void CREATE_LOAD_DESC();
 
 	void RENDER_MAP_MODE();
 	void RENDER_MAP_OBJ_MODE();
@@ -63,10 +63,12 @@ private:
 
 	// 맵에 배치된 오브젝트
 	list<CGameObject_Base*>			mListWorldObjects;
+
+	list<_uint>						mListNoTileIndex_Desc;
 	list<MODEL_WORLD_DESC>			mListWorldObjects_Desc;
 
 	// 만들어진 원본 이름
-	list<string>*					mProtoMapObjectList = nullptr;
+	list<string>*					mProtoParentObjectList = nullptr;
 private:
 	bool							mIsTerrainSetting = false;
 	E_TAYLAY						meCreateTERRAIN_Layer = LAY_TERRAIN;

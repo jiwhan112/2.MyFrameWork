@@ -27,7 +27,7 @@ HRESULT CLevel_Tool::NativeConstruct()
 	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(Ready_Tools());
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
-	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
+//	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 #endif
 
 	// 파일 원령객체 초기화

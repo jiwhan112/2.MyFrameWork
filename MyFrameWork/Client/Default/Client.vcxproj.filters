@@ -533,6 +533,7 @@
     <ClCompile Include="..\Private\GameObject\Dungeon_Objects.cpp">
       <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\Public\Client_DESC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

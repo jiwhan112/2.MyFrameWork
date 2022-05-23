@@ -15,13 +15,14 @@ enum E_TERRAINSIZE
 // DESC 정보 구분
 enum E_DESC_DATA
 {
+	// 단일 데이터 타입
 	DESC_DATA_WORLD, // 월드 행렬
 	DESC_DATA_TEXTURENAME, // 텍스처이름 모음
 	DESC_DATA_STRNAME, // 모델 이름
 	DESC_DATA_COLLIDER, // Collider 
+
+	// 포인터가 필요한 타입
 	DESC_DATA_TERRAIN, // Terrain
-	DESC_DATA_NONE1,
-	DESC_DATA_NONE2,
 	DESC_DATA_END,
 };
 
@@ -53,12 +54,16 @@ static const _tchar* STR_DATADESC_EXE(E_DESC_DATA type)
 #define  DESCEXE		STR_DATADESC_EXE
 
 
+//typedef struct tag_BaseDesc
+//{
+//	virtual tag_BaseDesc* Clone()PURE;
+//}BASE_DESC;
 
 
 // UI 정보
 typedef struct tag_UIDESC
 {
-	explicit tag_UIDESC()
+	 tag_UIDESC()
 	{
 		mPosX = g_iWinCX * 0.5f;
 		mPosY = g_iWinCY * 0.5f;
@@ -67,6 +72,23 @@ typedef struct tag_UIDESC
 		mDepth = 0;
 		mPivot = { 0.5f,0.5f };
 	};
+
+	//virtual tag_UIDESC* Clone()override
+	//{
+	//	tag_UIDESC* desc = NEW tag_UIDESC;
+
+	//	desc->mPosX = mPosX;
+	//	desc->mPosY = mPosY;
+
+	//	desc->mSizeX = mSizeX;
+	//	desc->mSizeY = mSizeY;
+
+	//	desc->mDepth = mDepth;
+	//	desc->mPivot = mPivot;
+	//	return desc;
+
+	//}
+
 
 	_int	mPosX = g_iWinCX * 0.5f;
 	_int	mPosY = g_iWinCY * 0.5f;
@@ -88,6 +110,7 @@ typedef struct tag_TEXTUREDESC_UI
 	char mTextureKey_05[MAX_STR] = "";
 	char mTextureKey_06[MAX_STR] = "";
 	char mTextureKey_07[MAX_STR] = "";
+
 }TEXTURE_UI_DESC;
 
 typedef struct tag_TEXTUREDESC_MODEL
@@ -96,6 +119,17 @@ typedef struct tag_TEXTUREDESC_MODEL
 	char mTextureKey_Normal[MAX_STR] = "";
 	char mTextureKey_Hieght[MAX_STR] = "";
 	char mTextureKey_AA[MAX_STR] = "";
+
+	/* tag_TEXTUREDESC_MODEL() = default;
+
+	 tag_TEXTUREDESC_MODEL(const tag_TEXTUREDESC_MODEL& rhs)
+	{
+		strcpy_s(mTextureKey_Diffuse, rhs.mTextureKey_Diffuse);
+		strcpy_s(mTextureKey_Normal, rhs.mTextureKey_Normal);
+		strcpy_s(mTextureKey_Hieght, rhs.mTextureKey_Hieght);
+		strcpy_s(mTextureKey_AA, rhs.mTextureKey_AA);
+	}*/
+
 }TEXTURE_MODEL_DESC;
 
 
@@ -103,12 +137,26 @@ typedef struct tag_MODEL_STATIC_DESC
 {
 	// FBX 이름
 	char mModelName[MAX_STR] = "";
+	 tag_MODEL_STATIC_DESC() = default;
+
+	 /* tag_MODEL_STATIC_DESC(const tag_MODEL_STATIC_DESC& rhs)
+	 {
+		 strcpy_s(mModelName, rhs.mModelName);
+	 }*/
+
 }MODEL_STATIC_DESC;
 
 typedef struct tag_MODEL_DYNAMIC_DESC
 {
 	// FBX 이름
 	char mModelName[MAX_STR] = "";
+	 tag_MODEL_DYNAMIC_DESC() = default;
+
+	// tag_MODEL_DYNAMIC_DESC(const tag_MODEL_DYNAMIC_DESC& rhs)
+	//{
+	//	strcpy_s(mModelName, rhs.mModelName);
+	//}
+
 }MODEL_DYNAMIC_DESC;
 
 typedef struct tag_COLLIDERODEL_DESC
@@ -123,6 +171,7 @@ typedef struct tag_COLLIDERODEL_DESC
 	CCollider::E_COLLIDER_TYPE meColliderType;
 	_float3 mOffset;
 	_float3 mSize;
+
 }COLLIDER_DESC;
 
 
@@ -132,22 +181,75 @@ typedef struct tag_MODELNAME_WORLD_DESC
 	char mProtoName[MAX_STR] = "";
 	_float4x4 mWorldMat;
 
+
+	/* tag_MODELNAME_WORLD_DESC(const tag_MODELNAME_WORLD_DESC& rhs)
+	{
+		strcpy_s(mProtoName, rhs.mProtoName);
+		mWorldMat = rhs.mWorldMat;
+	}*/
+
+
 }MODEL_WORLD_DESC;
 
-typedef struct tag_TERRAIN_DESC
+typedef struct tag_TERRAIN_DESC // : public BASE_DESC
 {
-	explicit tag_TERRAIN_DESC()
+	tag_TERRAIN_DESC()
 	{
-		meTerrainSize = TERRAINSIZE_16;
-		mTextureMultiSize = 30;
+		meTerrainSize = TERRAINSIZE_32;
+		mTextureMultiSize = 1;
+
+		mNoTileSize = 0;
+		mArrayIndes = nullptr;
+
 		mObjectSize = 0;
-		mModelObjects = nullptr;
+		mArrayModelObjects = nullptr;
 	}
+
+	// tag_BaseDesc을(를) 통해 상속됨
+	//virtual tag_TERRAIN_DESC* Clone()override
+	//{
+	//	tag_TERRAIN_DESC* desc = NEW tag_TERRAIN_DESC;
+
+	//	desc->meTerrainSize = meTerrainSize;
+	//	desc->mTextureMultiSize = mTextureMultiSize;
+
+	//	if (mArrayIndes)
+	//	{
+	//		desc->mNoTileSize = mNoTileSize;
+	//		desc->mArrayIndes = NEW _uint[mNoTileSize];
+
+	//		for (int i = 0; i < mNoTileSize; ++i)
+	//		{
+	//			_uint data = mArrayIndes[i];
+	//			desc->mArrayIndes[i] = data;
+	//		}
+	//	}
+
+	//	if (mArrayModelObjects)
+	//	{
+	//		desc->mObjectSize = mObjectSize;
+	//		desc->mArrayModelObjects = NEW MODEL_WORLD_DESC[mObjectSize];
+
+	//		for (int i = 0; i < mObjectSize; ++i)
+	//		{
+	//			desc->mArrayModelObjects[i] = mArrayModelObjects[i];
+	//		}
+	//	}
+	//	return desc;
+	//}
+
+	~tag_TERRAIN_DESC();
 
 	E_TERRAINSIZE			meTerrainSize;
 	_uint					mTextureMultiSize;
 
+	// 타일 오브젝트 정보 / 없는 타일의 인덱스를 저장한다.
+	_uint					mNoTileSize;
+	_uint*					mArrayIndes = nullptr;
+
+	// 타일 이외의 오브젝트
 	_uint					mObjectSize;
-	MODEL_WORLD_DESC*		mModelObjects;
+	MODEL_WORLD_DESC*		mArrayModelObjects = nullptr;
 
 }TERRAIN_DESC;
+

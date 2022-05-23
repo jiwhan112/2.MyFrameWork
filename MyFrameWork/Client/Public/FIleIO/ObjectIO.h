@@ -30,16 +30,12 @@ public:
 	// Creater 맵에 원형 저장
 	bool Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname);
 	
-private:
 	// 오브젝트를 desc타입 별로 나눠서 저장한다.
-	HRESULT Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* desc, _uint size);
+	HRESULT Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* desc);
+	HRESULT Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename);
 
 
-private:
-	// 임의 데이터 맴버 저장
-	E_OBJECT_TYPE					mObjectType;
-	UI_DESC							mUIDesc;
-	TEXTURE_UI_DESC					mTexDesc;
+
 
 public:
 	static CObjectIO* Create();

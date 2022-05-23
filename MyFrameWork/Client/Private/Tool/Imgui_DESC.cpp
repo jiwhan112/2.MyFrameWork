@@ -2,6 +2,8 @@
 #include "Tool/Imgui_DESC.h"
 #include "GameObject/Client_Object.h"
 
+string CImgui_DESC::mStrSelectName[E_DESC_DATA::DESC_DATA_END] = {"",};
+
 CImgui_DESC::CImgui_DESC(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
 {
@@ -126,6 +128,7 @@ HRESULT CImgui_DESC::Edit_DESC()
 						if (ImGui::Selectable(iter->c_str(), mSelectIndex[i] == cnt))
 						{
 							mSelectIndex[i] = cnt;
+							mStrSelectName[i] = iter->c_str();
 						}
 					}
 					cnt++;
@@ -144,6 +147,11 @@ wstring CImgui_DESC::Get_EXEDescName(E_DESC_DATA descid)
 		return exestr;
 	exestr = exestr.substr(1, exestr.size());
 	return exestr;
+}
+
+string CImgui_DESC::Get_String(E_DESC_DATA descid)
+{
+	return mStrSelectName[descid];
 }
 
 

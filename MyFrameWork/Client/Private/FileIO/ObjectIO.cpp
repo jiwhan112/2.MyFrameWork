@@ -8,10 +8,6 @@
 
 HRESULT CObjectIO::NativeConstruct()
 {
-	ZeroMemory(&mObjectType, sizeof(E_OBJECT_TYPE));
-	ZeroMemory(&mUIDesc, sizeof(UI_DESC));
-	ZeroMemory(&mTexDesc, sizeof(TEXTURE_UI_DESC));
-
 	return S_OK;
 }
 
@@ -21,9 +17,6 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 
 	_ulong			dwByte = 0;
 	wstring datPath = FolderPath + L"\\" + filename + L".dat";
-
-
-
 
 	HANDLE			hFile = CreateFile(datPath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
@@ -57,8 +50,8 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		WriteFile(hFile, &(oobj->Get_ColliderDESC()), sizeof(COLLIDER_DESC), &dwByte, nullptr);
 
 		// desc
-		Save_DESC(DESC_DATA_STRNAME, FolderPath, filename, (void*) &(oobj->Get_ModelDESC()), sizeof(MODEL_STATIC_DESC));
-		Save_DESC(DESC_DATA_COLLIDER, FolderPath, filename, (void*)&(oobj->Get_ColliderDESC()), sizeof(COLLIDER_DESC));
+		Save_DESC(DESC_DATA_STRNAME, FolderPath, filename, (void*) &(oobj->Get_ModelDESC()));
+		Save_DESC(DESC_DATA_COLLIDER, FolderPath, filename, (void*)&(oobj->Get_ColliderDESC()));
 
 	}
 	break;
@@ -68,7 +61,7 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		WriteFile(hFile, &(oobj->Get_ModelDESC()), sizeof(MODEL_DYNAMIC_DESC), &dwByte, nullptr);
 
 		// desc
-		Save_DESC(DESC_DATA_STRNAME, FolderPath, filename, (void*)&(oobj->Get_ModelDESC()), sizeof(MODEL_DYNAMIC_DESC));
+		Save_DESC(DESC_DATA_STRNAME, FolderPath, filename, (void*)&(oobj->Get_ModelDESC()));
 
 	}
 	break;
@@ -90,16 +83,24 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	case OBJECT_TYPE_TERRAIN:
 	{
 		CGameObject_MyTerrain* oobj = static_cast<CGameObject_MyTerrain*>(obj);
-		TERRAIN_DESC desc = (oobj->Get_TerrainDESC());
+		/*TERRAIN_DESC desc = (oobj->Get_TerrainDESC());
 		WriteFile(hFile, &desc.meTerrainSize, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
 		WriteFile(hFile, &desc.mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &desc.mObjectSize, sizeof(_uint), &dwByte, nullptr);
 
-		for (int i =0; i< desc.mObjectSize;++i)
+		WriteFile(hFile, &desc.mNoTileSize, sizeof(_uint), &dwByte, nullptr);
+		for (int i = 0; i < desc.mNoTileSize; ++i)
 		{
-			MODEL_WORLD_DESC dummy = desc.mModelObjects[i];
-			WriteFile(hFile, &dummy, sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
+			_uint NoIndex = desc.mArrayIndes[i];
+			WriteFile(hFile, &NoIndex, sizeof(_uint), &dwByte, nullptr);
 		}
+
+		WriteFile(hFile, &desc.mObjectSize, sizeof(_uint), &dwByte, nullptr);
+		for (int i = 0; i < desc.mObjectSize; ++i)
+		{
+			MODEL_WORLD_DESC dummy = desc.mArrayModelObjects[i];
+			WriteFile(hFile, &dummy, sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
+		}*/
+		Save_DESC(DESC_DATA_TERRAIN, FolderPath, filename, (void*)&(oobj->Get_TerrainDESC()));
 	}
 	break;
 
@@ -118,7 +119,7 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 
 // 1. 객체를 저장할 떄 같이 저장
 // 2. 따로 저장/수정 가능하게 IMGUI 판다.
-HRESULT CObjectIO::Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* desc, _uint size)
+HRESULT CObjectIO::Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* voidDesc)
 {
 	// #SAVE DESC 정보 저장
 	// 확장자로 나누기 // ㅇ 
@@ -126,17 +127,113 @@ HRESULT CObjectIO::Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring fil
 
 	wstring ExeName = DESCEXE(descid);
 	wstring DescPath = FolderPath + L"\\DESC\\" + filename + ExeName;
-
 	HANDLE			hFile = CreateFile(DescPath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
-	WriteFile(hFile, &desc, sizeof(size), &dwByte, nullptr);
+	switch (descid)
+	{
+	case DESC_DATA_WORLD:
+		break;
+	case DESC_DATA_TEXTURENAME:
+		break;
+	case DESC_DATA_STRNAME:
+		break;
+	case DESC_DATA_COLLIDER:
+		break;
+	case DESC_DATA_TERRAIN:
+	{
+		TERRAIN_DESC desc = (*(TERRAIN_DESC*)(voidDesc));
+		WriteFile(hFile, &desc.meTerrainSize, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
+		WriteFile(hFile, &desc.mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
+
+		WriteFile(hFile, &desc.mNoTileSize, sizeof(_uint), &dwByte, nullptr);
+		for (int i = 0; i < desc.mNoTileSize; ++i)
+		{
+			WriteFile(hFile, &desc.mArrayIndes[i], sizeof(_uint), &dwByte, nullptr);
+		}
+
+		WriteFile(hFile, &desc.mObjectSize, sizeof(_uint), &dwByte, nullptr);
+		for (int i = 0; i < desc.mObjectSize; ++i)
+		{
+			WriteFile(hFile, &desc.mArrayModelObjects[i], sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
+		}
+	}
+		break;
+	case DESC_DATA_END:
+		break;
+	default:
+		break;
+	}
+
 	CloseHandle(hFile);
 
 	return S_OK;
 }
 
+HRESULT CObjectIO::Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename)
+{
+	// #LOADDESC 정보 로드 테스트 필요
+	CGameObject_Creater* creater = GetSingle(CGameManager)->Get_CreaterManager();
+
+	_ulong			dwByte = 0;
+	int test = 5;
+	wstring ExeName = DESCEXE(descid);
+	wstring DescPath = FolderPath + L"\\DESC\\" + filename;
+
+	HANDLE			hFile = CreateFile(DescPath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	// 정보 별로 읽어서 DESC MAP에 저장해둔다.
+
+	switch (descid)
+	{
+	case DESC_DATA_TERRAIN:
+		TERRAIN_DESC* desc = NEW TERRAIN_DESC;
+
+		ReadFile(hFile, &desc->meTerrainSize, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &desc->mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
+
+		ReadFile(hFile, &desc->mNoTileSize, sizeof(_uint), &dwByte, nullptr);
+		if (desc->mNoTileSize != 0)
+		{
+			desc->mArrayIndes = NEW _uint[desc->mNoTileSize];
+			for (int i = 0; i < desc->mNoTileSize; ++i)
+			{
+				ReadFile(hFile, &desc->mArrayIndes[i], sizeof(_uint), &dwByte, nullptr);
+			}
+		}
+
+		ReadFile(hFile, &desc->mObjectSize, sizeof(_uint), &dwByte, nullptr);
+		if (desc->mObjectSize != 0)
+		{
+			desc->mArrayModelObjects = NEW MODEL_WORLD_DESC[desc->mObjectSize];
+			for (int i = 0; i < desc->mObjectSize; ++i)
+			{
+				ReadFile(hFile, &desc->mArrayModelObjects[i], sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
+			}
+			ReadFile(hFile, &desc->mArrayModelObjects, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
+		}
+		
+
+		// Desc 맵에 반환
+		creater->Add_MapTerrainDesc(filename, desc);
+		break;
+	}
+
+
+	if (dwByte == 0)
+	{
+		CloseHandle(hFile);
+		return E_FAIL;
+	}
+
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
 
 HRESULT CObjectIO::LoadObject_Create(wstring FolderPath, wstring filename)
 {
@@ -157,7 +254,7 @@ HRESULT CObjectIO::LoadObject_Create(wstring FolderPath, wstring filename)
 
 bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 {
-	// #LOAD 저장된 객체 프로토타입으로 저장.
+	// #LOADOBJECT 저장된 객체 프로토타입으로 저장.
 
 	CGameManager* GameInstance = GetSingle(CGameManager);
 	CGameObject_Creater* creater =  GameInstance->Get_CreaterManager();
@@ -211,7 +308,6 @@ bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 		break;
 	case OBJECT_TYPE_3D_STATIC_PARENT:
 	{
-		
 		while (true)
 		{
 			MODEL_STATIC_DESC modelDesc;
@@ -257,26 +353,42 @@ bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 		break;
 	case OBJECT_TYPE_TERRAIN:
 	{
-		TERRAIN_DESC desc;	
+		//TERRAIN_DESC desc;	
 
-		ReadFile(hFile, &desc.meTerrainSize, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
-		ReadFile(hFile, &desc.mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
-		ReadFile(hFile, &desc.mObjectSize, sizeof(_uint), &dwByte, nullptr);
+		//ReadFile(hFile, &desc.meTerrainSize, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
+		//ReadFile(hFile, &desc.mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
 
-		if (dwByte == 0)
-			break;
+		//ReadFile(hFile, &desc.mNoTileSize, sizeof(_uint), &dwByte, nullptr);
+		//if (desc.mNoTileSize != 0)
+		//{
+		//	desc.mArrayIndes = NEW _uint[desc.mNoTileSize];
+		//	for (int i = 0; i < desc.mNoTileSize; ++i)
+		//	{
+		//		int index = -1;
+		//		ReadFile(hFile, &index, sizeof(_uint), &dwByte, nullptr);
+		//		if (index != -1)
+		//			desc.mArrayIndes[i] = index;
+		//	}
+		//}
 
-		int size = desc.mObjectSize;
-		desc.mModelObjects = NEW MODEL_WORLD_DESC[size];
-		for (int i =0 ; i < size;i++)
-		{
-			MODEL_WORLD_DESC dummy;
-			ReadFile(hFile, &dummy, sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
-			desc.mModelObjects[i] = dummy;
-		}
-		emptyObject = creater->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-		CGameObject_MyTerrain* terrainobj = static_cast<CGameObject_MyTerrain*>(emptyObject);
-		terrainobj->Set_LoadTerrainDESC(desc);
+		//ReadFile(hFile, &desc.mObjectSize, sizeof(_uint), &dwByte, nullptr);
+		//if (desc.mObjectSize != 0)
+		//{
+		//	desc.mArrayModelObjects = NEW MODEL_WORLD_DESC[desc.mObjectSize];
+
+		//	for (int i = 0; i < desc.mObjectSize; ++i)
+		//	{
+		//		MODEL_WORLD_DESC worldDesc;
+		//		ReadFile(hFile, &worldDesc, sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
+		//		if (dwByte == 0)
+		//			return false;
+
+		//	}
+		//}
+
+		//emptyObject = creater->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		//CGameObject_MyTerrain* terrainobj = static_cast<CGameObject_MyTerrain*>(emptyObject);
+		//terrainobj->Set_LoadTerrainDESC(desc);
 	}
 
 	case OBJECT_TYPE_END:

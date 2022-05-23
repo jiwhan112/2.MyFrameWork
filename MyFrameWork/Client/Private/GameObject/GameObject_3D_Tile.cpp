@@ -105,7 +105,7 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 				
 			}
 		}	
-		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Update_NaviMesh_STOPSetting(mIndex));
+		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Setup_TileState(mIndex));
 		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->RemoveTile(this));
 		Set_Dead();
 	}

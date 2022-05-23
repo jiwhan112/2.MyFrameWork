@@ -51,7 +51,7 @@ public:
 
 public: // DESC
 	HRESULT Init_Map(const _tchar* layertag); // 맵 데이터로 맵에 따른 객체생성
-	HRESULT SaveDESC_Objects(const list<MODEL_WORLD_DESC>& worldObjList); // 맵 데이터로 맵에 따른 객체생성
+	HRESULT SaveDESC_Objects(const list<_uint>& uintList, const list<MODEL_WORLD_DESC>& worldObjList); // 맵 데이터로 맵에 따른 객체생성
 
 
 

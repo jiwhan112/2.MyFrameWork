@@ -76,6 +76,17 @@ HRESULT CGameObject_Creater::LoaderDatFile_For_PrototypeObject()
 		ObjectIoManager->LoadObject_Create(STR_FILEPATH_RESOURCE_DAT_L, path->FileName);
 	}
 
+	// 모든 DESC 파일 재 로드
+	GetSingle(CGameManager)->Set_ReListPath(CGameManager::PATHTYPE_DESC);
+
+	const list<MYFILEPATH*>* listDESCpath = GetSingle(CGameManager)->Get_PathList(CGameManager::PATHTYPE_DESC);
+
+	for (auto& path : *listDESCpath)
+	{
+		// 파일을 불러와서 타입별로 원형객체 추가
+		ObjectIoManager->Load_DESC(DESC_DATA_TERRAIN, STR_FILEPATH_RESOURCE_DAT_L, path->FileName);
+	}
+
 	return S_OK;
 }
 
@@ -191,6 +202,20 @@ HRESULT CGameObject_Creater::Add_MapObject(wstring keyname, CGameObject_Base* ob
 	return S_OK;
 }
 
+HRESULT CGameObject_Creater::Add_MapTerrainDesc(wstring keyname, TERRAIN_DESC* terraindesc)
+{
+	mMap_TerrainDESC.emplace(keyname, terraindesc);
+	return S_OK;
+}
+
+TERRAIN_DESC * CGameObject_Creater::Find_TerrainData(wstring key)
+{
+	auto iter = mMap_TerrainDESC.find(key);
+	if (iter != mMap_TerrainDESC.end())
+		return iter->second;
+	return nullptr;
+}
+
 CGameObject_Base * CGameObject_Creater::Find_MapObject(wstring key)
 {
 	auto iter = mMap_GameObject2File_Proto.find(key);
@@ -225,5 +250,13 @@ void CGameObject_Creater::Free()
 			Safe_Release(obj.second);
 		}
 		mMap_GameObject2File_Proto.clear();
+	}
+
+	if (mMap_TerrainDESC.empty() == false)
+	{
+		for (auto terr: mMap_TerrainDESC)
+		{
+			Safe_Delete(terr.second);
+		}
 	}
 }
