@@ -142,7 +142,7 @@ bool CColliderManager::Check_Mouse_Terrain()
 		if (terrain == nullptr)
 			continue;
 
-		_float4x4 WorldMatrixInverse = terrain->Get_TransformCom()->GetInvert();
+		_float4x4 WorldMatrixInverse = terrain->Get_ComTransform()->GetInvert();
 		CNavigation* navi = terrain->Get_ComNavimesh();
 
 		if (Check_Navi(WorldMatrixInverse, navi))

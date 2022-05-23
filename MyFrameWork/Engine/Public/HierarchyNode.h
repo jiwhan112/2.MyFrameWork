@@ -30,9 +30,18 @@ public:
 		return XMLoadFloat4x4(&m_OffsetMatrix);
 	}
 
+	_float4x4* Get_OffsetMatrixPtr()
+	{
+		return &m_OffsetMatrix;
+	}
+
 	_fmatrix Get_CombinedTransformationMatrix()
 	{
 		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);
+	}
+	_float4x4* Get_CombinedTransformationMatrixPtr()
+	{
+		return &m_CombinedTransformationMatrix;
 	}
 
 public:

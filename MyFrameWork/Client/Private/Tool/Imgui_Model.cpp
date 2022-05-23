@@ -530,7 +530,7 @@ HRESULT CImgui_Model::Edit_FBX()
 
 			IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Parent_Transform"))
 			{
-				CTransform* parentTrans = mCurrent_ModelStaticObject_Parent->Get_TransformCom();
+				CTransform* parentTrans = mCurrent_ModelStaticObject_Parent->Get_ComTransform();
 				_float4x4	Worldmat = parentTrans->GetWorldMatrix();
 				_float3		position = Worldmat.Translation();
 
@@ -548,7 +548,7 @@ HRESULT CImgui_Model::Edit_FBX()
 				if (0 <= selectIndex)
 				{
 					CGameObject_3D_Static* SelectObjectChild = mCurrent_ModelStaticObject_Parent->Get_ChildOfIndex(selectIndex);
-					CTransform* trnascom = SelectObjectChild->Get_TransformCom();
+					CTransform* trnascom = SelectObjectChild->Get_ComTransform();
 
 
 					_float4x4 WorldLocalMat = trnascom->GetWorldLocalFloat4x4();
@@ -626,6 +626,10 @@ HRESULT CImgui_Model::Edit_ANI()
 	CModel* modelCom = mCurrent_ModelDynamicObject->Get_ComModel();
 	CAnimatior* animator = modelCom->Get_Animaitor();
 
+	// Selects
+	static string Select_Bonestr = "";
+	static string Select_AniStr = "";
+
 	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Bones")))
 	{
 		auto pVecBones = modelCom->Get_VecHierarchy();
@@ -635,7 +639,6 @@ HRESULT CImgui_Model::Edit_ANI()
 		// 선택된 모델의 뼈 정보 출력
 		static int selectBone = -1;
 		_uint cnt = 0;
-		string SelectStr = "";
 		static ImGuiTextFilter filter;
 		filter.Draw();
 
@@ -651,7 +654,7 @@ HRESULT CImgui_Model::Edit_ANI()
 				if (ImGui::Selectable(bufName, selectBone == cnt))
 				{
 					selectBone = cnt;
-					SelectStr = bufName;
+					Select_Bonestr = bufName;
 				//	mat = (*iter)->Get_CombinedTransformationMatrix();
 				}
 			}
@@ -681,7 +684,7 @@ HRESULT CImgui_Model::Edit_ANI()
 		static int selectAni = -1;
 
 		_uint cnt = 0;
-		string SelectStr = "";
+		
 		static ImGuiTextFilter filter;
 		filter.Draw();
 
@@ -695,8 +698,8 @@ HRESULT CImgui_Model::Edit_ANI()
 				if (ImGui::Selectable(bufName, selectAni == cnt))
 				{
 					selectAni = cnt;
-					SelectStr = bufName;
-					animator->Set_AniString(SelectStr);
+					Select_AniStr = bufName;
+					animator->Set_AniString(Select_AniStr);
 
 					// MODEL_DYNAMIC_DESC fbx;
 					//	strcpy_s(fbx.mModelName, selectFBX.c_str());
@@ -736,12 +739,41 @@ HRESULT CImgui_Model::Edit_ANI()
 
 		}
 
-
 	}
 
-	
+	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "SocketObjectTest")))
+	{
 
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "SocketButton")))
+		{
+			CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 
+			CGameObject_3D_Socket::SOCKETDESC desc;
+			// 뼈이름
+			desc.mSocketName = Select_Bonestr.c_str();
+			if (strlen(desc.mSocketName) < 1)
+			{
+				ImGui::EndListBox();
+				return S_FALSE;
+			}
+
+			// 붙일 모델
+			desc.mTargetModel = mCurrent_ModelDynamicObject->Get_ComModel();
+			desc.mTransform = mCurrent_ModelDynamicObject->Get_ComTransform();
+
+			// 소켓 오브젝트 테스트
+			CGameObject_3D_Socket* Socket = (CGameObject_3D_Socket*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_SOCKET);
+
+			
+
+			Socket->Set_LoadSocketDESC("crea_SnotPickaxe.fbx", desc);
+
+			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			Create_Manager->PushObject((CGameObject_Base**)&Socket, levelindex, TAGLAY(meCreateLayer));
+		}
+		ImGui::EndListBox();
+
+	}
 	return S_OK;
 }
 

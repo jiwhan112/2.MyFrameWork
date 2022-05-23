@@ -19,6 +19,9 @@ HRESULT CLevel_MyGamePlay::NativeConstruct()
 #ifdef _DEBUG
 	FAILED_CHECK(Ready_IMGUI());
 #endif
+
+//	GetSingle(CGameManager)->Get_DaungonManager()->Init_Dungeon
+
 	// 주면 지형 생성
 	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
@@ -138,7 +141,7 @@ HRESULT CLevel_MyGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 HRESULT CLevel_MyGamePlay::Ready_Level_BaseGame()
 {
-	CDaungon_Manager*	 pDaungonManager =  GetSingle(CGameManager)->Get_DaungonManager();
+	CDungeon_Manager*	 pDaungonManager =  GetSingle(CGameManager)->Get_DaungonManager();
 	CGameObject_Creater* pCreateManager = GetSingle(CGameManager)->Get_CreaterManager();
 
 	NULL_CHECK_HR(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_BACKGROUND), TAGOBJ(GAMEOBJECT_SKY)));

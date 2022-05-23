@@ -1,7 +1,5 @@
 #include "stdafx.h"
-#include "GameObject/Daungon_Manager.h"
-#include "GameObject/GameObject_3D_Tile.h"
-#include "GameObject/GameObject_3D_Static2.h"
+#include "GameObject/Client_Object.h"
 
 CGameObject_3D_Tile::CGameObject_3D_Tile(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_3D_Static(pDevice, pDeviceContext)

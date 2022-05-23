@@ -80,13 +80,15 @@ CModel::BONEMATRIX_PTR CModel::Get_BoneMatrixPtr(string bonename)
 	ZeroMemory(&BoneMatrixPtr, sizeof(BONEMATRIX_PTR));
 
 
-	CHierarchyNode * 		pNode = Find_HierarchyNode(bonename.c_str());
+	// 애니메이션의 노드를 찾아야한다.
+	CHierarchyNode * 		pNode = mAnimator->Find_HierarchyNode(bonename.c_str());
 
 	if (nullptr == pNode)
 		return BONEMATRIX_PTR();
 
-	BoneMatrixPtr.pOffsetMatrix = pNode->Get_OffsetMatrix();
-	BoneMatrixPtr.pCombinedMatrix = pNode->Get_CombinedTransformationMatrix();
+
+	BoneMatrixPtr.pOffsetMatrix = pNode->Get_OffsetMatrixPtr();
+	BoneMatrixPtr.pCombinedMatrix = pNode->Get_CombinedTransformationMatrixPtr();
 
 	return BoneMatrixPtr;
 }

@@ -178,7 +178,7 @@ HRESULT CGameObject_3D_Dynamic::Render()
 	CGameObject* obj = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
 	if (obj != nullptr&& mComNaviMesh !=nullptr) 
 	{
-		CTransform* terraintrans = obj->Get_TransformCom();
+		CTransform* terraintrans = obj->Get_ComTransform();
 		mComNaviMesh->Render(terraintrans);
 	}
 	

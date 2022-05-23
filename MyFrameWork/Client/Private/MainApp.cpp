@@ -343,6 +343,9 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
 		CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
 
+	// 소켓 깡통
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_SOCKET),
+		CGameObject_3D_Socket::Create(m_pDevice, m_pDeviceContext)));
 
 	// 구체화 오브젝트 초기화
 	// 깡통 오브젝트로 만들어진 구체화 오브젝트

@@ -229,7 +229,7 @@ HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
 		if (cloneObject == nullptr)
 			return E_FAIL;
 		_float4x4 worlmat = mTerrainDESC.mModelObjects[i].mWorldMat;
-		cloneObject->Get_TransformCom()->Set_WorldMat(worlmat);
+		cloneObject->Get_ComTransform()->Set_WorldMat(worlmat);
 	}
 	return S_OK;
 }

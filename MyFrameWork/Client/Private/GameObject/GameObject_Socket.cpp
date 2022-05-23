@@ -30,7 +30,7 @@ HRESULT CGameObject_3D_Socket::NativeConstruct(void* pArg)
 
 //	mComTransform->Scaled();
 //	mComTransform->Rotation();
-
+	mCurrentShaderPass = 2;
 	
 	return S_OK;
 }
@@ -50,8 +50,8 @@ HRESULT CGameObject_3D_Socket::Render()
 	if (mComShader == nullptr)
 		return E_FAIL;
 
-	_matrix			TransformMatrix = XMLoadFloat4x4(&mBoneMatrixPtr.pOffsetMatrix)
-		* XMLoadFloat4x4(&mBoneMatrixPtr.pCombinedMatrix) * XMLoadFloat4x4(&mSocketTransformMatrix) 
+	_matrix			TransformMatrix = XMLoadFloat4x4(mBoneMatrixPtr.pOffsetMatrix)
+		* XMLoadFloat4x4(mBoneMatrixPtr.pCombinedMatrix) * XMLoadFloat4x4(&mSocketTransformMatrix) 
 		* mSocketDESC.mTransform->GetWorldMatrix();
 	
 
@@ -63,15 +63,17 @@ HRESULT CGameObject_3D_Socket::Render()
 	
 	mComShader->Set_RawValue("g_SocketMatrix", &XMMatrixTranspose(TransformMatrix), sizeof(_matrix));
 
-
 	__super::Render();
-	
-
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Socket::Set_LoadSocketDESC(const SOCKETDESC & desc)
+HRESULT CGameObject_3D_Socket::Set_LoadSocketDESC(const char* MyFbxname, const SOCKETDESC & desc)
 {
+
+	strcpy_s(mModelStatic_Desc.mModelName, MyFbxname);
+
+	FAILED_CHECK(Set_LoadModelDESC(mModelStatic_Desc));
+
 	memcpy(&mSocketDESC, &desc, sizeof(SOCKETDESC));
 
 	if (mSocketDESC.mTargetModel == nullptr)
@@ -93,14 +95,11 @@ HRESULT CGameObject_3D_Socket::Set_Component()
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
 
-	if (mComModel == nullptr)
+	mComModel = nullptr;
+
+	if (mComCollider == nullptr)
 	{
-		if (IsName(mModelStatic_Desc.mModelName))
-		{
-			string strModel = mModelStatic_Desc.mModelName;
-			wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
-			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
-		}
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
 	}
 
 	/*if (mComCollider == nullptr)
@@ -117,6 +116,7 @@ HRESULT CGameObject_3D_Socket::Set_Component()
 //	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 //
 //	return UPDATENONE;
+
 //}
 //
 //_int CGameObject_3D_Socket::LateTick(_double TimeDelta)
@@ -162,8 +162,5 @@ void CGameObject_3D_Socket::Free()
 {
 	__super::Free();
 
-	Safe_Release(mComModel);
-	Safe_Release(mComCollider);
-	Safe_Release(mComTexture);
 
 }

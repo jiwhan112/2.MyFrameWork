@@ -3,7 +3,7 @@
 #include "../Public/Tool/ImguiMgr.h"
 #include "../Public/FIleIO/GameObject_Creater.h"
 #include "../Public/FIleIO/ObjectIO.h"
-#include "../Public/GameObject/Daungon_Manager.h"
+#include "../Public/GameObject/Client_Object.h"
 #include "../Public/System/ColliderManager.h"
 
 
@@ -35,7 +35,7 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 		mObjectIoManager = CObjectIO::Create();
 
 	if (mDaungonManager == nullptr)
-		mDaungonManager = CDaungon_Manager::Create();
+		mDaungonManager = CDungeon_Manager::Create();
 	if (mColliderManager == nullptr)
 		mColliderManager = CColliderManager::Create();
 
@@ -53,29 +53,14 @@ HRESULT CGameManager::Tick(_double timer)
 	mColliderManager->Tick_ColliderCheck(timer);
 	mDaungonManager->Tick(timer);
 	mIMGUIManager->Update(timer);
+	
+	FAILED_CHECK(LevelChanger());
+	return S_OK;
+}
 
-	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & DIS_Down)
-	{
-		//	FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
-	}
-	int idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	if (idx == E_LEVEL::LEVEL_LOGO)
-	{
-		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
-			// 엔진에서 클리어 하기전에 한번 해준다. 
-			LevelLoading(LEVEL_TOOL);
-
-		if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
-			LevelLoading(LEVEL_MYGAMEPLAY);
-	}
-	else
-	{
-		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
-			LevelLoading(LEVEL_LOGO);
-	}
-
+HRESULT CGameManager::LateTick(_double timer)
+{
+	mDaungonManager->LateTick(timer);	
 	return S_OK;
 }
 
@@ -97,7 +82,7 @@ CObjectIO * CGameManager::Get_ObjectIOManager()
 {
 	return mObjectIoManager;
 }
-CDaungon_Manager * CGameManager::Get_DaungonManager()
+CDungeon_Manager * CGameManager::Get_DaungonManager()
 {
 	return mDaungonManager;
 }
@@ -231,6 +216,34 @@ HRESULT CGameManager::ClearLevel()
 
 	if (mColliderManager != nullptr)
 		mColliderManager->ReleaseObjects();
+
+	return S_OK;
+}
+
+HRESULT CGameManager::LevelChanger()
+{
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_RETURN) & DIS_Down)
+	{
+		//	FAILED_CHECK(pGameInstance->OpenLevel(LEVEL_LOADING, CLevel_Loader::Create(m_pDevice, m_pDeviceContext, LEVEL_GAMEPLAY)));
+	}
+	int idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	if (idx == E_LEVEL::LEVEL_LOGO)
+	{
+		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+			// 엔진에서 클리어 하기전에 한번 해준다. 
+			LevelLoading(LEVEL_TOOL);
+
+		if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
+			LevelLoading(LEVEL_MYGAMEPLAY);
+	}
+	else
+	{
+		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+			LevelLoading(LEVEL_LOGO);
+	}
+
 
 	return S_OK;
 }

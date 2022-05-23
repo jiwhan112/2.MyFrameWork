@@ -183,7 +183,7 @@
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Tile.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Base.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h" />
-    <ClInclude Include="..\Public\GameObject\Daungon_Manager.h" />
+    <ClInclude Include="..\Public\GameObject\Dungeon_Manager.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -254,7 +254,7 @@
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp" />
-    <ClCompile Include="..\Private\GameObject\Daungon_Manager.cpp" />
+    <ClCompile Include="..\Private\GameObject\Dungeon_Manager.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

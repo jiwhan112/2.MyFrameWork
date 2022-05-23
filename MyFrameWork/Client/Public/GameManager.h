@@ -18,7 +18,7 @@ BEGIN(Client)
 class CGameObject_Creater;
 class CImguiMgr;
 class CObjectIO;
-class CDaungon_Manager;
+class CDungeon_Manager;
 // class CColliderManager;
 
 class CGameManager final : public CBase
@@ -40,13 +40,14 @@ private:
 public:
 	HRESULT Initialize(ID3D11Device * d, ID3D11DeviceContext * c);
 	HRESULT Tick(_double timer);
+	HRESULT LateTick(_double timer);
 	HRESULT Render();
 
 public:
 	CGameObject_Creater*		Get_CreaterManager();
 	CImguiMgr*					Get_ImGuiManager();
 	CObjectIO*					Get_ObjectIOManager();
-	CDaungon_Manager*			Get_DaungonManager();
+	CDungeon_Manager*			Get_DaungonManager();
 	CColliderManager*			Get_ColliderManager();
 
 	const list<MYFILEPATH*>* Get_PathList(E_PATHTYPE type) const;
@@ -64,15 +65,16 @@ public: // Collider
 	HRESULT Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE e, CGameObject_Base * col);
 
 
-private:
-	// 경로 저장
+private:// 경로 저장	
 	HRESULT Initialize_PathData();
 	HRESULT Set_PathData(list<MYFILEPATH*>* outData, wstring str, const char* filetype, bool bFlag = true);
 	HRESULT Safe_Delete_Path(list<MYFILEPATH*>* outData);
 
 private:
+	// 게임 매니저용 클리어 레벨
 	HRESULT LevelLoading(E_LEVEL nextLevel);
 	HRESULT ClearLevel();
+	HRESULT LevelChanger();
 
 
 private:
@@ -85,7 +87,7 @@ private:
 	CImguiMgr*					mIMGUIManager = nullptr;
 	CObjectIO*					mObjectIoManager = nullptr;
 
-	CDaungon_Manager*			mDaungonManager = nullptr;	
+	CDungeon_Manager*			mDaungonManager = nullptr;	
 	CColliderManager*			mColliderManager = nullptr;
 
 

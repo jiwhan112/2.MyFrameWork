@@ -106,6 +106,8 @@ public:
 public:
 	HRESULT Update_CombinedTransformationMatrices(_double timer);
 
+	// 애니메이션 뼈 찾기
+	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr) const;
 private:
 	HRESULT Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* parentNode, _uint iDepth);
 	HRESULT Ready_OffsetMatrices(const vector<CMeshContainer*>* meshcon);
@@ -113,7 +115,6 @@ private:
 	HRESULT Link_ChannelToNode();
 
 private:
-	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr) const;
 	_int Find_Animation(string aniname) const;
 
 

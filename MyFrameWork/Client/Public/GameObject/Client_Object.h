@@ -11,7 +11,7 @@
 
 
 // 관리자
-#include "GameObject/Daungon_Manager.h"
+#include "GameObject/Dungeon_Manager.h"
 
 // 지형
 #include "GameObject/GameObject_MyTerrain.h"
@@ -22,6 +22,7 @@
 #include "GameObject/GameObject_3D_Static2.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_3D_Tile.h"
+#include "GameObject/GameObject_Socket.h"
 
 // 그외
 #include "GameObject/GameObject_2D.h"

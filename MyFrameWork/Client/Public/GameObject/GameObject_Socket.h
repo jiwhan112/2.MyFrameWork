@@ -38,7 +38,7 @@ public:
 	//virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist) override;
 
 public:
-	HRESULT		Set_LoadSocketDESC(const SOCKETDESC& desc);
+	HRESULT		Set_LoadSocketDESC(const char* MyFbxname, const SOCKETDESC& desc);
 
 	virtual HRESULT Set_Component()override;
 
@@ -46,9 +46,6 @@ protected: // 소켓의 정보 / 타겟의 뼈 행렬 정보
 	SOCKETDESC				mSocketDESC;
 	CModel::BONEMATRIX_PTR	mBoneMatrixPtr;
 	_float4x4				mSocketTransformMatrix;
-
-	
-
 
 public:
 	static CGameObject_3D_Socket* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

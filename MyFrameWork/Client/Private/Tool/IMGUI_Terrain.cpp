@@ -430,13 +430,13 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 					// 맵에 배치 시킨다.
 					_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 					CGameObject_Base* cloneObject = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
-					cloneObject->Get_TransformCom()->Set_WorldMat(mCurrent_PickObject->Get_TransformCom()->GetWorldFloat4x4());
+					cloneObject->Get_ComTransform()->Set_WorldMat(mCurrent_PickObject->Get_ComTransform()->GetWorldFloat4x4());
 					mListWorldObjects.push_front(cloneObject);
 					Safe_AddRef(cloneObject);
 
 					MODEL_WORLD_DESC worldDesc;
 					strcpy_s(worldDesc.mProtoName, selectObjectStr.c_str());
-					worldDesc.mWorldMat = cloneObject->Get_TransformCom()->GetWorldFloat4x4();
+					worldDesc.mWorldMat = cloneObject->Get_ComTransform()->GetWorldFloat4x4();
 					mListWorldObjects_Desc.push_front(worldDesc);
 
 				}

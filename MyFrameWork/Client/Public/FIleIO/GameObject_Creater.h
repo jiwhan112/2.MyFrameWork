@@ -49,6 +49,10 @@ public:
 	HRESULT  Add_MapObject(wstring keyname,CGameObject_Base* obj);
 
 
+public: // 특정 오브젝트 생성
+//	CGameObject_Base* Create_SocketObject();
+
+
 private:
 	CGameObject_Base* Find_MapObject(wstring key);
 

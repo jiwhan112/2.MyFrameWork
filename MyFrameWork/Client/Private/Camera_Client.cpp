@@ -154,7 +154,7 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
 	if (mbTargetSet == false)
 	{
-		CTransform* targetTrans = mTargetObject->Get_TransformCom();
+		CTransform* targetTrans = mTargetObject->Get_ComTransform();
 		_float3 targetPos = targetTrans->GetState(CTransform::STATE_POSITION);
 
 		mComTransform->LookAt(targetPos);

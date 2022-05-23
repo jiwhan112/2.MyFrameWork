@@ -22,7 +22,7 @@ public:
 	virtual HRESULT Render();
 
 public:
-	class CTransform*	Get_TransformCom() const { return mComTransform; }
+	class CTransform*	Get_ComTransform() const { return mComTransform; }
 
 	bool Get_IsLife() const { return mIsLife; }
 	bool Get_IsRenderer() const { return mIsRenderer; }

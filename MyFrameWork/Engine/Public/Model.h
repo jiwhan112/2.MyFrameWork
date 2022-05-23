@@ -11,8 +11,8 @@ public:
 	// 소켓에 해당 뼈 행렬 넘길떄 사용
 	typedef struct tagBoneMatrixPtr
 	{
-		_float4x4			pOffsetMatrix;
-		_float4x4			pCombinedMatrix;
+		_float4x4*			pOffsetMatrix = nullptr;
+		_float4x4*			pCombinedMatrix = nullptr;
 	}BONEMATRIX_PTR;
 
 	enum E_MODEL_TYPE { MODEL_NOANI, MODEL_ANI, MODEL_END };

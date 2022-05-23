@@ -345,9 +345,6 @@
     <ClInclude Include="..\Public\GameObject\Client_Object.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject\Daungon_Manager.h">
-      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Tile.h">
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\01.GameObject_Tile</Filter>
     </ClInclude>
@@ -368,6 +365,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_Socket.h">
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\02.Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\Dungeon_Manager.h">
+      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -497,9 +497,6 @@
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\03.Parent</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameObject\Daungon_Manager.cpp">
-      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Tile.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\01.GameObject_Tile</Filter>
     </ClCompile>
@@ -520,6 +517,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_Socket.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\02.Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\Dungeon_Manager.cpp">
+      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

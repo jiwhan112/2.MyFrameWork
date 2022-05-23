@@ -1,26 +1,29 @@
 #include "stdafx.h"
-#include "GameObject/Daungon_Manager.h"
+#include "GameObject/Dungeon_Manager.h"
 #include "GameObject/GameObject_MyTerrain.h"
 #include "GameObject/GameObject_3D_Tile.h"
 
-CDaungon_Manager::CDaungon_Manager()
+CDungeon_Manager::CDungeon_Manager()
 {
 }
 
-HRESULT CDaungon_Manager::NativeConstruct_Prototype()
+HRESULT CDungeon_Manager::NativeConstruct_Prototype()
 {
 	return S_OK;
 }
 
-_int CDaungon_Manager::Tick(_double TimeDelta)
+_int CDungeon_Manager::Tick(_double TimeDelta)
 {
-
-
 
 	return UPDATENONE;
 }
 
-HRESULT CDaungon_Manager::Init_TileSet()
+_int CDungeon_Manager::LateTick(_double TimeDelta)
+{
+	return UPDATENONE;
+}
+
+HRESULT CDungeon_Manager::Init_TileSet()
 {
 	// 이웃한 타일 기준으로 현재 타일의 상태를 결정한다.
 
@@ -29,7 +32,7 @@ HRESULT CDaungon_Manager::Init_TileSet()
 	return S_OK;
 }
 
-HRESULT CDaungon_Manager::Update_NaviMesh_STOPSetting(_uint TileIndex)
+HRESULT CDungeon_Manager::Update_NaviMesh_STOPSetting(_uint TileIndex)
 {
 	if (mListVecTiles == nullptr)
 		return E_FAIL;
@@ -40,7 +43,7 @@ HRESULT CDaungon_Manager::Update_NaviMesh_STOPSetting(_uint TileIndex)
 		return E_FAIL;
 
 
-	_float3 tilePos = tile->Get_TransformCom()->GetState(CTransform::STATE_POSITION);
+	_float3 tilePos = tile->Get_ComTransform()->GetState(CTransform::STATE_POSITION);
 	CNavigation* navi = mDaungonTerrain->Get_ComNavimesh();
 	auto VecCell = navi->Get_CellVector();
 	if (VecCell == nullptr)
@@ -69,7 +72,7 @@ HRESULT CDaungon_Manager::Update_NaviMesh_STOPSetting(_uint TileIndex)
 
 
 
-HRESULT CDaungon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain , E_LEVEL level)
+HRESULT CDungeon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain , E_LEVEL level)
 {
 	mDaungonTerrain = terrain;
 	Safe_AddRef(mDaungonTerrain);
@@ -84,7 +87,7 @@ HRESULT CDaungon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain , E_LEVEL
 	return S_OK;
 }
 
-void CDaungon_Manager::Release_DaungonData()
+void CDungeon_Manager::Release_DaungonData()
 {
 	Safe_Release(mDaungonTerrain);
 	mDaungonTerrain = nullptr;
@@ -100,7 +103,7 @@ void CDaungon_Manager::Release_DaungonData()
 	}
 }
 
-CGameObject_3D_Tile * CDaungon_Manager::FInd_TIleForIndex(_int TileIndex) const
+CGameObject_3D_Tile * CDungeon_Manager::FInd_TIleForIndex(_int TileIndex) const
 {
 	for (auto& obj: *mListVecTiles)
 	{
@@ -113,7 +116,7 @@ CGameObject_3D_Tile * CDaungon_Manager::FInd_TIleForIndex(_int TileIndex) const
 	return nullptr;
 }
 
-HRESULT CDaungon_Manager::RemoveTile(CGameObject_3D_Tile * pTIle)
+HRESULT CDungeon_Manager::RemoveTile(CGameObject_3D_Tile * pTIle)
 {
 	if (mListVecTiles == nullptr)
 		return E_FAIL;
@@ -124,7 +127,7 @@ HRESULT CDaungon_Manager::RemoveTile(CGameObject_3D_Tile * pTIle)
 	return S_OK;
 }
 
-HRESULT CDaungon_Manager::Init_Tile(E_LEVEL level)
+HRESULT CDungeon_Manager::Init_Tile(E_LEVEL level)
 {
 	_uint* TileXZ = mDaungonTerrain->Get_TerrainBuffer()->Get_XZ();
 	mSizeX = TileXZ[0];
@@ -169,7 +172,7 @@ HRESULT CDaungon_Manager::Init_Tile(E_LEVEL level)
 	return S_OK;
 }
 
-HRESULT CDaungon_Manager::Init_NaviMesh_STOPSetting()
+HRESULT CDungeon_Manager::Init_NaviMesh_STOPSetting()
 {
 	if (mListVecTiles == nullptr)
 		return E_FAIL;
@@ -203,7 +206,7 @@ HRESULT CDaungon_Manager::Init_NaviMesh_STOPSetting()
 	return S_OK;
 }
 
-HRESULT CDaungon_Manager::Set_Neigbor_Tile()
+HRESULT CDungeon_Manager::Set_Neigbor_Tile()
 {
 	// 타일의 이웃설정하기
 	// 1. 타일 인덱스로 찾기 
@@ -307,7 +310,7 @@ HRESULT CDaungon_Manager::Set_Neigbor_Tile()
 
 
 
-HRESULT CDaungon_Manager::Update_TileState(_int tileIndex)
+HRESULT CDungeon_Manager::Update_TileState(_int tileIndex)
 {
 	// 타일 인덱스가 없다면 전체 타일 업데이트
 	if (mListVecTiles == nullptr)
@@ -346,19 +349,19 @@ HRESULT CDaungon_Manager::Update_TileState(_int tileIndex)
 		return E_FAIL;
 }
 
-CDaungon_Manager * CDaungon_Manager::Create()
+CDungeon_Manager * CDungeon_Manager::Create()
 {
-	CDaungon_Manager* pInstance = NEW CDaungon_Manager();
+	CDungeon_Manager* pInstance = NEW CDungeon_Manager();
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
-		MSGBOX("Failed to Created CDaungon_Manager");
+		MSGBOX("Failed to Created CDungeon_Manager");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CDaungon_Manager::Free()
+void CDungeon_Manager::Free()
 {
 	
 	Release_DaungonData();
