@@ -20,9 +20,9 @@ HRESULT CLevel_MyGamePlay::NativeConstruct()
 	FAILED_CHECK(Ready_IMGUI());
 #endif
 
-//	GetSingle(CGameManager)->Get_DaungonManager()->Init_Dungeon
+//	FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Init_GameLevel((E_LEVEL)mLevelIndex));
 
-	// 주면 지형 생성
+	//// 주면 지형 생성
 	FAILED_CHECK(Ready_Light());
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 	FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
@@ -30,7 +30,7 @@ HRESULT CLevel_MyGamePlay::NativeConstruct()
 
 	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
 
-	// 기본 게임 레벨 생성
+	//// 기본 게임 레벨 생성
 	FAILED_CHECK(Ready_Level_BaseGame());
 
 	

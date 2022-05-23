@@ -33,7 +33,7 @@ void CHierarchyNode::Update_CombinedTransformationMatrix()
 
 CHierarchyNode * CHierarchyNode::Create(const char* pName, _float4x4 TransformationMatrix, _uint iDepth, CHierarchyNode* pParent)
 {
-	CHierarchyNode*	pInstance = new CHierarchyNode();
+	CHierarchyNode*	pInstance = NEW CHierarchyNode();
 
 	if (FAILED(pInstance->NativeConstruct(pName, TransformationMatrix, iDepth, pParent)))
 	{

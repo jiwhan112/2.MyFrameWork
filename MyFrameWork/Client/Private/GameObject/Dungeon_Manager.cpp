@@ -1,7 +1,5 @@
 #include "stdafx.h"
-#include "GameObject/Dungeon_Manager.h"
-#include "GameObject/GameObject_MyTerrain.h"
-#include "GameObject/GameObject_3D_Tile.h"
+#include "GameObject/Client_Object.h"
 
 CDungeon_Manager::CDungeon_Manager()
 {
@@ -85,6 +83,30 @@ HRESULT CDungeon_Manager::Setup_Terrain(CGameObject_MyTerrain* terrain , E_LEVEL
 	FAILED_CHECK(Init_NaviMesh_STOPSetting());
 
 	return S_OK;
+}
+
+HRESULT CDungeon_Manager::Init_GameLevel(E_LEVEL level)
+{
+	if (level == LEVEL_MYGAMEPLAY)
+	{
+		mGameAllObjects->Init_GameLevel(level);
+
+		// 
+		//// 라이팅 카메라 마우스 세팅
+		//FAILED_CHECK(Ready_Light());
+		//FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
+		//FAILED_CHECK(Ready_Layer_Mouse(TAGLAY(LAY_PLAYER)));
+
+
+		//// 던전맵 / 오펜스 맵 생성 및 네비 세팅
+		//FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
+		//
+		//// 기타 게임에 관련된 것 생성
+		//FAILED_CHECK(Ready_Level_BaseGame());
+		return S_OK;
+	}
+
+	return E_FAIL;
 }
 
 void CDungeon_Manager::Release_DaungonData()

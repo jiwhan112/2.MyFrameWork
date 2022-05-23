@@ -184,7 +184,7 @@ bool CColliderManager::ColCheck_MOUSE()
 
 CColliderManager * CColliderManager::Create()
 {
-	CColliderManager*	pInstance = new CColliderManager();
+	CColliderManager*	pInstance = NEW CColliderManager();
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{

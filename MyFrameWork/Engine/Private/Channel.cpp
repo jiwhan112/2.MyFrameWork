@@ -33,7 +33,7 @@ void CChannel::Set_HierarchyNodePtr(CHierarchyNode * pNode)
 
 CChannel * CChannel::Create(const char* pName/*, CHierarchyNode* pNode*/)
 {
-	CChannel*	pInstance = new CChannel();
+	CChannel*	pInstance = NEW CChannel();
 
 	if (FAILED(pInstance->NativeConstruct(pName/*, pNode*/)))
 	{

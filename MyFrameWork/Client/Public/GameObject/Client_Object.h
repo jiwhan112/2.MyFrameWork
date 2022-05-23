@@ -12,6 +12,7 @@
 
 // 관리자
 #include "GameObject/Dungeon_Manager.h"
+#include "GameObject/Dungeon_Objects.h"
 
 // 지형
 #include "GameObject/GameObject_MyTerrain.h"

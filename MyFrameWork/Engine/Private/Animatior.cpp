@@ -219,7 +219,7 @@ HRESULT CAnimatior::Ready_Animation()
 			// 각 프레임에 맞는 값을 넣어준다.
 			for (_uint k = 0; k < iNumKeyFrames; ++k)
 			{
-				KEYFRAME*			pKeyFrame = new KEYFRAME;
+				KEYFRAME*			pKeyFrame = NEW KEYFRAME;
 				ZeroMemory(pKeyFrame, sizeof(KEYFRAME));
 
 				if (pAIChannel->mNumScalingKeys > k)
@@ -400,7 +400,7 @@ _int  CAnimatior::Find_Animation(string AniName) const
 
 CAnimatior * CAnimatior::Create(const aiScene* scene, const vector<class CMeshContainer*>* con)
 {
-	CAnimatior*	pInstance = new CAnimatior(scene);
+	CAnimatior*	pInstance = NEW CAnimatior(scene);
 
 	if (FAILED(pInstance->NativeConstruct(con)))
 	{

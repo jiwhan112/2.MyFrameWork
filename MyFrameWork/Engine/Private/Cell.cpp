@@ -122,7 +122,7 @@ _float3 CCell::Get_MeshCenter()
 
 CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _float3 * pPoints, _uint iIndex)
 {
-	CCell*	pInstance = new CCell(pDevice, pDeviceContext);
+	CCell*	pInstance = NEW CCell(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct(pPoints, iIndex)))
 	{

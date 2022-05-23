@@ -60,7 +60,7 @@ void CImgui_DESC::Reset_PathData()
 	if (NewPathList == nullptr)
 		return;
 
-	mListFilePath = new list<MYFILEPATH *>;
+	mListFilePath = NEW list<MYFILEPATH *>;
 	for (auto& path : *NewPathList)
 	{
 		MYFILEPATH* pathdata = path;

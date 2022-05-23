@@ -26,6 +26,9 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 
 public:
+	// 레벨마다 초기화
+	HRESULT Init_GameLevel(E_LEVEL level);
+
 	// 레벨 나갈떄마다
 	void Release_DaungonData();
 
@@ -47,6 +50,9 @@ private: // Private Tile
 	// 상하좌우 검사 해서 큐브 타일 설정
 	HRESULT Init_TileSet(); // 전체 타일 초기화
 
+
+	// 던전에 들어가는 오브젝트들 생성
+	class CDungeon_Objects*		mGameAllObjects;
 
 
 protected: // value Tile

@@ -40,7 +40,7 @@ HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNaviDataFilePath)
 #ifdef _DEBUG
 
 	// 셰이더 정점 초기화
-	mBaseEffect = new BasicEffect(m_pDevice);
+	mBaseEffect = NEW BasicEffect(m_pDevice);
 	mBaseEffect->SetVertexColorEnabled(true);
 
 	const void* pShaderByteCode = nullptr;
@@ -52,7 +52,7 @@ HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNaviDataFilePath)
 		pShaderByteCode, iShaderByteCodeLength, &mInputLayout)))
 		return E_FAIL;
 
-	mBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
+	mBatch = NEW PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
 
 #endif // _DEBUG
 
@@ -947,7 +947,7 @@ bool CNavigation::Check_Open(_uint index)
 
 CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * pNaviDataFilePath)
 {
-	CNavigation*	pInstance = new CNavigation(pDevice, pDeviceContext);
+	CNavigation*	pInstance = NEW CNavigation(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(pNaviDataFilePath)))
 	{
@@ -960,7 +960,7 @@ CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 
 CComponent * CNavigation::Clone(void * pArg)
 {
-	CNavigation*	pInstance = new CNavigation(*this);
+	CNavigation*	pInstance = NEW CNavigation(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

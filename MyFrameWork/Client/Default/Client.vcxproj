@@ -173,6 +173,7 @@
     <ClInclude Include="..\Public\GameManager.h" />
     <ClInclude Include="..\Public\GameObject\Camera_Game.h" />
     <ClInclude Include="..\Public\GameObject\Client_Object.h" />
+    <ClInclude Include="..\Public\GameObject\Dungeon_Objects.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Socket.h" />
@@ -244,6 +245,7 @@
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp" />
     <ClCompile Include="..\Private\GameManager.cpp" />
     <ClCompile Include="..\Private\GameObject\Camera_Game.cpp" />
+    <ClCompile Include="..\Private\GameObject\Dungeon_Objects.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Socket.cpp" />

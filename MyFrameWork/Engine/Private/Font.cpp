@@ -10,11 +10,11 @@ CFont::CFont(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 HRESULT CFont::NativeConstruct(const _tchar * pFontFilePath)
 {
 	// 폰트 파일 생성
-	mBatch = new SpriteBatch(mDeviceContext);
+	mBatch = NEW SpriteBatch(mDeviceContext);
 	if (nullptr == mBatch)
 		return E_FAIL;
 
-	mFont = new SpriteFont(mDevice, pFontFilePath);
+	mFont = NEW SpriteFont(mDevice, pFontFilePath);
 	if (nullptr == mFont)
 		return E_FAIL;
 

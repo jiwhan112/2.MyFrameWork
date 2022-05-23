@@ -52,7 +52,7 @@ HRESULT CMeshContainer::Ready_VertexIndexBuffer(CModel::E_MODEL_TYPE eMeshtype, 
 	m_IBDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	m_IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-	FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitive];
+	FACEINDICES32* pIndices = NEW FACEINDICES32[m_iNumPrimitive];
 	ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitive);
 
 	for (_uint i = 0; i < m_iNumPrimitive; ++i)
@@ -130,7 +130,7 @@ HRESULT CMeshContainer::Ready_NonAnimMeshContainer(aiMesh* pAIMesh, _fmatrix Tra
 	m_VBDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	m_VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
-	VTXMODEL*	pVertices = new VTXMODEL[m_iNumVertices];
+	VTXMODEL*	pVertices = NEW VTXMODEL[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXMODEL) * m_iNumVertices);
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
@@ -165,7 +165,7 @@ HRESULT CMeshContainer::Ready_AnimMeshContainer(aiMesh* pAIMesh)
 	m_VBDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	m_VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
-	VTXANIMODEL*	pVertices = new VTXANIMODEL[m_iNumVertices];
+	VTXANIMODEL*	pVertices = NEW VTXANIMODEL[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXANIMODEL) * m_iNumVertices);
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
@@ -235,7 +235,7 @@ HRESULT CMeshContainer::Ready_SkinnedInfo(VTXANIMODEL* pVertices)
 
 CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, aiMesh * pAIMesh)
 {
-	CMeshContainer*	pInstance = new CMeshContainer(pDevice, pDeviceContext);
+	CMeshContainer*	pInstance = NEW CMeshContainer(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(pAIMesh)))
 	{
@@ -246,7 +246,7 @@ CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 }
 CComponent * CMeshContainer::Clone(void * pArg)
 {
-	CMeshContainer*	pInstance = new CMeshContainer(*this);
+	CMeshContainer*	pInstance = NEW CMeshContainer(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

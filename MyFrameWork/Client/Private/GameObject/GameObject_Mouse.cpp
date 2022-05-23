@@ -28,7 +28,7 @@ HRESULT CGameObject_Mouse::NativeConstruct_Prototype()
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
 #ifdef _DEBUG
-	mBaseEffect = new BasicEffect(m_pDevice);
+	mBaseEffect = NEW BasicEffect(m_pDevice);
 	mBaseEffect->SetVertexColorEnabled(true);
 
 	const void* pShaderByteCode = nullptr;
@@ -39,7 +39,7 @@ HRESULT CGameObject_Mouse::NativeConstruct_Prototype()
 	FAILED_CHECK(m_pDevice->CreateInputLayout(DirectX::VertexPositionColor::InputElements, DirectX::VertexPositionColor::InputElementCount,
 		pShaderByteCode, iShaderByteCodeLength, &mInputLayout));
 
-	mBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
+	mBatch = NEW PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
 
 
 #endif // _DEBUG

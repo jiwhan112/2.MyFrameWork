@@ -190,6 +190,12 @@
     <Filter Include="02.GameObject\02.3DObject\0.Base\01.Static\02.Socket">
       <UniqueIdentifier>{0e08cee5-eac8-4f0e-b938-55b48dfb2582}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameSystems\06.Dungeon_Manager">
+      <UniqueIdentifier>{abbb6473-a57d-49f1-b81a-0e180c1e6a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\06.Dungeon_Manager\Dungeon_Objects">
+      <UniqueIdentifier>{123098ba-47a6-47f5-80f5-1b2addec8b38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -367,7 +373,10 @@
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\02.Socket</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\Dungeon_Manager.h">
-      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
+      <Filter>03.GameSystems\06.Dungeon_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\Dungeon_Objects.h">
+      <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -519,7 +528,10 @@
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\02.Socket</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\Dungeon_Manager.cpp">
-      <Filter>02.GameObject\02.3DObject\1.Terrain\Daungon</Filter>
+      <Filter>03.GameSystems\06.Dungeon_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\Dungeon_Objects.cpp">
+      <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

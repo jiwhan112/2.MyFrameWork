@@ -110,7 +110,7 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 
 CAnimationClip * CAnimationClip::Create(const char* pName, _double Duration, _double TickPerSecond)
 {
-	CAnimationClip*	pInstance = new CAnimationClip();
+	CAnimationClip*	pInstance = NEW CAnimationClip();
 
 	if (FAILED(pInstance->NativeConstruct(pName, Duration, TickPerSecond)))
 	{

@@ -285,7 +285,7 @@ HRESULT CModel::Ready_MeshContainers()
 
 	m_iNumMeshContainers = m_pScene->mNumMeshes;
 
-	m_pMeshContainers = new MESHCONTAINERS[m_iNumMaterials];
+	m_pMeshContainers = NEW MESHCONTAINERS[m_iNumMaterials];
 
 	for (_uint i = 0; i < m_iNumMeshContainers; ++i)
 	{
@@ -318,7 +318,7 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 
 	for (_uint i = 0; i < m_iNumMaterials; ++i)
 	{
-		MESHMATERIALDESC*		pMeshMaterialDesc = new MESHMATERIALDESC;
+		MESHMATERIALDESC*		pMeshMaterialDesc = NEW MESHMATERIALDESC;
 		ZeroMemory(pMeshMaterialDesc, sizeof(MESHMATERIALDESC));
 
 		for (_uint j = 1; j < AI_TEXTURE_TYPE_MAX; ++j)
@@ -610,7 +610,7 @@ CHierarchyNode * CModel::Find_HierarchyNode(const char * pName, _uint* pOut)
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_MODEL_TYPE eModelType, const char * pModelFilePath, const char * pModelFileName, _fmatrix TransformMatrix)
 {
-	CModel*	pInstance = new CModel(pDevice, pDeviceContext);
+	CModel*	pInstance = NEW CModel(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(eModelType, pModelFilePath, pModelFileName, TransformMatrix)))
 	{
@@ -622,7 +622,7 @@ CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceCon
 
 CComponent * CModel::Clone(void * pArg)
 {
-	CModel*	pInstance = new CModel(*this);
+	CModel*	pInstance = NEW CModel(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

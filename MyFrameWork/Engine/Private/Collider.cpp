@@ -25,11 +25,11 @@ CCollider::CCollider(const CCollider & rhs)
 {
 	// 복사시 새로 만들어지고 위치를 설정해준다.
 	if (nullptr != rhs.mAABB)
-		mAABB = new BoundingBox(*rhs.mAABB);
+		mAABB = NEW BoundingBox(*rhs.mAABB);
 	if (nullptr != rhs.mOBB)
-		mOBB = new BoundingOrientedBox(*rhs.mOBB);
+		mOBB = NEW BoundingOrientedBox(*rhs.mOBB);
 	if (nullptr != rhs.mSphere)
-		mSphere = new BoundingSphere(*rhs.mSphere);
+		mSphere = NEW BoundingSphere(*rhs.mSphere);
 
 #ifdef _DEBUG
 	Safe_AddRef(mInputLayout);
@@ -47,19 +47,19 @@ HRESULT CCollider::NativeConstruct_Prototype(E_COLLIDER_TYPE eType)
 	switch (meType)
 	{
 	case COL_AABB:
-		mAABB = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(fDefault, fDefault, fDefault));
+		mAABB = NEW BoundingBox(_float3(0.f, 0.f, 0.f), _float3(fDefault, fDefault, fDefault));
 		break;
 	case COL_OBB:
-		mOBB = new BoundingOrientedBox(_float3(0.f, 0.f, 0.f), _float3(fDefault, fDefault, fDefault), _float4(0.f, 0.f, 0.f, 1.f));
+		mOBB = NEW BoundingOrientedBox(_float3(0.f, 0.f, 0.f), _float3(fDefault, fDefault, fDefault), _float4(0.f, 0.f, 0.f, 1.f));
 		break;
 	case COL_SPHERE:
-		mSphere = new BoundingSphere(_float3(0.f, 0.f, 0.f), fDefault);
+		mSphere = NEW BoundingSphere(_float3(0.f, 0.f, 0.f), fDefault);
 		break;
 	}
 
 	// 기본 셰이더와 Layout / Batch 생성
 #ifdef _DEBUG
-	mBaseEffect = new BasicEffect(m_pDevice);
+	mBaseEffect = NEW BasicEffect(m_pDevice);
 	mBaseEffect->SetVertexColorEnabled(true);
 
 	const void* pShaderByteCode = nullptr;
@@ -70,7 +70,7 @@ HRESULT CCollider::NativeConstruct_Prototype(E_COLLIDER_TYPE eType)
 	FAILED_CHECK(m_pDevice->CreateInputLayout(DirectX::VertexPositionColor::InputElements, DirectX::VertexPositionColor::InputElementCount,
 		pShaderByteCode, iShaderByteCodeLength, &mInputLayout));
 
-	mBatch = new PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
+	mBatch = NEW PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
 
 #endif // _DEBUG
 
@@ -389,7 +389,7 @@ bool CCollider::Update_MY_OBB(CCollider * TargetCollider)
 
 CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, E_COLLIDER_TYPE eType)
 {
-	CCollider*	pInstance = new CCollider(pDevice, pDeviceContext);
+	CCollider*	pInstance = NEW CCollider(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(eType)))
 	{
@@ -402,7 +402,7 @@ CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDev
 
 CComponent * CCollider::Clone(void * pArg)
 {
-	CCollider*	pInstance = new CCollider(*this);
+	CCollider*	pInstance = NEW CCollider(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{

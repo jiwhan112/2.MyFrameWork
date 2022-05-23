@@ -107,7 +107,7 @@ HRESULT CVIBuffer_Rect_Instance::NativeConstruct_Prototype(_uint NumInstance)
 	m_VBInstDesc.StructureByteStride = sizeof(VTXMATRIX); // RULP만 있으면된다.
 	m_VBInstDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	VTXMATRIX*		pInstanceMatrix = new VTXMATRIX[m_iNumInstance];
+	VTXMATRIX*		pInstanceMatrix = NEW VTXMATRIX[m_iNumInstance];
 	ZeroMemory(pInstanceMatrix, sizeof(VTXMATRIX) * m_iNumInstance);
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
