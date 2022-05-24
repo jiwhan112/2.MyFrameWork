@@ -26,12 +26,15 @@ public:
 	_int Get_TilIndex(_uint x, _uint z);
 	_uint* Get_XZ() { _uint r[2] = { miNumX ,miNumZ }; return r; };
 
-	HRESULT INIT_Default_VIBuffer(_uint x, _uint z, const _tchar* newHeight = L"");
-	HRESULT INIT_New_VIBuffer(_uint x, _uint z, const _tchar* newHeight = L"");
+	HRESULT INIT_Default_VIBuffer(_uint x, _uint z);
+	HRESULT INIT_New_VIBuffer(_uint x, _uint z);
+	HRESULT UpdateY(_float y);
+	HRESULT Set_HeightMap(const _tchar* filepath);
 
 private:
 	HRESULT Set_NewXZ(const _uint X, const _uint Z);
 
+	
 private:
 	_uint			miNumX = 0;
 	_uint			miNumZ = 0;

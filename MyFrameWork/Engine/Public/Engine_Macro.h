@@ -197,5 +197,7 @@ static const char* STR_TEXTURESIZE = "g_TextureSize";
 static const char* FILEPATH_RESOURCE = "..\\Bin\\Resources";
 static const char* FILEPATH_TXT_TEST = "..\\Bin\\Resources\\PathFinder\\test.txt";
 static const char* FILEPATH_TXT_RSOURCES = "..\\Bin\\Resources\\PathFinder\\path.txt";
+static const wchar_t* FILEPATH_FILTERTEXTURE = L"..\\Bin\\Resources\\Sprite\\MyFilter.png";
+
 
 #pragma endregion

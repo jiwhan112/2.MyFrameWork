@@ -570,5 +570,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexPointInstance.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Terrain.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

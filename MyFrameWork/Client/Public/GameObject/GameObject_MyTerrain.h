@@ -39,12 +39,7 @@ public:
 	HRESULT		Set_LoadTerrainDESC(const TERRAIN_DESC& desc);
 	HRESULT		Set_TerrainMode(E_TERRAINSIZE e);
 
-	const _float3& Get_PickWorldPos()const
-	{
-		return mPickWorldPos;
-	}
 
-	bool		Get_isPick() const { return misPick; };
 	int			Get_TileIndex(_float3 worldPos);
 	_float3		Get_TileWorld(_uint index);
 	_uint		GetMapSize();
@@ -53,13 +48,13 @@ public: // DESC
 	HRESULT Init_Map(const _tchar* layertag); // 맵 데이터로 맵에 따른 객체생성
 	HRESULT SaveDESC_Objects(const list<_uint>& uintList, const list<MODEL_WORLD_DESC>& worldObjList); // 맵 데이터로 맵에 따른 객체생성
 
+public:
+	HRESULT CreateFiterTexture();
+	HRESULT Set_HeightNewMap();
+
 protected:
 	virtual HRESULT Set_Component()override;
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
-
-
-private:
-	void Update_PickPos(_float3 pickPos);
 
 protected:
 	CVIBuffer_Terrain*		mComVIBuffer = nullptr;
@@ -68,13 +63,25 @@ protected:
 
 	TERRAIN_DESC			mTerrainDESC;
 
+	// Texture Test
+	
+	// 필터링용 소스 텍스처 4개
+	CTexture*				mFiter1 = nullptr;
+	CTexture*				mFiter2 = nullptr;
+	CTexture*				mFiter3 = nullptr;
+	CTexture*				mFiter4 = nullptr;
+//	CTexture*				mHeight = nullptr;
+
+	// 소스텍스처를 XYZW로 섞어주는 텍스처
+	CTexture*				mFiter_XYZW = nullptr;
+	CTexture*				mBrush = nullptr;
+
 	// 필터 텍스처 이름
 	TEXTURE_NAMES_DESC		mTextureFiterDESC;
 
-	bool misPick = false;
-	_float3 mPickWorldPos = _float3(0, 0, 0);
-
-
+public:
+	_float					mRadius = 3;
+//	_float3					mWorldPickPos;
 
 public:
 	static CGameObject_MyTerrain* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

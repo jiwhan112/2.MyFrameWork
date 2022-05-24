@@ -54,19 +54,14 @@ _int CGameObject_3D_Static2::Tick(_double TimeDelta)
 		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
 		if (terrain != nullptr)
 		{
-			if (terrain->Get_isPick())
-			{
-				_float3 worldPos = terrain->Get_PickWorldPos();
+				_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
 				int index = terrain->Get_TileIndex(worldPos);
-
 				_float3 pickTilePos = terrain->Get_TileWorld(index);			
-
 				_float4x4 transmat = _float4x4::CreateTranslation(pickTilePos);
 				mComTransform->Set_State(CTransform::STATE_POSITION, transmat.Translation());
-				
-			}
 		}
 	}
+
 	FAILED_CHECK_NONERETURN(Tick_Child(TimeDelta));
 
 	return UPDATENONE;

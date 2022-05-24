@@ -409,6 +409,8 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 			
 			IMGUI_TREE_END
 		}
+
+		// CamDIr
 		static _float3 DirData = _float3(-0.7, -1.5f, 1);
 		CCamera_Client* camera = (CCamera_Client*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA));
 		if (camera)
@@ -423,6 +425,25 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 			//}
 
 		}
+
+		// ShaderValue
+		static _float Range = 1.0f;
+		ImGui::DragFloat("BrushRange", &Range, 0.1f, 1.f, 25.f);
+		mCurrent_TerrainObject->mRadius = Range;
+
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_FiterTexture")))
+		{
+			mCurrent_TerrainObject->CreateFiterTexture();
+		}
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "UpdateY")))
+		{
+			mCurrent_TerrainObject->Get_TerrainBuffer()->UpdateY(0.5f);
+		}
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "SetHeightMap")))
+		{
+			mCurrent_TerrainObject->Set_HeightNewMap();
+		}
+		
 	}
 
 	return S_OK;

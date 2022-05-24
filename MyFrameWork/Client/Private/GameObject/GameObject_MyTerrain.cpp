@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_MyTerrain.h"
 
+const wchar_t* STR_PATH_HEIGHTMAP_64 = L"../Bin/Resources/Sprite/HeightMap_64.bmp";
 CGameObject_MyTerrain::CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
@@ -25,9 +26,7 @@ HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
 HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	misPick = false;
 	Init_Map(TAGLAY(LAY_OBJECT));
-
 
 	return S_OK;
 }
@@ -72,8 +71,10 @@ HRESULT CGameObject_MyTerrain::Render()
 	FAILED_CHECK(Set_ConstantTable_Tex());
 	FAILED_CHECK(Set_ConstantTable_Light());
 
+	mCurrentShaderPass = 1;
+
 	mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE, 0);
-	mComVIBuffer->Render(mComShader, 0);
+	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 
 #ifdef _DEBUG
 	mComNaviMesh->Render(mComTransform);
@@ -169,6 +170,91 @@ _uint CGameObject_MyTerrain::GetMapSize()
 	return 0;
 }
 
+HRESULT CGameObject_MyTerrain::CreateFiterTexture()
+{
+	_uint size = 0;
+	switch (mTerrainDESC.meTerrainSize)
+	{
+	case TERRAINSIZE_16:
+		size = 17;
+		break;
+	case TERRAINSIZE_32:
+		size = 33;
+		break;
+	case TERRAINSIZE_64:
+		size = 65;
+		break;
+	case TERRAINSIZE_128:
+		size = 129;
+		break;
+	default:
+		return E_FAIL;
+	}
+
+	// 필터 텍스처 만들기
+	// 정점 사이즈 대로 만든다.
+	ID3D11Texture2D*			pTexture;
+
+	D3D11_TEXTURE2D_DESC		TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	TextureDesc.Width = size;
+	TextureDesc.Height = size;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	TextureDesc.SampleDesc.Count = 1;
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	D3D11_SUBRESOURCE_DATA			SubResourceData;
+	ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	_ulong*		pPixel = new _ulong[size * size];
+	ZeroMemory(pPixel, sizeof(_ulong) * size * size);
+
+	int half = size *0.5f;
+	for (_uint i = 0; i < size; ++i)
+	{
+		for (_uint j = 0; j < size; ++j)
+		{
+			_uint iIndex = i * size + j;
+			
+			// 저장될 필터 텍스처 값
+			if (j < half)
+				pPixel[iIndex] = D3D11COLOR_ARGB(255, 255, 255, 255);
+			else
+				pPixel[iIndex] = D3D11COLOR_ARGB(255, 0, 0, 0);
+		}
+	}
+
+
+	SubResourceData.pSysMem = pPixel;
+	SubResourceData.SysMemPitch = sizeof(_ulong) * size;
+
+	// 텍스처를 만들고 ShaderResourceView를 만든다.
+
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, &SubResourceData, &pTexture)))
+		return E_FAIL;
+
+	// 셰이더 리소스뷰를 만들어서 사용할 수 있다.
+	/*ID3D11ShaderResourceView* SRV = nullptr;
+	if (FAILED(m_pDevice->CreateShaderResourceView(pTexture, nullptr, &SRV)))
+		return E_FAIL;
+	if (SRV)
+		Safe_Release(SRV);*/
+
+	if (FAILED(SaveWICTextureToFile(m_pDeviceContext, pTexture, GUID_ContainerFormatPng, FILEPATH_FILTERTEXTURE, &GUID_WICPixelFormat32bppBGRA)))
+		return E_FAIL;
+
+	Safe_Release(pTexture);
+
+	Safe_Delete_Array(pPixel);
+	return S_OK;
+}
+
 HRESULT CGameObject_MyTerrain::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -176,7 +262,7 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 
 	// 모델 타입에 따라 정적모델 동적모델 처리
 	if (mComShader == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX), TEXT("Com_Shader"), (CComponent**)&mComShader));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_TERRAIN), TEXT("Com_Shader"), (CComponent**)&mComShader));
 
 	if (mComTexture == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR), TEXT("Com_Texture"), (CComponent**)&mComTexture));
@@ -189,19 +275,55 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 		Set_TerrainMode(TERRAINSIZE_32);
 	}
 
+	if (mFiter1 == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER1), TEXT("Com_Fiter1"), (CComponent**)&mFiter1));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER2), TEXT("Com_Fiter2"), (CComponent**)&mFiter2));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER3), TEXT("Com_Fiter3"), (CComponent**)&mFiter3));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER4), TEXT("Com_Fiter4"), (CComponent**)&mFiter4));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER_XYZW), TEXT("Com_XYZW"), (CComponent**)&mFiter_XYZW));
+
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_BRUSH), TEXT("Com_Brush"), (CComponent**)&mBrush));
+		
+	}
+
 	return S_OK;
 }
 
 HRESULT CGameObject_MyTerrain::Set_ConstantTable_Tex()
 {
-	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE, 0));
-	FAILED_CHECK(mComShader->Set_RawValue(STR_TEXTURESIZE, &mTerrainDESC.mTextureMultiSize, sizeof(_uint)));
+	// Fiter12 / Brush / Range
+	FAILED_CHECK(mComShader->Set_RawValue(STR_TEXTURESIZE, &mTerrainDESC.mTextureMultiSize, sizeof(_float)));
+
+	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_SourDiffuseTexture", 0));
+	FAILED_CHECK(mFiter1->SetUp_OnShader(mComShader, "g_DestDiffuseTexture", 0));
+
+	FAILED_CHECK(mBrush->SetUp_OnShader(mComShader, "g_BrushTexture", 0));
+	FAILED_CHECK(mFiter_XYZW->SetUp_OnShader(mComShader, "g_FilterTexture", 0));
+
+
+	_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
+	FAILED_CHECK(mComShader->Set_RawValue("g_vBrushPos", &worldPickPos, sizeof(_float3)));
+	FAILED_CHECK(mComShader->Set_RawValue("g_fRadius", &mRadius, sizeof(_float)));
+
+	return S_OK;
+}
+
+HRESULT CGameObject_MyTerrain::Set_HeightNewMap()
+{
+	// 버퍼 수정
+
+	// 텍스처 새로 만들고 받기
+
+	// 버퍼 수정
+	mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_64);
+
+
 	return S_OK;
 }
 
 HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
 {
-
 	if (mTerrainDESC.mObjectSize <= 0)
 		return S_FALSE;
 	Set_TerrainMode(mTerrainDESC.meTerrainSize);
@@ -272,15 +394,6 @@ HRESULT CGameObject_MyTerrain::SaveDESC_Objects(const list<_uint>& uintList, con
 	return S_OK;
 }
 
-
-void CGameObject_MyTerrain::Update_PickPos(_float3 pickPos)
-{
-	misPick = true;
-	// 피킹시 게임 매니저에 전달??
-	_uint iIndex = mComVIBuffer->Get_TileIndex(pickPos);
-	mPickWorldPos = mComVIBuffer->Get_TileWorldPos(iIndex);
-}
-
 CGameObject_MyTerrain * CGameObject_MyTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
 	CGameObject_MyTerrain*	pInstance = NEW CGameObject_MyTerrain(pDevice, pDeviceContext);
@@ -312,5 +425,12 @@ void CGameObject_MyTerrain::Free()
 	Safe_Release(mComVIBuffer);
 	Safe_Release(mComTexture);
 	Safe_Release(mComNaviMesh);
+	
+	Safe_Release(mFiter1);
+	Safe_Release(mFiter2);
+	Safe_Release(mFiter3);
+	Safe_Release(mFiter4);
+	Safe_Release(mFiter_XYZW);
+	Safe_Release(mBrush);
 	
 }

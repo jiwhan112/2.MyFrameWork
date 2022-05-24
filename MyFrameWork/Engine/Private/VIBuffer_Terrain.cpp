@@ -166,10 +166,10 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(_uint x, _uint z)
 {
 	// 기본 정적 버퍼 생성
-	INIT_Default_VIBuffer(x, z);
+//	INIT_Default_VIBuffer(x, z);
 
 	// 동적 버퍼 생성
-//	INIT_New_VIBuffer(x, z);
+	INIT_New_VIBuffer(x, z);
 
 	return S_OK;
 }
@@ -278,7 +278,7 @@ _int CVIBuffer_Terrain::Get_TilIndex(_uint x, _uint z)
 	return z * miNumX + x;
 }
 
-HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z, const _tchar * newHeight)
+HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z)
 {
 #pragma region VERTEX_BUFFER
 
@@ -412,7 +412,7 @@ HRESULT CVIBuffer_Terrain::INIT_Default_VIBuffer(_uint x, _uint z, const _tchar 
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Terrain::INIT_New_VIBuffer(_uint x, _uint z, const _tchar * newHeight)
+HRESULT CVIBuffer_Terrain::INIT_New_VIBuffer(_uint x, _uint z)
 {
 	// 최대 버퍼 129X129에서 해당 부분만 그린다.
 	miNumX = x;
@@ -546,8 +546,104 @@ HRESULT CVIBuffer_Terrain::INIT_New_VIBuffer(_uint x, _uint z, const _tchar * ne
 	return S_OK;
 }
 
+
+HRESULT CVIBuffer_Terrain::Set_HeightMap(const _tchar* filepath)
+{
+	// 만들어진 버텍스 수정
+	// 무조건 BMP 파일
+
+	if (nullptr == m_pDeviceContext)
+		return E_FAIL;
+
+	HANDLE		hFile = CreateFile(filepath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	_ulong					dwByte = 0;
+	BITMAPFILEHEADER		fh;
+	BITMAPINFOHEADER		ih;
+
+	ReadFile(hFile, &fh, sizeof(BITMAPFILEHEADER), &dwByte, nullptr);
+	ReadFile(hFile, &ih, sizeof(BITMAPINFOHEADER), &dwByte, nullptr);
+
+	miNumX = ih.biWidth;
+	miNumZ = ih.biHeight;
+	m_iNumVertices = miNumX * miNumZ;
+
+	_ulong*		pPixel = NEW _ulong[m_iNumVertices];
+	ReadFile(hFile, pPixel, sizeof(_ulong) * m_iNumVertices, &dwByte, nullptr);
+
+	if (mpVertexPos != nullptr)
+	{
+		Safe_Delete_Array(mpVertexPos);
+		mpVertexPos = nullptr;
+	}
+
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	mpVertexPos = NEW _float3[m_iNumVertices];
+	ZeroMemory(mpVertexPos, sizeof(_float3));
+	m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+
+	// 버텍스 수정하기
+	for (_uint z = 0; z < miNumZ; z++)
+	{
+		for (_uint x = 0; x < miNumX; x++)
+		{
+			_uint iIndex = z * miNumX + x;
+			_float newY = (pPixel[iIndex] & 0x000000ff) / 10.f;
+
+			((VTXNORTEX*)SubResource.pData)[iIndex].vPosition = mpVertexPos[iIndex] = _float3(x, newY, z);
+			((VTXNORTEX*)SubResource.pData)[iIndex].vNormal = _float3(0.0f, 1, 0.0f);
+			((VTXNORTEX*)SubResource.pData)[iIndex].vTexUV = _float2(x / (miNumX - 1.f), z / (miNumZ - 1.f));
+		}
+	}
+
+	m_pDeviceContext->Unmap(m_pVB, 0);
+
+
+	////
+	//D3D11_MAPPED_SUBRESOURCE		SubResource;
+
+	//m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+	//for (_uint i = 0; i < m_iNumVertices; ++i)
+	//{
+	//	_float3		vPos = ((VTXNORTEX*)SubResource.pData)[i].vPosition;
+
+	//	if (i % 5 == 0)
+	//		vPos.y += y;
+
+	//	((VTXNORTEX*)SubResource.pData)[i].vPosition = vPos;
+	//}
+
+	//m_pDeviceContext->Unmap(m_pVB, 0);
+	////
+	return S_OK;
+
+}
+HRESULT CVIBuffer_Terrain::UpdateY(_float y)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+	
+	m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		_float3		vPos = ((VTXNORTEX*)SubResource.pData)[i].vPosition;
+
+		if(i%5 == 0)
+			vPos.y += y;
+
+		((VTXNORTEX*)SubResource.pData)[i].vPosition = vPos;
+	}
+	m_pDeviceContext->Unmap(m_pVB, 0);
+	return S_OK;
+}
+
+
 HRESULT CVIBuffer_Terrain::Set_NewXZ(const _uint X, const _uint Z)
 {
+	// #BUG 인덱스 버퍼 재설정 다시보기
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
 	if (mpVertexPos != nullptr)

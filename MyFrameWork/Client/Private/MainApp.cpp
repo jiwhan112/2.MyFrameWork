@@ -168,6 +168,22 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT_FLOOR),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/tile1.dds"), 1)));
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER1),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Sprite/GRASS.dds"), 1)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER2),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Sprite/GROUND1.dds"), 1)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER3),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Sprite/GROUND2.dds"), 1)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER4),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Sprite/GROUND3.dds"), 1)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_FITER_XYZW),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Sprite/MyFilter.png"), 1)));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_BRUSH),
+		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Sprite/Brush.png"), 1)));
+
+
+	
 	// ¸ðµ¨ / ÅØ½ºÃ³ ¸Ê / ¼ÎÀÌ´õ /
 	FAILED_CHECK(Ready_Prototype_Components_Model());
 	FAILED_CHECK(Ready_Prototype_Components_AniModel());
@@ -275,9 +291,9 @@ HRESULT CMainApp::Ready_Prototype_Components_Texture()
 HRESULT CMainApp::Ready_Prototype_Components_Terrain()
 {
 	// ÁöÇü ÄÄÆ÷³ÍÆ®
-	CVIBuffer_Terrain* debugterrain = nullptr;
+//	CVIBuffer_Terrain* debugterrain = nullptr;
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16),
-		debugterrain = CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 17, 17)));
+		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 17, 17)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 33, 33)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64),
@@ -286,11 +302,11 @@ HRESULT CMainApp::Ready_Prototype_Components_Terrain()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 129, 129)));
 
 	// ³×ºñ
-	CNavigation* initNavi = nullptr;
+//	CNavigation* initNavi = nullptr;
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_NAVIMESH),
-		initNavi = CNavigation::Create(m_pDevice, m_pDeviceContext, nullptr)));
+		CNavigation::Create(m_pDevice, m_pDeviceContext, nullptr)));
 
-	initNavi->SetUp_AutoMesh(debugterrain);
+//	initNavi->SetUp_AutoMesh(debugterrain);
 	return S_OK;
 }
 
@@ -303,8 +319,8 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXTEXCUBE),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexCube.hlsl"),
 			VTXCUBETEX_DECLARATION::Elements, VTXCUBETEX_DECLARATION::iNumElements)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXNORTEX),
-		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"),
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_TERRAIN),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex_Terrain.hlsl"),
 			VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXMODEL),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"),
