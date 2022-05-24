@@ -404,10 +404,24 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 
 			}
 			
-
+			
 
 			
 			IMGUI_TREE_END
+		}
+		static _float3 DirData = _float3(-0.7, -1.5f, 1);
+		CCamera_Client* camera = (CCamera_Client*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA));
+		if (camera)
+		{
+			ImGui::DragFloat3("DirCamera", (float*)&DirData, 0.01f, -2, 2);
+
+			camera->Set_CamerDIr(DirData);
+
+			//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_INGAME, "ButtOnDir")))
+			//{
+			//	camera->Set_CamerDIr(DirData);
+			//}
+
 		}
 	}
 
@@ -425,16 +439,16 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 	// Object 정보
 	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Objects")))
 	{
-		if (mProtoParentObjectList == nullptr)
-			mProtoParentObjectList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC_PARENT);
-		if (mProtoParentObjectList != nullptr)
+		if (mProtoStaticObjectList == nullptr)
+			mProtoStaticObjectList = Create_Manager->Get_MapObject_Type(OBJECT_TYPE_3D_STATIC);
+		if (mProtoStaticObjectList != nullptr)
 		{
 			// 객체 선택
 			static int selectObjectIndex = -1;
 			_uint cnt = 0;
 			static wstring selectObjectWStr = L"";
 			static string selectObjectStr = "";
-			for (auto& protoString : *mProtoParentObjectList)
+			for (auto& protoString : *mProtoStaticObjectList)
 			{
 				cnt++;
 				if (ImGui::Selectable(protoString.c_str(), selectObjectIndex == cnt))
@@ -448,7 +462,7 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 					{
 						_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 						CGameObject_Base* pickobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
-						static_cast<CGameObject_3D_Static2*>(pickobj)->Set_UpdateMode(CGameObject_3D_Static2::E_UPDATETYPE_PICK);
+						static_cast<CGameObject_3D_Static*>(pickobj)->Set_PickObject();
 						Set_PickObject(pickobj);
 					}
 
@@ -468,7 +482,7 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 
 			// 객체 배치
 			static bool bBatchAble = false;
-			ImGui::Checkbox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "MAP_PICK"), &bBatchAble);
+			ImGui::Checkbox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "AbleToggle"), &bBatchAble);
 
 			// 현재 픽 오브젝트
 			if (bBatchAble && mCurrent_PickObject)
@@ -492,7 +506,7 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 				}
 			}
 
-
+			// 오브젝트 삭제
 			/*if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_RBUTTON)& DIS_Down)
 			{
 				if (mListWorldObjects.empty() == false)
@@ -506,14 +520,13 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 			}*/
 
 			
-
+			// 타일 깔기
 			if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Map_SelectLoadButton")))
 			{
 				wstring keyname = CHelperClass::Convert_str2wstr(CImgui_DESC::mStrSelectName[E_DESC_DATA::DESC_DATA_TERRAIN]);
-				TERRAIN_DESC* DungeonDesc =  Create_Manager->Find_TerrainData(keyname);
-				GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->ResetTile_Tool(DungeonDesc);
 
-							   
+				TERRAIN_DESC* DungeonDesc = GetSingle(CGameManager)->Get_ObjectIOManager()->Find_TerrainDesc(keyname);
+				GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->ResetTile_Tool(DungeonDesc);
 			}
 
 			if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Map_Saver")))
@@ -591,7 +604,7 @@ void CImgui_Terrain::Free()
 	Safe_Release(mCurrent_TerrainObject);
 	Safe_Release(mCurrent_PickObject);
 
-	Safe_Delete(mProtoParentObjectList);
+	Safe_Delete(mProtoStaticObjectList);
 	
 	for (auto& obj: mListWorldObjects)
 	{

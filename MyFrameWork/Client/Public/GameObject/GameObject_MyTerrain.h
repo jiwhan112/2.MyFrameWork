@@ -69,6 +69,7 @@ protected:
 	CNavigation*			mComNaviMesh = nullptr;
 
 	TERRAIN_DESC			mTerrainDESC;
+	TERRAIN_DESC			mTerrainDESC;
 
 	bool misPick = false;
 	_float3 mPickWorldPos = _float3(0, 0, 0);

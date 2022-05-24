@@ -42,7 +42,6 @@ HRESULT CImgui_DESC::Render_UI()
 		}
 		ImGui::End();
 	}
-
 	return S_OK;
 }
 

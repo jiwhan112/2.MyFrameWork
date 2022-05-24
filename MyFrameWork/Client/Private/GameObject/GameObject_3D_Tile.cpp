@@ -87,7 +87,7 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 		Update_Debug_TILESTATE();
 	}
 
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Press)
+	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
 	{
 		// 상하좌우에 연결된 타일이 있다면 자신의 인덱스를 지운다.
 		// 타일 리스트 가져오기

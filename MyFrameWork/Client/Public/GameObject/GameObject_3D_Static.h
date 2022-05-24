@@ -12,6 +12,18 @@ BEGIN(Client)
 class CGameObject_3D_Static :
 	public CGameObject_Base
 {
+	// 업데이트 모드
+	enum E_UPDATETYPE
+	{
+		// 기본
+		E_UPDATETYPE_NONE,
+
+		// 마우스 피킹시 
+		E_UPDATETYPE_PICK,
+		E_UPDATETYPE_END
+
+	};
+
 protected:
 	explicit CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_3D_Static(const CGameObject_3D_Static& rhs);
@@ -38,6 +50,12 @@ public:
 	HRESULT		Set_LoadModelDESC(const MODEL_STATIC_DESC& desc);
 	HRESULT		Set_LoadColliderDESC(const COLLIDER_DESC& desc);
 
+	void		Set_PickObject()
+	{
+		meUpdateType = E_UPDATETYPE_PICK;
+	}
+
+
 	void		Update_CombinedTransformationMatrix(_fmatrix combine);
 
 
@@ -55,7 +73,7 @@ protected: // 3D모델 Com / DESC 추가
 	MODEL_STATIC_DESC			mModelStatic_Desc;
 	COLLIDER_DESC				mCollider_Desc;
 
-
+	E_UPDATETYPE				meUpdateType = E_UPDATETYPE_NONE;
 
 public:
 	static CGameObject_3D_Static* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

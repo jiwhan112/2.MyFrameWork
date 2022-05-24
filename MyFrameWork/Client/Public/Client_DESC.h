@@ -111,27 +111,7 @@ typedef struct tag_TEXTUREDESC_UI
 	char mTextureKey_06[MAX_STR] = "";
 	char mTextureKey_07[MAX_STR] = "";
 
-}TEXTURE_UI_DESC;
-
-typedef struct tag_TEXTUREDESC_MODEL
-{
-	char mTextureKey_Diffuse[MAX_STR] = "";
-	char mTextureKey_Normal[MAX_STR] = "";
-	char mTextureKey_Hieght[MAX_STR] = "";
-	char mTextureKey_AA[MAX_STR] = "";
-
-	/* tag_TEXTUREDESC_MODEL() = default;
-
-	 tag_TEXTUREDESC_MODEL(const tag_TEXTUREDESC_MODEL& rhs)
-	{
-		strcpy_s(mTextureKey_Diffuse, rhs.mTextureKey_Diffuse);
-		strcpy_s(mTextureKey_Normal, rhs.mTextureKey_Normal);
-		strcpy_s(mTextureKey_Hieght, rhs.mTextureKey_Hieght);
-		strcpy_s(mTextureKey_AA, rhs.mTextureKey_AA);
-	}*/
-
-}TEXTURE_MODEL_DESC;
-
+}TEXTURE_NAMES_DESC;
 
 typedef struct tag_MODEL_STATIC_DESC
 {

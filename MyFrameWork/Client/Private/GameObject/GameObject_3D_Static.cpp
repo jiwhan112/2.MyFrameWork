@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Static.h"
+#include "GameObject/GameObject_MyTerrain.h"
 
 CGameObject_3D_Static::CGameObject_3D_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -34,7 +35,7 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 	// 데이터 디폴트 세팅
 	if (IsName(mModelStatic_Desc.mModelName) == false)
 	{
-		string str("room_Prison_FloorTile.fbx");
+		string str("crea_SnotPickaxe.fbx");
 		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
 	}
 	Set_Component();
@@ -45,8 +46,30 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 _int CGameObject_3D_Static::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 
+	if (meUpdateType == CGameObject_3D_Static::E_UPDATETYPE_NONE)
+	{
+		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
+	}
+
+	else if (meUpdateType == CGameObject_3D_Static::E_UPDATETYPE_PICK)
+	{
+		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_RED;
+
+		// 피킹오브젝트는 해당 지형에 매핑된다.
+		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+		if (terrain != nullptr)
+		{
+			_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
+			int index = terrain->Get_TileIndex(worldPickPos);
+			_float3 pickTilePos = terrain->Get_TileWorld(index);
+
+			_float4x4 transmat = _float4x4::CreateTranslation(pickTilePos);
+			mComTransform->Set_State(CTransform::STATE_POSITION, transmat.Translation());
+		}
+	}
+
+	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 	return UPDATENONE;
 }
 

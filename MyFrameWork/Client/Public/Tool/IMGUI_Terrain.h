@@ -68,7 +68,7 @@ private:
 	list<MODEL_WORLD_DESC>			mListWorldObjects_Desc;
 
 	// 만들어진 원본 이름
-	list<string>*					mProtoParentObjectList = nullptr;
+	list<string>*					mProtoStaticObjectList = nullptr;
 private:
 	bool							mIsTerrainSetting = false;
 	E_TAYLAY						meCreateTERRAIN_Layer = LAY_TERRAIN;

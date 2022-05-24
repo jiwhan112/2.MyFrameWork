@@ -30,6 +30,7 @@ public:
 
 protected:
 	virtual HRESULT Update_ObjectList();
+	virtual HRESULT Update_ObjectList_Layer();
 	virtual HRESULT Set_SelectObject(CGameObject* obj);
 
 private:
@@ -43,7 +44,9 @@ private:
 	void CImgui_CommonUI::FrameUI_Overaly(_double time);
 
 private:
-	CGameObject*			mSelectObject = nullptr;
+	CGameObject*		mSelectObject = nullptr;
+//	_int				mSelectIndex[LAY_END] = { -1, };
+	_int				mSelectIndex = -1;
 
 	_double dClock;
 	_uint	mFrameCount;

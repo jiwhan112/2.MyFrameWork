@@ -37,7 +37,7 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 	{
 		CGameObject_2D* oobj = static_cast<CGameObject_2D*>(obj);
 		WriteFile(hFile, &(oobj->Get_UIDesc()), sizeof(UI_DESC), &dwByte, nullptr);
-		WriteFile(hFile, &(oobj->Get_TextureDesc()), sizeof(TEXTURE_UI_DESC), &dwByte, nullptr);
+		WriteFile(hFile, &(oobj->Get_TextureDesc()), sizeof(TEXTURE_NAMES_DESC), &dwByte, nullptr);
 
 		if (dwByte == 0)
 			return S_OK;	
@@ -102,8 +102,8 @@ HRESULT CObjectIO::SaverObject(E_OBJECT_TYPE type, wstring FolderPath, wstring f
 		}*/
 		Save_DESC(DESC_DATA_TERRAIN, FolderPath, filename, (void*)&(oobj->Get_TerrainDESC()));
 	}
-	break;
 
+	break;
 	case OBJECT_TYPE_END:
 
 		break;
@@ -171,14 +171,18 @@ HRESULT CObjectIO::Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring fil
 	return S_OK;
 }
 
-HRESULT CObjectIO::Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename)
+HRESULT CObjectIO::Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, wstring Extension)
 {
 	// #LOADDESC 정보 로드 테스트 필요
 	CGameObject_Creater* creater = GetSingle(CGameManager)->Get_CreaterManager();
 
 	_ulong			dwByte = 0;
-	int test = 5;
-	wstring ExeName = DESCEXE(descid);
+
+	wstring ExeName = Get_EXEDescName(descid);
+
+	if ((Extension != ExeName))
+		return S_FALSE;
+
 	wstring DescPath = FolderPath + L"\\DESC\\" + filename;
 
 	HANDLE			hFile = CreateFile(DescPath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -213,12 +217,12 @@ HRESULT CObjectIO::Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring fil
 			{
 				ReadFile(hFile, &desc->mArrayModelObjects[i], sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
 			}
-			ReadFile(hFile, &desc->mArrayModelObjects, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
 		}
 		
 
-		// Desc 맵에 반환
-		creater->Add_MapTerrainDesc(filename, desc);
+
+		// Desc 전역 저장
+		Add_TerrainDesc(filename, desc);
 		break;
 	}
 
@@ -234,6 +238,38 @@ HRESULT CObjectIO::Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring fil
 
 	return S_OK;
 }
+
+wstring CObjectIO::Get_EXEDescName(E_DESC_DATA descid)
+{
+
+	wstring exestr = STR_DATADESC_EXE(descid);
+	if (exestr.empty())
+		return exestr;
+	exestr = exestr.substr(1, exestr.size());
+	return exestr;
+
+}
+
+HRESULT CObjectIO::Add_TerrainDesc(wstring key, TERRAIN_DESC * value)
+{
+
+	if (Find_TerrainDesc(key) != nullptr)
+		return E_FAIL;
+
+	mMap_TerrainDesc.emplace(key, value);
+	return S_OK;
+}
+
+TERRAIN_DESC * CObjectIO::Find_TerrainDesc(wstring key)
+{
+	auto iter = mMap_TerrainDesc.find(key);
+
+	if (iter == mMap_TerrainDesc.end())
+		return nullptr; 
+
+	return iter->second;
+}
+
 
 HRESULT CObjectIO::LoadObject_Create(wstring FolderPath, wstring filename)
 {
@@ -274,10 +310,10 @@ bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 	case OBJECT_TYPE_2D:
 	{
 		UI_DESC uiDesc;
-		TEXTURE_UI_DESC texDesc;
+		TEXTURE_NAMES_DESC texDesc;
 
 		ReadFile(hFile, &uiDesc, sizeof(UI_DESC), &dwByte, nullptr);
-		ReadFile(hFile, &texDesc, sizeof(TEXTURE_UI_DESC), &dwByte, nullptr);
+		ReadFile(hFile, &texDesc, sizeof(TEXTURE_NAMES_DESC), &dwByte, nullptr);
 
 		if (dwByte == 0)
 			return false;
@@ -420,54 +456,9 @@ CObjectIO * CObjectIO::Create()
 
 void CObjectIO::Free()
 {
+	for (auto& desc : mMap_TerrainDesc)
+	{
+		Safe_Delete(desc.second);
+	}
+	mMap_TerrainDesc.clear();
 }
-
-// 선택한 오브젝트를 저장한다.
-
-// 1. 클릭시 다이얼 로그 생성.
-//CFileDialog		Dlg(FALSE,
-//	L"dat", // .dat파일로 저장
-//	L"*.dat",
-//	OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-//	L"Data Files(*.dat)|*.dat||",
-//	cwnd);
-
-//TCHAR	szPath[MAX_PATH] = L"";
-//GetCurrentDirectory(MAX_PATH, szPath);
-//PathRemoveFileSpec(szPath);
-
-//lstrcat(szPath, g_FilePath_ObjectPathData_Save.c_str());
-//Dlg.m_ofn.lpstrInitialDir = szPath;
-
-//if (IDOK == Dlg.DoModal())
-//{
-//	// 이름
-
-//	CString				str = Dlg.GetPathName().GetString();
-//	CString				Filename = PathFindFileName(str);
-
-//	TCHAR				NEWName[64] = L"";
-
-//	lstrcpy(NEWName, Filename);
-//	PathRemoveExtension(NEWName);
-
-//	const TCHAR*		pGetPath = str.GetString();
-
-//	HANDLE hFile = CreateFile(pGetPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-
-//	if (INVALID_HANDLE_VALUE == hFile)
-//		return E_FAIL;
-
-//	DWORD	dwByte = 0;
-
-//	// 파일 ID / 정보
-
-//	OUTPUT_ID id;
-//	id.FILEID = OUTPUT_OBJECT;
-//	lstrcpy(id.strObjectName, NEWName);
-
-//	obj->Set_OUTPUTData_Save();
-//	WriteFile(hFile, &id, sizeof(OUTPUT_ID), &dwByte, nullptr);
-//	WriteFile(hFile, &obj->Get_OutputData(), sizeof(OUTPUT_OBJECTINFO), &dwByte, nullptr);
-
-//	CloseHandle(hFile);

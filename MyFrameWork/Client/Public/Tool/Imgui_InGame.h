@@ -26,7 +26,7 @@ public:
 private:
 
 private:
-	HRESULT Edit_TERRAIN(); // TARRAIN
+	HRESULT Edit_TERRAIN_INGAME(); // TARRAIN
 
 //	HRESULT Edit_Texture();
 

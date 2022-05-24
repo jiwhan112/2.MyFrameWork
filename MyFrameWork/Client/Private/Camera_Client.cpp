@@ -193,7 +193,7 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 
 	return S_OK;
 }
-
+const _float3 GameCameraDir = _float3(-0.7, -1.5f, 1);
 HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 {
 	if (mTargetObject == nullptr)
@@ -206,7 +206,7 @@ HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 
 		_float3 Postition = _float3(size, 5, size);
 
-		_float3 Dir = _float3(-1,-1.5f,1);
+		_float3 Dir = GameCameraDir;
 
 		mComTransform->Set_State(CTransform::STATE_POSITION, Postition);
 		mComTransform->LookAtDir(Dir);
@@ -258,15 +258,17 @@ HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
 {
 	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+	mComTransform->LookAtDir(GameCameraDir);
+
 
 	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
 	{
-		mComTransform->GO_WorldVec(_float3(0, 0, 1), 45, CTransform::ROTTYPE_Y, TimeDelta);
+		mComTransform->GO_WorldVec(_float3(0, 0, 1), -45, CTransform::ROTTYPE_Y, TimeDelta);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
 	{
-		mComTransform->GO_WorldVec(_float3(0, 0, -1), 45, CTransform::ROTTYPE_Y, TimeDelta);
+		mComTransform->GO_WorldVec(_float3(0, 0, -1), -45, CTransform::ROTTYPE_Y, TimeDelta);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_A) & DIS_Press)
@@ -284,6 +286,9 @@ HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
 
 	if (MouseMove > 0)
 	{
+		// 범위 제한
+		// mTargetObject;
+
 		mComTransform->GO_Straight(TimeDelta * MouseSpeed);
 	}
 
@@ -291,8 +296,6 @@ HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
 	{
 		mComTransform->GO_Backward(TimeDelta * MouseSpeed);
 	}
-
-
 	return S_OK;
 }
 

@@ -6,6 +6,8 @@ BEGIN(Client)
 
 // 클라이언트의 DESC 정보 저장 불러오기 클래스
 // 바이너리로 DESC파일 저장 및 불러오기 수행
+
+// 불러온 데이터 전역 저장
 class CGameObject_Base;
 
 class CObjectIO final
@@ -31,11 +33,17 @@ public:
 	bool Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname);
 	
 	// 오브젝트를 desc타입 별로 나눠서 저장한다.
-	HRESULT Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* desc);
-	HRESULT Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename);
+	HRESULT				Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, void* desc);
+	HRESULT				Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring filename, wstring Extension);
+	wstring				Get_EXEDescName(E_DESC_DATA descid);
 
+public: // Terrain Desc
+	HRESULT					Add_TerrainDesc(wstring key, TERRAIN_DESC* value);
+	TERRAIN_DESC*			Find_TerrainDesc(wstring key);
 
-
+private:
+	// DESC정보 전역 저장
+	map<wstring, TERRAIN_DESC*> mMap_TerrainDesc;
 
 public:
 	static CObjectIO* Create();

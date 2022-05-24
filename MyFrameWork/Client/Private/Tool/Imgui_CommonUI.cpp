@@ -134,67 +134,68 @@ void CImgui_CommonUI::Button_PathTxtSave(wstring path, wstring txtpath, wstring 
 
 HRESULT CImgui_CommonUI::Update_ObjectList()
 {
-	_uint CurrentLevelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	//_uint CurrentLevelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	//auto objmap = GetSingle(CGameInstance)->Get_All_GameObjectLayerMap(CurrentLevelIndex);
 
-	auto objmap = GetSingle(CGameInstance)->Get_All_GameObjectLayerMap(CurrentLevelIndex);
+	//// 각 레이어 별로 생성
 
-	// 각 레이어 별로 생성
+	//if (objmap == nullptr)
+	//	return S_OK;
 
-	if (objmap == nullptr)
-		return S_OK;
+	//if (ImGui::BeginListBox("ObjectListBox"))
+	//{
+	//	static _int selectIndex = -1;
+	//	_uint cnt = 0;
 
-	if (ImGui::BeginListBox("ObjectListBox"))
-	{
-		static _int selectIndex = -1;
-		_uint cnt = 0;
+	//	for (auto& pair : *objmap)
+	//	{
+	//		wstring wstr = pair.first;
+	//		string str = CHelperClass::Convert_Wstr2str(wstr);
+	//		auto objectList = pair.second->Get_GameObjectList();
+	//		if (objectList == nullptr)
+	//			continue;
 
-		for (auto& pair : *objmap)
-		{
-			wstring wstr = pair.first;
-			string str = CHelperClass::Convert_Wstr2str(wstr);
-			auto objectList = pair.second->Get_GameObjectList();
-			if (objectList == nullptr)
-				continue;
+	//		for (auto& obj : *objectList)
+	//		{
+	//			if (obj == nullptr)
+	//				continue;
+	//			Update_ListBox(obj, str, cnt, &selectIndex);
+	//			cnt++;
+	//		}
+	//	}
+	//	ImGui::EndListBox();
+	//}
 
-			for (auto& obj : *objectList)
-			{
-				if (obj == nullptr)
-					continue;
-				Update_ListBox(obj, str, cnt, &selectIndex);
-				cnt++;
-			}
-		}
-		ImGui::EndListBox();
-	}
+	Update_ObjectList_Layer();
 
-	if (ImGui::Button("Delect Object"))
-	{
-		if (mSelectObject)
-		{
-			mSelectObject->Set_Dead();
-			Safe_Release(mSelectObject);
-			mSelectObject = nullptr;
-		}
-	}
-	if (ImGui::Button("Delect All"))
-	{
-		for (auto& pair : *objmap)
-		{
 
-			if (pair.first == TAGLAY(LAY_CAMERA))
-				continue;
-			else
-			{
-				auto objectList = pair.second->Get_GameObjectList();
+	//if (ImGui::Button("Delect Object"))
+	//{
+	//	if (mSelectObject)
+	//	{
+	//		mSelectObject->Set_Dead();
+	//		Safe_Release(mSelectObject);
+	//		mSelectObject = nullptr;
+	//	}
+	//}
+	//if (ImGui::Button("Delect All"))
+	//{
+	//	for (auto& pair : *objmap)
+	//	{
+	//		if (pair.first == TAGLAY(LAY_CAMERA))
+	//			continue;
+	//		else
+	//		{
+	//			auto objectList = pair.second->Get_GameObjectList();
 
-				for (auto& obj : *objectList)
-				{
-					obj->Set_Dead();
-				}
-			}
-		}	
+	//			for (auto& obj : *objectList)
+	//			{
+	//				obj->Set_Dead();
+	//			}
+	//		}
+	//	}	
 
-	}
+	//}
 
 
 	/*if (ImGui::BeginListBox("ObjectListBox"))
@@ -213,6 +214,55 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 	}
 
 	*/
+	return S_OK;
+}
+
+HRESULT CImgui_CommonUI::Update_ObjectList_Layer()
+{
+
+	_uint CurrentLevelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	auto objmap = GetSingle(CGameInstance)->Get_All_GameObjectLayerMap(CurrentLevelIndex);
+
+	if (objmap == nullptr)
+		return S_OK;
+
+	IMGUI_LISTBOX_BEGIN("ObjectBox")
+	{
+		for (auto& pair : *objmap)
+		{
+			wstring laywstr = pair.first;
+			string laystr = CHelperClass::Convert_Wstr2str(laywstr);
+			auto objectList = pair.second->Get_GameObjectList();
+			if (objectList == nullptr)
+				continue;
+
+
+			IMGUI_TREE_BEGIN(laystr.c_str())
+			{
+				int cnt = 0;
+				for (auto& obj : *objectList)
+				{
+					if (obj == nullptr)
+						continue;
+
+					E_OBJECT_TYPE objtype = (E_OBJECT_TYPE)obj->Get_ObjectTypeID();
+
+					char buf[128] = "";
+					sprintf_s(buf, "OBJ_%s_%d", TAGOBJTYPE(objtype), cnt);
+					if (ImGui::Selectable(buf, mSelectIndex == cnt))
+					{
+						mSelectIndex = cnt;
+						Set_SelectObject(obj);
+					}
+					cnt++;
+				}
+				IMGUI_TREE_END
+			}
+
+		}
+
+		IMGUI_LISTBOX_END
+	}
 	return S_OK;
 }
 

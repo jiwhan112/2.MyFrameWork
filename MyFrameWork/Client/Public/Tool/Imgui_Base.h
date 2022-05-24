@@ -9,7 +9,7 @@ BEGIN(Client)
 // IMGUI â DEFINE
 #define IMGUI_TREE_BEGIN(x)		if(ImGui::TreeNode(x))
 #define IMGUI_TREE_END			ImGui::TreePop();
-#define IMGUI_LISTBOX_BEGIN(x)	if(ImGui::ListBox(x))
+#define IMGUI_LISTBOX_BEGIN(x)	if(ImGui::BeginListBox(x))
 #define IMGUI_LISTBOX_END		ImGui::EndListBox();
 #define IM_MIN(A, B)            (((A) < (B)) ? (A) : (B))
 #define IM_MAX(A, B)            (((A) >= (B)) ? (A) : (B))

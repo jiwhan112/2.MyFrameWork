@@ -232,7 +232,22 @@ HRESULT CDungeon_Objects::ResetTile_Tool(TERRAIN_DESC * data)
 	FAILED_CHECK(Setup_TileState());
 	// 네비메시와 타일 충돌
 	FAILED_CHECK(Setup_Collision_Navi2Tile());
-	   
+	
+	// Static 오브젝트 생성
+	_uint objSize = data->mObjectSize;
+	for (int i =0; i< objSize ; ++i)
+	{
+		string str = data->mArrayModelObjects[i].mProtoName;
+		wstring wstr = CHelperClass::Convert_str2wstr(str);
+		_float4x4 worldmat = data->mArrayModelObjects[i].mWorldMat;
+
+		CGameObject_Base* obj  =  GetSingle(CGameManager)->Get_CreaterManager()->Create_ObjectClone_Prefab(mCurrentLevel,wstr,
+			TAGLAY(LAY_BACKGROUND));
+		if (obj == nullptr)
+			return E_FAIL;
+		obj->Set_Transform(worldmat);
+	}
+
 	return S_OK;
 }
 

@@ -250,7 +250,6 @@ HRESULT CGameObject_MyTerrain::SaveDESC_Objects(const list<_uint>& uintList, con
 
 		mTerrainDESC.mNoTileSize = tilesize;
 		mTerrainDESC.mArrayIndes = NoTileArray;
-
 	}
 
 	if (objectsize > 0)

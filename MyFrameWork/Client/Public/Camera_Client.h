@@ -40,6 +40,10 @@ public:
 		Safe_Release(mTargetObject);
 		mTargetObject = nullptr;
 	}
+	void Set_CamerDIr(_float3 Dir)
+	{
+		mComTransform->LookAtDir(Dir);
+	}
 
 private:
 	HRESULT Update_Default(_double TimeDelta);
