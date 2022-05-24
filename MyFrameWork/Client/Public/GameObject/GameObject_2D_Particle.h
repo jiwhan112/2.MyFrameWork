@@ -24,7 +24,6 @@ public:
 
 public:
 
-
 protected:
 	virtual HRESULT Set_Component()override;
 

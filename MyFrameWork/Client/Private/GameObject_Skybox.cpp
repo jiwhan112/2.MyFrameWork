@@ -80,7 +80,7 @@ HRESULT CGameObject_Skybox::Set_ConstantTable()
 	FAILED_CHECK(mComShader->Set_RawValue("g_ProjMatrix", &pGameInstance->GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE::D3DTS_PROJ), sizeof(_float4x4)));
 
 	// 텍스처 넘기기
-	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture", 2));
+	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, "g_DiffuseTexture"));
 	return S_OK;
 }
 

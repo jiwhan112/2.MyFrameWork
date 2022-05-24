@@ -53,8 +53,6 @@ public: // DESC
 	HRESULT Init_Map(const _tchar* layertag); // 맵 데이터로 맵에 따른 객체생성
 	HRESULT SaveDESC_Objects(const list<_uint>& uintList, const list<MODEL_WORLD_DESC>& worldObjList); // 맵 데이터로 맵에 따른 객체생성
 
-
-
 protected:
 	virtual HRESULT Set_Component()override;
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
@@ -69,7 +67,9 @@ protected:
 	CNavigation*			mComNaviMesh = nullptr;
 
 	TERRAIN_DESC			mTerrainDESC;
-	TERRAIN_DESC			mTerrainDESC;
+
+	// 필터 텍스처 이름
+	TEXTURE_NAMES_DESC		mTextureFiterDESC;
 
 	bool misPick = false;
 	_float3 mPickWorldPos = _float3(0, 0, 0);
