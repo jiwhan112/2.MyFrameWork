@@ -79,6 +79,7 @@ bool CColliderManager::Check_Navi(_float4x4 WorldMatrixInverse, CNavigation * na
 			_float4x4		WorldMatrix;
 			WorldMatrix = WorldMatrixInverse.Invert();
 
+
 			// 월드 변환
 			_float3::Transform(mWorldPickPos, WorldMatrix, mWorldPickPos);
 			return isPick;

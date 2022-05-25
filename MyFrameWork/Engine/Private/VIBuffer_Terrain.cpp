@@ -52,7 +52,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* heightmap)
 	ZeroMemory(pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
 
 	mpVertexPos = NEW _float3[m_iNumVertices];
-	ZeroMemory(mpVertexPos, sizeof(_float3));
+	ZeroMemory(mpVertexPos, sizeof(_float3)*m_iNumVertices);
 
 	for (_uint z = 0; z < miNumZ; z++)
 	{
@@ -571,57 +571,48 @@ HRESULT CVIBuffer_Terrain::Set_HeightMap(const _tchar* filepath)
 	m_iNumVertices = miNumX * miNumZ;
 
 	_ulong*		pPixel = NEW _ulong[m_iNumVertices];
+	ZeroMemory(pPixel, sizeof(_ulong)*m_iNumVertices);
+
 	ReadFile(hFile, pPixel, sizeof(_ulong) * m_iNumVertices, &dwByte, nullptr);
 
-	if (mpVertexPos != nullptr)
-	{
-		Safe_Delete_Array(mpVertexPos);
-		mpVertexPos = nullptr;
-	}
+	//// 버텍스 수정하기
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource;
 	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
-	mpVertexPos = NEW _float3[m_iNumVertices];
-	ZeroMemory(mpVertexPos, sizeof(_float3));
+	//	m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 	m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
 
-	// 버텍스 수정하기
 	for (_uint z = 0; z < miNumZ; z++)
 	{
 		for (_uint x = 0; x < miNumX; x++)
 		{
-			_uint iIndex = z * miNumX + x;
-			_float newY = (pPixel[iIndex] & 0x000000ff) / 10.f;
+			_uint		iIndex = z * miNumX + x;
+			_float		NewY = ((pPixel[iIndex] & 0x000000ff));
+			if (NewY < 1 && NewY>1)
+				NewY = 0;
+			if (NewY != 0)
+				NewY /= 50;
 
-			((VTXNORTEX*)SubResource.pData)[iIndex].vPosition = mpVertexPos[iIndex] = _float3(x, newY, z);
-			((VTXNORTEX*)SubResource.pData)[iIndex].vNormal = _float3(0.0f, 1, 0.0f);
+			_float3		newPos = _float3(x, NewY, z);
+
+			((VTXNORTEX*)SubResource.pData)[iIndex].vPosition = mpVertexPos[iIndex] = newPos;
+			((VTXNORTEX*)SubResource.pData)[iIndex].vNormal = _float3(0, 1, 0);
 			((VTXNORTEX*)SubResource.pData)[iIndex].vTexUV = _float2(x / (miNumX - 1.f), z / (miNumZ - 1.f));
+
 		}
 	}
+	
+	// 노말 새로 구하기
+
 
 	m_pDeviceContext->Unmap(m_pVB, 0);
 
-
-	////
-	//D3D11_MAPPED_SUBRESOURCE		SubResource;
-
-	//m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
-	//for (_uint i = 0; i < m_iNumVertices; ++i)
-	//{
-	//	_float3		vPos = ((VTXNORTEX*)SubResource.pData)[i].vPosition;
-
-	//	if (i % 5 == 0)
-	//		vPos.y += y;
-
-	//	((VTXNORTEX*)SubResource.pData)[i].vPosition = vPos;
-	//}
-
-	//m_pDeviceContext->Unmap(m_pVB, 0);
-	////
+	Safe_Delete_Array(pPixel);
+	CloseHandle(hFile);
 	return S_OK;
-
 }
+
 HRESULT CVIBuffer_Terrain::UpdateY(_float y)
 {
 	D3D11_MAPPED_SUBRESOURCE		SubResource;
@@ -637,6 +628,7 @@ HRESULT CVIBuffer_Terrain::UpdateY(_float y)
 		((VTXNORTEX*)SubResource.pData)[i].vPosition = vPos;
 	}
 	m_pDeviceContext->Unmap(m_pVB, 0);
+
 	return S_OK;
 }
 

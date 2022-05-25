@@ -2,6 +2,7 @@
 #include "GameObject/GameObject_MyTerrain.h"
 
 const wchar_t* STR_PATH_HEIGHTMAP_64 = L"../Bin/Resources/Sprite/HeightMap_64.bmp";
+const wchar_t* STR_PATH_HEIGHTMAP_32 = L"../Bin/Resources/Sprite/HeightMap_32.bmp";
 CGameObject_MyTerrain::CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
@@ -316,7 +317,7 @@ HRESULT CGameObject_MyTerrain::Set_HeightNewMap()
 	// 텍스처 새로 만들고 받기
 
 	// 버퍼 수정
-	mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_64);
+	mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_32);
 
 
 	return S_OK;
