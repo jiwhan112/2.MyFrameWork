@@ -589,6 +589,8 @@ HRESULT CVIBuffer_Terrain::Set_HeightMap(const _tchar* filepath)
 		{
 			_uint		iIndex = z * miNumX + x;
 			_float		NewY = ((pPixel[iIndex] & 0x000000ff));
+			NewY -= 128;
+
 			if (NewY < 1 && NewY>1)
 				NewY = 0;
 			if (NewY != 0)

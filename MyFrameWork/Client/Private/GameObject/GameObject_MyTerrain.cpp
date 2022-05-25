@@ -317,8 +317,8 @@ HRESULT CGameObject_MyTerrain::Set_HeightNewMap()
 	// 텍스처 새로 만들고 받기
 
 	// 버퍼 수정
-	mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_32);
-
+	FAILED_CHECK(mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_32));
+	FAILED_CHECK(mComNaviMesh->SetUp_CurrentPoint(mComVIBuffer));
 
 	return S_OK;
 }

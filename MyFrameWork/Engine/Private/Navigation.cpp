@@ -387,6 +387,46 @@ HRESULT CNavigation::Remove_NaviMeshData()
 	return S_OK;
 }
 
+HRESULT CNavigation::SetUp_CurrentPoint(CVIBuffer_Terrain * terrainBuffer)
+{
+	// 버퍼의 위치를 다시 얻어와서 셀에 정의해준다.
+	if (terrainBuffer == nullptr)
+		return E_FAIL;
+	if (mVecCells.empty())
+		return E_FAIL;
+
+	_uint* XZ = terrainBuffer->Get_XZ();
+	_uint sizeX = XZ[0];
+	_uint sizeZ = XZ[1];
+
+	_float3* vertexPostitions = terrainBuffer->Get_VerrtexPosition();
+	
+	_uint numface = 0;
+	for (_uint  z = 0; z< sizeZ-1;++z)
+	{
+		for (_uint x = 0; x < sizeX-1; ++x)
+		{
+			_uint iIndex = z * sizeX + x;
+			_uint iIndeics[4] = {
+				iIndex + sizeX,iIndex + sizeX + 1,
+				 iIndex + 1,iIndex
+			};
+
+			mVecCells[numface]->Set_NewPoint( CCell::POINT_A, vertexPostitions[iIndeics[0]]);
+			mVecCells[numface]->Set_NewPoint(CCell::POINT_B, vertexPostitions[iIndeics[1]]);
+			mVecCells[numface]->Set_NewPoint(CCell::POINT_C, vertexPostitions[iIndeics[2]]);
+			numface++;
+			mVecCells[numface]->Set_NewPoint(CCell::POINT_A, vertexPostitions[iIndeics[0]]);
+			mVecCells[numface]->Set_NewPoint(CCell::POINT_B, vertexPostitions[iIndeics[2]]);
+			mVecCells[numface]->Set_NewPoint(CCell::POINT_C, vertexPostitions[iIndeics[3]]);
+			numface++;
+		}
+	}
+
+
+	return S_OK;
+}
+
 const list<CCell*>& CNavigation::AstartPathFind(_uint StartTileIndex, _uint GoalTileIndex)
 {
 	// 사용한 것 초기화....
@@ -415,116 +455,6 @@ const list<CCell*>& CNavigation::AstartPathFind(_uint StartTileIndex, _uint Goal
 	}
 	return mListPathList;
 }
-
-//bool CNavigation::MakeRoute(_uint StartTileIndex, _uint GoalTileIndex, CCell* oriStartCell, CCell* oriGoalCell)
-//{
-//	// 해당 네비 메시 정보로 탐색
-//	if (mVecCells.empty())
-//		return false;
-//	if (oriStartCell == nullptr || oriGoalCell == nullptr)
-//		return false;
-//
-//	
-//
-//	// 큐의 형식으로 동작하는 너비 우선탐색의 특성 상 가장 먼저 들어온 노드를 오픈 리스트에 제거
-//	if (!mListOpen.empty())
-//		mListOpen.pop_front();
-//
-//	// 시작지점은 바로 넣는다.
-//	mListClose.push_back(StartTileIndex);
-//
-//	// 인접한 타일 정보로 가까운 경로 찾기
-//
-//	const CCell* cell = Get_TileForIndex(StartTileIndex);
-//	if (cell == nullptr)
-//		return false;
-//
-//	const _int* VecNeighors = cell->Get_ArrayNeighborIndex();
-//	if (VecNeighors == nullptr)
-//	{
-//
-//	}
-//	else
-//	{
-//		for (int i = 0; i < 3; ++i)
-//		{
-//			// 찾은 경로가 골 지점에 도달했을 경우
-//			_int NearIndex  = VecNeighors[i];
-//			if (NearIndex == -1)
-//				return false;
-//
-//			if (GoalTileIndex == NearIndex)
-//			{
-//				// 도달할 경우 이전 인덱스 저장
-//				Get_TileForIndex(GoalTileIndex)->Set_ParentIndex(StartTileIndex);
-//				return true;
-//			}
-//
-//			// 인접한 타일 조사
-//			// Close 이미 조사한 노드
-//			// Open 조사할 대상 노드
-//			if (false == Check_Close(NearIndex) &&
-//				false == Check_Open(NearIndex))
-//			{
-//				// 갈 수 있는 길인지 판단
-//				CCell* NearCell = mVecCells[NearIndex];
-//				if (NearCell)
-//				{
-//					if (NearCell->Get_CellType() == CCell::CELLTYPE_STOP)
-//					{
-//						// 갈 수 없다.
-//						NearCell->Set_ParentIndex(-1);
-//						mListClose.push_back(NearIndex);
-//					}
-//					else
-//					{
-//						// 간다.
-//						NearCell->Set_ParentIndex(StartTileIndex);
-//						mListOpen.push_back(NearIndex);
-//					}
-//
-//				}
-//			}
-//		}
-//	}
-//
-//	// 갈 수 없음
-//	if (mListOpen.empty())
-//		return false;
-//
-//	// OpenList의 가중치 비교해서 다음 지점 선택
-//	// F = g+h
-//	// 가중치는 목표지점과의 거리로 결정된다.
-//	// 가중치 = (시작->현재지점) + (현재지점->목표지점)
-//
-//	// 오름차순
-//	_uint	iOriginStart = StartTileIndex;
-//
-//	mListOpen.sort([&](int iDest, int iSour)
-//	{
-//		CCell::E_POINTS ePointA =  CCell::E_POINTS::POINT_A;
-//		CCell* destCel = Get_TileForIndex(iDest);
-//		CCell* sourCel = Get_TileForIndex(iSour);
-//
-//
-//		// 시작 ~ 현재
-//		_float3 vSCost1 = destCel->Get_Point(ePointA) - oriStartCell->Get_Point(ePointA);
-//		// 현재 ~ 골
-//		_float3 vGCost1 = destCel->Get_Point(ePointA) - oriGoalCell->Get_Point(ePointA);
-//		_float Cost1 = vSCost1.Length() + vGCost1.Length();
-//
-//		// 비교대상
-//		_float3 vSCost2 = sourCel->Get_Point(ePointA) - oriStartCell->Get_Point(ePointA);
-//		_float3 vGCost2 = sourCel->Get_Point(ePointA) - oriGoalCell->Get_Point(ePointA);
-//		_float Cost2 = vSCost2.Length() + vGCost2.Length();
-//
-//
-//		return Cost1 < Cost2;
-//	});
-//
-//	// 깊이 우선탐색처럼 도착지점을 찾을 때까지 계속 탐색
-//	return MakeRoute(mListOpen.front(), GoalTileIndex,oriStartCell,oriGoalCell);
-//}
 
 bool CNavigation::MakeRoute_INDEX(_uint StartTileIndex, _uint GoalTileIndex, CCell* oriStartCell)
 {

@@ -22,6 +22,10 @@ public:
 	{
 		mParentIndex = idx;
 	}
+	void Set_NewPoint(E_POINTS point, _float3 newPoint)
+	{
+		mPoints[point] = newPoint;
+	}
 	_int Get_ParentIndex()
 	{
 		return mParentIndex;

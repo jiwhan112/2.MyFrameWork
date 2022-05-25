@@ -14,6 +14,15 @@ class	CGameObject_3D_Dynamic;
 class CDungeon_Objects final :
 	public CBase
 {
+public:
+	//enum E_LEVEL_GAMEOPTION
+	//{
+	//	LEVEL_GAMEOPTION_GAME,
+	//	LEVEL_GAMEOPTION_GAME_DUNGEON,
+	//	LEVEL_GAMEOPTION_GAME_WORLD,
+	//	LEVEL_GAMEOPTION_TOOL,
+	//	LEVEL_GAMEOPTION_END,
+	//};
 
 protected:
 	explicit CDungeon_Objects();
@@ -49,6 +58,7 @@ public: // 지형
 	HRESULT ResetTile_Tool(TERRAIN_DESC * data);
 
 
+	
 private: // 지형
 	// 타일 세팅
 	HRESULT Setup_Terrain();
@@ -59,6 +69,13 @@ private: // 지형
 
 private:
 	HRESULT Release_Objects();
+
+private:
+	// 레벨 세팅
+	//HRESULT Init_GameScene_Dungeon();
+	//HRESULT Init_GameScene_World();
+	//HRESULT Init_ToolScene_Tool();
+
 
 private: // value Tile
 	_uint								mSizeX = 0;

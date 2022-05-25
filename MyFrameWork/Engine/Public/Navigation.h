@@ -57,6 +57,8 @@ public:
 	HRESULT Save_NaviMeshData(wstring wpath);
 	HRESULT Load_NaviMeshData(wstring wpath);
 	HRESULT Remove_NaviMeshData();
+	HRESULT SetUp_CurrentPoint(class CVIBuffer_Terrain* terrain);// 높이맵에 따른 포인트 재정의
+
 
 	const list<CCell*>& AstartPathFind(_uint StartTileIndex, _uint GoalTileIndex);
 	

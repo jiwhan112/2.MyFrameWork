@@ -16,24 +16,42 @@ HRESULT CDungeon_Objects::NativeConstruct_Prototype(ID3D11Device* device, ID3D11
 
 	mCurrentLevel = level;
 
-
+	
 	if (mCurrentLevel == LEVEL_MYGAMEPLAY)
 	{
-
 #ifdef _DEBUG
 		FAILED_CHECK(Ready_IMGUI());
 #endif
-		// 주면 지형 생성		
+
 		FAILED_CHECK(Ready_Light());
 		FAILED_CHECK(Ready_Camera());
 		FAILED_CHECK(Ready_BackGround());
 		FAILED_CHECK(Ready_GameObjects());
+
+
+		//if (Option == CDungeon_Objects::LEVEL_GAMEOPTION_GAME_DUNGEON)
+		//{
+		//	// 던전 테스트
+		//	Init_GameScene_Dungeon();
+		//}
+		//else if (Option == CDungeon_Objects::LEVEL_GAMEOPTION_GAME_WORLD)
+		//{
+		//	// 월드맵 테스트
+		//	Init_GameScene_World();
+		//}
+		//else if (Option == CDungeon_Objects::LEVEL_GAMEOPTION_GAME)
+		//{
+		//	// 게임
+		//}
+
+		
 
 		return S_OK;
 	}
 
 	else if (mCurrentLevel == LEVEL_TOOL)
 	{
+		//Init_ToolScene_Tool();
 		return S_OK;
 	}
 
@@ -69,6 +87,27 @@ HRESULT CDungeon_Objects::Release_Objects()
 
 	return S_OK;
 }
+
+//HRESULT CDungeon_Objects::Init_GameScene_Dungeon()
+//{
+//	FAILED_CHECK(Ready_Light());
+//	FAILED_CHECK(Ready_Camera());
+//	FAILED_CHECK(Ready_BackGround());
+//	FAILED_CHECK(Ready_GameObjects());
+//
+//	return S_OK;
+//}
+//
+//HRESULT CDungeon_Objects::Init_GameScene_World()
+//{
+//
+//	return S_OK;
+//}
+//
+//HRESULT CDungeon_Objects::Init_ToolScene_Tool()
+//{
+//	return S_OK;
+//}
 
 HRESULT CDungeon_Objects::Ready_IMGUI()
 {
@@ -562,7 +601,7 @@ HRESULT CDungeon_Objects::Setup_TileState(_int tileIndex)
 	return E_FAIL;
 }
 
-CDungeon_Objects * CDungeon_Objects::Create(ID3D11Device* device, ID3D11DeviceContext* context, E_LEVEL level)
+CDungeon_Objects * CDungeon_Objects::Create(ID3D11Device* device, ID3D11DeviceContext* context, E_LEVEL level )
 {
 	CDungeon_Objects*	pInstance = NEW CDungeon_Objects();
 

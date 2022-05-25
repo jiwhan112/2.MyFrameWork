@@ -437,11 +437,17 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 		}
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "UpdateY")))
 		{
+			// 높이 테스트
 			mCurrent_TerrainObject->Get_TerrainBuffer()->UpdateY(0.5f);
 		}
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "SetHeightMap")))
 		{
+			// 높이 버퍼 수정
 			mCurrent_TerrainObject->Set_HeightNewMap();
+		}
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "SetNaviMap")))
+		{
+			// 네비 메시 새로 씌우기
 		}
 		
 	}
