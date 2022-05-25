@@ -113,6 +113,14 @@ namespace Engine
 			return answer;
 		}
 
+		static int RandomInt(int min, int max)
+		{
+			if (max <= min)
+				return min;
+
+			return rand() % (min + max) - min;
+		}
+
 
 	};
 }

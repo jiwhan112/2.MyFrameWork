@@ -11,12 +11,26 @@ END
 BEGIN(Client)
 
 // 지형
-//
 class CGameObject_MyTerrain  :
 	public CGameObject_Base
 {
 public:
-
+	enum E_SOURCETYPE
+	{
+		SOURCE_A,
+		SOURCE_R,
+		SOURCE_G,
+		SOURCE_B,
+		SOURCE_END,
+	};
+	
+	// 월드맵 / 던전맵 나누기
+	enum E_MAPTYPE
+	{
+		MAPTYPE_DUNGEON,
+		MAPTYPE_WORLD,
+		MAPTYPE_END,
+	};
 
 protected:
 	explicit CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -39,45 +53,47 @@ public:
 	HRESULT		Set_LoadTerrainDESC(const TERRAIN_DESC& desc);
 	HRESULT		Set_TerrainMode(E_TERRAINSIZE e);
 
-
 	int			Get_TileIndex(_float3 worldPos);
 	_float3		Get_TileWorld(_uint index);
 	_uint		GetMapSize();
+
+
+	void	Set_ColorFiter(E_SOURCETYPE type, _color* color, _float val);
+
 
 public: // DESC
 	HRESULT Init_Map(const _tchar* layertag); // 맵 데이터로 맵에 따른 객체생성
 	HRESULT SaveDESC_Objects(const list<_uint>& uintList, const list<MODEL_WORLD_DESC>& worldObjList); // 맵 데이터로 맵에 따른 객체생성
 
 public:
-	HRESULT CreateFiterTexture();
+	HRESULT SaveCurrentFiterMap(); // 텍스처 저장
+	HRESULT UpdateFiterTextue(); // 텍스처 생성 / 값 변경
+	HRESULT UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos,_float Range,_float AddValue); 
 	HRESULT Set_HeightNewMap();
 
 protected:
 	virtual HRESULT Set_Component()override;
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
+	HRESULT LoadTextureMap(); // 텍스처 부르기
+	
 
 protected:
 	CVIBuffer_Terrain*		mComVIBuffer = nullptr;
-	CTexture*				mComTexture = nullptr;
 	CNavigation*			mComNaviMesh = nullptr;
 
+	// Textures
+	CTexture_map*			mComDefaultTex = nullptr;;
+	CTexture_map*			mComFiterSourceTex[SOURCE_END] = { nullptr ,nullptr ,nullptr ,nullptr };
+										
+	CTexture_map*			mComFiter_XYZW = nullptr;
+
+	ID3D11Texture2D*			mFiterTexture = nullptr;
+	ID3D11ShaderResourceView*	mFiterSRV = nullptr;; // 셰이더에 넘길 리소스뷰 
+
+	CTexture_map*				mComBrushTex = nullptr;
+
 	TERRAIN_DESC			mTerrainDESC;
-
-	// Texture Test
-	
-	// 필터링용 소스 텍스처 4개
-	CTexture*				mFiter1 = nullptr;
-	CTexture*				mFiter2 = nullptr;
-	CTexture*				mFiter3 = nullptr;
-	CTexture*				mFiter4 = nullptr;
-//	CTexture*				mHeight = nullptr;
-
-	// 소스텍스처를 XYZW로 섞어주는 텍스처
-	CTexture*				mFiter_XYZW = nullptr;
-	CTexture*				mBrush = nullptr;
-
-	// 필터 텍스처 이름
-	TEXTURE_NAMES_DESC		mTextureFiterDESC;
+	TEXTURE_NAMES_DESC		mTextureNameDesc;
 
 public:
 	_float					mRadius = 3;
@@ -89,4 +105,6 @@ public:
 	virtual void Free() override;
 };
 
+
+// 
 END

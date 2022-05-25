@@ -9,34 +9,35 @@ CTexture_map::CTexture_map(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice
 CTexture_map::CTexture_map(const CTexture_map & rhs)
 	: CComponent(rhs)
 	, mMapTextures(rhs.mMapTextures)
-	, mCurrentKey(rhs.mCurrentKey)
-	, mListKey(rhs.mListKey)
+	, mStrCurrentKey(rhs.mStrCurrentKey)
 {
 	for (auto& maptex : mMapTextures)
 	{
 		Safe_AddRef(maptex.second);
 	}
 
-	mCurrentKey = "";
-	mCurrentTexture = nullptr;
+	mStrCurrentKey = "";
+	mCurrentTexutreSRV = nullptr;
 }
 
 HRESULT CTexture_map::SetUp_OnShader(CShader * pShader, const char * pValueName)
 {
-	if (mCurrentTexture == nullptr)
+	if (mCurrentTexutreSRV == nullptr)
 		return E_FAIL;
 
-	return pShader->Set_Texture(pValueName, mCurrentTexture);
+	return pShader->Set_Texture(pValueName, mCurrentTexutreSRV);
 }
 
 HRESULT CTexture_map::Set_TextureMap(string texturename)
 {
-	mCurrentKey = texturename;
-	mCurrentTexture = Find_MapTexture(mCurrentKey);
 
-	if (mCurrentTexture == nullptr)
+	mCurrentTexutreSRV = Find_MapTexture(texturename);
+	if (mCurrentTexutreSRV == nullptr)
+	{
+		mStrCurrentKey = "";
 		return E_FAIL;
-
+	}
+	mStrCurrentKey = texturename;
 	return S_OK;
 }
 
@@ -44,7 +45,6 @@ HRESULT CTexture_map::NativeConstruct_Prototype(list<MYFILEPATH*> listpath)
 {
 	// 스레드가 여러개 실행될 떄 잘못 초기화될 경우를 방지.
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-	mListKey = NEW list<string>;
 
 	if (listpath.empty())
 		return E_FAIL;
@@ -87,7 +87,6 @@ HRESULT CTexture_map::NativeConstruct_Prototype(list<MYFILEPATH*> listpath)
 		}
 		mMapTextures.emplace(keyname, pSRV);
 
-		mListKey->push_front(keyname);
 	}
 
 	return S_OK;
@@ -116,7 +115,7 @@ ID3D11ShaderResourceView * CTexture_map::Find_MapTexture(string key)
 	if (mMapTextures.empty())
 		return nullptr;
 
-	auto iter = mMapTextures.find(key.c_str());
+	auto iter = mMapTextures.find(key);
 	if (iter == mMapTextures.end())
 		return nullptr;
 	return iter->second;
@@ -155,7 +154,4 @@ void CTexture_map::Free()
 		Safe_Release(maptex.second);
 	}
 	mMapTextures.clear();
-
-	if (m_isCloned == false)
-		Safe_Delete(mListKey);
 }

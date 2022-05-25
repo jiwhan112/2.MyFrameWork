@@ -185,7 +185,6 @@ void CVIBuffer_Point_Instance::Update(_double TimeDelta)
 		return;
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource;
-
 	m_pDeviceContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)

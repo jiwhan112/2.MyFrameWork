@@ -2,14 +2,16 @@
 
 // Terrain 전용 셰이더
 texture2D		g_DiffuseTexture;
+texture2D		g_SourDiffuseTexture1;
+texture2D		g_SourDiffuseTexture2;
+texture2D		g_SourDiffuseTexture3;
+texture2D		g_SourDiffuseTexture4;
 
-// 필터링 텍스처
-texture2D		g_SourDiffuseTexture;
-texture2D		g_DestDiffuseTexture;
+
+// 필터 / 브러쉬 텍스처 
 texture2D		g_FilterTexture;
-
-// 브러쉬 텍스처
 texture2D		g_BrushTexture;
+
 
 // float			g_BrushSize = 10;
 cbuffer BrushDesc
@@ -18,7 +20,7 @@ cbuffer BrushDesc
 	float		g_fRadius = 0.5f;
 };
 
-uint g_TextureSize;
+uint	g_TextureSize;
 
 // VS
 struct VS_IN
@@ -100,9 +102,16 @@ PS_OUT PS_MAIN_TERRAIN_FITER(PS_IN In)
 
 	// 스플라인 기법으로 텍스처 함치기
 
-	// 3개의 텍스처 로드
-	vector	vSourMtrlDiffuse = g_SourDiffuseTexture.Sample(DefaultSampler, In.vTexUV * g_TextureSize);
-	vector	vDestMtrlDiffuse = g_DestDiffuseTexture.Sample(DefaultSampler, In.vTexUV * g_TextureSize);
+	// 기본 텍스처 로드
+	vector	vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV * g_TextureSize);
+
+	
+	// 4개의 텍스처 로드
+	vector	vSource1 = g_SourDiffuseTexture1.Sample(DefaultSampler, In.vTexUV * g_TextureSize);
+	vector	vSource2 = g_SourDiffuseTexture2.Sample(DefaultSampler, In.vTexUV * g_TextureSize);
+	vector	vSource3 = g_SourDiffuseTexture3.Sample(DefaultSampler, In.vTexUV * g_TextureSize);
+	vector	vSource4 = g_SourDiffuseTexture4.Sample(DefaultSampler, In.vTexUV * g_TextureSize);
+
 	vector	vFilterColor = g_FilterTexture.Sample(PointSampler, In.vTexUV);
 
 	// 브러쉬 텍스처
@@ -120,8 +129,17 @@ PS_OUT PS_MAIN_TERRAIN_FITER(PS_IN In)
 
 	// Diffuse를 구할 떄 필터와 브러쉬 텍스처도 같이 구한다.
 	// diffuse = (ATex * Fiter) + ((1 - Fiter) * BTex)
-	float4	vMtrlDiffuse = vSourMtrlDiffuse * vFilterColor.r + vDestMtrlDiffuse * (1.f - vFilterColor.r);
+	
+	float4	vMtrlDiffuse0 = vDiffuse;
+	float4	vMtrlDiffuse1 = vSource1 * vFilterColor.a + vMtrlDiffuse0 * (1.f - vFilterColor.a);
+	float4	vMtrlDiffuse2 = vSource2 * vFilterColor.r + vMtrlDiffuse1 * (1.f - vFilterColor.r);
+	float4	vMtrlDiffuse3 = vSource3 * vFilterColor.g + vMtrlDiffuse2 * (1.f - vFilterColor.g);
+	float4	vMtrlDiffuse4 = vSource4 * vFilterColor.b + vMtrlDiffuse3 * (1.f - vFilterColor.b);
+
+	float4	vMtrlDiffuse = vMtrlDiffuse4; // 잘 섞인다
+
 	float	Nomal = saturate(dot(normalize(g_vLightDir) * -1.f, In.vNormal));
+
 	float4	Diffuse = g_vLightDiffuse * vMtrlDiffuse * saturate(Nomal + (g_vLightAmbient * g_vMtrlAmbient)) + vBrushColor;
 
 	float3	PN = In.vNormal* dot(normalize(g_vLightDir) * -1.f, In.vNormal);
@@ -176,7 +194,6 @@ technique11		DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_TERRAIN_FITER();
 	}
-
 	//pass TOON
 	//{
 	//	SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);

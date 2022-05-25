@@ -433,21 +433,55 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_FiterTexture")))
 		{
-			mCurrent_TerrainObject->CreateFiterTexture();
+			mCurrent_TerrainObject->SaveCurrentFiterMap();
 		}
+
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "UpdateY")))
 		{
 			// 높이 테스트
 			mCurrent_TerrainObject->Get_TerrainBuffer()->UpdateY(0.5f);
 		}
+
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "SetHeightMap")))
 		{
 			// 높이 버퍼 수정
+			// 네비 메시 새로 씌우기
 			mCurrent_TerrainObject->Set_HeightNewMap();
 		}
-		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "SetNaviMap")))
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "TESTBUTTON")))
 		{
+			// 높이 버퍼 수정
 			// 네비 메시 새로 씌우기
+			mCurrent_TerrainObject->UpdateFiterTextue();
+		}
+		
+		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "FiterMake")))
+		{
+			static ImGuiComboFlags flags = ImGuiComboFlags_PopupAlignLeft;
+
+			const char* items[] = { "SourceNONE","SourceA", "SourceR", "SourceG", "SourceB" };
+			static int item_current_idx = 0; // Here we store our selection data as an index.
+			const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+
+			if (ImGui::BeginCombo("FIterCombo", combo_preview_value, flags))
+			{
+				for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+				{
+					const bool is_selected = (item_current_idx == n);
+					if (ImGui::Selectable(items[n], is_selected))
+					{
+						item_current_idx = n;
+					}
+				}
+				ImGui::EndCombo();
+			}
+			if (item_current_idx != 0)
+			{
+				_float3 WorldPos = GetSingle(CGameManager)->Get_PickPos();
+				if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON))
+					mCurrent_TerrainObject->UpdateFiterTextue_TOOL((CGameObject_MyTerrain::E_SOURCETYPE)(item_current_idx-1), WorldPos, 3, 1);
+
+			}
 		}
 		
 	}
