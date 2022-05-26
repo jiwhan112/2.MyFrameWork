@@ -85,8 +85,8 @@ PS_OUT PS_MAIN_TERRAIN(PS_IN In)
 	// 반사각 구하기
 	// 빛 -> 노말에 맞아 반사 벡터 구하기
 	float3 PN = In.vNormal* dot(normalize(g_vLightDir) * -1.f, In.vNormal);
-	float3 Reflection = normalize(g_vLightDir) + 2 * PN; // R = P+2n(dot(-P,n)) // 1이라면 슬라이드 벡터 2라면 반사벡터
-//	float3 Reflection = normalize(reflect(g_vLightDir,In.vNormal));
+//	float3 Reflection = normalize(g_vLightDir) + 2 * PN; // R = P+2n(dot(-P,n)) // 1이라면 슬라이드 벡터 2라면 반사벡터
+	float3 Reflection = normalize(reflect(g_vLightDir,In.vNormal));
 	float3 LookVec = normalize(g_CameraPosition - In.vWorldPos);
 
 	float  SpecularPow = pow(saturate(dot(normalize(Reflection), LookVec)), 30.0f);
@@ -98,6 +98,7 @@ PS_OUT PS_MAIN_TERRAIN(PS_IN In)
 
 PS_OUT PS_MAIN_TERRAIN_FITER(PS_IN In)
 {
+
 	PS_OUT			Out = (PS_OUT)0;
 
 	// 스플라인 기법으로 텍스처 함치기

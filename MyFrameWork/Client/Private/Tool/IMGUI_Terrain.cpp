@@ -118,37 +118,43 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 {
 	// 빈 오브젝트 클론
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
 	{
-		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
+		{
+			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+		}
 
-		// 이미 만들어진 오브젝트 추가
-		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), createobj);
+		// 툴에서의 월드 맵
+		mWorldMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		NULL_CHECK_BREAK(mWorldMap);
+		Safe_AddRef(mWorldMap);
+		mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+		mWorldMap->Init_SetupInit();
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_TERRAIN), mWorldMap));
+
 	}
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_DungeonMap")))
 	{
+		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
+		{
+			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+		}
 
-		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-		CGameObject_MyTerrain* createobj = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		// 툴에서의 던전맵
+		mDungeonMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		NULL_CHECK_BREAK(mDungeonMap);
+		Safe_AddRef(mDungeonMap);
+		mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+		mDungeonMap->Init_SetupInit();
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_TERRAIN), mDungeonMap));
 
-		// 타일 초기화
-		GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
-		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain_Tool(createobj);
-
-		// 이미 만들어진 오브젝트 추가
-		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateTERRAIN_Layer), createobj);
-
+		// 타일 추가
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain(mDungeonMap);
 	}
-
-
-	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
-	//{
-	//
-	//}
-	
 }
 
 void CImgui_Terrain::CREATE_LOAD_DESC()
@@ -625,8 +631,14 @@ HRESULT CImgui_Terrain::SAVER_MODE()
 			wstring wstr = CHelperClass::Convert_str2wstr(str);
 			
 			// 오브젝트랑 타일정보는 툴의 정보를 기반으로 새로 저장
-			auto removeList =  GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListRemoveTile();
-			mCurrent_TerrainObject->SaveDESC_Objects(*removeList,mListWorldObjects_Desc);
+			auto TileList =  GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_TileList();
+			list<_uint> tilelistindex;
+			for (auto& tile : *TileList)
+			{
+				_uint tileindex = tile->Get_TileIndex();
+				tilelistindex.push_front(tileindex);
+			}
+			mCurrent_TerrainObject->SaveDESC_Objects(tilelistindex,mListWorldObjects_Desc);
 			FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_TERRAIN, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrent_TerrainObject));
 		}
 		IMGUI_TREE_END
@@ -665,6 +677,9 @@ void CImgui_Terrain::Free()
 	Safe_Release(mCameraClient);
 	Safe_Release(mCurrent_TerrainObject);
 	Safe_Release(mCurrent_PickObject);
+	Safe_Release(mDungeonMap);
+	Safe_Release(mWorldMap);
+
 
 	Safe_Delete(mProtoStaticObjectList);
 	

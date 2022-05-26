@@ -147,8 +147,8 @@ HRESULT CObjectIO::Save_DESC(E_DESC_DATA descid, wstring FolderPath, wstring fil
 		WriteFile(hFile, &desc.meTerrainSize, sizeof(E_TERRAINSIZE), &dwByte, nullptr);
 		WriteFile(hFile, &desc.mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
 
-		WriteFile(hFile, &desc.mNoTileSize, sizeof(_uint), &dwByte, nullptr);
-		for (int i = 0; i < desc.mNoTileSize; ++i)
+		WriteFile(hFile, &desc.mTileSize, sizeof(_uint), &dwByte, nullptr);
+		for (int i = 0; i < desc.mTileSize; ++i)
 		{
 			WriteFile(hFile, &desc.mArrayIndes[i], sizeof(_uint), &dwByte, nullptr);
 		}
@@ -199,11 +199,11 @@ HRESULT CObjectIO::Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring fil
 		ReadFile(hFile, &desc->meTerrainSize, sizeof(_uint), &dwByte, nullptr);
 		ReadFile(hFile, &desc->mTextureMultiSize, sizeof(_uint), &dwByte, nullptr);
 
-		ReadFile(hFile, &desc->mNoTileSize, sizeof(_uint), &dwByte, nullptr);
-		if (desc->mNoTileSize != 0)
+		ReadFile(hFile, &desc->mTileSize, sizeof(_uint), &dwByte, nullptr);
+		if (desc->mTileSize != 0)
 		{
-			desc->mArrayIndes = NEW _uint[desc->mNoTileSize];
-			for (int i = 0; i < desc->mNoTileSize; ++i)
+			desc->mArrayIndes = NEW _uint[desc->mTileSize];
+			for (int i = 0; i < desc->mTileSize; ++i)
 			{
 				ReadFile(hFile, &desc->mArrayIndes[i], sizeof(_uint), &dwByte, nullptr);
 			}
@@ -458,6 +458,8 @@ void CObjectIO::Free()
 {
 	for (auto& desc : mMap_TerrainDesc)
 	{
+		Safe_Delete(desc.second->mArrayIndes);
+		Safe_Delete(desc.second->mArrayModelObjects);
 		Safe_Delete(desc.second);
 	}
 	mMap_TerrainDesc.clear();

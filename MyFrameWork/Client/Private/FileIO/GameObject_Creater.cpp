@@ -22,7 +22,7 @@ HRESULT CGameObject_Creater::NativeConstruct(ID3D11Device * d, ID3D11DeviceConte
 		Safe_AddRef(m_pDevice);
 		Safe_AddRef(m_pDeviceContext);
 	}
-	// LoaderDatFile_For_PrototypeObject();
+//	LoaderDatFile_For_PrototypeObject();
 
 	return S_OK;
 }

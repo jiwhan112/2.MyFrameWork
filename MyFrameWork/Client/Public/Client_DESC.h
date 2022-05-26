@@ -178,7 +178,7 @@ typedef struct tag_TERRAIN_DESC // : public BASE_DESC
 		meTerrainSize = TERRAINSIZE_32;
 		mTextureMultiSize = 1;
 
-		mNoTileSize = 0;
+		mTileSize = 0;
 		mArrayIndes = nullptr;
 
 		mObjectSize = 0;
@@ -223,8 +223,8 @@ typedef struct tag_TERRAIN_DESC // : public BASE_DESC
 	E_TERRAINSIZE			meTerrainSize;
 	_uint					mTextureMultiSize;
 
-	// 타일 오브젝트 정보 / 없는 타일의 인덱스를 저장한다.
-	_uint					mNoTileSize;
+	// 있는 타일 인덱스로 변경
+	_uint					mTileSize;
 	_uint*					mArrayIndes = nullptr;
 
 	// 타일 이외의 오브젝트

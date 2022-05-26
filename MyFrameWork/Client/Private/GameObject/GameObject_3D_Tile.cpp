@@ -70,18 +70,12 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 {
 	FAILED_CHECK(__super::CollisionFunc(PickPosition,dist));
 	   
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
-	{
-		if (mCurrentShaderPass == 0)
-			mCurrentShaderPass = 1;
-		else
-			mCurrentShaderPass = 0;
-	}
-
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_WHEEL)& DIS_Down)
-	{
-		Update_Debug_TILESTATE();
-	}
+	mCurrentShaderPass = 1;
+	
+	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_WHEEL)& DIS_Down)
+	//{
+	//	Update_Debug_TILESTATE();
+	//}
 
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
 	{

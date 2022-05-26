@@ -57,6 +57,11 @@ private:
 
 	// 지형 오브젝트
 	class CGameObject_MyTerrain*	mCurrent_TerrainObject = nullptr;
+	// 던전 지형
+	class CGameObject_MyTerrain*	mDungeonMap = nullptr;
+	// 월드 지형
+	class CGameObject_MyTerrain*	mWorldMap = nullptr;
+
 
 	// 피킹 오브젝트
 	class CGameObject_Base*			mCurrent_PickObject = nullptr;

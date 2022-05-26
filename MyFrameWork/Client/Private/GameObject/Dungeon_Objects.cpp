@@ -80,12 +80,6 @@ HRESULT CDungeon_Objects::Release_Objects()
 		Safe_Delete(mListVecTiles);
 	}
 
-	if (mListRemoveTile != nullptr)
-	{
-		mListRemoveTile->clear();
-		Safe_Delete(mListRemoveTile);
-	}
-
 	return S_OK;
 }
 
@@ -196,17 +190,16 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
 	mDungeonMap->Init_SetupInit();
 	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
-
 	// 맵에 타일 추가
 	this->Setup_Terrain();
 
 	// 월드맵 생성
-	// mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	// NULL_CHECK_HR(mWorldMap);
-	// Safe_AddRef(mWorldMap);
-	// mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
-	// mWorldMap->Init_SetupInit();
-	// FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
+	//mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	//NULL_CHECK_HR(mWorldMap);
+	//Safe_AddRef(mWorldMap);
+	//mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+	//mWorldMap->Init_SetupInit();
+	//FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
 
 
 
@@ -214,19 +207,21 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	mTestUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
 	NULL_CHECK_HR(mTestUnit);
 	Safe_AddRef(mTestUnit);
-
 	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_OBJECT), mTestUnit));
 
 	return S_OK;
 }
 
-HRESULT CDungeon_Objects::Setup_Terrain_Tool(CGameObject_MyTerrain* map)
+HRESULT CDungeon_Objects::Setup_Terrain(CGameObject_MyTerrain* map)
 {
-	if (map == nullptr)
-		return E_FAIL;
+	if (mDungeonMap == nullptr)
+	{
+		mDungeonMap = map;
+		Safe_AddRef(mDungeonMap);
+	}
 
-	mDungeonMap = map;
-	Safe_AddRef(mDungeonMap);
+	if (mDungeonMap == nullptr)
+		return E_FAIL;
 
 	// 타일 생성
 	FAILED_CHECK(Create_Tiles(mCurrentLevel));
@@ -237,18 +232,6 @@ HRESULT CDungeon_Objects::Setup_Terrain_Tool(CGameObject_MyTerrain* map)
 	// 네비메시와 타일 충돌
 	FAILED_CHECK(Setup_Collision_Navi2Tile());
 
-	return S_OK;
-}
-
-HRESULT CDungeon_Objects::Setup_DungeonTerrain_Data(TERRAIN_DESC * data)
-{
-	mDesc_DungeonMap = data;
-	return S_OK;
-}
-
-HRESULT CDungeon_Objects::Setup_DungeonWorld_Data(TERRAIN_DESC * data)
-{
-	mDesc_WorldMap = data;
 	return S_OK;
 }
 
@@ -267,14 +250,6 @@ HRESULT CDungeon_Objects::ResetTile_Tool(TERRAIN_DESC * data)
 		mListVecTiles->clear();
 		Safe_Delete(mListVecTiles);
 	}
-
-	if (mListRemoveTile != nullptr)
-	{
-		mListRemoveTile->clear();
-		Safe_Delete(mListRemoveTile);
-	}
-
-	mDesc_DungeonMap = data;
 
 	// 타일 생성
 	FAILED_CHECK(Create_Tiles(mCurrentLevel));
@@ -303,23 +278,6 @@ HRESULT CDungeon_Objects::ResetTile_Tool(TERRAIN_DESC * data)
 	return S_OK;
 }
 
-HRESULT CDungeon_Objects::Setup_Terrain()
-{
-	if (mDungeonMap == nullptr)
-		return E_FAIL;
-
-	// 타일 생성
-	FAILED_CHECK(Create_Tiles(mCurrentLevel));
-	// 타일 이웃 설정
-	FAILED_CHECK(Setup_Neigbor_Tile());
-	// 타일 메쉬 설정
-	FAILED_CHECK(Setup_TileState());
-	// 네비메시와 타일 충돌
-	FAILED_CHECK(Setup_Collision_Navi2Tile());
-
-	return S_OK;
-}
-
 CGameObject_3D_Tile * CDungeon_Objects::FInd_TIleForIndex(_int TileIndex) const
 {
 	for (auto& obj : *mListVecTiles)
@@ -339,13 +297,6 @@ HRESULT CDungeon_Objects::RemoveTile(CGameObject_3D_Tile * pTIle)
 	if (pTIle == nullptr)
 		return E_FAIL;
 
-	if (mCurrentLevel == LEVEL_TOOL)
-	{
-		if (mListRemoveTile == nullptr)
-			mListRemoveTile = NEW list<_uint>();
-		mListRemoveTile->push_front(pTIle->Get_TileIndex());
-	}
-
 	mListVecTiles->remove(pTIle);
 	Safe_Release(pTIle);
 	return S_OK;
@@ -358,6 +309,7 @@ HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 	mSizeX = TileXZ[0];
 	mSizeZ = TileXZ[1];
 
+	const TERRAIN_DESC* desc = &mDungeonMap->Get_TerrainDESC();
 
 	if (mSizeX <= 0)
 		return E_FAIL;
@@ -367,6 +319,9 @@ HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+
+	// 저장된 타일만 생성 생성한다.
+
 	for (_int z = 0; z < mSizeZ - 1; ++z)
 	{
 		for (_int x = 0; x < mSizeX - 1; ++x)
@@ -374,24 +329,25 @@ HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 			bool ismatch = false;
 			_int iIndex = mDungeonMap->Get_TerrainBuffer()->Get_TilIndex(x, z);
 
-			if (mDesc_DungeonMap != nullptr)
+			if (desc->mTileSize != 0)
 			{
-				for (int i = 0; i < mDesc_DungeonMap->mNoTileSize; ++i)
+				for (int i = 0; i < desc->mTileSize; ++i)
 				{
-					if (mDesc_DungeonMap->mArrayIndes[i] == iIndex)
+					if (desc->mArrayIndes[i] == iIndex)
 					{
 						ismatch = true;
 						break;;
 					}
 				}
-			}	
-			if(ismatch)
-				continue;;
+			}
+			else
+				ismatch = true;
+
+			if(!ismatch)
+				continue;
 
 			CGameObject_3D_Tile* tileObj = (CGameObject_3D_Tile*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_TILE);
 			_float3 CreatePosition = mDungeonMap->Get_TerrainBuffer()->Get_TileWorldPos(x, z);
-
-			CreatePosition.y += 0.01f;
 
 			tileObj->Set_Position(CreatePosition);
 			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::TILETYPE_TOP));
@@ -403,7 +359,6 @@ HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 			Safe_AddRef(tileObj);
 		}
 	}
-
 	return S_OK;
 }
 
@@ -527,9 +482,7 @@ HRESULT CDungeon_Objects::Setup_Neigbor_Tile()
 				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_LEFT] = -1;
 			else
 				iIndex[CGameObject_3D_Tile::NEIGHBOR_TILE_LEFT] = -1;
-
 		}
-
 
 		// (SizeX*(SizeZ-1)) ~((SizeX*SizeZ)-1) // 위쪽
 		if (((mSizeX*(mSizeZ - 1)) <= currentIndex) && (currentIndex <= sizeXZ - 1))

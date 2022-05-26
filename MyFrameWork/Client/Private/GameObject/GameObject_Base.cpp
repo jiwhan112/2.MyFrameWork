@@ -58,12 +58,9 @@ HRESULT CGameObject_Base::Set_Position(_float4 position)
 
 HRESULT CGameObject_Base::Set_Position(_float3 position)
 {
-	_float4 pos;
-	pos = position;
-	pos.w = 1;
-	mComTransform->Set_State(CTransform::STATE_POSITION, pos);
+	mComTransform->Set_State(CTransform::STATE_POSITION, position.ToVec4(1));
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CGameObject_Base::Set_Transform(_float4x4 mat)

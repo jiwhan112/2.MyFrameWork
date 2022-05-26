@@ -7,33 +7,12 @@ CGameObject_MyTerrain::CGameObject_MyTerrain(ID3D11Device* pDevice, ID3D11Device
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_TERRAIN;
+	meMapType = CGameObject_MyTerrain::MAPTYPE_END;
 }
 
 CGameObject_MyTerrain::CGameObject_MyTerrain(const CGameObject_MyTerrain& rhs)
 	: CGameObject_Base(rhs)
-	, mTerrainDESC(rhs.mTerrainDESC)
 {
-	if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
-	{
-		// 던전 맵
-	}
-	else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
-	{
-		// 월드맵 
-
-		// Desc 내부의 동적오브젝트는 Load 함수호출로 생성;
-		strcpy_s(mTextureNameDesc.mTextureKey_Diffuse, rhs.mTextureNameDesc.mTextureKey_Diffuse);
-
-		strcpy_s(mTextureNameDesc.mTextureKey_01, rhs.mTextureNameDesc.mTextureKey_01);
-		strcpy_s(mTextureNameDesc.mTextureKey_02, rhs.mTextureNameDesc.mTextureKey_02);
-		strcpy_s(mTextureNameDesc.mTextureKey_03, rhs.mTextureNameDesc.mTextureKey_03);
-		strcpy_s(mTextureNameDesc.mTextureKey_04, rhs.mTextureNameDesc.mTextureKey_04);
-
-		// Fiter_XYZ Brush
-		strcpy_s(mTextureNameDesc.mTextureKey_05, rhs.mTextureNameDesc.mTextureKey_05);
-		strcpy_s(mTextureNameDesc.mTextureKey_06, rhs.mTextureNameDesc.mTextureKey_06);
-
-	}
 }
 
 HRESULT CGameObject_MyTerrain::NativeConstruct_Prototype()
@@ -52,6 +31,22 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 
 HRESULT CGameObject_MyTerrain::Init_SetupInit()
 {
+	// DESC정보 초기화
+	if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
+	{
+		mStrMapDatName = "DungeonBaseMap.terrdat";
+		wstring wstr = CHelperClass::Convert_str2wstr(mStrMapDatName);
+		TERRAIN_DESC* pTerrainDESC = GetSingle(CGameManager)->Get_ObjectIOManager()->Find_TerrainDesc(wstr);
+	//	pTerrainDESC->mTileSize = 0;
+		Set_LoadTerrainDESC(*pTerrainDESC);
+
+
+	}
+	else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
+	{
+		mStrMapDatName = "WorldBaseMap.terrdat";
+	}
+
 	// Terrain 생성
 	Init_Map(TAGLAY(LAY_OBJECT));
 	// LoadTex2Name
@@ -84,7 +79,6 @@ _int CGameObject_MyTerrain::LateTick(_double TimeDelta)
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 	_float3 pos =  GetSingle(CGameManager)->Get_PickPos();
 
-
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_FIRST, this);
 	return UPDATENONE;
 }
@@ -100,7 +94,10 @@ HRESULT CGameObject_MyTerrain::Render()
 	FAILED_CHECK(Set_ConstantTable_Tex());
 	FAILED_CHECK(Set_ConstantTable_Light());
 
-	mCurrentShaderPass = 1;
+	if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
+		mCurrentShaderPass = 1;
+	else 
+		mCurrentShaderPass = 0;
 
 	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 
@@ -113,7 +110,6 @@ HRESULT CGameObject_MyTerrain::Render()
 HRESULT CGameObject_MyTerrain::Set_LoadTerrainDESC(const TERRAIN_DESC & desc)
 {
 	memcpy(&mTerrainDESC, &desc, sizeof(TERRAIN_DESC));
-
 	return S_OK;
 }
 
@@ -439,7 +435,6 @@ HRESULT CGameObject_MyTerrain::Set_ConstantTable_Tex()
 		FAILED_CHECK(mComShader->Set_RawValue("g_vBrushPos", &worldPickPos, sizeof(_float3)));
 		FAILED_CHECK(mComShader->Set_RawValue("g_fRadius", &mRadius, sizeof(_float)));
 	}
-	
 	return S_OK;
 }
 
@@ -489,15 +484,26 @@ HRESULT CGameObject_MyTerrain::LoadTextureMap()
 
 HRESULT CGameObject_MyTerrain::Set_HeightNewMap()
 {
-	// 버퍼 수정
+	_float3 WorldMapPos = _float3(0, 10, 0);
 
-	// 텍스처 새로 만들고 받기
-
+	Set_Position(WorldMapPos);
 	// 버퍼 수정
 	FAILED_CHECK(mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_32));
 	FAILED_CHECK(mComNaviMesh->SetUp_CurrentPoint(mComVIBuffer));
 
 	return S_OK;
+}
+
+_float CGameObject_MyTerrain::Get_HeightY(_float3 PositionXZ)
+{
+	_float newY = -1;
+	if (mComVIBuffer == nullptr)
+		return newY;
+
+	newY =  mComVIBuffer->Get_HeightY(PositionXZ);
+	
+	newY += Get_WorldPostition().y;
+	return newY;
 }
 
 HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
@@ -508,6 +514,7 @@ HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
 
 	if (mTerrainDESC.mObjectSize <= 0)
 		return S_FALSE;
+
 	// 저장된 오브젝트 생성
 	CGameObject_Creater* creater = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
@@ -530,7 +537,7 @@ HRESULT CGameObject_MyTerrain::SaveDESC_Objects(const list<_uint>& uintList, con
 {
 	//Safe_Delete_Array(mTerrainDESC.mArrayModelObjects);
 	//Safe_Delete_Array(mTerrainDESC.mArrayIndes);
-	mTerrainDESC.mNoTileSize = 0;
+	mTerrainDESC.mTileSize = 0;
 	mTerrainDESC.mObjectSize = 0;
 
 	// 정보 업데이트 및 저장
@@ -548,7 +555,7 @@ HRESULT CGameObject_MyTerrain::SaveDESC_Objects(const list<_uint>& uintList, con
 			count++;
 		}
 
-		mTerrainDESC.mNoTileSize = tilesize;
+		mTerrainDESC.mTileSize = tilesize;
 		mTerrainDESC.mArrayIndes = NoTileArray;
 	}
 

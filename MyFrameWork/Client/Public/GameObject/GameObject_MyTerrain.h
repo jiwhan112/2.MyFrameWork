@@ -72,6 +72,7 @@ public:
 	HRESULT UpdateFiterTextue(); // 텍스처 생성 / 값 변경
 	HRESULT UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos,_float Range, _uint value);
 	HRESULT Set_HeightNewMap();
+	_float Get_HeightY(_float3 PositionXZ);
 
 protected:
 	virtual HRESULT Set_Component()override;
@@ -80,14 +81,14 @@ protected:
 	
 
 protected:
-	CVIBuffer_Terrain*		mComVIBuffer = nullptr;
-	CNavigation*			mComNaviMesh = nullptr;
+	CVIBuffer_Terrain*			mComVIBuffer = nullptr;
+	CNavigation*				mComNaviMesh = nullptr;
 
 	// Textures
-	CTexture_map*			mComDefaultTex = nullptr;;
-	CTexture_map*			mComFiterSourceTex[SOURCE_END] = { nullptr ,nullptr ,nullptr ,nullptr };
+	CTexture_map*				mComDefaultTex = nullptr;;
+	CTexture_map*				mComFiterSourceTex[SOURCE_END] = { nullptr ,nullptr ,nullptr ,nullptr };
 										
-	CTexture_map*			mComFiter_XYZW = nullptr;
+	CTexture_map*				mComFiter_XYZW = nullptr;
 
 	ID3D11Texture2D*			mFiterTexture = nullptr;
 	ID3D11ShaderResourceView*	mFiterSRV = nullptr;; // 셰이더에 넘길 리소스뷰
@@ -95,11 +96,12 @@ protected:
 
 	CTexture_map*				mComBrushTex = nullptr;
 
-	TERRAIN_DESC			mTerrainDESC;
-	TEXTURE_NAMES_DESC		mTextureNameDesc;
-	E_MAPTYPE				meMapType =MAPTYPE_END;
+	TERRAIN_DESC				mTerrainDESC;
+	TEXTURE_NAMES_DESC			mTextureNameDesc;
+	E_MAPTYPE					meMapType = MAPTYPE_END;
+	string						mStrMapDatName = "";
 public:
-	_float					mRadius = 3;
+	_float					mRadius = 0.5f;
 //	_float3					mWorldPickPos;
 
 public:

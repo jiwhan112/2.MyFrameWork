@@ -15,6 +15,10 @@ CLevel_MyGamePlay::CLevel_MyGamePlay(ID3D11Device* pDevice, ID3D11DeviceContext*
 HRESULT CLevel_MyGamePlay::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
+	// 파일 원령객체 초기화
+	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	Create_Manager->LoaderDatFile_For_PrototypeObject();
+
 	FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level((E_LEVEL)mLevelIndex));
 	return S_OK;
 }

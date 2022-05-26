@@ -621,16 +621,15 @@ HRESULT CVIBuffer_Terrain::Set_HeightMap(const _tchar* filepath)
 
 	//	m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 	m_pDeviceContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
-
 	for (_uint z = 0; z < miNumZ; z++)
 	{
 		for (_uint x = 0; x < miNumX; x++)
 		{
 			_uint		iIndex = z * miNumX + x;
 			_float		NewY = ((pPixel[iIndex] & 0x000000ff));
-			NewY -= 128;
+			NewY -= 64;
 
-			if (NewY < 1 && NewY>1)
+			if (NewY < 2 && NewY>2)
 				NewY = 0;
 			if (NewY != 0)
 				NewY /= 50;
@@ -644,7 +643,53 @@ HRESULT CVIBuffer_Terrain::Set_HeightMap(const _tchar* filepath)
 		}
 	}
 	
-	// 노말 새로 구하기
+	// #TODO: 노말 새로 구하기
+
+	for (_uint z = 0; z < miNumZ - 1; z++)
+	{
+		for (_uint x = 0; x < miNumX - 1; x++)
+		{
+			_uint		iIndex = z * miNumX + x;
+
+			_uint		iIndices[4] = {
+				iIndex + miNumX,
+				iIndex + miNumX + 1,
+				iIndex + 1,
+				iIndex
+			};
+			_vector P[2], vNormal;
+
+		//	((VTXNORTEX*)SubResource.pData)[iIndex].vNormal
+
+			// 노말 채우기
+			// 폴리곤의 두 벡터를 외적해서 노말벡터를 구한다.
+			P[0] = XMLoadFloat3(&mpVertexPos[iIndices[1]]) - XMLoadFloat3(&mpVertexPos[iIndices[0]]);
+			P[1] = XMLoadFloat3(&mpVertexPos[iIndices[2]]) - XMLoadFloat3(&mpVertexPos[iIndices[1]]);
+			vNormal = XMVector3Normalize(XMVector3Cross(P[0], P[1]));
+
+			// 구한 노말을 노말라이즈해서 더해주고 다시 노말을 해준다.
+			XMStoreFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[0]].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[0]].vNormal) + vNormal));
+			XMStoreFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[1]].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[1]].vNormal) + vNormal));
+			XMStoreFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[2]].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[2]].vNormal) + vNormal));
+
+			// 노말 채우기
+			P[0] = XMLoadFloat3(&mpVertexPos[iIndices[1]]) - XMLoadFloat3(&mpVertexPos[iIndices[0]]);
+			P[1] = XMLoadFloat3(&mpVertexPos[iIndices[2]]) - XMLoadFloat3(&mpVertexPos[iIndices[1]]);
+			vNormal = XMVector3Normalize(XMVector3Cross(P[0], P[1]));
+
+			// 구한 노말을 노말라이즈해서 더해주고 다시 노말을 해준다.
+			XMStoreFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[0]].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[0]].vNormal) + vNormal));
+			XMStoreFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[2]].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[1]].vNormal) + vNormal));
+			XMStoreFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[3]].vNormal,
+				XMVector3Normalize(XMLoadFloat3(&((VTXNORTEX*)SubResource.pData)[iIndices[2]].vNormal) + vNormal));
+
+		}
+	}
 
 
 	m_pDeviceContext->Unmap(m_pVB, 0);

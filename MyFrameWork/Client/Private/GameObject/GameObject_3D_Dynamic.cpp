@@ -341,8 +341,7 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 	if (terrain == nullptr)
 		return E_FAIL;
 
-	float newY = terrain->Get_TerrainBuffer()->Get_HeightY(mCurrentPosition);;
-	mCurrentPosition.y = newY;
+	mCurrentPosition.y = terrain->Get_HeightY(mCurrentPosition);
 	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, mCurrentPosition.ToVec4(1));
 	return S_OK;
 }
