@@ -356,7 +356,7 @@ HRESULT CNavigation::Load_NaviMeshData(wstring wpath)
 		if (0 == dwByte)
 			break;
 
-		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, CellIndexndex);
+		pCell = CCell::Create(vPoints, CellIndexndex);
 		
 		for (int i =0; i <3; ++i)
 		{
@@ -458,6 +458,7 @@ const list<CCell*>& CNavigation::AstartPathFind(_uint StartTileIndex, _uint Goal
 
 bool CNavigation::MakeRoute_INDEX(_uint StartTileIndex, _uint GoalTileIndex, CCell* oriStartCell)
 {
+	// TODO: 경로 정보 변경
 	if (mVecCells.empty())
 		return false;
 	if (oriStartCell == nullptr)
@@ -684,7 +685,7 @@ HRESULT CNavigation::ReadyNaviMeshForListData(list<_float3*>& vpointlist)
 			vPoints[i] = newPoint;
 		}
 
-		pCell = CCell::Create(m_pDevice, m_pDeviceContext, vPoints, mVecCells.size());
+		pCell = CCell::Create(vPoints, mVecCells.size());
 		if (nullptr == pCell)
 			return E_FAIL;
 		mVecCells.push_back(pCell);

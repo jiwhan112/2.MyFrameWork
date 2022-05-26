@@ -53,10 +53,6 @@ HRESULT CGameObject_3D_Tile::NativeConstruct(void* pArg)
 _int CGameObject_3D_Tile::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
-	// #TODO: 충돌 매니저 만들기
-	// 중복 충돌 막기
-	// 마우스 충돌은 한 프레임에 한번만 하게 수정
 	GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_STATIC, this);
 
 	return UPDATENONE;
@@ -228,6 +224,9 @@ HRESULT CGameObject_3D_Tile::Update_NeighborTile()
 		}
 
 	}
+	
+	// 대각선처리 오른쪽 위 / 왼쪽 위
+
 	Update_TILESTATE();
 	return S_OK;
 }

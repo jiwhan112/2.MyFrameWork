@@ -303,6 +303,9 @@
     <ClCompile Include="..\Private\RenderTarget.cpp">
       <Filter>01.Utility\13.RenderTarget\02.RenderTarget</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\EasingMgr.cpp">
+      <Filter>01.Utility\01.EasingMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Graphic_Device.h">
@@ -331,9 +334,6 @@
     </ClInclude>
     <ClInclude Include="..\public\GameInstance.h">
       <Filter>01.Utility\00.GameInstance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Engine_Easing.h">
-      <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Timer_Manager.h">
       <Filter>01.Utility\03.TimerMgr\Mgr</Filter>
@@ -469,6 +469,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\RenderTarget.h">
       <Filter>01.Utility\13.RenderTarget\02.RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EasingMgr.h">
+      <Filter>01.Utility\01.EasingMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Enum.h">
+      <Filter>99.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -158,6 +158,8 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Animatior.h" />
     <ClInclude Include="..\Public\AnimationClip.h" />
+    <ClInclude Include="..\Public\EasingMgr.h" />
+    <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\Frstum.h" />
     <ClInclude Include="..\Public\Base.h" />
     <ClInclude Include="..\Public\Camera.h" />
@@ -181,7 +183,6 @@
     <ClInclude Include="..\Public\Direct_TK\DDSTextureLoader.h" />
     <ClInclude Include="..\Public\Direct_TK\WICTextureLoader.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
-    <ClInclude Include="..\Public\Engine_Easing.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
     <ClInclude Include="..\Public\Engine_Macro.h" />
     <ClInclude Include="..\Public\Engine_Struct.h" />
@@ -215,6 +216,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\AnimationClip.cpp" />
     <ClCompile Include="..\Private\Animatior.cpp" />
+    <ClCompile Include="..\Private\EasingMgr.cpp" />
     <ClCompile Include="..\Private\Frstum.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />

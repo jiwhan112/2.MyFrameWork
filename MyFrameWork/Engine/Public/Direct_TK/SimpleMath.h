@@ -266,6 +266,7 @@ namespace DirectX
             float Dot(const Vector3& V) const noexcept;
             void Cross(const Vector3& V, Vector3& result) const noexcept;
             Vector3 Cross(const Vector3& V) const noexcept;
+			Vector4 ToVec4(float w);
 
             void Normalize() noexcept;
             void Normalize(Vector3& result) const noexcept;
@@ -376,6 +377,9 @@ namespace DirectX
             // Unary operators
             Vector4 operator+ () const noexcept { return *this; }
             Vector4 operator- () const noexcept;
+
+			// MY
+			Vector3 ToVec3();
 
             // Vector operations
             bool InBounds(const Vector4& Bounds) const noexcept;

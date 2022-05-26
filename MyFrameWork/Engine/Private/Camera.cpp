@@ -47,8 +47,7 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 	mComTransform->Set_State(CTransform::STATE_RIGHT, vRight);
 	mComTransform->Set_State(CTransform::STATE_LOOK, vLook);
 	// float3 형을 4의 vecotr로 바꿔서 넣어준다. &는 주소를 넘겨야하기 때문에
-	mComTransform->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&_float4(mCameraDesc.vEye, 1.f)));
-
+	mComTransform->Set_State(CTransform::STATE_POSITION, mCameraDesc.vEye.ToVec4(1));
 	return S_OK;
 }
 

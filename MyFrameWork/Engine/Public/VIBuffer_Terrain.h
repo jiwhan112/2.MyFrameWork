@@ -18,6 +18,7 @@ public:
 
 	// #Tag 지형타기
 	_float4 Get_Height(_float4 TargetPos);
+	_float Get_HeightY(_float3 TargetPos);
 
 	// 피킹 타일 인덱스 반환
 	_uint Get_TileIndex(_float3 worldPos);

@@ -189,24 +189,24 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 
 	// ¸Ê Å¸ÀÏ ÃÊ±âÈ­
 
-	//// ´øÀü¸Ê ¸Ê »ý¼º
-	//mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	//NULL_CHECK_HR(mDungeonMap);
-	//Safe_AddRef(mDungeonMap);
-	//mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
-	//mDungeonMap->Init_SetupInit();
-	// FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
+	// ´øÀü¸Ê ¸Ê »ý¼º
+	mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	NULL_CHECK_HR(mDungeonMap);
+	Safe_AddRef(mDungeonMap);
+	mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+	mDungeonMap->Init_SetupInit();
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
 
-	//// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
-	//this->Setup_Terrain();
+	// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
+	this->Setup_Terrain();
 
 	// ¿ùµå¸Ê »ý¼º
-	mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	NULL_CHECK_HR(mWorldMap);
-	Safe_AddRef(mWorldMap);
-	mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
-	mWorldMap->Init_SetupInit();
-	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
+	// mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	// NULL_CHECK_HR(mWorldMap);
+	// Safe_AddRef(mWorldMap);
+	// mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+	// mWorldMap->Init_SetupInit();
+	// FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
 
 
 
@@ -395,7 +395,7 @@ HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 
 			tileObj->Set_Position(CreatePosition);
 			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::TILETYPE_TOP));
-			tileObj->Set_TileIndex(iIndex);
+			tileObj->Set_NeighborTileIndex(iIndex);
 			tileObj->Set_ColliderPosition();
 
 			Create_Manager->PushObject((CGameObject_Base**)&tileObj, level, TAGLAY(LAY_CUBETILE));
@@ -568,12 +568,12 @@ HRESULT CDungeon_Objects::Setup_Neigbor_Tile()
 			{
 				if (iIndex[i] < 0 || iIndex[i] >= sizeXZ)
 				{
-					obj->Set_TileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, -1);
+					obj->Set_NeighborTileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, -1);
 				}
 
 				if (iIndex[i] == SearchIndex)
 				{
-					obj->Set_TileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, SearchIndex);
+					obj->Set_NeighborTileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, SearchIndex);
 				}
 			}
 		}

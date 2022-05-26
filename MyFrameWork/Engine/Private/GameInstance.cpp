@@ -15,6 +15,7 @@ CGameInstance::CGameInstance()
 	, m_pPickMgr(CPicking::GetInstance())
 	, m_pFrstumMgr(CFrustum::GetInstance())
 	, m_pFontMgr(CFontMgr::GetInstance())
+	, m_pEasingMgr(CEasingMgr::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -28,6 +29,8 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPickMgr);
 	Safe_AddRef(m_pFrstumMgr);
 	Safe_AddRef(m_pFontMgr);
+	Safe_AddRef(m_pEasingMgr);
+
 	mIsRender_Collider = true;
 	
 }
@@ -400,6 +403,18 @@ void CGameInstance::Update_Debug()
 	}
 }
 
+_float CGameInstance::Easing(EasingTypeID eEasingType, _float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
+{
+	NULL_CHECK_BREAK(m_pEasingMgr);
+	return m_pEasingMgr->Easing(eEasingType, fStartPoint, fTotalTime, fPassedTime, fTotalTime);
+}
+
+_float3 CGameInstance::Easing3(EasingTypeID eEasingType, _float3 fStartPoint, _float3 fTargetPoint, _float fPassedTime, _float fTotalTime)
+{
+	NULL_CHECK_BREAK(m_pEasingMgr);
+	return m_pEasingMgr->Easing3(eEasingType, fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+}
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -434,12 +449,15 @@ void CGameInstance::Release_Engine()
 
 	if (0 != CFontMgr::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CFontMgr");
+	if (0 != CEasingMgr::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CEasingMgr");
 
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
 
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");
+
 }
 
 void CGameInstance::Free()
@@ -456,5 +474,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pPickMgr);
 	Safe_Release(m_pFrstumMgr);
 	Safe_Release(m_pFontMgr);
+	Safe_Release(m_pEasingMgr);
 
 }

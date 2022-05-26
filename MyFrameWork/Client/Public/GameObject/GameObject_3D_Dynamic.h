@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class CModel;
+class CCell;
 END
 
 // 애니메이션 3D 오브젝트 출력
@@ -53,6 +54,7 @@ public:
 protected:
 	virtual HRESULT Set_Component() override;
 	HRESULT Update_Collider();
+	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 
 
 //	void		GOMOVE(_double timer);
@@ -76,6 +78,14 @@ protected: // 3D모델 Com / DESC 추가
 	_double						mTimer;
 	_double						mTimeMax;
 	bool						mIsMove = false;
+	bool						mIsMoveCell = false;
+
+	list<CCell*>				mCurrentPathList;
+	CCell*						mMoveCell; // 현재 셀
+
+	_float3						mCurrentPosition;
+
+
 //	E_BASEAI					meAI;
 
 public:

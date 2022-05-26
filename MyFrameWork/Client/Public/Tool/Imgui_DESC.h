@@ -7,7 +7,6 @@ END
 BEGIN(Client)
 
 
-// #TODO: 데이터 저장 싱글턴으로 변경하자
 
 class CImgui_DESC final :
 	public CImgui_Base

@@ -161,7 +161,7 @@ HRESULT CTransform::GO_WorldVec(_float3 vec, _double deltatime)
 	vec.Normalize();
 	vPosition += vec * mDesc.SpeedPersec *(_float)deltatime;
 
-	_float4 vPos = _float4(vPosition, 1.f);
+	_float4 vPos = vPosition.ToVec4(1);
 
 	Set_State(CTransform::STATE_POSITION, vPos);
 
@@ -190,12 +190,12 @@ HRESULT CTransform::GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _doub
 		break;
 	}
 
-	_float4 newVec = _float4(vec, 1.f);
+	_float4 newVec = vec.ToVec4(1);
 	_float4::Transform(newVec, RotMat, newVec);
 
-	vPosition += newVec.Get_Float3() * mDesc.SpeedPersec *(_float)deltatime;
+	vPosition += newVec.ToVec3() * mDesc.SpeedPersec *(_float)deltatime;
 
-	Set_State(CTransform::STATE_POSITION, _float4(vPosition, 1.f));
+	Set_State(CTransform::STATE_POSITION, vPosition.ToVec4(1));
 
 	return S_OK;
 }
@@ -330,16 +330,6 @@ HRESULT CTransform::LookAtDir(_float3 Dir)
 
 	return S_OK;
 }
-
-HRESULT CTransform::LookAtZ(_fvector targetPos)
-{
-	_float3 TargetPos = targetPos;
-	_float3 vPos = mWorldMatrix.Translation();
-	_float3 vScale = GetScaleXYZ();
-	return E_FAIL;
-}
-
-
 
 HRESULT CTransform::Scaled(_fvector scale)
 {

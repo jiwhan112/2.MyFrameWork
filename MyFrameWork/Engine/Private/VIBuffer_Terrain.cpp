@@ -184,7 +184,7 @@ _float4 CVIBuffer_Terrain::Get_Height(_float4 TargetPos)
 	_float4 vPos = TargetPos;
 
 	// 현재 위치 찾기 z * width + x
-	_uint iIndex = vPos.z * miNumX + vPos.x;
+	_uint iIndex = (_uint)vPos.z * miNumX + (_uint)vPos.x;
 
 	_uint Indeces[] = {
 		iIndex + miNumX,
@@ -217,6 +217,45 @@ _float4 CVIBuffer_Terrain::Get_Height(_float4 TargetPos)
 	vPos.y = fY;
 	return vPos;
 }
+
+_float CVIBuffer_Terrain::Get_HeightY(_float3 TargetPos)
+{
+	// 현재 위치 찾기 z * width + x
+	_float3 Target = TargetPos;
+
+	_uint iIndex = (_uint)Target.z * miNumX + (_uint)Target.x;
+
+	_uint Indeces[] = {
+		iIndex + miNumX,
+		iIndex + miNumX + 1,
+		iIndex + 1 ,
+		iIndex
+	};
+
+	_float fWidth = Target.x - mpVertexPos[Indeces[0]].x;
+	_float fDeoth = mpVertexPos[Indeces[0]].z - Target.z;
+
+	_float fY = 0.f;
+	_plane plane;
+
+	// Width가 더 크면 위쪽 삼각형
+	if (fWidth > fDeoth)
+	{
+		// 점 3개로 평면을 만든다.
+		plane = _plane(mpVertexPos[Indeces[0]], mpVertexPos[Indeces[1]], mpVertexPos[Indeces[2]]);
+	}
+	// 아래쪽
+	else
+	{
+		plane = _plane(mpVertexPos[Indeces[0]], mpVertexPos[Indeces[2]], mpVertexPos[Indeces[3]]);
+	}
+
+	// y = (-ax - cz - d) / b;
+	fY = ((-plane.x * Target.x) - (plane.z * Target.z) - plane.D()) / plane.y;
+
+	return fY;
+}
+
 
 _uint CVIBuffer_Terrain::Get_TileIndex(_float3 worldPos)
 {

@@ -59,35 +59,12 @@ namespace Engine
 	// 클래스에서 선언 X
 
 	// DXSimpleMath 정의 행렬로 변경
+//	using namespace DirectX::SimpleMath;
+
 	typedef DirectX::SimpleMath::Matrix		_float4x4;
 	typedef DirectX::SimpleMath::Vector2	_float2;
 	typedef DirectX::SimpleMath::Vector3	_float3;
-
-	typedef struct tagFloat4_Derived final : public DirectX::SimpleMath::Vector4
-	{
-		tagFloat4_Derived(float _x, float _y, float _z, float _w) :Vector4(_x, _y, _z, _w) {}
-		tagFloat4_Derived() = default;
-		tagFloat4_Derived(_float3 vFloat3, _float fW) :
-			Vector4(vFloat3.x, vFloat3.y, vFloat3.z, fW)
-		{
-		}
-		_float3 Get_Float3()
-		{
-			return _float3(x, y, z);
-		}
-		tagFloat4_Derived Get_Float4(float _w)
-		{
-			return tagFloat4_Derived(x, y, z, _w);
-		}
-		Vector4& operator=(const _float3& f)
-		{
-			x = f.x;
-			y = f.y;
-			z = f.z;
-			w = 0;
-			return *this;
-		}
-	}_float4;
+	typedef DirectX::SimpleMath::Vector4	_float4;
 
 	typedef DirectX::SimpleMath::Plane		_plane;
 	typedef DirectX::SimpleMath::Quaternion _quaterion;

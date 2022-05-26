@@ -5,7 +5,7 @@
 BEGIN(Engine)
 
 // 네비게이션 메시의 삼각형 모양의 셀
-class CCell final : public CBase
+class ENGINE_DLL CCell final : public CBase
 {
 public:
 	// 점 3개와 이웃하는 선분을 정의.
@@ -14,7 +14,7 @@ public:
 	enum E_CELLTYPE { CELLTYPE_NONE, CELLTYPE_DEBUG, CELLTYPE_STOP, CELLTYPE_END };
 
 private:
-	CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	CCell();
 	virtual ~CCell() = default;
 
 public:
@@ -77,6 +77,7 @@ public:
 	_bool isIn(_fvector vPosition, _int* pNeighborIndex);
 	CCell* isIn_Cell(_fvector vPosition);
 
+private:
 	_float3 Get_MeshCenter();
 
 
@@ -106,7 +107,7 @@ private:
 	
 
 public:
-	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _float3* pPoints, _uint iIndex);
+	static CCell* Create(const _float3* pPoints, _uint iIndex);
 	virtual void Free() override;
 };
 

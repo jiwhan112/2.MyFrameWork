@@ -26,7 +26,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
 		string str("crea_Snot_a.fbx");
 		strcpy_s(mModelDesc.mModelName, str.c_str());
 	}
-
+	
 	mCurrentShaderPass = 0;
 
 	return S_OK;
@@ -35,9 +35,11 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
 HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
+	mComTransform->Scaled(_float3(0.5f,0.5f,0.5f));
+
 	mComModel->SetUp_AnimIndex(0);
 
-	// #TESTCODE 
+	// #TESTCODE 충돌체 
 	COLLIDER_DESC desc[3];
 	desc[0].meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
 	desc[1].meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
@@ -84,25 +86,45 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 	{
 		mComModel->SetUp_AnimIndex(29);
 
-		mComTransform->LookAt(mGoalPosition);
-
-		mTimer += TimeDelta;
-		if (mTimer > mTimeMax)
-			mIsMove = false;
-
-		_float3 CurrentPos = _float3::Lerp(mStartPosition, mGoalPosition, mTimer / mTimeMax);
-		_float4 CurrentPos4;
-		CurrentPos4 = CurrentPos;
-		CurrentPos4.w = 1;
-
-		if (mComNaviMesh->Move_OnNavigation(CurrentPos4))
+		// 경로 리스트에 있는 셀을 뺴서 이동
+		// #Tag 네비메시 움직임나중에 수정 
+		if (mIsMoveCell)
 		{
-			mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPos4);
+			// 셀 이동
+			mGoalPosition = mMoveCell->Get_CenterPoint();
+			// Test
+			_float3 newLook = _float3(mGoalPosition.x, mStartPosition.y, mGoalPosition.z);
+			mComTransform->LookAt(newLook);
+			mTimer += TimeDelta;
+			mCurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mGoalPosition, mTimer, mTimeMax);
+			if (mTimer > mTimeMax)
+				mIsMoveCell = false;
+			if (_float3::Distance(mCurrentPosition, mGoalPosition) < 1.0f)
+				mIsMoveCell = false;
 		}
 
-		
+		else
+		{
+			// 셀 설정
+			if (mCurrentPathList.empty())
+			{
+				mIsMove = false;
+				mIsMoveCell = false;
+				mTimeMax = 0.3f;
+			}
+			else
+			{
+				mMoveCell = mCurrentPathList.front();
+				mCurrentPathList.pop_front();
+				mIsMoveCell = true;
+				mStartPosition = Get_WorldPostition();
+				mTimer = 0;
+				mComNaviMesh->Move_OnNavigation(_float4(0, 0, 0, 0));
+			}
+			
+			
+		}
 	}
-
 	return UPDATENONE;
 }
 
@@ -113,34 +135,40 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
 	if (terrain != nullptr)
 	{	
+		
+		FAILED_CHECK(Set_Terrain_HeightY(terrain));		
 
-		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
 		{
 			// #TODO 네비메시 길찾기 적용 
 			_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
 			_uint StartIndex = mComNaviMesh->Get_CurrentCellIndex();
 			_uint GoalIndex = StartIndex;
 			
-			if (mComNaviMesh->Get_PickPosForIndex(worldPickPos, &GoalIndex))
+			if (mIsMove == false && mCurrentPathList.empty())
 			{
-				auto pathList = mComNaviMesh->AstartPathFind(StartIndex, GoalIndex);
-				for (auto& cell : pathList)
+				if (mComNaviMesh->Get_PickPosForIndex(worldPickPos, &GoalIndex))
 				{
-					cell->Set_TileType(CCell::CELLTYPE_DEBUG);
+					mCurrentPathList = mComNaviMesh->AstartPathFind(StartIndex, GoalIndex);
+					mTimeMax = 0.3f;
+					mIsMove = true;
 				}
 			}
 
-			//_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
-			//int index = terrain->Get_TileIndex(worldPos);
-			//mGoalPosition = terrain->Get_TileWorld(index);
-			//mStartPosition = mComTransform->GetState(CTransform::STATE_POSITION);
-			//
-			//mTimer = 0;
-			//mTimeMax = _float3::Distance(mStartPosition, mGoalPosition);
-			//mIsMove = true;
-		}
+			// For.Debug
+			//if (mComNaviMesh->Get_PickPosForIndex(worldPickPos, &GoalIndex))
+			//{
 
+			//	mCurrentPathList = mComNaviMesh->AstartPathFind(StartIndex, GoalIndex);
+			//	mIsMove = true;
+			//	for (auto& cell : mCurrentPathList)
+			//	{
+			//		cell->Set_TileType(CCell::CELLTYPE_DEBUG);
+			//	}
+			//}
+		}
 	}
+	
 
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
@@ -305,6 +333,17 @@ HRESULT CGameObject_3D_Dynamic::Update_Collider()
 		mComListCollider->push_back(static_cast<CCollider*>(col));
 	}
 
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terrain)
+{
+	if (terrain == nullptr)
+		return E_FAIL;
+
+	float newY = terrain->Get_TerrainBuffer()->Get_HeightY(mCurrentPosition);;
+	mCurrentPosition.y = newY;
+	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, mCurrentPosition.ToVec4(1));
 	return S_OK;
 }
 

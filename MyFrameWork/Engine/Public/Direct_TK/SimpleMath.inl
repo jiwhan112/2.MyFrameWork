@@ -1,3 +1,4 @@
+#include "SimpleMath.h"
 //-------------------------------------------------------------------------------------
 // SimpleMath.inl -- Simplified C++ Math wrapper for DirectXMath
 //
@@ -945,6 +946,17 @@ inline Vector3 Vector3::Cross(const Vector3& V) const noexcept
     return result;
 }
 
+inline Vector4 DirectX::SimpleMath::Vector3::ToVec4(float w)
+{
+	Vector4 vec;
+	vec.x = x;
+	vec.y = y;
+	vec.z = z;
+	vec.w = w;
+
+	return vec;
+}
+
 inline void Vector3::Normalize() noexcept
 {
     using namespace DirectX;
@@ -1396,6 +1408,15 @@ inline Vector4 Vector4::operator- () const noexcept
     Vector4 R;
     XMStoreFloat4(&R, X);
     return R;
+}
+
+inline Vector3 DirectX::SimpleMath::Vector4::ToVec3()
+{
+	Vector3 vec3;
+	vec3.x = x;
+	vec3.y = y;
+	vec3.z = z;
+	return vec3;
 }
 
 //------------------------------------------------------------------------------

@@ -96,7 +96,6 @@ public:
 	HRESULT LookAt(_fvector TargetPos, _double time);
 	HRESULT LookAt(_fvector TargetPos);
 	HRESULT LookAtDir(_float3 Dir);
-	HRESULT LookAtZ(_fvector TargetPos);
 
 	// Scale
 //	HRESULT Scaling(_fvector scale);

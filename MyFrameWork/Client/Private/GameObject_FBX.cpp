@@ -185,7 +185,7 @@ HRESULT CGameObject_FBX::Set_Height()
 	// 3.공간 맞춰서 연산하고 다시 공간 변환
 	// 월드 -> 로컬 -> 연산 -> 로컬 -> 월드
 	_float4::Transform(vPosition, WorldMatrixInverse, vPosition);
-	vPosition = pVIBuffer->Get_Height(vPosition);
+//	vPosition = pVIBuffer->Get_Height(vPosition);
 	_float4::Transform(vPosition, WorldMatrix, vPosition);
 
 	vPosition.y = 5;

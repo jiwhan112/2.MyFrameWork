@@ -1,12 +1,10 @@
 #include "..\Public\Cell.h"
 #include "Shader.h"
 
-CCell::CCell(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-	: m_pDevice(pDevice)
-	, m_pDeviceContext(pDeviceContext)
+CCell::CCell()
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pDeviceContext);
+	//Safe_AddRef(m_pDevice);
+	//Safe_AddRef(m_pDeviceContext);
 }
 
 HRESULT CCell::NativeConstruct(const _float3 * pPoints, _uint iIndex)
@@ -120,9 +118,9 @@ _float3 CCell::Get_MeshCenter()
 	return centerPoint;
 }
 
-CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _float3 * pPoints, _uint iIndex)
+CCell * CCell::Create( const _float3 * pPoints, _uint iIndex)
 {
-	CCell*	pInstance = NEW CCell(pDevice, pDeviceContext);
+	CCell*	pInstance = NEW CCell();
 
 	if (FAILED(pInstance->NativeConstruct(pPoints, iIndex)))
 	{
@@ -134,6 +132,6 @@ CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceConte
 
 void CCell::Free()
 {
-	Safe_Release(m_pDeviceContext);
-	Safe_Release(m_pDevice);
+	//Safe_Release(m_pDeviceContext);
+	//Safe_Release(m_pDevice);
 }

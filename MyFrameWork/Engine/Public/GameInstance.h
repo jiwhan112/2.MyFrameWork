@@ -12,6 +12,8 @@
 #include "Picking.h"
 #include "Frstum.h"
 #include "FontMgr.h"
+#include "EasingMgr.h"
+
 
 BEGIN(Engine)
 
@@ -95,12 +97,17 @@ public: // For, Font
 	HRESULT Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _tchar* pFontTag, const _tchar* pFontFilePath);
 	HRESULT Render_Font(const _tchar* pFontTag, const _tchar* pText, _float2 vPosition, _fvector vColor);
 
+public: // FOR.EASING
+	_float	Easing(EasingTypeID eEasingType, _float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
+	_float3	Easing3(EasingTypeID eEasingType, _float3 fStartPoint, _float3 fTargetPoint, _float fPassedTime, _float fTotalTime);
+
 public: // FOR.DEBUG
 	bool Get_IsColliderRender() const { return mIsRender_Collider; }
 
 private: // FOR.DEBUG
 	void	Update_Debug();
 	bool	mIsRender_Collider = true;
+
 
 
 private:
@@ -116,6 +123,7 @@ private:
 	CPicking*					m_pPickMgr = nullptr;
 	CFrustum*					m_pFrstumMgr = nullptr;
 	CFontMgr*					m_pFontMgr = nullptr;
+	CEasingMgr*					m_pEasingMgr = nullptr;
 
 public:
 	static void Release_Engine();
