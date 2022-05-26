@@ -70,6 +70,8 @@ public:
 		// 왼쪽 오른쪽 위
 		NEIGHBOR_TILE_LT,
 		NEIGHBOR_TILE_RT,
+		NEIGHBOR_TILE_RB,
+		NEIGHBOR_TILE_LB,
 		NEIGHBOR_TILE_END
 	};
 
@@ -90,10 +92,10 @@ public:
 
 
 	HRESULT Set_LoadNewFBX(E_TILETYPE type);
-	void Set_NeighborTileIndex(_int index) { mIndex = index; }
+	void Set_TileIndex(_int index) { mIndex = index; }
 	_int Get_TileIndex()const { return mIndex; }
 
-	void Set_NeighborTileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
+	void Set_TileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
 	bool Set_EmptySearchNeighbor(int searchIndex);
 	void Set_ColliderPosition();
 
@@ -102,6 +104,8 @@ public:
 
 	// 타일의 이웃정보에 따라 자신의 상태 변경
 	HRESULT Update_NeighborTile();
+	HRESULT Update_Tile_CrossCheck();
+	
 
 protected:
 	void Update_TILESTATE();
@@ -113,7 +117,7 @@ protected:
 	_int mIndex = -1;
 
 	// 이웃하는 타일 인덱스
-	_int mNeighborIndex[NEIGHBOR_TILE_END] = { -1,-1,-1,-1,-1,-1 };
+	_int mNeighborIndex[NEIGHBOR_TILE_END] = { -1,-1,-1,-1,-1,-1,-1,-1 };
 	
 	// 타일 FBX 이름	
 	string mTileNames[TILETYPE_END];

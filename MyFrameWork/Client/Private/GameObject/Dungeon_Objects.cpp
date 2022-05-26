@@ -395,7 +395,7 @@ HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 
 			tileObj->Set_Position(CreatePosition);
 			tileObj->Set_LoadNewFBX((CGameObject_3D_Tile::TILETYPE_TOP));
-			tileObj->Set_NeighborTileIndex(iIndex);
+			tileObj->Set_TileIndex(iIndex);
 			tileObj->Set_ColliderPosition();
 
 			Create_Manager->PushObject((CGameObject_Base**)&tileObj, level, TAGLAY(LAY_CUBETILE));
@@ -568,15 +568,21 @@ HRESULT CDungeon_Objects::Setup_Neigbor_Tile()
 			{
 				if (iIndex[i] < 0 || iIndex[i] >= sizeXZ)
 				{
-					obj->Set_NeighborTileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, -1);
+					obj->Set_TileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, -1);
 				}
 
 				if (iIndex[i] == SearchIndex)
 				{
-					obj->Set_NeighborTileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, SearchIndex);
+					obj->Set_TileIndex((CGameObject_3D_Tile::E_NEIGHBOR_TILE)i, SearchIndex);
 				}
 			}
 		}
+		for (auto& searchobj : *mListVecTiles)
+		{
+			// 대각선 찾기
+			searchobj->Update_Tile_CrossCheck();
+		}
+
 	}
 
 	return S_OK;

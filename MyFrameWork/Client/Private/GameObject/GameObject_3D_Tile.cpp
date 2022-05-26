@@ -224,10 +224,57 @@ HRESULT CGameObject_3D_Tile::Update_NeighborTile()
 		}
 
 	}
-	
-	// 대각선처리 오른쪽 위 / 왼쪽 위
+	// 대각선
+	else if (mNeighborIndex[NEIGHBOR_TILE_LT] == -1)
+	{
+		meTileState = CGameObject_3D_Tile::TILESTATE_BEHIND_TOP;
 
+	}
+
+	else if (mNeighborIndex[NEIGHBOR_TILE_RT] == -1)
+	{
+		meTileState = CGameObject_3D_Tile::TILESTATE_BEHIND_RIGHT;
+
+	}
+	else if (mNeighborIndex[NEIGHBOR_TILE_RB] == -1)
+	{ 
+		meTileState = CGameObject_3D_Tile::TILESTATE_BEHIND_BOTTOM;
+
+	}
+	else if (mNeighborIndex[NEIGHBOR_TILE_LB] == -1)
+	{
+		meTileState = CGameObject_3D_Tile::TILESTATE_BEHIND_LEFT;
+
+	}
+
+
+	
+	// 실제 모델 변경
 	Update_TILESTATE();
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Tile::Update_Tile_CrossCheck()
+{
+	// 대각선 검사
+	// 왼쪽 / 위가 유효하면 왼쪽 위가 있음
+	if (mNeighborIndex[NEIGHBOR_TILE_TOP] != -1)
+	{
+		if (mNeighborIndex[NEIGHBOR_TILE_LEFT] != -1)
+			mNeighborIndex[NEIGHBOR_TILE_LT] = mNeighborIndex[NEIGHBOR_TILE_TOP] - 1;
+		if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] != -1)
+			mNeighborIndex[NEIGHBOR_TILE_RT] = mNeighborIndex[NEIGHBOR_TILE_TOP] + 1;
+	}
+
+	if (mNeighborIndex[NEIGHBOR_TILE_BOTTOM] != -1)
+	{
+		if (mNeighborIndex[NEIGHBOR_TILE_LEFT] != -1)
+			mNeighborIndex[NEIGHBOR_TILE_LB] = mNeighborIndex[NEIGHBOR_TILE_BOTTOM] - 1;
+		if (mNeighborIndex[NEIGHBOR_TILE_RIGHT] != -1)
+			mNeighborIndex[NEIGHBOR_TILE_RB] = mNeighborIndex[NEIGHBOR_TILE_BOTTOM] + 1;
+	}
+	
+
 	return S_OK;
 }
 
