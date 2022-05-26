@@ -160,8 +160,8 @@ HRESULT CGameObject_FBX::Set_Height()
 	// 1. 각 컴포넌트 구하기
 	if (mTerrain == nullptr)
 	{
-		int index = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-		auto listdata = GetSingle(CGameInstance)->Get_GameObjectLayerList(index, TAGLAY(LAY_TERRAIN));
+		_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
+		auto listdata = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, TAGLAY(LAY_TERRAIN));
 
 		NULL_CHECK_BREAK(listdata);
 

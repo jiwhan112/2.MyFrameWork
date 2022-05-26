@@ -220,8 +220,8 @@ HRESULT CImgui_CommonUI::Update_ObjectList()
 HRESULT CImgui_CommonUI::Update_ObjectList_Layer()
 {
 
-	_uint CurrentLevelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	auto objmap = GetSingle(CGameInstance)->Get_All_GameObjectLayerMap(CurrentLevelIndex);
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
+	auto objmap = GetSingle(CGameInstance)->Get_All_GameObjectLayerMap(idx);
 
 	if (objmap == nullptr)
 		return S_OK;

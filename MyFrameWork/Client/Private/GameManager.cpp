@@ -45,6 +45,8 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 		Safe_AddRef(mGameInstance);
 	}
 	Initialize_PathData();
+
+	mCurrentLevel = LEVEL_LOGO;
 	return S_OK;
 }
 
@@ -150,8 +152,8 @@ HRESULT CGameManager::Set_ReListPath(E_PATHTYPE type)
 
 CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _uint index)
 {
-	_uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	auto GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(levelIndex, layerTag);
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
+	auto GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, layerTag);
 	if (GameObjectList == nullptr)
 		return nullptr;
 
@@ -177,8 +179,8 @@ CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _
 
 const list<CGameObject*>* CGameManager::Get_LevelObjectList(const wchar_t * layerTag)
 {
-	_uint levelIndex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	const list<CGameObject*>* GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(levelIndex, layerTag);
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
+	const list<CGameObject*>* GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, layerTag);
 	if (GameObjectList == nullptr)
 		return nullptr;
 	return GameObjectList;
@@ -232,16 +234,26 @@ HRESULT CGameManager::LevelChanger()
 	if (idx == E_LEVEL::LEVEL_LOGO)
 	{
 		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+		{
 			// 엔진에서 클리어 하기전에 한번 해준다. 
 			LevelLoading(LEVEL_TOOL);
+			mCurrentLevel = LEVEL_TOOL;
+		}
 
 		if (pGameInstance->Get_DIKeyState(DIK_F2) & DIS_Down)
+		{
+
 			LevelLoading(LEVEL_MYGAMEPLAY);
+			mCurrentLevel = LEVEL_MYGAMEPLAY;
+		}
 	}
 	else
 	{
 		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & DIS_Down)
+		{
 			LevelLoading(LEVEL_LOGO);
+			mCurrentLevel = LEVEL_LOGO;
+		}
 	}
 
 

@@ -103,7 +103,6 @@ HRESULT CModel::NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char * 
 	_uint		iFlag = 0;
 
 	/* Ä®, ±×¸²ÀÚ */
-
 	if (MODEL_NOANI == eModelType)
 		iFlag = aiProcess_PreTransformVertices | /*aiProcess_GlobalScale | */aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 	else

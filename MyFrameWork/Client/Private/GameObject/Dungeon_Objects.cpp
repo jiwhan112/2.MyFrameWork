@@ -184,22 +184,22 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	// ¸Ê Å¸ÀÏ ÃÊ±âÈ­
 
 	// ´øÀü¸Ê ¸Ê »ý¼º
-	mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	NULL_CHECK_HR(mDungeonMap);
-	Safe_AddRef(mDungeonMap);
-	mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
-	mDungeonMap->Init_SetupInit();
-	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
-	// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
-	this->Setup_Terrain();
+	//mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	//NULL_CHECK_HR(mDungeonMap);
+	//Safe_AddRef(mDungeonMap);
+	//mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+	//mDungeonMap->Init_SetupInit();
+	//FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
+	//// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
+	//this->Setup_Terrain();
 
 	// ¿ùµå¸Ê »ý¼º
-	//mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	//NULL_CHECK_HR(mWorldMap);
-	//Safe_AddRef(mWorldMap);
-	//mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
-	//mWorldMap->Init_SetupInit();
-	//FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
+	mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	NULL_CHECK_HR(mWorldMap);
+	Safe_AddRef(mWorldMap);
+	mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+	mWorldMap->Init_SetupInit();
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
 
 
 

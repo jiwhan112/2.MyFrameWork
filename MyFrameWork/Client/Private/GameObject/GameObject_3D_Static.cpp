@@ -63,6 +63,7 @@ _int CGameObject_3D_Static::Tick(_double TimeDelta)
 			_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
 			int index = terrain->Get_TileIndex(worldPickPos);
 			_float3 pickTilePos = terrain->Get_TileWorld(index);
+			pickTilePos.y = worldPickPos.y;
 
 			_float4x4 transmat = _float4x4::CreateTranslation(pickTilePos);
 			mComTransform->Set_State(CTransform::STATE_POSITION, transmat.Translation());
@@ -99,14 +100,12 @@ HRESULT CGameObject_3D_Static::Render()
 			
 			// 2. 랜더링
 			// 여기서 뼈를 넘긴다.
-			FAILED_CHECK(mComModel->Render(mComShader, mCurrentShaderPass, 0));
+			mComModel->Render(mComShader, mCurrentShaderPass, i, "g_BoneMatrices");
 		}
 	}
-
 #ifdef _DEBUG
 	mComCollider->Render();
 #endif // _DEBUG
-
 	return S_OK;
 }
 

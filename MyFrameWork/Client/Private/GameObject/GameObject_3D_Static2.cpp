@@ -81,6 +81,8 @@ HRESULT CGameObject_3D_Static2::Render()
 	//FAILED_CHECK(Set_ConstantTable_World());
 	//FAILED_CHECK(Set_ConstantTable_Light());
 
+
+
 	return S_OK;
 }
 

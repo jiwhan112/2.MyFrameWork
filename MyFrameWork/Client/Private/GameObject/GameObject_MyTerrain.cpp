@@ -35,17 +35,18 @@ HRESULT CGameObject_MyTerrain::Init_SetupInit()
 	if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
 	{
 		mStrMapDatName = "DungeonBaseMap.terrdat";
-		wstring wstr = CHelperClass::Convert_str2wstr(mStrMapDatName);
-		TERRAIN_DESC* pTerrainDESC = GetSingle(CGameManager)->Get_ObjectIOManager()->Find_TerrainDesc(wstr);
-	//	pTerrainDESC->mTileSize = 0;
-		Set_LoadTerrainDESC(*pTerrainDESC);
 
 
 	}
 	else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
 	{
 		mStrMapDatName = "WorldBaseMap.terrdat";
+		
 	}
+
+	wstring wstr = CHelperClass::Convert_str2wstr(mStrMapDatName);
+	TERRAIN_DESC* pTerrainDESC = GetSingle(CGameManager)->Get_ObjectIOManager()->Find_TerrainDesc(wstr);
+	Set_LoadTerrainDESC(*pTerrainDESC);
 
 	// Terrain 积己
 	Init_Map(TAGLAY(LAY_OBJECT));
@@ -508,7 +509,6 @@ _float CGameObject_MyTerrain::Get_HeightY(_float3 PositionXZ)
 
 HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
 {
-	
 	// 甘积己
 	Set_TerrainMode(mTerrainDESC.meTerrainSize);
 
@@ -517,7 +517,7 @@ HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
 
 	// 历厘等 坷宏璃飘 积己
 	CGameObject_Creater* creater = GetSingle(CGameManager)->Get_CreaterManager();
-	_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 
 	for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
 	{

@@ -172,7 +172,7 @@ void CImgui_Model::RENDER_CREATE_PROTO()
 		// 선택 원형 오브젝트 클론
 		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Create_Clone_Static")))
 		{
-			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_OBJECT));
 		}
 
@@ -201,7 +201,7 @@ void CImgui_Model::RENDER_CREATE_PROTO()
 		// 선택 원형 오브젝트 클론
 		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Create_Clone_Dynamic")))
 		{
-			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_OBJECT));
 		}
 
@@ -230,7 +230,7 @@ void CImgui_Model::RENDER_CREATE_PROTO()
 		// 선택 원형 오브젝트 클론
 		if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_FBX, "Create_Clone_Parent")))
 		{
-			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_OBJECT));
 		}
 
@@ -264,37 +264,37 @@ void CImgui_Model::RENDER_CREATEEMPTY()
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Static")))
 	{
-		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC);
 
 		// 이미 만들어진 오브젝트 추가
-		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
+		GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(meCreateLayer), createobj);
 	}
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Dynamic")))
 	{
-		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
 
 		// 이미 만들어진 오브젝트 추가
-		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
+		GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(meCreateLayer), createobj);
 	}
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_Static2")))
 	{
-		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC2);
 
 		// 이미 만들어진 오브젝트 추가
-		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
+		GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(meCreateLayer), createobj);
 	}
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Create_TILE")))
 	{
-		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 		CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_TILE);
 		// 이미 만들어진 오브젝트 추가
-		GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(meCreateLayer), createobj);
+		GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(meCreateLayer), createobj);
 
 	}
 
@@ -486,7 +486,6 @@ HRESULT CImgui_Model::Edit_FBX()
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "CreateChild")))
 		{
 			CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
-			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 			CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_STATIC);
 			mCurrent_ModelStaticObject_Parent->Add_StaticObejct((CGameObject_3D_Static*)createobj);
 		}

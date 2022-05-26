@@ -118,7 +118,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 {
 	// 빈 오브젝트 클론
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
-	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
 	{
@@ -133,7 +133,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 		Safe_AddRef(mWorldMap);
 		mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
 		mWorldMap->Init_SetupInit();
-		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_TERRAIN), mWorldMap));
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
 
 	}
 
@@ -150,7 +150,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 		Safe_AddRef(mDungeonMap);
 		mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
 		mDungeonMap->Init_SetupInit();
-		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_TERRAIN), mDungeonMap));
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mDungeonMap));
 
 		// 타일 추가
 		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain(mDungeonMap);
@@ -501,6 +501,7 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 	// 만들어놓은 3D 깡통 오브젝트 배치 
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	CGameObject_3D_Static2* PickObject = nullptr;
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 
 	// 타일 모드랑 오브젝트 모드 나눠서 구현
 
@@ -528,10 +529,10 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 					// 선택 객체 생성
 					if (selectObjectIndex != -1)
 					{
-						_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
 						CGameObject_Base* pickobj = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
 						static_cast<CGameObject_3D_Static*>(pickobj)->Set_PickObject();
 						Set_PickObject(pickobj);
+
 					}
 
 				}
@@ -558,9 +559,6 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 				if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_LBUTTON)& DIS_Down)
 				{
 					// 맵에 배치 시킨다.
-					_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-
-
 					CGameObject_Base* cloneObject = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
 					cloneObject->Get_ComTransform()->Set_WorldMat(mCurrent_PickObject->Get_ComTransform()->GetWorldFloat4x4());
 					mListWorldObjects.push_front(cloneObject);
@@ -633,11 +631,16 @@ HRESULT CImgui_Terrain::SAVER_MODE()
 			// 오브젝트랑 타일정보는 툴의 정보를 기반으로 새로 저장
 			auto TileList =  GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_TileList();
 			list<_uint> tilelistindex;
-			for (auto& tile : *TileList)
+			if (TileList != nullptr)
 			{
-				_uint tileindex = tile->Get_TileIndex();
-				tilelistindex.push_front(tileindex);
+				
+				for (auto& tile : *TileList)
+				{
+					_uint tileindex = tile->Get_TileIndex();
+					tilelistindex.push_front(tileindex);
+				}
 			}
+
 			mCurrent_TerrainObject->SaveDESC_Objects(tilelistindex,mListWorldObjects_Desc);
 			FAILED_CHECK(Object_IO_Manager->SaverObject(OBJECT_TYPE_TERRAIN, STR_FILEPATH_RESOURCE_DAT_L, wstr , mCurrent_TerrainObject));
 		}

@@ -106,13 +106,13 @@ void CImgui_UI::UI_CREATEMODE()
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Create_Empty")))
 		{
 			// UI 타입별로 빈 오브젝트 생성
-			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 			CGameObject* createobj = Create_Manager->CreateEmptyObject(GAMEOBJECT_2D);
 			UI_DESC emptyDesc;
 			static_cast<CGameObject_2D*>(createobj)->Set_LoadUIDesc(emptyDesc);
 
 			// 이미 만들어진 오브젝트 추가
-			GetSingle(CGameInstance)->Push_Object(levelindex, TAGLAY(LAY_UI), createobj);
+			GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_UI), createobj);
 		}
 
 		// 이미 만들어진 오브젝트 클론
@@ -138,7 +138,7 @@ void CImgui_UI::UI_CREATEMODE()
 		// 선택 원형 오브젝트 클론
 		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Create_ProtoObject")))
 		{
-			_uint idx = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+			_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 			Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectStr, TAGLAY(LAY_UI));
 		}
 

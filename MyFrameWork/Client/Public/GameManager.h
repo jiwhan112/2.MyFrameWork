@@ -58,6 +58,7 @@ public:
 	// 카메라나 플레이어 가져올때 좀더 편하게 가져옴
 	CGameObject* Get_LevelObject_LayerTag(const wchar_t* layerTag, _uint index = 0);
 	const list<CGameObject*>* Get_LevelObjectList(const wchar_t* layerTag);
+	E_LEVEL Get_CurrentLevel() const { return mCurrentLevel; }
 
 public: // Collider 
 	const _float3& Get_PickPos() const;
@@ -90,6 +91,7 @@ private:
 	CDungeon_Manager*			mDaungonManager = nullptr;	
 	CColliderManager*			mColliderManager = nullptr;
 
+	E_LEVEL						mCurrentLevel = LEVEL_END;
 
 private:
 	list<MYFILEPATH*> mListPath[PATHTYPE_END];
