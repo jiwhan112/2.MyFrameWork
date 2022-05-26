@@ -116,7 +116,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
 		{
-			// #TESTCODE 네비메시 길찾기
+			// #TODO 네비메시 길찾기 적용 
 			_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
 			_uint StartIndex = mComNaviMesh->Get_CurrentCellIndex();
 			_uint GoalIndex = StartIndex;
@@ -129,6 +129,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 					cell->Set_TileType(CCell::CELLTYPE_DEBUG);
 				}
 			}
+
 			//_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
 			//int index = terrain->Get_TileIndex(worldPos);
 			//mGoalPosition = terrain->Get_TileWorld(index);

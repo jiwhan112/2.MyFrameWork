@@ -82,6 +82,8 @@ private: // value Tile
 	_uint								mSizeZ = 0;
 	// 积己等 Terrain 历厘
 	CGameObject_MyTerrain*				mDungeonMap = nullptr;
+	// 积己等 Terrain 历厘
+	CGameObject_MyTerrain*				mWorldMap = nullptr;
 	// 鸥老按眉 氦磐 历厘
 	list<CGameObject_3D_Tile*>*			mListVecTiles = nullptr;
 

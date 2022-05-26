@@ -266,6 +266,8 @@ HRESULT CMainApp::Ready_Prototype_Components_Terrain()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 17, 17)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 33, 33)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32_WORLD),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 33, 33)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, 65, 65)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128),

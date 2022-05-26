@@ -40,6 +40,7 @@ protected:
 public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
+	HRESULT	Init_SetupInit(); // 정보가 설정되고 초기화하는 함수
 
 	virtual _int Tick(_double TimeDelta);
 	virtual _int LateTick(_double TimeDelta);
@@ -59,6 +60,7 @@ public:
 
 
 	void	Set_ColorFiter(E_SOURCETYPE type, _color* color, _float val);
+	void	Set_MapType(E_MAPTYPE type) { meMapType = type; }
 
 
 public: // DESC
@@ -68,7 +70,7 @@ public: // DESC
 public:
 	HRESULT SaveCurrentFiterMap(); // 텍스처 저장
 	HRESULT UpdateFiterTextue(); // 텍스처 생성 / 값 변경
-	HRESULT UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos,_float Range,_float AddValue); 
+	HRESULT UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos,_float Range, _uint value);
 	HRESULT Set_HeightNewMap();
 
 protected:
@@ -88,13 +90,14 @@ protected:
 	CTexture_map*			mComFiter_XYZW = nullptr;
 
 	ID3D11Texture2D*			mFiterTexture = nullptr;
-	ID3D11ShaderResourceView*	mFiterSRV = nullptr;; // 셰이더에 넘길 리소스뷰 
+	ID3D11ShaderResourceView*	mFiterSRV = nullptr;; // 셰이더에 넘길 리소스뷰
+	_ulong*						mPixels = nullptr;
 
 	CTexture_map*				mComBrushTex = nullptr;
 
 	TERRAIN_DESC			mTerrainDESC;
 	TEXTURE_NAMES_DESC		mTextureNameDesc;
-
+	E_MAPTYPE				meMapType =MAPTYPE_END;
 public:
 	_float					mRadius = 3;
 //	_float3					mWorldPickPos;
@@ -104,7 +107,6 @@ public:
 	virtual CGameObject_MyTerrain* Clone(void* pArg);
 	virtual void Free() override;
 };
-
 
 // 
 END

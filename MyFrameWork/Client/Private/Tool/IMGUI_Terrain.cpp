@@ -457,31 +457,32 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 		
 		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "FiterMake")))
 		{
-			static ImGuiComboFlags flags = ImGuiComboFlags_PopupAlignLeft;
+			// 타일 브러시 일단 랜덤으로 사용
+			//static ImGuiComboFlags flags = ImGuiComboFlags_PopupAlignLeft;
 
-			const char* items[] = { "SourceNONE","SourceA", "SourceR", "SourceG", "SourceB" };
-			static int item_current_idx = 0; // Here we store our selection data as an index.
-			const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+			//const char* items[] = { "SourceNONE","SourceA", "SourceR", "SourceG", "SourceB" };
+			//static int item_current_idx = 0; // Here we store our selection data as an index.
+			//const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 
-			if (ImGui::BeginCombo("FIterCombo", combo_preview_value, flags))
-			{
-				for (int n = 0; n < IM_ARRAYSIZE(items); n++)
-				{
-					const bool is_selected = (item_current_idx == n);
-					if (ImGui::Selectable(items[n], is_selected))
-					{
-						item_current_idx = n;
-					}
-				}
-				ImGui::EndCombo();
-			}
-			if (item_current_idx != 0)
-			{
-				_float3 WorldPos = GetSingle(CGameManager)->Get_PickPos();
-				if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON))
-					mCurrent_TerrainObject->UpdateFiterTextue_TOOL((CGameObject_MyTerrain::E_SOURCETYPE)(item_current_idx-1), WorldPos, 3, 1);
+			//if (ImGui::BeginCombo("FIterCombo", combo_preview_value, flags))
+			//{
+			//	for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+			//	{
+			//		const bool is_selected = (item_current_idx == n);
+			//		if (ImGui::Selectable(items[n], is_selected))
+			//		{
+			//			item_current_idx = n;
+			//		}
+			//	}
+			//	ImGui::EndCombo();
+			//}
+			//if (item_current_idx != 0)
+			//{
+			//	_float3 WorldPos = GetSingle(CGameManager)->Get_PickPos();
+			//	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Press)
+			//		mCurrent_TerrainObject->UpdateFiterTextue_TOOL((CGameObject_MyTerrain::E_SOURCETYPE)(item_current_idx - 1), WorldPos, Range, 255);
 
-			}
+			//}
 		}
 		
 	}

@@ -67,6 +67,7 @@ HRESULT CDungeon_Objects::Release_Objects()
 	mDeviceContext = nullptr;
 
 	Safe_Release(mDungeonMap);
+	Safe_Release(mWorldMap);
 	Safe_Release(mTestUnit);
 
 	if (mListVecTiles != nullptr)
@@ -127,8 +128,8 @@ HRESULT CDungeon_Objects::Ready_Light()
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 
 	LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
-	//	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	//LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
 
@@ -188,14 +189,26 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 
 	// ¸Ê Å¸ÀÏ ÃÊ±âÈ­
 
-	// ¸Ê »ý¼º
-	mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	NULL_CHECK_HR(mDungeonMap);
-	Safe_AddRef(mDungeonMap);
+	//// ´øÀü¸Ê ¸Ê »ý¼º
+	//mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	//NULL_CHECK_HR(mDungeonMap);
+	//Safe_AddRef(mDungeonMap);
+	//mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+	//mDungeonMap->Init_SetupInit();
+	// FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
 
-	// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
-	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
-	this->Setup_Terrain();
+	//// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
+	//this->Setup_Terrain();
+
+	// ¿ùµå¸Ê »ý¼º
+	mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	NULL_CHECK_HR(mWorldMap);
+	Safe_AddRef(mWorldMap);
+	mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+	mWorldMap->Init_SetupInit();
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
+
+
 
 	// À¯´Ö »ý¼º
 	mTestUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
