@@ -177,7 +177,7 @@ CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _
 	return (*iter);
 }
 
-const list<CGameObject*>* CGameManager::Get_LevelObjectList(const wchar_t * layerTag)
+const list<CGameObject*>* CGameManager::Get_LevelObject_List(const wchar_t * layerTag)
 {
 	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 	const list<CGameObject*>* GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, layerTag);

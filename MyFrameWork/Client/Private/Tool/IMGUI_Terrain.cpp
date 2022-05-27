@@ -120,6 +120,22 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Empty_WorldMap")))
+	{
+		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
+		{
+			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+		}
+
+		// 툴에서의 월드 맵
+		mWorldMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		NULL_CHECK_BREAK(mWorldMap);
+		Safe_AddRef(mWorldMap);
+		mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+		mWorldMap->Init_SetupInit(true);
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
+	}
+
 	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
 	{
 		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
@@ -153,7 +169,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mDungeonMap));
 
 		// 타일 추가
-		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain(mDungeonMap);
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain_Daungeon(mDungeonMap);
 	}
 }
 
@@ -556,7 +572,7 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 			// 현재 픽 오브젝트
 			if (bBatchAble && mCurrent_PickObject)
 			{
-				if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_LBUTTON)& DIS_Down)
+				if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_RBUTTON)& DIS_Down)
 				{
 					// 맵에 배치 시킨다.
 					CGameObject_Base* cloneObject = Create_Manager->Create_ObjectClone_Prefab(idx, selectObjectWStr, TAGLAY(meCreateOBJ_Layer));
@@ -573,17 +589,17 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 			}
 
 			// 오브젝트 삭제
-			/*if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MOUSEBUTTONSTATE::MBS_RBUTTON)& DIS_Down)
+			if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Delete_MAP_Object")))
 			{
 				if (mListWorldObjects.empty() == false)
 				{
 					auto removeObj = mListWorldObjects.front();
 					mListWorldObjects.pop_front();
+					mListWorldObjects_Desc.pop_front();
 					Safe_Release(removeObj);
 					removeObj->Set_Dead();
-					mListWorldObjects_Desc.pop_front();
 				}
-			}*/
+			}
 
 			
 			// 타일 깔기

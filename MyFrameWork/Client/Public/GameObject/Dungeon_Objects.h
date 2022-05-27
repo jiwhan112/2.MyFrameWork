@@ -49,7 +49,8 @@ public: // 지형
 	// 타일 업데이트
 	HRESULT Setup_TileState(_int tileIndex = -1);
 
-	HRESULT Setup_Terrain(CGameObject_MyTerrain* toolmap = nullptr);
+	HRESULT Setup_Terrain_Daungeon(CGameObject_MyTerrain* toolmap = nullptr);
+	HRESULT Setup_Terrain_World(CGameObject_MyTerrain* toolmap = nullptr);
 	HRESULT ResetTile_Tool(TERRAIN_DESC * data);
 
 	const list<CGameObject_3D_Tile*>* Get_TileList() const { return mListVecTiles; }
@@ -59,6 +60,7 @@ private: // 지형
 	HRESULT Create_Tiles(E_LEVEL level);
 	HRESULT Setup_Neigbor_Tile();
 	HRESULT Setup_Collision_Navi2Tile();
+	HRESULT Setup_Collision_Navi2Object();
 	HRESULT Update_Collision_Navi2Tile(_uint index);
 
 private:

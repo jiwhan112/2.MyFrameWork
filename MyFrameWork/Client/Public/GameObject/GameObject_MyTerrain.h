@@ -40,7 +40,7 @@ protected:
 public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
-	HRESULT	Init_SetupInit(); // 정보가 설정되고 초기화하는 함수
+	HRESULT	Init_SetupInit(bool istool = false); // 정보가 설정되고 초기화하는 함수
 
 	virtual _int Tick(_double TimeDelta);
 	virtual _int LateTick(_double TimeDelta);

@@ -200,7 +200,7 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
 	mWorldMap->Init_SetupInit();
 	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
-
+	this->Setup_Terrain_World();
 
 
 	// 유닛 생성
@@ -212,7 +212,7 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	return S_OK;
 }
 
-HRESULT CDungeon_Objects::Setup_Terrain(CGameObject_MyTerrain* map)
+HRESULT CDungeon_Objects::Setup_Terrain_Daungeon(CGameObject_MyTerrain* map)
 {
 	if (mDungeonMap == nullptr)
 	{
@@ -232,6 +232,22 @@ HRESULT CDungeon_Objects::Setup_Terrain(CGameObject_MyTerrain* map)
 	// 네비메시와 타일 충돌
 	FAILED_CHECK(Setup_Collision_Navi2Tile());
 
+	return S_OK;
+}
+
+HRESULT CDungeon_Objects::Setup_Terrain_World(CGameObject_MyTerrain* map)
+{
+	if (mWorldMap == nullptr)
+	{
+		mWorldMap = map;
+		Safe_AddRef(mWorldMap);
+	}
+
+	if (mWorldMap == nullptr)
+		return E_FAIL;
+
+	// 콜라이더와 네비메시 체크 
+	FAILED_CHECK(Setup_Collision_Navi2Object());
 	return S_OK;
 }
 
@@ -393,6 +409,49 @@ HRESULT CDungeon_Objects::Setup_Collision_Navi2Tile()
 			}
 		}
 	}
+	return S_OK;
+}
+
+HRESULT CDungeon_Objects::Setup_Collision_Navi2Object()
+{
+	// 오브젝트와 네비메시의 충돌 체크
+	CNavigation* navi = mWorldMap->Get_ComNavimesh();
+	auto VecCell = navi->Get_CellVector();
+
+	auto Objects = GetSingle(CGameManager)->Get_LevelObject_List(TAGLAY(LAY_OBJECT));
+	if (Objects == nullptr)
+		return S_FALSE;
+
+
+	for (auto& obj : *Objects)
+	{
+		CCollider* objCollider = ((CGameObject_3D_Static*)obj)->Get_ComCollider();
+		objCollider->Update_Transform(((CGameObject_3D_Static*)obj)->Get_ComTransform()->GetWorldFloat4x4());
+
+		_float3 CellOffset = mWorldMap->Get_WorldPostition();
+		for (auto& cell : *VecCell)
+		{
+			if(cell->Get_CellType() == CCell::CELLTYPE_STOP)
+				continue;
+
+			_float3 point1 = cell->Get_Point(CCell::POINT_A);
+			_float3 point2 = cell->Get_Point(CCell::POINT_B);
+			_float3 point3 = cell->Get_Point(CCell::POINT_C);
+
+			
+			point1 += CellOffset;
+			point2 += CellOffset;
+			point3 += CellOffset;
+
+			if (objCollider->ColliderCheck(point1, point2, point3))
+			{
+				cell->Set_TileType(CCell::CELLTYPE_STOP);
+			}
+		}
+	}
+
+
+
 	return S_OK;
 }
 

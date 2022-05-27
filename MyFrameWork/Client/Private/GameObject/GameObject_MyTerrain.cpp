@@ -29,7 +29,7 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
-HRESULT CGameObject_MyTerrain::Init_SetupInit()
+HRESULT CGameObject_MyTerrain::Init_SetupInit(bool t)
 {
 	// DESC정보 초기화
 	if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
@@ -41,11 +41,14 @@ HRESULT CGameObject_MyTerrain::Init_SetupInit()
 	else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
 	{
 		mStrMapDatName = "WorldBaseMap.terrdat";
-		
+
 	}
 
 	wstring wstr = CHelperClass::Convert_str2wstr(mStrMapDatName);
 	TERRAIN_DESC* pTerrainDESC = GetSingle(CGameManager)->Get_ObjectIOManager()->Find_TerrainDesc(wstr);
+	if (t)
+		pTerrainDESC->mObjectSize = 0;
+
 	Set_LoadTerrainDESC(*pTerrainDESC);
 
 	// Terrain 생성
