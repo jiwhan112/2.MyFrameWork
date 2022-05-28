@@ -14,16 +14,16 @@ HRESULT CFrustum::Initialize()
 {
 	// 투영점 8개 정의
 	// 시계방향으로 그림
-	m_vPoint[0] = _float3(-1, 1, 0);
-	m_vPoint[1] = _float3(1, 1, 0);
-	m_vPoint[2] = _float3(1, -1, 0);
-	m_vPoint[3] = _float3(-1, -1, 0);
 
-	
-	m_vPoint[4] = _float3(-1, 1, 1);
-	m_vPoint[5] = _float3(1, 1, 1);
-	m_vPoint[6] = _float3(1, -1, 1);
-	m_vPoint[7] = _float3(-1, -1, 1);
+	m_vPoint[0] = _float3(-1.f, 1.f, 0.f);
+	m_vPoint[1] = _float3(1.f, 1.f, 0.f);
+	m_vPoint[2] = _float3(1.f, -1.f, 0.f);
+	m_vPoint[3] = _float3(-1.f, -1.f, 0.f);
+
+	m_vPoint[4] = _float3(-1.f, 1.f, 1.f);
+	m_vPoint[5] = _float3(1.f, 1.f, 1.f);
+	m_vPoint[6] = _float3(1.f, -1.f, 1.f);
+	m_vPoint[7] = _float3(-1.f, -1.f, 1.f);
 
 	return S_OK;
 }
@@ -37,21 +37,22 @@ void CFrustum::Tick()
 	_float4x4		ProjMatrixInv, ViewMatrixInv;
 
 	ProjMatrixInv = pPipeLine->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
-	ProjMatrixInv.Invert();
+	ProjMatrixInv = XMMatrixInverse(nullptr, ProjMatrixInv);
 
 	ViewMatrixInv = pPipeLine->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
-	ViewMatrixInv.Invert();
+	ViewMatrixInv = XMMatrixInverse(nullptr, ViewMatrixInv);
+
 
 	// 8개의 점을 변환한다.
 	for (_uint i = 0; i < 8; ++i)
 	{
-		_vector			vPoint;
+		_float3			vPoint = m_vPoint[i];
 
 		// 투영
-		vPoint = XMVector3TransformCoord(XMLoadFloat3(&m_vPoint[i]), ProjMatrixInv);
+		vPoint = _float3::Transform(vPoint, ProjMatrixInv);
 
 		// 뷰
-		vPoint = XMVector3TransformCoord(vPoint, ViewMatrixInv);
+		vPoint = _float3::Transform(vPoint, ViewMatrixInv);
 
 		m_vPointInWorld[i] = vPoint;
 	//	XMStoreFloat3(&m_vPointInWorld[i], vPoint);
@@ -105,6 +106,7 @@ _bool CFrustum::IsIn_LocalSpace(_fvector vPoint, _float fRange)
 		if (XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&m_PlaneInLocal[i]), vPoint)) > fRange)
 			return false;
 	}
+
 
 	return true;
 }

@@ -58,7 +58,7 @@ public:
 
 	void		Update_CombinedTransformationMatrix(_fmatrix combine);
 
-
+	void		Set_ShdaerPass(int i) {  mCurrentShaderPass = i; }
 protected:
 	virtual HRESULT Set_Component()override;
 

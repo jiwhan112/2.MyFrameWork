@@ -24,10 +24,6 @@ public:
 	// 행렬 바인딩
 	HRESULT SetTransform(E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);
 
-	// 연산용 반환
-	_matrix GetTransformMatrix(E_TRANSFORMSTATETYPE eStateType);
-
-	// 대입용 반환
 	_float4x4 GetTransformFloat4x4(E_TRANSFORMSTATETYPE eStateType);
 
 	// 전치 행렬 반환

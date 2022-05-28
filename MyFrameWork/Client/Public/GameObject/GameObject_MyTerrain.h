@@ -17,6 +17,7 @@ class CGameObject_MyTerrain  :
 public:
 	enum E_SOURCETYPE
 	{
+		SOURCE_NONE,
 		SOURCE_A,
 		SOURCE_R,
 		SOURCE_G,
@@ -52,7 +53,8 @@ public:
 
 	const TERRAIN_DESC& Get_TerrainDESC() const { return mTerrainDESC; }
 	HRESULT		Set_LoadTerrainDESC(const TERRAIN_DESC& desc);
-	HRESULT		Set_TerrainMode(E_TERRAINSIZE e);
+//	HRESULT		Set_TerrainMode(E_TERRAINSIZE e);
+	HRESULT		Set_TerrainMode(E_MAPTYPE type);
 
 	int			Get_TileIndex(_float3 worldPos);
 	_float3		Get_TileWorld(_uint index);
@@ -70,7 +72,7 @@ public: // DESC
 public:
 	HRESULT SaveCurrentFiterMap(); // 텍스처 저장
 	HRESULT UpdateFiterTextue(); // 텍스처 생성 / 값 변경
-	HRESULT UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos,_float Range, _uint value);
+	HRESULT UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos,_float Range, _float value);
 	HRESULT Set_HeightNewMap();
 	_float Get_HeightY(_float3 PositionXZ);
 
@@ -79,6 +81,8 @@ protected:
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
 	HRESULT LoadTextureMap(); // 텍스처 부르기
 	
+	// 환경 오브젝트 만들기
+
 
 protected:
 	CVIBuffer_Terrain*			mComVIBuffer = nullptr;

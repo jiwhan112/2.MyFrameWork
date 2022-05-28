@@ -31,7 +31,6 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-
 	// 데이터 디폴트 세팅
 	if (IsName(mModelStatic_Desc.mModelName) == false)
 	{
@@ -49,7 +48,7 @@ _int CGameObject_3D_Static::Tick(_double TimeDelta)
 
 	if (meUpdateType == CGameObject_3D_Static::E_UPDATETYPE_NONE)
 	{
-		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
+		//mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
 	}
 
 	else if (meUpdateType == CGameObject_3D_Static::E_UPDATETYPE_PICK)
@@ -77,6 +76,13 @@ _int CGameObject_3D_Static::Tick(_double TimeDelta)
 _int CGameObject_3D_Static::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+
+	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.0f))
+		mIsRenderer = true;
+	else
+		mIsRenderer = false;
+
+
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
 	return UPDATENONE;

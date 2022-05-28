@@ -175,7 +175,7 @@ typedef struct tag_TERRAIN_DESC // : public BASE_DESC
 {
 	tag_TERRAIN_DESC()
 	{
-		meTerrainSize = TERRAINSIZE_32;
+		meTerrainSize = TERRAINSIZE_64;
 		mTextureMultiSize = 1;
 
 		mTileSize = 0;

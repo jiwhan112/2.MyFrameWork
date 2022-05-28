@@ -18,11 +18,6 @@ HRESULT CPipeLine::SetTransform(E_TRANSFORMSTATETYPE eStateType, _fmatrix Transf
 	return S_OK;
 }
 
-_matrix CPipeLine::GetTransformMatrix(E_TRANSFORMSTATETYPE eStateType)
-{
-	return XMLoadFloat4x4(&mMatrix[eStateType]);
-}
-
 _float4x4 CPipeLine::GetTransformFloat4x4(E_TRANSFORMSTATETYPE eStateType)
 {
 	return mMatrix[eStateType];

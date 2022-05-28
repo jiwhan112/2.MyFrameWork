@@ -53,7 +53,6 @@ VS_OUT VS_MAIN_SOCKET(VS_IN In)
 
 	matrix			WorldMatrix = g_SocketMatrix;
 
-
 	matWV = mul(WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 
@@ -112,6 +111,8 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 	float4 color = Diffuse * Shade + Specular;
 	color.a = DiffuseMap.a;
+	if (color.a < 0.5f)
+		discard;
 
 	Out.vColor = color;
 	return Out;

@@ -16,6 +16,12 @@ public:
 public:
 	typedef struct tag_TransformDESC
 	{
+		tag_TransformDESC()
+		{
+			SpeedPersec = 1.0f;
+			RotPersec=1.0f;
+			ScalePersec=1.0f;
+		}
 		_float SpeedPersec;
 		_float RotPersec;
 		_float ScalePersec;
@@ -29,6 +35,8 @@ public:
 public:
 	_vector GetState(E_STATE state) const;
 	_vector GetScale(E_STATE state) const;
+	_float3 Get_Scale();
+
 	_float3 GetScaleXYZ() const;
 	// 연산용 데이터
 	_matrix GetWorldMatrix() const { return XMLoadFloat4x4(&mWorldMatrix); }
@@ -36,11 +44,11 @@ public:
 	// 저장용 데이터
 	_float4x4 GetWorldFloat4x4() const { return mWorldMatrix; }
 	_float4x4 GetInvert() const
- {
-_float4x4 invmat;
-mWorldMatrix.Invert(invmat);
-return invmat;
-}
+	{
+		_float4x4 invmat;
+		mWorldMatrix.Invert(invmat);
+		return invmat;
+	}
 
 	_float4x4 GetWorldLocalFloat4x4() const { return mLocalMatrix; }
 
@@ -60,6 +68,17 @@ public:
 	{
 		mLocalMatrix = worldmat;
 	}
+	void Set_LoadTransDesc(_float speed, _float rot, _float scale)
+	{
+		mDesc.SpeedPersec = speed;
+		mDesc.RotPersec = rot;
+		mDesc.ScalePersec = scale;
+	}
+	void Set_MoveSpeed(_float fMoveSpeed) { mDesc.SpeedPersec = fMoveSpeed; };
+	void Set_RotSpeed(_float fMoveSpeed) { mDesc.RotPersec= fMoveSpeed; };
+	void Set_ScaleSpeed(_float fMoveSpeed) { mDesc.ScalePersec = fMoveSpeed; };
+
+
 
 
 public:
@@ -86,20 +105,30 @@ public:
 	HRESULT GO_WorldVec(_float3 vec, _double deltatime);
 	HRESULT GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _double deltatime);
 
+	void MovetoDir(_float3 vDir, _double fDeltaTime);
+	void MovetoTarget(_float3 vTarget, _double fDeltaTime);
+
+
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);
 	HRESULT Rotation(_fvector vAxis, _float fRadian);
 	HRESULT Rotation_Add(_fvector vAxis, _float fRadian);
-	
+
+	//void Turn_CW(_float3 vAxis, _double fDeltaTime);
+	//void Turn_CCW(_float3 vAxis, _double fDeltaTime);
+	//void Rotation_CW(_float3 vAxis, _double fRadian);
+	//void Rotation_CCW(_float3 vAxis, _double fRadian);
+
 
 	HRESULT Chase(_fvector TargetPos, _double time);
 	HRESULT LookAt(_fvector TargetPos, _double time);
 	HRESULT LookAt(_fvector TargetPos);
 	HRESULT LookAtDir(_float3 Dir);
 
-	// Scale
-//	HRESULT Scaling(_fvector scale);
+	// scaled
 	HRESULT Scaled(_fvector scale);
+	void Scaling(_float3 vScale, _double fDeltaTime);
+
 
 private:
 	TRANSFORMDESC	mDesc;

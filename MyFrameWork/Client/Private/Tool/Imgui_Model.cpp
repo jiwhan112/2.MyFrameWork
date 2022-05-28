@@ -139,6 +139,28 @@ void CImgui_Model::FBX_SETTINGMODE()
 		mCurrent_ModelStaticObject || 
 		mCurrent_ModelStaticObject_Parent)
 	{
+		if (mCurrent_ModelStaticObject)
+			mCurrent_ModelStaticObject->Get_ComTransform()->Set_LoadTransDesc(1.f, 0.2f, 1.0f);
+
+		if(mCurrent_ModelDynamicObject)
+			mCurrent_ModelDynamicObject->Get_ComTransform()->Set_LoadTransDesc(1.f, 0.2f, 1.0f);
+
+
+		if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_Q & DIS_Press))
+		{
+			if (mCurrent_ModelStaticObject)
+				mCurrent_ModelStaticObject->Get_ComTransform()->Turn(_float3::Up, 0.3f);
+			if (mCurrent_ModelDynamicObject)
+				mCurrent_ModelDynamicObject->Get_ComTransform()->Turn(_float3::Up, 0.3f);
+		}
+		if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_E & DIS_Press))
+		{
+			if (mCurrent_ModelStaticObject)
+				mCurrent_ModelStaticObject->Get_ComTransform()->Turn(_float3::Down, 0.3f);
+			if (mCurrent_ModelDynamicObject)
+				mCurrent_ModelDynamicObject->Get_ComTransform()->Turn(_float3::Down, 0.3f);
+		}
+
 		// 선택된 FBX 오브젝트 수정
 		FAILED_CHECK_NONERETURN(Edit_FBX());
 		FAILED_CHECK_NONERETURN(Edit_ANI());
@@ -416,6 +438,17 @@ HRESULT CImgui_Model::Edit_FBX()
 
 			ImGui::EndListBox();
 		}
+
+		
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "Add_Pass")))
+		{
+			static int shaderpass = 0;
+			mCurrent_ModelStaticObject->Set_ShdaerPass(shaderpass);
+			shaderpass++;
+			shaderpass %= 2;
+		}
+
+
 	
 	}
 

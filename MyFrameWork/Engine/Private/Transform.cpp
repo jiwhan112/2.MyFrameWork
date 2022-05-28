@@ -22,6 +22,15 @@ _vector CTransform::GetScale(E_STATE state) const
 	return XMVector3Length(XMLoadFloat3((_float3*)&mWorldMatrix.m[state][0]));
 }
 
+_float3 CTransform::Get_Scale()
+{
+	_float3 r = mWorldMatrix.Right();
+	_float3 u = mWorldMatrix.Up();
+	_float3 l = mWorldMatrix.Backward();
+	_float3 length = _float3(r.Length(), u.Length(), l.Length());
+	return length;
+}
+
 _float3 CTransform::GetScaleXYZ() const
 {
 	_float3 fSizeX, fSizeY, fSizeZ;
@@ -200,6 +209,29 @@ HRESULT CTransform::GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _doub
 	return S_OK;
 }
 
+void CTransform::MovetoDir(_float3 vDir, _double fDeltaTime)
+{
+	if (vDir == _float3(0, 0, 0))
+		return;
+
+	_float3 vPos = GetState(STATE_POSITION);
+
+	vDir.Normalize();
+	vPos += vDir * mDesc.SpeedPersec * fDeltaTime;
+
+	Set_State(STATE_POSITION, vPos);
+}
+
+void CTransform::MovetoTarget(_float3 vTarget, _double fDeltaTime)
+{
+	_float3 vPos = GetState(STATE_POSITION);
+	_float3 vTargetNormal = vTarget - vPos;
+	vTargetNormal.Normalize();
+	vPos += vTargetNormal * mDesc.SpeedPersec * fDeltaTime;
+
+	Set_State(STATE_POSITION, vPos);
+}
+
 HRESULT CTransform::Turn(_fvector vAxis, _double time)
 {
 	_vector		vRight = GetState(CTransform::STATE_RIGHT);
@@ -260,6 +292,9 @@ HRESULT CTransform::Rotation_Add(_fvector vAxis, _float fRadian)
 
 	return S_OK;
 }
+
+
+
 
 HRESULT CTransform::Chase(_fvector TargetPos, _double time)
 {
@@ -346,6 +381,23 @@ HRESULT CTransform::Scaled(_fvector scale)
 	Set_State(STATE_UP, vUp);
 	Set_State(STATE_LOOK, vLook);
 	return S_OK;
+}
+
+void CTransform::Scaling(_float3 vScale, _double fDeltaTime)
+{
+	_float3 ScaleXYZ = Get_Scale();
+	_float3 FinalScale = (ScaleXYZ + (vScale * fDeltaTime));
+
+	_float3 rNormal = mWorldMatrix.Right();
+	rNormal.Normalize();
+	_float3 uNormal = mWorldMatrix.Up();
+	uNormal.Normalize();
+	_float3 lNormal = mWorldMatrix.Backward();
+	lNormal.Normalize();
+
+	Set_State(CTransform::STATE_RIGHT, rNormal* FinalScale.x);
+	Set_State(CTransform::STATE_UP, uNormal * FinalScale.y);
+	Set_State(CTransform::STATE_LOOK, lNormal * FinalScale.z);
 }
 
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)

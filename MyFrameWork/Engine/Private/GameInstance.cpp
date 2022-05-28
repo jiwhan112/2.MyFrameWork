@@ -71,11 +71,12 @@ _int CGameInstance::Tick_Engine(_double TimeDelta)
 	FAILED_CHECK(m_pLevel_Manager->Tick(TimeDelta));
 	FAILED_CHECK(m_pObject_Manager->Tick(TimeDelta));
 
-	// Frstum
-	m_pFrstumMgr->Tick();
+
 
 	// PipeLine
 	FAILED_CHECK(m_pPipeLine->Tick());
+	// Frstum
+	(m_pFrstumMgr->Tick());
 
 
 	return 0;
@@ -262,11 +263,6 @@ HRESULT CGameInstance::SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, 
 	return m_pPipeLine->SetTransform(eStateType, TransformMatrix);
 }
 
-_matrix CGameInstance::GetTransformMatrix(CPipeLine::E_TRANSFORMSTATETYPE eStateType)
-{
-	NULL_CHECK_BREAK(m_pPipeLine);
-	return m_pPipeLine->GetTransformMatrix(eStateType);
-}
 
 _float4x4 CGameInstance::GetTransformFloat4x4(CPipeLine::E_TRANSFORMSTATETYPE eStateType)
 {

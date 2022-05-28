@@ -74,7 +74,6 @@ HRESULT CImgui_Terrain::Render_UI()
 			// 파일 불러오기
 			CREATE_LOAD_DESC();
 
-
 			ImGui::Checkbox("TerrainSetting", &mIsTerrainSetting);
 
 			if (mIsTerrainSetting)
@@ -136,7 +135,8 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
 	}
 
-	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Empty_DungeonMap")))
 	{
 		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
 		{
@@ -144,33 +144,49 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 		}
 
 		// 툴에서의 월드 맵
-		mWorldMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-		NULL_CHECK_BREAK(mWorldMap);
-		Safe_AddRef(mWorldMap);
-		mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
-		mWorldMap->Init_SetupInit();
-		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
-
-	}
-
-	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_DungeonMap")))
-	{
-		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
-		{
-			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
-		}
-
-		// 툴에서의 던전맵
 		mDungeonMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
 		NULL_CHECK_BREAK(mDungeonMap);
 		Safe_AddRef(mDungeonMap);
 		mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
-		mDungeonMap->Init_SetupInit();
-		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mDungeonMap));
-
-		// 타일 추가
-		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain_Daungeon(mDungeonMap);
+		mDungeonMap->Init_SetupInit(true);
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
 	}
+
+	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
+	//{
+	//	if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
+	//	{
+	//		GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+	//	}
+
+	//	// 툴에서의 월드 맵
+	//	mWorldMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	//	NULL_CHECK_BREAK(mWorldMap);
+	//	Safe_AddRef(mWorldMap);
+	//	mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+	//	mWorldMap->Init_SetupInit();
+	//	FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
+
+	//}
+
+	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_DungeonMap")))
+	//{
+	//	if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
+	//	{
+	//		GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+	//	}
+
+	//	// 툴에서의 던전맵
+	//	mDungeonMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	//	NULL_CHECK_BREAK(mDungeonMap);
+	//	Safe_AddRef(mDungeonMap);
+	//	mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+	//	mDungeonMap->Init_SetupInit();
+	//	FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mDungeonMap));
+
+	//	// 타일 추가
+	//	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain_Daungeon(mDungeonMap);
+	//}
 }
 
 void CImgui_Terrain::CREATE_LOAD_DESC()
@@ -289,14 +305,14 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 
 			mCurrent_TerrainObject->Set_LoadTerrainDESC(terrainDesc);
 
-			if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "TerrainSize")))
-			{
-				static _uint eSize = 0;
-				static const _uint eMaxSize = E_TERRAINSIZE::TERRAINSIZE_END;
-				eSize++;
-				eSize %= eMaxSize;
-				mCurrent_TerrainObject->Set_TerrainMode(E_TERRAINSIZE(eSize));
-			}
+			//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "TerrainSize")))
+			//{
+			//	static _uint eSize = 0;
+			//	static const _uint eMaxSize = E_TERRAINSIZE::TERRAINSIZE_END;
+			//	eSize++;
+			//	eSize %= eMaxSize;
+			//	mCurrent_TerrainObject->Set_TerrainMode(E_TERRAINSIZE(eSize));
+			//}
 
 			IMGUI_TREE_END
 		}
@@ -470,7 +486,7 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 			// 네비 메시 새로 씌우기
 			mCurrent_TerrainObject->Set_HeightNewMap();
 		}
-		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "TESTBUTTON")))
+		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "NEW_FITER")))
 		{
 			// 높이 버퍼 수정
 			// 네비 메시 새로 씌우기
@@ -480,32 +496,42 @@ HRESULT CImgui_Terrain::Edit_TERRAIN()
 		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "FiterMake")))
 		{
 			// 타일 브러시 일단 랜덤으로 사용
-			//static ImGuiComboFlags flags = ImGuiComboFlags_PopupAlignLeft;
+			static ImGuiComboFlags flags = ImGuiComboFlags_PopupAlignLeft;
 
-			//const char* items[] = { "SourceNONE","SourceA", "SourceR", "SourceG", "SourceB" };
-			//static int item_current_idx = 0; // Here we store our selection data as an index.
-			//const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+			const char* items[] = { "SourceNONE","SourceA", "SourceR", "SourceG", "SourceB" };
+			static int item_current_idx = 0; // Here we store our selection data as an index.
+			const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 
-			//if (ImGui::BeginCombo("FIterCombo", combo_preview_value, flags))
-			//{
-			//	for (int n = 0; n < IM_ARRAYSIZE(items); n++)
-			//	{
-			//		const bool is_selected = (item_current_idx == n);
-			//		if (ImGui::Selectable(items[n], is_selected))
-			//		{
-			//			item_current_idx = n;
-			//		}
-			//	}
-			//	ImGui::EndCombo();
-			//}
-			//if (item_current_idx != 0)
-			//{
-			//	_float3 WorldPos = GetSingle(CGameManager)->Get_PickPos();
-			//	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Press)
-			//		mCurrent_TerrainObject->UpdateFiterTextue_TOOL((CGameObject_MyTerrain::E_SOURCETYPE)(item_current_idx - 1), WorldPos, Range, 255);
+			if (ImGui::BeginCombo("FIterCombo", combo_preview_value, flags))
+			{
+				for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+				{
+					const bool is_selected = (item_current_idx == n);
+					if (ImGui::Selectable(items[n], is_selected))
+					{
+						item_current_idx = n;
+					}
+				}
+				ImGui::EndCombo();
+			}
+			static float fVal = 1.0f;
+			ImGui::DragFloat("Fiter_Value", &fVal, 0.01f, 0.01f, 1.f);
 
-			//}
+			if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Press)
+			{
+				_float3 WorldPos = GetSingle(CGameManager)->Get_PickPos();
+				mCurrent_TerrainObject->UpdateFiterTextue_TOOL((CGameObject_MyTerrain::E_SOURCETYPE)(item_current_idx), WorldPos, Range, fVal);
+
+			}
+			if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "SAVE_FITER")))
+			{
+				// 높이 버퍼 수정
+				// 네비 메시 새로 씌우기
+				mCurrent_TerrainObject->SaveCurrentFiterMap();
+			}
+			
 		}
+	
 		
 	}
 
@@ -587,6 +613,42 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 
 				}
 			}
+
+			// 오브젝트 수정 인터페이스
+			if (mCurrent_PickObject)
+			{
+				CTransform* trans = mCurrent_PickObject->Get_ComTransform();
+				_double timer = 0.03f;
+				// 버튼 회전 
+				if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_Q) & DIS_Press)
+				{
+					// 현재 픽된 오브젝트 회전 
+					
+					trans->Turn(_float3::Up, timer);
+					
+				}
+				else if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_E) & DIS_Press)
+				{
+					trans->Turn(_float3::Down, timer);
+				}
+
+				// 크기 변환
+				if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_Z) & DIS_Press)
+				{
+					// 현재 픽된 오브젝트 회전 
+
+					trans->Scaling(_float3::One, timer);
+
+				}
+				if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_C) & DIS_Press)
+				{
+					// 현재 픽된 오브젝트 회전 
+
+					trans->Scaling(-_float3::One, timer);
+
+				}
+			}
+
 
 			// 오브젝트 삭제
 			if (ImGui::Button(STR_IMGUI_IDSTR(IMGUI_TITLE_TERRAIN, "Delete_MAP_Object")))

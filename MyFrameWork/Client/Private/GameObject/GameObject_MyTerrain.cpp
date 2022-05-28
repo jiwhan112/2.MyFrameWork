@@ -34,18 +34,26 @@ HRESULT CGameObject_MyTerrain::Init_SetupInit(bool t)
 	// DESC정보 초기화
 	if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
 	{
-		mStrMapDatName = "DungeonBaseMap.terrdat";
+	//	mStrMapDatName = "DungeonBaseMap.terrdat";
 
 
 	}
 	else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
 	{
-		mStrMapDatName = "WorldBaseMap.terrdat";
+	//	mStrMapDatName = "WorldBaseMap.terrdat";
 
 	}
 
 	wstring wstr = CHelperClass::Convert_str2wstr(mStrMapDatName);
 	TERRAIN_DESC* pTerrainDESC = GetSingle(CGameManager)->Get_ObjectIOManager()->Find_TerrainDesc(wstr);
+	if (pTerrainDESC == nullptr)
+	{
+		pTerrainDESC = NEW TERRAIN_DESC();
+		pTerrainDESC->meTerrainSize = TERRAINSIZE_64;;
+		pTerrainDESC->mTileSize = 10;
+
+	}
+
 	if (t)
 		pTerrainDESC->mObjectSize = 0;
 
@@ -117,11 +125,75 @@ HRESULT CGameObject_MyTerrain::Set_LoadTerrainDESC(const TERRAIN_DESC & desc)
 	return S_OK;
 }
 
-HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
-{
-	if (mTerrainDESC.meTerrainSize != e)
-		mTerrainDESC.meTerrainSize = e;
+//HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
+//{
+//	if (mTerrainDESC.meTerrainSize != e)
+//		mTerrainDESC.meTerrainSize = e;
+//
+//	// 해당 모델 컴포넌트로 변경
+//	if (mComVIBuffer != nullptr)
+//	{
+//		Safe_Release(mComVIBuffer);
+//		mComVIBuffer = nullptr;
+//	}
+//
+//	FAILED_CHECK(__super::Release_Component(TEXT("Com_VIBuffer")));
+//	wstring datapath = STR_FILEPATH_RESOURCE_DAT_L;
+//	datapath += L"\\";
+//
+//	switch (mTerrainDESC.meTerrainSize)
+//	{
+//	case TERRAINSIZE_16:
+//		mTerrainDESC.mTextureMultiSize = 16;
+//		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+//		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME16);
+//		break;
+//
+//	case TERRAINSIZE_32:
+//		if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
+//		{
+//			mTerrainDESC.mTextureMultiSize = 10;
+//			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+//			mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME64);
+//		}
+//		else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
+//		{
+//			return E_FAIL;
+//		}
+//
+//	case TERRAINSIZE_64:
+//		if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
+//		{
+//			mTerrainDESC.mTextureMultiSize = 10;
+//			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+//			mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME64);
+//		}
+//		else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
+//		{
+//			mTerrainDESC.mTextureMultiSize = 10;
+//			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64_WORLD), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+//			// 높이맵 적용된 네비메시 설정
+//			mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME64);
+//			Set_HeightNewMap();
+//		}
+//		break;
+//
+//	case TERRAINSIZE_128:
+//		mTerrainDESC.mTextureMultiSize = 128;
+//		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+//		// Update_TileVec(129, 129);
+//		break;
+//	case TERRAINSIZE_END:
+//		break;
+//	default:
+//		break;
+//	}
+//
+//	return S_OK;
+//}
 
+HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_MAPTYPE type)
+{
 	// 해당 모델 컴포넌트로 변경
 	if (mComVIBuffer != nullptr)
 	{
@@ -133,50 +205,27 @@ HRESULT CGameObject_MyTerrain::Set_TerrainMode(E_TERRAINSIZE e)
 	wstring datapath = STR_FILEPATH_RESOURCE_DAT_L;
 	datapath += L"\\";
 
-	switch (mTerrainDESC.meTerrainSize)
+
+	if (type == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
 	{
-	case TERRAINSIZE_16:
-		mTerrainDESC.mTextureMultiSize = 16;
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_16), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME16);
-		break;
 
-	case TERRAINSIZE_32:
-		if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
-		{
-			mTerrainDESC.mTextureMultiSize = 10;
-			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-			mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME32);
-		}
-		else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
-		{
-			mTerrainDESC.mTextureMultiSize = 10;
-			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32_WORLD), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-			// 높이맵 적용된 네비메시 설정
-			mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME32);
-			Set_HeightNewMap();
-		}
-		break;
+		mTerrainDESC.mTextureMultiSize = 10;
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_32), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME32);
 
-	case TERRAINSIZE_64:
-		mTerrainDESC.mTextureMultiSize = 64;
+	}
+
+	else if (type == CGameObject_MyTerrain::MAPTYPE_WORLD)
+	{
+		mTerrainDESC.mTextureMultiSize = 10;
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_64), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 		mComNaviMesh->Load_NaviMeshData(datapath + mComNaviMesh->NAVI_FILENAME64);
-		break;
-
-	case TERRAINSIZE_128:
-		mTerrainDESC.mTextureMultiSize = 128;
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN_128), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
-		// Update_TileVec(129, 129);
-		break;
-	case TERRAINSIZE_END:
-		break;
-	default:
-		break;
+		Set_HeightNewMap();
 	}
 
 	return S_OK;
 }
+
 
 int CGameObject_MyTerrain::Get_TileIndex(_float3 worldPos)
 {
@@ -212,8 +261,15 @@ _uint CGameObject_MyTerrain::GetMapSize()
 
 void CGameObject_MyTerrain::Set_ColorFiter(E_SOURCETYPE type, _color * color, _float val)
 {
+
 	switch (type)
 	{
+	case Client::CGameObject_MyTerrain::SOURCE_NONE:
+		color->x = 0;
+		color->y = 0;
+		color->z = 0;
+		color->w = 0;
+		break;
 	case Client::CGameObject_MyTerrain::SOURCE_A:
 		color->w = val;
 		break;
@@ -332,7 +388,7 @@ HRESULT CGameObject_MyTerrain::UpdateFiterTextue()
 
 }
 
-HRESULT CGameObject_MyTerrain::UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos, _float Range, _uint value)
+HRESULT CGameObject_MyTerrain::UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3 worldPos, _float Range, _float value)
 {
 	if (mFiterTexture == nullptr)
 		return E_FAIL;
@@ -346,28 +402,13 @@ HRESULT CGameObject_MyTerrain::UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3
 	m_pDeviceContext->Map(mFiterTexture,0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
 	// distance로 판단해서 색을 넣어준다.
 	_uint PickTileIndex = Get_TileIndex(worldPos);
-	for (_uint i = 0; i < size; ++i)
-	{
-		for (_uint j = 0; j < size; ++j)
-		{
-			_uint iIndex = i * size + j;
 
-			_color coloirValue = *(_color*)&mPixels[iIndex];
-			if (iIndex == PickTileIndex)
-				Set_ColorFiter(type, &coloirValue, value);
+	_color coloirValue = *(_color*)&mPixels[PickTileIndex];
+	Set_ColorFiter(type, &coloirValue, value);
 
-			//_float distance = _float3::Distance(CurrentTilePos, worldPos);
+	_ulong color = *(_ulong*)&coloirValue.RGBA();
+	mPixels[PickTileIndex] = color;
 
-			//if (distance < 0.5f)
-			//{
-			//	Set_ColorFiter(type, &coloirValue, value);
-			////	Set_ColorFiter(type, &coloirValue, value*((Range - distance) / Range));
-			//}
-
-			_ulong color = *(_ulong*)&coloirValue.RGBA();
-			mPixels[iIndex] = color;
-		}
-	}
 
 	memcpy(SubResource.pData, mPixels, sizeof(_ulong) * size*size);
 	m_pDeviceContext->Unmap(mFiterTexture, 0);
@@ -395,7 +436,18 @@ HRESULT CGameObject_MyTerrain::Set_Component()
 
 	if (mComVIBuffer == nullptr)
 	{
-		Set_TerrainMode(TERRAINSIZE_32);
+		
+
+		if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
+		{
+			Set_TerrainMode(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+		}
+		else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
+		{
+			Set_TerrainMode(CGameObject_MyTerrain::MAPTYPE_WORLD);
+
+
+		}
 	}
 	if (mComDefaultTex == nullptr)
 	{
@@ -463,10 +515,10 @@ HRESULT CGameObject_MyTerrain::LoadTextureMap()
 
 
 		strcpy_s(mTextureNameDesc.mTextureKey_Diffuse, "GROUND1.dds");
-		strcpy_s(mTextureNameDesc.mTextureKey_01, "GRASS.dds");
-		strcpy_s(mTextureNameDesc.mTextureKey_02, "GROUNDTILE1.dds");
-		strcpy_s(mTextureNameDesc.mTextureKey_03, "GROUNDTILE2.dds");
-		strcpy_s(mTextureNameDesc.mTextureKey_04, "GROUNDTILE3.dds");
+		strcpy_s(mTextureNameDesc.mTextureKey_01, "GROUND2.dds");
+		strcpy_s(mTextureNameDesc.mTextureKey_02, "GROUND3.dds");
+		strcpy_s(mTextureNameDesc.mTextureKey_03, "GROUND4.dds");
+		strcpy_s(mTextureNameDesc.mTextureKey_04, "GROUND5.dds");
 
 		// Fiter_XYZ Brush
 		strcpy_s(mTextureNameDesc.mTextureKey_05, "MyFilter.png");
@@ -477,7 +529,7 @@ HRESULT CGameObject_MyTerrain::LoadTextureMap()
 		FAILED_CHECK(mComFiterSourceTex[SOURCE_G]->Set_TextureMap(mTextureNameDesc.mTextureKey_03));
 		FAILED_CHECK(mComFiterSourceTex[SOURCE_B]->Set_TextureMap(mTextureNameDesc.mTextureKey_04));
 
-		FAILED_CHECK(mComFiter_XYZW->Set_TextureMap(mTextureNameDesc.mTextureKey_01));
+		FAILED_CHECK(mComFiter_XYZW->Set_TextureMap(mTextureNameDesc.mTextureKey_05));
 		FAILED_CHECK(mComBrushTex->Set_TextureMap(mTextureNameDesc.mTextureKey_06));
 	}
 
@@ -492,9 +544,18 @@ HRESULT CGameObject_MyTerrain::Set_HeightNewMap()
 
 	Set_Position(WorldMapPos);
 	// 버퍼 수정
-	FAILED_CHECK(mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_32));
-	FAILED_CHECK(mComNaviMesh->SetUp_CurrentPoint(mComVIBuffer));
+	if (mTerrainDESC.meTerrainSize == TERRAINSIZE_32)
+	{
+		FAILED_CHECK(mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_32));
 
+	}
+	else if (mTerrainDESC.meTerrainSize == TERRAINSIZE_64)
+	{
+
+		FAILED_CHECK(mComVIBuffer->Set_HeightMap(STR_PATH_HEIGHTMAP_64));
+	}
+
+	FAILED_CHECK(mComNaviMesh->SetUp_CurrentPoint(mComVIBuffer));
 	return S_OK;
 }
 
@@ -513,7 +574,7 @@ _float CGameObject_MyTerrain::Get_HeightY(_float3 PositionXZ)
 HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
 {
 	// 맵생성
-	Set_TerrainMode(mTerrainDESC.meTerrainSize);
+	Set_TerrainMode(meMapType);
 
 	if (mTerrainDESC.mObjectSize <= 0)
 		return S_FALSE;

@@ -66,7 +66,6 @@ public: /* For.Object_Manager */
 
 public: /* For. PipeLine Single*/
 	HRESULT SetTransform(CPipeLine::E_TRANSFORMSTATETYPE eStateType, _fmatrix TransformMatrix);
-	_matrix GetTransformMatrix(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
 	_float4x4 GetTransformFloat4x4(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
 	_float4x4 GetTransformFloat4x4_TP(CPipeLine::E_TRANSFORMSTATETYPE eStateType);
 	_float4 GetCameraPosition_float() const;

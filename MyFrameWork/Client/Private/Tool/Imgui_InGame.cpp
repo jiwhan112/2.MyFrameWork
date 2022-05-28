@@ -53,27 +53,9 @@ HRESULT CImgui_InGame::Edit_TERRAIN_INGAME()
 {
 	// 지형처리 하기
 
-	if (mCameraClient == nullptr)
-	{
-		//	CGameObject_Base* CameraObject = (CGameObject_Base*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA));
-		//	mCameraClient = static_cast<CCamera_Client*>(CameraObject);
-	}
-	if (mTerrainObject == nullptr)
-	{
-		CGameObject_Base* TerrainObejct = (CGameObject_Base*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
-		mTerrainObject = static_cast<CGameObject_MyTerrain*>(TerrainObejct);
-
-	}
-
-	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_INGAME, "Change_Terrain")))
-	{
-		E_TERRAINSIZE size = mTerrainObject->Get_TerrainDESC().meTerrainSize;
-		int newsize = (int)size;
-		newsize++;
-		newsize %= (int)TERRAINSIZE_128;
-		mTerrainObject->Set_TerrainMode((E_TERRAINSIZE)newsize);
-
-	}
+	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_INGAME, "Change_Terrain")))
+	//{
+	//}
 
 
 

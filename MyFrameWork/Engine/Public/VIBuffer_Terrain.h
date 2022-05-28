@@ -34,7 +34,6 @@ public:
 
 private:
 	HRESULT Set_NewXZ(const _uint X, const _uint Z);
-
 	
 private:
 	_uint			miNumX = 0;

@@ -171,7 +171,14 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	
 
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+
+	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 1.f))
+		mIsRenderer = true;
+	else
+		mIsRenderer = false;
+
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+
 	return UPDATENONE;
 }
 
