@@ -1,4 +1,5 @@
 #include "Tool/Imgui_Base.h"
+#include "GameObject/Dungeon_Manager.h"
 
 BEGIN(Client)
 
@@ -26,18 +27,22 @@ public:
 private:
 
 private:
-	HRESULT Edit_TERRAIN_INGAME(); // TARRAIN
+	HRESULT Edit_InGame(); 
 
-//	HRESULT Edit_Texture();
 
 private:
 	// 카메라
-	class CCamera_Client*			mCameraClient = nullptr;
+	// class CCamera_Client*			mCameraClient = nullptr;
 
 	// 지형 오브젝트
-	class CGameObject_MyTerrain*	mTerrainObject = nullptr;
+	class CGameObject_MyTerrain*	mTerrainDungeon= nullptr;
+	class CGameObject_MyTerrain*	mTerrainWorld = nullptr;
 
+	CDungeon_Manager::E_GAMEMODE	mGameMode;
 
+	const int mSpawnIndexDAUNGEON = 481;
+	const int mSpawnIndexWORLD_UNIT = 480;
+	const int mSpawnIndexWORLD_ENEMY= 1624;
 
 public:
 	static CImgui_InGame* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);

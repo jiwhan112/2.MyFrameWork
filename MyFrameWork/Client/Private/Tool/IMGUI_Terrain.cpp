@@ -16,7 +16,7 @@ HRESULT CImgui_Terrain::NativeConstruct()
 	mCurrent_TerrainObject = nullptr;
 
 	mCameraClient = nullptr;
-	meCreateTERRAIN_Layer = LAY_TERRAIN;
+	meCreateTERRAIN_Layer = LAY_TERRAIN_DUNGEON;
 	meCreateOBJ_Layer = LAY_OBJECT;
 
 	return S_OK;
@@ -38,7 +38,7 @@ HRESULT CImgui_Terrain::Update(_double time)
 		if (type == OBJECT_TYPE_TERRAIN)
 		{
 			mCurrent_TerrainObject = static_cast<CGameObject_MyTerrain*>(SelectObject);
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_MAP, SelectObject);
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_D, SelectObject);
 		}
 	}
 	else
@@ -119,40 +119,7 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 	CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 
-	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Empty_WorldMap")))
-	{
-		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
-		{
-			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
-		}
-
-		// 툴에서의 월드 맵
-		mWorldMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-		NULL_CHECK_BREAK(mWorldMap);
-		Safe_AddRef(mWorldMap);
-		mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
-		mWorldMap->Init_SetupInit(true);
-		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
-	}
-
-
-	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Empty_DungeonMap")))
-	{
-		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
-		{
-			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
-		}
-
-		// 툴에서의 월드 맵
-		mDungeonMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-		NULL_CHECK_BREAK(mDungeonMap);
-		Safe_AddRef(mDungeonMap);
-		mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
-		mDungeonMap->Init_SetupInit(true);
-		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
-	}
-
-	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
+	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Empty_WorldMap")))
 	//{
 	//	if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
 	//	{
@@ -164,29 +131,64 @@ void CImgui_Terrain::RENDER_CREATEEMPTY()
 	//	NULL_CHECK_BREAK(mWorldMap);
 	//	Safe_AddRef(mWorldMap);
 	//	mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
-	//	mWorldMap->Init_SetupInit();
+	//	mWorldMap->Init_SetupInit(true);
 	//	FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mWorldMap));
-
 	//}
 
-	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_DungeonMap")))
+
+	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_Empty_DungeonMap")))
 	//{
 	//	if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
 	//	{
 	//		GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
 	//	}
 
-	//	// 툴에서의 던전맵
+	//	// 툴에서의 월드 맵
 	//	mDungeonMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
 	//	NULL_CHECK_BREAK(mDungeonMap);
 	//	Safe_AddRef(mDungeonMap);
 	//	mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
-	//	mDungeonMap->Init_SetupInit();
+	//	mDungeonMap->Init_SetupInit(true);
 	//	FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN), mDungeonMap));
-
-	//	// 타일 추가
-	//	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain_Daungeon(mDungeonMap);
 	//}
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_WorldMap")))
+	{
+		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
+		{
+			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+		}
+
+		// 툴에서의 월드 맵
+		mWorldMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		NULL_CHECK_BREAK(mWorldMap);
+		Safe_AddRef(mWorldMap);
+		mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
+		mWorldMap->Init_SetupInit();
+		mWorldMap->Get_MODEL_WORLD_DESC_List(&mListWorldObjects_Desc);
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN_DUNGEON), mWorldMap));
+
+	}
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_TERRAIN, "Create_DungeonMap")))
+	{
+		if (nullptr == GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects())
+		{
+			GetSingle(CGameManager)->Get_DaungonManager()->NativeConstruct_Level(LEVEL_TOOL);
+		}
+
+		// 툴에서의 던전맵
+		mDungeonMap = (CGameObject_MyTerrain*)Create_Manager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+		NULL_CHECK_BREAK(mDungeonMap);
+		Safe_AddRef(mDungeonMap);
+		mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+		mDungeonMap->Init_SetupInit();
+		mWorldMap->Get_MODEL_WORLD_DESC_List(&mListWorldObjects_Desc);
+		FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Push_Object(idx, TAGLAY(LAY_TERRAIN_WORLD), mDungeonMap));
+
+		// 타일 추가
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Setup_Terrain_Daungeon(mDungeonMap);
+	}
 }
 
 void CImgui_Terrain::CREATE_LOAD_DESC()
@@ -636,16 +638,28 @@ HRESULT CImgui_Terrain::Edit_OBJECTS()
 				if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_Z) & DIS_Press)
 				{
 					// 현재 픽된 오브젝트 회전 
-
 					trans->Scaling(_float3::One, timer);
 
 				}
-				if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_C) & DIS_Press)
+				else if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_C) & DIS_Press)
 				{
 					// 현재 픽된 오브젝트 회전 
 
 					trans->Scaling(-_float3::One, timer);
 
+				}
+				// 위아래
+				static _float offsetY = 0;
+				if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_R) & DIS_Down)
+				{
+					offsetY += 0.1f;
+					((CGameObject_3D_Static*)mCurrent_PickObject)->Set_OffsetY(offsetY);
+
+				}
+				else if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_F) & DIS_Down)
+				{
+					offsetY -= 0.1f;
+					((CGameObject_3D_Static*)mCurrent_PickObject)->Set_OffsetY(offsetY);
 				}
 			}
 
@@ -711,7 +725,6 @@ HRESULT CImgui_Terrain::SAVER_MODE()
 			list<_uint> tilelistindex;
 			if (TileList != nullptr)
 			{
-				
 				for (auto& tile : *TileList)
 				{
 					_uint tileindex = tile->Get_TileIndex();

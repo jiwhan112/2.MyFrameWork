@@ -121,13 +121,19 @@ HRESULT CDungeon_Objects::Ready_Light()
 	LIGHTDESC		LightDesc;
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 
+	//LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
+	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	////LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
+	//LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	//LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
+
+	//LightDesc.vDirection = _float4(1, -1.f, 1, 0.f);
+
 	LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
-
-	LightDesc.vDirection = _float4(1, -1.f, 1, 0.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDirection = _float4(0, -1.f, 0, 0.f);
 
 	if (FAILED(pGameInstance->Add_Light(mDevice, mDeviceContext, LightDesc)))
 		return E_FAIL;
@@ -155,7 +161,6 @@ HRESULT CDungeon_Objects::Ready_Camera()
 	CameraDesc.TransformDesc.RotPersec = XMConvertToRadians(90.0f);
 
 	CCamera_Client* client = (CCamera_Client*)(GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, TAGLAY(LAY_CAMERA), TAGOBJ(GAMEOBJECT_CAMERA), &CameraDesc));
-	client->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_D);
 
 	return S_OK;
 }
@@ -184,14 +189,14 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	// ¸Ê Å¸ÀÏ ÃÊ±âÈ­
 
 	// ´øÀü¸Ê ¸Ê »ý¼º
-	//mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
-	//NULL_CHECK_HR(mDungeonMap);
-	//Safe_AddRef(mDungeonMap);
-	//mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
-	//mDungeonMap->Init_SetupInit();
-	//FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mDungeonMap));
-	//// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
-	//this->Setup_Terrain();
+	mDungeonMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
+	NULL_CHECK_HR(mDungeonMap);
+	Safe_AddRef(mDungeonMap);
+	mDungeonMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_DUNGEON);
+	mDungeonMap->Init_SetupInit();
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN_DUNGEON), mDungeonMap));
+	// ¸Ê¿¡ Å¸ÀÏ Ãß°¡
+	this->Setup_Terrain_Daungeon();
 
 	// ¿ùµå¸Ê »ý¼º
 	mWorldMap = (CGameObject_MyTerrain*)pCreateManager->CreateEmptyObject(GAMEOBJECT_MYTERRAIN);
@@ -199,15 +204,9 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	Safe_AddRef(mWorldMap);
 	mWorldMap->Set_MapType(CGameObject_MyTerrain::MAPTYPE_WORLD);
 	mWorldMap->Init_SetupInit();
-	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN), mWorldMap));
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN_WORLD), mWorldMap));
 	this->Setup_Terrain_World();
 
-
-	// À¯´Ö »ý¼º
-	mTestUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
-	NULL_CHECK_HR(mTestUnit);
-	Safe_AddRef(mTestUnit);
-	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_OBJECT), mTestUnit));
 
 	return S_OK;
 }
@@ -266,6 +265,8 @@ HRESULT CDungeon_Objects::ResetTile_Tool(TERRAIN_DESC * data)
 		mListVecTiles->clear();
 		Safe_Delete(mListVecTiles);
 	}
+	
+
 
 	// Å¸ÀÏ »ý¼º
 	FAILED_CHECK(Create_Tiles(mCurrentLevel));
@@ -315,6 +316,18 @@ HRESULT CDungeon_Objects::RemoveTile(CGameObject_3D_Tile * pTIle)
 
 	mListVecTiles->remove(pTIle);
 	Safe_Release(pTIle);
+	return S_OK;
+}
+
+HRESULT CDungeon_Objects::Create_Unit(_float3 PositionXZ)
+{
+	CGameObject_Creater* pCreateManager = GetSingle(CGameManager)->Get_CreaterManager();
+
+	mTestUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
+	PositionXZ.y += 1;
+	mTestUnit->Set_Position(PositionXZ);
+	NULL_CHECK_HR(mTestUnit);
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_OBJECT), mTestUnit)); 
 	return S_OK;
 }
 
@@ -418,7 +431,7 @@ HRESULT CDungeon_Objects::Setup_Collision_Navi2Object()
 	CNavigation* navi = mWorldMap->Get_ComNavimesh();
 	auto VecCell = navi->Get_CellVector();
 
-	auto Objects = GetSingle(CGameManager)->Get_LevelObject_List(TAGLAY(LAY_OBJECT));
+	auto Objects = GetSingle(CGameManager)->Get_LevelObject_List(TAGLAY(LAY_OBJECT_W));
 	if (Objects == nullptr)
 		return S_FALSE;
 
@@ -647,6 +660,4 @@ CDungeon_Objects * CDungeon_Objects::Create(ID3D11Device* device, ID3D11DeviceCo
 void CDungeon_Objects::Free()
 {
 	Release_Objects();
-
-	
 }

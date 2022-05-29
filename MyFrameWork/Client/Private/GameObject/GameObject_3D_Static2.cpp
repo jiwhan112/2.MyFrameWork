@@ -51,7 +51,7 @@ _int CGameObject_3D_Static2::Tick(_double TimeDelta)
 		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_RED;
 
 		// 피킹오브젝트는 해당 지형에 매핑된다.
-		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_DUNGEON));
 		if (terrain != nullptr)
 		{
 				_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();

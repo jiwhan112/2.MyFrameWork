@@ -76,7 +76,7 @@ private:
 	list<string>*					mProtoStaticObjectList = nullptr;
 private:
 	bool							mIsTerrainSetting = false;
-	E_TAYLAY						meCreateTERRAIN_Layer = LAY_TERRAIN;
+	E_TAYLAY						meCreateTERRAIN_Layer = LAY_TERRAIN_DUNGEON;
 	E_TAYLAY						meCreateOBJ_Layer = LAY_OBJECT;
 
 	E_TOOLMODE_TERRAIN				meToolMode = E_TOOLMODE_TERRAIN_END;

@@ -29,19 +29,18 @@ HRESULT CGameObject_MyTerrain::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
-HRESULT CGameObject_MyTerrain::Init_SetupInit(bool t)
+HRESULT CGameObject_MyTerrain::Init_SetupInit(bool ToolEmpty)
 {
 	// DESC정보 초기화
 	if (meMapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON)
 	{
-	//	mStrMapDatName = "DungeonBaseMap.terrdat";
+		mStrMapDatName = "DungeonBaseMap.terrdat";
 
 
 	}
 	else if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
 	{
-	//	mStrMapDatName = "WorldBaseMap.terrdat";
-
+		mStrMapDatName = "WorldBaseMap.terrdat";
 	}
 
 	wstring wstr = CHelperClass::Convert_str2wstr(mStrMapDatName);
@@ -54,15 +53,17 @@ HRESULT CGameObject_MyTerrain::Init_SetupInit(bool t)
 
 	}
 
-	if (t)
+	if (ToolEmpty)
 		pTerrainDESC->mObjectSize = 0;
 
 	Set_LoadTerrainDESC(*pTerrainDESC);
 
 	// Terrain 생성
-	Init_Map(TAGLAY(LAY_OBJECT));
+	Init_Map();
+
 	// LoadTex2Name
 	LoadTextureMap();
+
 	
 	return S_OK;
 }
@@ -238,7 +239,7 @@ _float3 CGameObject_MyTerrain::Get_TileWorld(_uint index)
 	return mComVIBuffer->Get_TileWorldPos(index);
 }
 
-_uint CGameObject_MyTerrain::GetMapSize()
+_uint CGameObject_MyTerrain::Get_MapSize()
 {
 	switch (mTerrainDESC.meTerrainSize)
 	{
@@ -305,7 +306,7 @@ HRESULT CGameObject_MyTerrain::SaveCurrentFiterMap()
 HRESULT CGameObject_MyTerrain::UpdateFiterTextue()
 {
 	// 필터 텍스처 생성및 셰이더로 넘김
-	_uint size = GetMapSize();
+	_uint size = Get_MapSize();
 	
 	
 	// 필터 텍스처 생성
@@ -392,7 +393,7 @@ HRESULT CGameObject_MyTerrain::UpdateFiterTextue_TOOL(E_SOURCETYPE type, _float3
 {
 	if (mFiterTexture == nullptr)
 		return E_FAIL;
-	_uint size = GetMapSize();
+	_uint size = Get_MapSize();
 
 
 	// 피킹 위치를 지점으로 해당 텍스처 블랜드
@@ -538,6 +539,49 @@ HRESULT CGameObject_MyTerrain::LoadTextureMap()
 	return S_OK;
 }
 
+CGameObject_Environment::E_ENVIORMENT_TYPE CGameObject_MyTerrain::Get_Str2EnviorType(string str)
+{
+	// Obj_Envir_
+	// Weed
+	// Mush
+	// DelTree
+	// DeadTree
+	// Rock
+	// Flower
+
+	if (str == "Weed")
+	{
+		return CGameObject_Environment::E_ENVIORMENT_TYPE::E_ENVIOR_WEED;
+	}
+	else if (str == "Mush")
+	{
+		return CGameObject_Environment::E_ENVIORMENT_TYPE::E_ENVIOR_MUSH;
+
+	}
+	else if (str == "DelTree")
+	{
+		return CGameObject_Environment::E_ENVIORMENT_TYPE::E_ENVIOR_TREE_DEL;
+
+	}
+	else if (str == "DeadTree")
+	{
+
+		return CGameObject_Environment::E_ENVIORMENT_TYPE::E_ENVIOR_TREE_DEAD;
+	}
+	else if (str == "Rock")
+	{
+		return CGameObject_Environment::E_ENVIORMENT_TYPE::E_ENVIOR_ROCK;
+
+	}
+	else if (str == "Flower")
+	{
+
+		return CGameObject_Environment::E_ENVIORMENT_TYPE::E_ENVIOR_FLOWER;
+	}
+	
+	return CGameObject_Environment::E_ENVIORMENT_TYPE::E_ENVIOR_END;
+}
+
 HRESULT CGameObject_MyTerrain::Set_HeightNewMap()
 {
 	_float3 WorldMapPos = _float3(0, 10, 0);
@@ -571,27 +615,98 @@ _float CGameObject_MyTerrain::Get_HeightY(_float3 PositionXZ)
 	return newY;
 }
 
-HRESULT CGameObject_MyTerrain::Init_Map(const _tchar* layertag)
+HRESULT CGameObject_MyTerrain::Init_Map()
 {
 	// 맵생성
 	Set_TerrainMode(meMapType);
 
-	if (mTerrainDESC.mObjectSize <= 0)
-		return S_FALSE;
+	if (mListBackObjects == nullptr)
+		mListBackObjects = NEW list<CGameObject_Base*>;
 
-	// 저장된 오브젝트 생성
 	CGameObject_Creater* creater = GetSingle(CGameManager)->Get_CreaterManager();
 	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
 
+	const wchar_t* ObjectLayerTag = nullptr;
+	if (meMapType == CGameObject_MyTerrain::MAPTYPE_WORLD)
+		ObjectLayerTag = TAGLAY(LAY_OBJECT_W);
+	else
+		ObjectLayerTag = TAGLAY(LAY_OBJECT_D);
+
+
+	if (mTerrainDESC.mObjectSize != 0)
+	{
+		// 저장된 오브젝트 생성
+		for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
+		{
+			string str = mTerrainDESC.mArrayModelObjects[i].mProtoName;
+			_float4x4 worlmat = mTerrainDESC.mArrayModelObjects[i].mWorldMat;
+			
+
+			vector<string> VecStr1 = CHelperClass::StringSplit(str, '_');
+			
+
+			if(VecStr1.size()>2 && VecStr1[1] == "Envir")
+			{
+				// Obj_Envir_
+				// Weed
+				// Mush
+				// DelTree
+				// DeadTree
+				// Rock
+				// Flower
+				vector<string> VecStr2 = CHelperClass::StringSplit(VecStr1[2], '.');
+				CGameObject_Environment::E_ENVIORMENT_TYPE type = CGameObject_Environment::E_ENVIOR_END;
+				type = Get_Str2EnviorType(VecStr2[0]);
+				// NewPos.y = Get_HeightY(NewPos);
+				CGameObject_Environment* envior = (CGameObject_Environment*)creater->CreateAndPush(GAMEOBJECT_3D_ENVIRONMENT, idx, ObjectLayerTag);
+				if (envior == nullptr)
+					return E_FAIL; 
+
+				envior->Environment_RandomSetting(type);
+				envior->Get_ComTransform()->Set_WorldMat(worlmat);
+
+				mListBackObjects->push_front(envior);
+				Safe_AddRef(envior);
+
+			}
+			else
+			{
+				wstring wstr = CHelperClass::Convert_str2wstr(str);
+				CGameObject_Base* cloneObject = creater->Create_ObjectClone_Prefab(idx, wstr, ObjectLayerTag);
+				if (cloneObject == nullptr)
+					return E_FAIL;
+				cloneObject->Get_ComTransform()->Set_WorldMat(worlmat);
+
+				mListBackObjects->push_front(cloneObject);
+				Safe_AddRef(cloneObject);
+			}	
+			
+		}
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CGameObject_MyTerrain::Get_MODEL_WORLD_DESC_List(list<MODEL_WORLD_DESC>* SaverList)
+{
+	if (mTerrainDESC.mObjectSize == 0)
+		return S_FALSE;
+
+		// 저장된 오브젝트 생성
 	for (int i = 0; i < mTerrainDESC.mObjectSize; ++i)
 	{
 		string str = mTerrainDESC.mArrayModelObjects[i].mProtoName;
-		wstring wstr = CHelperClass::Convert_str2wstr(str);
-		CGameObject_Base* cloneObject = creater->Create_ObjectClone_Prefab(idx, wstr, layertag);
-		if (cloneObject == nullptr)
-			return E_FAIL;
 		_float4x4 worlmat = mTerrainDESC.mArrayModelObjects[i].mWorldMat;
-		cloneObject->Get_ComTransform()->Set_WorldMat(worlmat);
+
+		if (SaverList != nullptr)
+		{
+			MODEL_WORLD_DESC saverDesc;
+			strcpy_s(saverDesc.mProtoName, str.c_str());
+			saverDesc.mWorldMat = worlmat;
+			SaverList->push_front(saverDesc);
+		}
+
 	}
 
 	return S_OK;
@@ -689,5 +804,16 @@ void CGameObject_MyTerrain::Free()
 
 	Safe_Release(mComFiter_XYZW);
 	Safe_Release(mComBrushTex);
+
+	// objs
+	if (mListBackObjects)
+	{
+		for (auto obj : *mListBackObjects)
+		{
+			Safe_Release(obj);
+		}
+		mListBackObjects->clear();
+		Safe_Delete(mListBackObjects);
+	}
 	
 }

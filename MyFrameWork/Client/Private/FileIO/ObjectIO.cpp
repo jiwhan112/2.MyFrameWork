@@ -218,8 +218,6 @@ HRESULT CObjectIO::Load_DESC(E_DESC_DATA descid, wstring FolderPath, wstring fil
 				ReadFile(hFile, &desc->mArrayModelObjects[i], sizeof(MODEL_WORLD_DESC), &dwByte, nullptr);
 			}
 		}
-		
-
 
 		// Desc 전역 저장
 		Add_TerrainDesc(filename, desc);

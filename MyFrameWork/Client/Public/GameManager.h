@@ -19,7 +19,8 @@ class CGameObject_Creater;
 class CImguiMgr;
 class CObjectIO;
 class CDungeon_Manager;
-// class CColliderManager;
+class CGameObject_MyTerrain;
+class CCamera_Client;
 
 class CGameManager final : public CBase
 {
@@ -57,8 +58,14 @@ public:
 
 	// 카메라나 플레이어 가져올때 좀더 편하게 가져옴
 	CGameObject* Get_LevelObject_LayerTag(const wchar_t* layerTag, _uint index = 0);
+	CCamera_Client* Get_LevelObject_Camera();
+	CGameObject_MyTerrain* Get_LevelObject_DUNGEONMAP();
+	CGameObject_MyTerrain* Get_LevelObject_WORLDMAP();
+
 	const list<CGameObject*>* Get_LevelObject_List(const wchar_t* layerTag);
 	E_LEVEL Get_CurrentLevel() const { return mCurrentLevel; }
+	HRESULT Set_VisibleTag(const wchar_t* layerTag,bool b);
+
 
 public: // Collider 
 	const _float3& Get_PickPos() const;

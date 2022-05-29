@@ -15,11 +15,21 @@ public:
 		CAMERA_MODE_DEFAULT,
 		CAMERA_MODE_RETURN,
 		CAMERA_MODE_TARGET,
-		CAMERA_MODE_MAP,
 		CAMERA_MODE_GAME_D,
 		CAMERA_MODE_GAME_W,
 		CAMERA_MODE_END,
 	};
+
+	enum E_CAMERA_MOVE_STATE
+	{
+		CAMERA_UPDATE_STATE_NONE,
+		CAMERA_UPDATE_STATE_ENTER,
+		CAMERA_UPDATE_STATE_STAY,
+		CAMERA_UPDATE_STATE_EXIT,
+		CAMERA_UPDATE_STATE_END,
+
+	};
+
 
 protected:
 	explicit CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -35,11 +45,8 @@ public:
 	virtual HRESULT Render();
 
 	void Set_CameraMode(E_CAMERA_MODE e, CGameObject* target = nullptr);
-	void ReleaseTarget()
-	{
-		Safe_Release(mTargetObject);
-		mTargetObject = nullptr;
-	}
+	void ReleaseTarget();
+
 	void Set_CamerDIr(_float3 Dir)
 	{
 		mComTransform->LookAtDir(Dir);
@@ -49,11 +56,15 @@ private:
 	HRESULT Update_Default(_double TimeDelta);
 	HRESULT Update_Target_Unit(_double TimeDelta);
 	HRESULT Update_Target_Terrain(_double TimeDelta);
-	HRESULT Update_Target_D(_double TimeDelta);
-	HRESULT Update_Map(_double TimeDelta);
+	HRESULT Update_Target_Dungeon(_double TimeDelta);
+	HRESULT Update_Target_World(_double TimeDelta);
 
 private:
+	// 지속 상태
 	E_CAMERA_MODE meCameraMode;
+
+	// 움직일 때 연출용
+	E_CAMERA_MOVE_STATE meCameraMoveState;
 
 	_float4x4 mStartWorlMat;
 	CGameObject* mTargetObject = nullptr;

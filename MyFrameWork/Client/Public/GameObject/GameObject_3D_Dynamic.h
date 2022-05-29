@@ -14,12 +14,19 @@ class CGameObject_3D_Dynamic  :
 	public CGameObject_Base
 {
 public:
-	//enum E_BASEAI
-	//{
-	//	BASEAI_IDLE,
-	//	BASEAI_MOVE,
-	//	BASEAI_END,
-	//};
+	enum E_UNITTYPE
+	{
+		UNIT_PLAYER,
+		UNIT_ENEMY,
+		UNIT_END,
+	};
+
+	enum E_MAPTYPE
+	{
+		MAPTYPE_DUNGEON,
+		MAPTYPE_WORLD,
+		MAPTYPE_END,
+	};
 
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -63,15 +70,20 @@ protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
 
 	// 콜라이더 리스트 추가 / 콜라이더는 맵에 넣지 않고 여기서만 관리한다.
+	// 뼈애 달리게 수정
 	list<CCollider*>*			mComListCollider = nullptr;
 
-	// 생성시 무조건 Terrain 정보가 있어야한다.
-//	CGameObject_Base*			mGameObjectTerrain = nullptr;
 	CNavigation*				mComNaviMesh = nullptr;
 
 
 	MODEL_DYNAMIC_DESC			mModelDesc;
 	list<COLLIDER_DESC>			mListColliderDesc;
+
+	
+	E_UNITTYPE					meUnitType = UNIT_END;
+	E_MAPTYPE					meCurrentMap = MAPTYPE_END;
+
+	// MOVE
 
 	_float3						mGoalPosition;
 	_float3						mStartPosition;
@@ -84,6 +96,10 @@ protected: // 3D모델 Com / DESC 추가
 	CCell*						mMoveCell; // 현재 셀
 
 	_float3						mCurrentPosition;
+
+	// 현재 지형
+	CGameObject_MyTerrain*		mCurrentTerrain= nullptr;
+
 
 
 //	E_BASEAI					meAI;

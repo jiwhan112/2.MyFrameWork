@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Camera_Client.h"
-#include "GameObject/Client_Object.h"
+#include "GameObject/GameObject_MyTerrain.h"
 
 CCamera_Client::CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CCamera(pDevice, pDeviceContext)
@@ -53,16 +53,18 @@ _int CCamera_Client::Tick(_double TimeDelta)
 			FAILED_CHECK_NONERETURN(Update_Target_Unit(TimeDelta));
 		}
 		break;
-	case CCamera_Client::CAMERA_MODE_MAP:
+	case CCamera_Client::CAMERA_MODE_GAME_D:
 		if (mTargetObject)
 		{
-			FAILED_CHECK_NONERETURN(Update_Target_Terrain(TimeDelta));
+		FAILED_CHECK_NONERETURN(Update_Target_Terrain(TimeDelta));
 		}
 		break;
-	case CCamera_Client::CAMERA_MODE_GAME_D:
-		FAILED_CHECK_NONERETURN(Update_Target_D(TimeDelta));
-		break;
 	case CCamera_Client::CAMERA_MODE_GAME_W:
+		if (mTargetObject)
+		{
+
+		FAILED_CHECK_NONERETURN(Update_Target_Terrain(TimeDelta));
+		}
 
 		break;
 
@@ -103,6 +105,12 @@ void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, CGameObject * target)
 	}
 
 	
+}
+
+void CCamera_Client::ReleaseTarget()
+{
+	Safe_Release(mTargetObject);
+	mTargetObject = nullptr;
 }
 
 HRESULT CCamera_Client::Update_Default(_double TimeDelta)
@@ -193,6 +201,7 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 
 	return S_OK;
 }
+
 const _float3 GameCameraDir = _float3(-0.7, -1.5f, 1);
 HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 {
@@ -201,7 +210,7 @@ HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 
 	if (mbTargetSet == false)
 	{
-		_uint size =  static_cast<CGameObject_MyTerrain*>(mTargetObject)->GetMapSize();
+		_uint size =  static_cast<CGameObject_MyTerrain*>(mTargetObject)->Get_MapSize();
 		size *= 0.3f;
 
 		_float3 Postition = _float3(size, 5, size);
@@ -255,52 +264,16 @@ HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 	return S_OK;
 }
 
-HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
+HRESULT CCamera_Client::Update_Target_Dungeon(_double TimeDelta)
 {
-	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
-	mComTransform->LookAtDir(GameCameraDir);
-
-
-	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
-	{
-		mComTransform->GO_WorldVec(_float3(0, 0, 1), -45, CTransform::ROTTYPE_Y, TimeDelta);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
-	{
-		mComTransform->GO_WorldVec(_float3(0, 0, -1), -45, CTransform::ROTTYPE_Y, TimeDelta);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_A) & DIS_Press)
-	{
-		mComTransform->GO_Left(TimeDelta);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_D) & DIS_Press)
-	{
-		mComTransform->GO_Right(TimeDelta);
-	}
-
-	const _float MouseSpeed = 4.0f;
-	long MouseMove = pGameInstance->Get_DIMouseMoveState(CInput_Device::MMS_WHEEL);
-
-	if (MouseMove > 0)
-	{
-		// 범위 제한
-		// mTargetObject;
-
-		mComTransform->GO_Straight(TimeDelta * MouseSpeed);
-	}
-
-	if (MouseMove < 0)
-	{
-		mComTransform->GO_Backward(TimeDelta * MouseSpeed);
-	}
+	
 	return S_OK;
 }
 
-HRESULT CCamera_Client::Update_Map(_double TimeDelta)
+HRESULT CCamera_Client::Update_Target_World(_double TimeDelta)
 {
+
+
 	return S_OK;
 }
 

@@ -2,6 +2,8 @@
 #include "Tool/Imgui_InGame.h"
 #include "GameObject/GameObject_MyTerrain.h"
 #include "Camera_Client.h"
+#include "GameObject/Dungeon_Manager.h"
+#include "GameObject/Dungeon_Objects.h"
 
 CImgui_InGame::CImgui_InGame(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -18,6 +20,20 @@ HRESULT CImgui_InGame::NativeConstruct()
 
 HRESULT CImgui_InGame::Update(_double time)
 {
+	mGameMode = GetSingle(CGameManager)->Get_DaungonManager()->Get_CurrentGameMode();
+
+
+
+	 if (mTerrainDungeon == nullptr)
+	 {
+		 mTerrainDungeon = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
+	 }
+	 if (mTerrainWorld == nullptr)
+	 {
+		 mTerrainWorld = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
+
+	 }
+	 
 	FAILED_CHECK(Render_UI());
 
 	return S_OK;
@@ -37,7 +53,7 @@ HRESULT CImgui_InGame::Render_UI()
 			{
 				if (ImGui::CollapsingHeader("TerrainSetting"))
 				{
-					FAILED_CHECK(Edit_TERRAIN_INGAME());
+					FAILED_CHECK(Edit_InGame());
 				}
 				ImGui::End();
 			}
@@ -49,15 +65,36 @@ HRESULT CImgui_InGame::Render_UI()
 	return S_OK;
 }
 
-HRESULT CImgui_InGame::Edit_TERRAIN_INGAME()
+HRESULT CImgui_InGame::Edit_InGame()
 {
-	// 지형처리 하기
+	if (mTerrainWorld == nullptr || mTerrainDungeon == nullptr)
+		return S_FALSE;
 
-	//if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_INGAME, "Change_Terrain")))
-	//{
-	//}
+	_float3 pickWorld = GetSingle(CGameManager)->Get_PickPos();
+	int TileIndex  = 0;
 
+	if (mGameMode == CDungeon_Manager::E_GAMEMODE::GAMEMODE_DUNGEON)
+	{
+		TileIndex =mTerrainDungeon->Get_TileIndex(pickWorld);
+		ImGui::DragInt("TILEINDEX:",&TileIndex);
+	}
+	else if (mGameMode == CDungeon_Manager::E_GAMEMODE::GAMEMODE_WORLD)
+	{
+		TileIndex =mTerrainWorld->Get_TileIndex(pickWorld);
+		ImGui::DragInt("TILEINDEX:", &TileIndex);
+	}
 
+	if (ImGui::Button("Create_DungeonObject"))
+	{
+		_float3 SpawnPos =  mTerrainDungeon->Get_TileWorld(mSpawnIndexDAUNGEON);
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(SpawnPos);
+	}
+
+	if (ImGui::Button("Create_WorldObject"))
+	{
+		_float3 SpawnPos =  mTerrainWorld->Get_TileWorld(mSpawnIndexWORLD_UNIT);
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(SpawnPos);
+	}
 
 	return S_OK;
 }
@@ -78,6 +115,6 @@ CImgui_InGame * CImgui_InGame::Create(ID3D11Device* deviec, ID3D11DeviceContext*
 void CImgui_InGame::Free()
 {
 	__super::Free();
-	Safe_Release(mTerrainObject);
-	Safe_Release(mCameraClient);
+	Safe_Release(mTerrainDungeon);
+	Safe_Release(mTerrainWorld);
 }

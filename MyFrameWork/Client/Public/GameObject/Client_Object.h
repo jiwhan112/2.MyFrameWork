@@ -24,6 +24,7 @@
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_3D_Tile.h"
 #include "GameObject/GameObject_Socket.h"
+#include "GameObject/GameObject_Environment.h"
 
 // ±×¿Ü
 #include "GameObject/GameObject_2D.h"

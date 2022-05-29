@@ -209,10 +209,8 @@ HRESULT CMainApp::Ready_Prototype_Components_Model()
 		wstring wpath = GetSingle(CGameInstance)->Get_PathData(path->FullPath);
 		wstring wName = path->FileName;
 
-		string pathstr;
-		string namestr;
-		CHelperClass::Convert_string_wstring(wpath, pathstr, true);
-		CHelperClass::Convert_string_wstring(wName, namestr, true);
+		string pathstr = CHelperClass::Convert_Wstr2str(wpath);
+		string namestr = CHelperClass::Convert_Wstr2str(wName);
 		FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, path->FileName,
 			CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, pathstr.c_str(), namestr.c_str(), DefaultTransform)));
 	}
@@ -334,6 +332,10 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	// 소켓 깡통
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_SOCKET),
 		CGameObject_3D_Socket::Create(m_pDevice, m_pDeviceContext)));
+
+	// 환경오브젝트 깡통
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_ENVIRONMENT),
+		CGameObject_Environment::Create(m_pDevice, m_pDeviceContext)));
 
 	// 구체화 오브젝트 초기화
 	// 깡통 오브젝트로 만들어진 구체화 오브젝트

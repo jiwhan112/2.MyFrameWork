@@ -262,7 +262,7 @@ _uint CVIBuffer_Terrain::Get_TileIndex(_float3 worldPos)
 	_float3 vPos = worldPos;
 
 	// 현재 위치 찾기 z * width + x
-	int z = (int)vPos.z * ((int)miNumX-1);
+	int z = (int)vPos.z * ((int)miNumX);
 	int x = (int)vPos.x;
 	int iIndex = z + x;
 

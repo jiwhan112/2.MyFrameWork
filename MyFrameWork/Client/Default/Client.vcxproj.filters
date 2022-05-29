@@ -196,6 +196,9 @@
     <Filter Include="03.GameSystems\06.Dungeon_Manager\Dungeon_Objects">
       <UniqueIdentifier>{123098ba-47a6-47f5-80f5-1b2addec8b38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj">
+      <UniqueIdentifier>{07b7e8cf-a459-472b-a26f-72280821cb9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -378,6 +381,9 @@
     <ClInclude Include="..\Public\GameObject\Dungeon_Objects.h">
       <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Environment.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -534,6 +540,9 @@
       <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Client_DESC.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Environment.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

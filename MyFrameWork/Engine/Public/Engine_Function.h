@@ -121,6 +121,60 @@ namespace Engine
 			return rand() % (min + max) - min;
 		}
 
+		static std::string to_utf8(const wchar_t* buffer, int len)
+		{
+			int nChars = ::WideCharToMultiByte(
+				CP_UTF8,
+				0,
+				buffer,
+				len,
+				NULL,
+				0,
+				NULL,
+				NULL);
+			if (nChars == 0) return "";
+
+			string newbuffer;
+			newbuffer.resize(nChars);
+			::WideCharToMultiByte(
+				CP_UTF8,
+				0,
+				buffer,
+				len,
+				const_cast<char*>(newbuffer.c_str()),
+				nChars,
+				NULL,
+				NULL);
+
+			return newbuffer;
+		}
+
+		static std::string to_utf8(const std::wstring& str)
+		{
+			return to_utf8(str.c_str(), (int)str.size());
+		}
+
+		static vector<string> StringSplit(string input, char de)
+		{
+			vector<string> answer;
+			stringstream ss(input);
+			string temp;
+
+			while (getline(ss, temp, de))
+			{
+				answer.push_back(temp);
+			}
+			return answer;
+		}
+
+		template <typename Container>
+		static bool in_quote(const Container& cont, const std::string& s)
+		{
+			return std::search(cont.begin(), cont.end(), s.begin(), s.end()) !=
+				cont.end();
+		}
+
+
 
 	};
 }

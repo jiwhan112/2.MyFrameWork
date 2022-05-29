@@ -48,21 +48,21 @@ _int CGameObject_3D_Static::Tick(_double TimeDelta)
 
 	if (meUpdateType == CGameObject_3D_Static::E_UPDATETYPE_NONE)
 	{
-		//mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
+		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
 	}
 
 	else if (meUpdateType == CGameObject_3D_Static::E_UPDATETYPE_PICK)
 	{
-		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_RED;
+		mCurrentShaderPass = (int)E_SHADERPASS_STATICMODEL_DEFAULT;
 
 		// 피킹오브젝트는 해당 지형에 매핑된다.
-		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_DUNGEON));
 		if (terrain != nullptr)
 		{
 			_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
 			int index = terrain->Get_TileIndex(worldPickPos);
 			_float3 pickTilePos = terrain->Get_TileWorld(index);
-			pickTilePos.y = worldPickPos.y;
+			pickTilePos.y = worldPickPos.y + mOffsetY;
 
 			_float4x4 transmat = _float4x4::CreateTranslation(pickTilePos);
 			mComTransform->Set_State(CTransform::STATE_POSITION, transmat.Translation());
@@ -78,12 +78,9 @@ _int CGameObject_3D_Static::LateTick(_double TimeDelta)
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.0f))
-		mIsRenderer = true;
-	else
-		mIsRenderer = false;
+		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
 
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
 	return UPDATENONE;
 }

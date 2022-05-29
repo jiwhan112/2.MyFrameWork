@@ -177,6 +177,22 @@ CGameObject * CGameManager::Get_LevelObject_LayerTag(const wchar_t * layerTag, _
 	return (*iter);
 }
 
+CCamera_Client * CGameManager::Get_LevelObject_Camera()
+{
+	return (CCamera_Client*)Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA));
+
+}
+
+CGameObject_MyTerrain * CGameManager::Get_LevelObject_DUNGEONMAP()
+{
+	return (CGameObject_MyTerrain*)Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_DUNGEON));
+}
+
+CGameObject_MyTerrain * CGameManager::Get_LevelObject_WORLDMAP()
+{
+	return (CGameObject_MyTerrain*)Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_WORLD));
+}
+
 const list<CGameObject*>* CGameManager::Get_LevelObject_List(const wchar_t * layerTag)
 {
 	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
@@ -184,6 +200,18 @@ const list<CGameObject*>* CGameManager::Get_LevelObject_List(const wchar_t * lay
 	if (GameObjectList == nullptr)
 		return nullptr;
 	return GameObjectList;
+}
+HRESULT CGameManager::Set_VisibleTag(const wchar_t * layerTag, bool b)
+{
+	auto TagObjectList = GetSingle(CGameManager)->Get_LevelObject_List(layerTag);
+	if (TagObjectList == nullptr)
+		return E_FAIL;
+	for (auto obj : *TagObjectList)
+	{
+		obj->Set_isVisible(b);
+	}
+
+	return S_OK;
 }
 const _float3 & CGameManager::Get_PickPos() const
 {

@@ -15,6 +15,13 @@ class CGameObject_3D_Tile;
 class CDungeon_Manager final :
 	public CBase
 {
+public:
+	enum E_GAMEMODE
+	{
+		GAMEMODE_DUNGEON,
+		GAMEMODE_WORLD,
+		GAMEMODE_END
+	};
 
 protected:
 	explicit CDungeon_Manager();
@@ -25,9 +32,14 @@ public:
 	virtual HRESULT NativeConstruct(ID3D11Device* device, ID3D11DeviceContext* context);
 	virtual _int Tick(_double TimeDelta);
 	virtual _int LateTick(_double TimeDelta);
+	_int Tick_Game(_double timeDelta);
 
 public: //GET SET
 	class CDungeon_Objects* Get_DungeonObjects() const { return mDungeon_Objects; }
+	E_GAMEMODE Get_CurrentGameMode()const
+	{
+		return meCurrentGameMode;
+	}
 
 public:
 	HRESULT NativeConstruct_Level(E_LEVEL level);
@@ -40,6 +52,11 @@ public: // For. Tile
 	HRESULT RemoveTile(CGameObject_3D_Tile* pTIle);
 	HRESULT Setup_TileState(_int tileIndex = -1);
 
+public: // For. object
+	HRESULT Create_DynamicObject();
+
+
+
 
 private:
 	// 던전에 들어가는 오브젝트들 생성
@@ -47,6 +64,10 @@ private:
 
 	ID3D11Device*			mDevice = nullptr;
 	ID3D11DeviceContext*	mDeviceContext = nullptr;
+
+	class CCamera_Client*		mGameCamera= nullptr;
+
+	E_GAMEMODE				meCurrentGameMode;
 
 public:
 	static CDungeon_Manager* Create(ID3D11Device* device, ID3D11DeviceContext* deviceContext);

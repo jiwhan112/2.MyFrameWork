@@ -105,6 +105,14 @@ HRESULT CGameObject_Creater::PushObject(CGameObject_Base** obj, _uint levelInex,
 	return S_OK;
 }
 
+CGameObject_Base * CGameObject_Creater::CreateAndPush(const E_TAYGAMEOBJECT type, _uint levelInex, wstring layertag)
+{
+	CGameObject_Base* EmptyObject = (CGameObject_Base*)GetSingle(CGameInstance)->Create_GameObject(TAGOBJ(type));
+	NULL_CHECK_BREAK(EmptyObject);
+	GetSingle(CGameInstance)->Push_Object(levelInex, layertag.c_str(), EmptyObject);
+	return EmptyObject;
+}
+
 //HRESULT CGameObject_Creater::Create_ObjectProto_Type(const E_OBJECT_TYPE type, const char * data, wstring protoname)
 //{
 //	_uint offset = 0;

@@ -161,7 +161,7 @@ HRESULT CGameObject_FBX::Set_Height()
 	if (mTerrain == nullptr)
 	{
 		_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
-		auto listdata = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, TAGLAY(LAY_TERRAIN));
+		auto listdata = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, TAGLAY(LAY_TERRAIN_DUNGEON));
 
 		NULL_CHECK_BREAK(listdata);
 

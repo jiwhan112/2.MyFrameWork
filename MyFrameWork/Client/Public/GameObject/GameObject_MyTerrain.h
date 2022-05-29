@@ -1,11 +1,13 @@
 #pragma once
 
 #include "GameObject_Base.h"
+#include "GameObject/GameObject_Environment.h"
 
 BEGIN(Engine)
 class CVIBuffer;
 class CVIBuffer_Terrain;
 class CNavigation;
+
 END
 
 BEGIN(Client)
@@ -58,7 +60,7 @@ public:
 
 	int			Get_TileIndex(_float3 worldPos);
 	_float3		Get_TileWorld(_uint index);
-	_uint		GetMapSize();
+	_uint		Get_MapSize();
 
 
 	void	Set_ColorFiter(E_SOURCETYPE type, _color* color, _float val);
@@ -66,7 +68,8 @@ public:
 
 
 public: // DESC
-	HRESULT Init_Map(const _tchar* layertag); // 맵 데이터로 맵에 따른 객체생성
+	HRESULT Init_Map(); // 맵 데이터로 맵에 따른 객체생성
+	HRESULT Get_MODEL_WORLD_DESC_List(list<MODEL_WORLD_DESC>* SaverList = nullptr);
 	HRESULT SaveDESC_Objects(const list<_uint>& uintList, const list<MODEL_WORLD_DESC>& worldObjList); // 맵 데이터로 맵에 따른 객체생성
 
 public:
@@ -76,12 +79,22 @@ public:
 	HRESULT Set_HeightNewMap();
 	_float Get_HeightY(_float3 PositionXZ);
 
+	void Add_MapObject(CGameObject_Base* obj)
+	{
+		if (mListBackObjects != nullptr)
+			mListBackObjects->push_front(obj);
+	}
+	const list<CGameObject_Base*>* Get_MapObjects()
+	{
+		return mListBackObjects;
+	}
 protected:
 	virtual HRESULT Set_Component()override;
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처
 	HRESULT LoadTextureMap(); // 텍스처 부르기
 	
 	// 환경 오브젝트 만들기
+	CGameObject_Environment::E_ENVIORMENT_TYPE Get_Str2EnviorType(string str);
 
 
 protected:
@@ -104,6 +117,10 @@ protected:
 	TEXTURE_NAMES_DESC			mTextureNameDesc;
 	E_MAPTYPE					meMapType = MAPTYPE_END;
 	string						mStrMapDatName = "";
+
+	// 생성된 배경 오브젝트 저장
+	list<CGameObject_Base*>*		mListBackObjects = nullptr;
+
 public:
 	_float					mRadius = 0.5f;
 //	_float3					mWorldPickPos;

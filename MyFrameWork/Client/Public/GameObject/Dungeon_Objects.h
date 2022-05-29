@@ -6,7 +6,9 @@ BEGIN(Client)
 
 class	CGameObject_MyTerrain;
 class	CGameObject_3D_Tile;
+class	CGameObject_3D_Static;
 class	CGameObject_3D_Dynamic;
+class	CGameObject_Environment;
 
 
 // 게임 오브젝트 생성 저장
@@ -55,6 +57,12 @@ public: // 지형
 
 	const list<CGameObject_3D_Tile*>* Get_TileList() const { return mListVecTiles; }
 
+	CGameObject_MyTerrain* Get_DungeonMap() { return mDungeonMap; }
+	CGameObject_MyTerrain* Get_WorldMap() { return mWorldMap; }
+
+public: // 유닛
+	HRESULT Create_Unit(_float3 PositionXZ);
+
 
 private: // 지형
 	HRESULT Create_Tiles(E_LEVEL level);
@@ -82,6 +90,7 @@ private: // value Tile
 	CGameObject_MyTerrain*				mWorldMap = nullptr;
 	// 타일객체 벡터 저장
 	list<CGameObject_3D_Tile*>*			mListVecTiles = nullptr;
+
 
 private:
 	CGameObject_3D_Dynamic*				mTestUnit = nullptr;

@@ -78,7 +78,7 @@ void CAstar::Start_AStar(const _float3& vStart, const _float3& vGoal)
 void CAstar::MakeBestList(int iGoalIndex)
 {
 	// 역 추적진행
-	CGameObject_MyTerrain* pterrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN));
+	CGameObject_MyTerrain* pterrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_DUNGEON));
 	if (pterrain == nullptr)
 		return;
 

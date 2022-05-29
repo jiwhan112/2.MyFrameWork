@@ -54,6 +54,10 @@ public:
 	{
 		meUpdateType = E_UPDATETYPE_PICK;
 	}
+	void Set_OffsetY(_float y)
+	{
+		mOffsetY = y;
+	}
 
 
 	void		Update_CombinedTransformationMatrix(_fmatrix combine);
@@ -74,6 +78,7 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	COLLIDER_DESC				mCollider_Desc;
 
 	E_UPDATETYPE				meUpdateType = E_UPDATETYPE_NONE;
+	_float						mOffsetY = 0;
 
 public:
 	static CGameObject_3D_Static* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

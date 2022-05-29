@@ -122,51 +122,7 @@ static int isFileOrDir(_finddatai64_t fd)
 	return 2;
 }
 
-static std::string to_utf8(const wchar_t* buffer, int len)
-{
-	int nChars = ::WideCharToMultiByte(
-		CP_UTF8,
-		0,
-		buffer,
-		len,
-		NULL,
-		0,
-		NULL,
-		NULL);
-	if (nChars == 0) return "";
 
-	string newbuffer;
-	newbuffer.resize(nChars);
-	::WideCharToMultiByte(
-		CP_UTF8,
-		0,
-		buffer,
-		len,
-		const_cast<char*>(newbuffer.c_str()),
-		nChars,
-		NULL,
-		NULL);
-
-	return newbuffer;
-}
-
-static std::string to_utf8(const std::wstring& str)
-{
-	return to_utf8(str.c_str(), (int)str.size());
-}
-
-static vector<string> StringSplit(string input, char de)
-{
-	vector<string> answer;
-	stringstream ss(input);
-	string temp;
-
-	while (getline(ss, temp, de))
-	{
-		answer.push_back(temp);
-	}
-	return answer;
-}
 
 HRESULT CFileInfo::FolderFinder(const wstring& FileFolder)
 {
@@ -274,7 +230,7 @@ void CFileInfo::SaveVectorToDat(wstring savetxtName, wstring ExtensionName)
 				FileCount + L'|';
 
 			// 문서 저장
-			string outText = to_utf8(filetxt);
+			string outText = CHelperClass::to_utf8(filetxt);
 			fWrite << outText << "\n";
 		}
 	}
@@ -317,7 +273,7 @@ list<MYFILEPATH*> CFileInfo::Load_ExtensionList(wstring txtfilepath, string exe,
 	while (!fRead.eof())
 	{
 		getline(fRead, line);
-		vector<string> vecStr = StringSplit(line, '|');
+		vector<string> vecStr = CHelperClass::StringSplit(line, '|');
 		if (vecStr.size() != 4)
 			continue;
 		if (bflag)
