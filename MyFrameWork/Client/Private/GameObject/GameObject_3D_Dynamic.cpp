@@ -38,15 +38,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 
 	mComModel->SetUp_AnimIndex(0);
 
-	// #TESTCODE 충돌체 
 	COLLIDER_DESC desc;
-	//desc[0].meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
-	//desc[1].meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
-	//desc[2].meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
-	//desc[1].mOffset = _float3(2, 0, 0);
-	//desc[1].mSize = _float3(0.5f, 0.5f, 0.5f);;
-	//desc[2].mOffset = _float3(-2, 0, 0);
-	//desc[2].mSize = _float3(1, 1, 1);;
 
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
 	desc.mSize = _float3(0.5f, 0.5f, 0.5f);
@@ -56,7 +48,8 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	mComModel->Get_Animaitor()->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 	// test
-	meCurrentMap = CGameObject_3D_Dynamic::MAPTYPE_DUNGEON;
+//	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
+	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 
 	return S_OK;
 }
@@ -65,18 +58,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-	// 던전맵인지 체크
-
-	if (mComNaviMesh == nullptr)
-	{
-		CGameObject_MyTerrain* terrain = (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_DUNGEON));
-		if (terrain != nullptr)
-		{
-			mComNaviMesh = (CNavigation*)terrain->Get_ComNavimesh()->Clone(nullptr);
-			mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
-		}
-	}
-
+	// 충돌
 	if (mComListCollider != nullptr)
 	{
 		for (auto& col : *mComListCollider)
@@ -84,13 +66,12 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			col->Update_Transform(mComTransform->GetWorldFloat4x4());
 			GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
 		}
-
 	}
 
+	// 움직임
 	if (mIsMove)
 	{
 		mComModel->SetUp_AnimIndex(29);
-
 		// 경로 리스트에 있는 셀을 뺴서 이동
 		// #Tag 네비메시 움직임나중에 수정 
 		if (mIsMoveCell)
@@ -102,10 +83,19 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			mComTransform->LookAt(newLook);
 			mTimer += TimeDelta;
 			mCurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mGoalPosition, mTimer, mTimeMax);
+			mCurrentNavi->Move_OnNavigation(mCurrentPosition);
+			
+			mCurrentPosition.y = mCurrentMap->Get_HeightY(mCurrentPosition);
+			Set_Position(mCurrentPosition);
+
 			if (mTimer > mTimeMax)
+			{
 				mIsMoveCell = false;
-			if (_float3::Distance(mCurrentPosition, mGoalPosition) < 1.0f)
+			}
+			else if (_float3::Distance(mCurrentPosition, mGoalPosition) < 0.5f)
+			{
 				mIsMoveCell = false;
+			}
 		}
 
 		else
@@ -116,6 +106,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 				mIsMove = false;
 				mIsMoveCell = false;
 				mTimeMax = 0.3f;
+				Set_Position(mGoalPosition);
 			}
 			else
 			{
@@ -124,7 +115,6 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 				mIsMoveCell = true;
 				mStartPosition = Get_WorldPostition();
 				mTimer = 0;
-				mComNaviMesh->Move_OnNavigation(_float4(0, 0, 0, 0));
 			}
 			
 			
@@ -137,60 +127,31 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
+	//if (mCurrentMap == nullptr)
+	//	return UPDATEERROR;
 
-	if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
-	{
-		mCurrentTerrain = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
-		FAILED_CHECK(Set_Terrain_HeightY(mCurrentTerrain));
+	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+	//{
+	//	_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
+	//	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 
-		// Test Test
-		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
-		{
-			_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
-			_uint StartIndex = mComNaviMesh->Get_CurrentCellIndex();
-			_uint GoalIndex = StartIndex;
+	//	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
+	//	_uint GoalIndex = StartIndex;
 
-			if (mIsMove == false && mCurrentPathList.empty())
-			{
-				if (mComNaviMesh->Get_PickPosForIndex(worldPickPos, &GoalIndex))
-				{
-					mCurrentPathList = mComNaviMesh->AstartPathFind(StartIndex, GoalIndex);
-					mTimeMax = 0.3f;
-					mIsMove = true;
-				}
-			}
-		}
-	}
+	//	if (mIsMove == false && mCurrentPathList.empty())
+	//	{
+	//		if (mCurrentNavi->Get_PickPosForIndex(worldPickPos, &GoalIndex))
+	//		{
+	//			mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
+	//			mTimeMax = 0.3f;
+	//			mIsMove = true;
+	//		}
+	//	}
+	//}
 
-	else if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
-	{
-		mCurrentTerrain = GetSingle(CGameManager)->Get_LevelObject_WORLDMAP();
-
-		//FAILED_CHECK(Set_Terrain_HeightY(mCurrentTerrain));
-
-		//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
-		//{
-		//	// #TODO 네비메시 길찾기 적용 
-		//	_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
-		//	_uint StartIndex = mComNaviMesh->Get_CurrentCellIndex();
-		//	_uint GoalIndex = StartIndex;
-
-		//	if (mIsMove == false && mCurrentPathList.empty())
-		//	{
-		//		if (mComNaviMesh->Get_PickPosForIndex(worldPickPos, &GoalIndex))
-		//		{
-		//			mCurrentPathList = mComNaviMesh->AstartPathFind(StartIndex, GoalIndex);
-		//			mTimeMax = 0.3f;
-		//			mIsMove = true;
-		//		}
-		//	}
-		//}
-	}
-
-	
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 
-	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 1.f))
+	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
 	return UPDATENONE;
@@ -224,15 +185,25 @@ HRESULT CGameObject_3D_Dynamic::Render()
 			obj->Render();
 		}
 	}
-
-	if (mCurrentTerrain != nullptr&& mComNaviMesh !=nullptr)
+	if (mCurrentMap)
 	{
-		CTransform* terraintrans = mCurrentTerrain->Get_ComTransform();
-		mComNaviMesh->Render(terraintrans);
+		CTransform* terraintrans = mCurrentMap->Get_ComTransform();
+		mCurrentNavi->Render(terraintrans);
 	}
 	
 #endif // _DEBUG
 
+	return S_OK;
+}
+
+HRESULT  CGameObject_3D_Dynamic::Set_MapSetting(E_MAPTYPE type)
+{
+	if (type == CGameObject_3D_Dynamic::MAPTYPE_END)
+		return E_FAIL;
+
+	meCurrentMap = type;
+	mCurrentMap = mTerrain_Maps[type];
+	mCurrentNavi = mComNavi[type];
 	return S_OK;
 }
 
@@ -297,16 +268,18 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 	}
 
-	if (mComNaviMesh == nullptr)
-	{
-		// 현재 Terrain의 네비 메시를 가져와야한다.
-		CGameObject_MyTerrain* terrain =  (CGameObject_MyTerrain*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_DUNGEON));
-		if (terrain != nullptr)
-		{
-			mComNaviMesh = (CNavigation*)terrain->Get_ComNavimesh()->Clone(nullptr);
-			mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
-		}
-	}
+	//if (mTerrain_Maps[MAPTYPE_DUNGEON] == nullptr || mTerrain_Maps[MAPTYPE_WORLD] == nullptr)
+	//{
+	//	// 현재 Terrain의 네비 메시 복사.
+	//	mTerrain_Maps[MAPTYPE_DUNGEON] = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
+	//	mTerrain_Maps[MAPTYPE_WORLD] = GetSingle(CGameManager)->Get_LevelObject_WORLDMAP();
+	//	Safe_AddRef(mTerrain_Maps[MAPTYPE_DUNGEON]);
+	//	Safe_AddRef(mTerrain_Maps[MAPTYPE_WORLD]);
+
+	//	mComNavi[MAPTYPE_DUNGEON] = (CNavigation*)mTerrain_Maps[MAPTYPE_DUNGEON]->Get_ComNavimesh()->Clone(nullptr);
+	//	mComNavi[MAPTYPE_WORLD] = (CNavigation*)mTerrain_Maps[MAPTYPE_WORLD]->Get_ComNavimesh()->Clone(nullptr);
+	//}
+
 	return S_OK;
 }
 
@@ -407,5 +380,11 @@ void CGameObject_3D_Dynamic::Free()
 		Safe_Delete(mComListCollider);
 	}
 
-	Safe_Release(mComNaviMesh);
+	for (int i =0; i<MAPTYPE_END;++i)
+	{
+		Safe_Release(mTerrain_Maps[i]);
+		Safe_Release(mComNavi[i]);
+	}
+	mCurrentMap = nullptr;
+	mCurrentNavi = nullptr;
 }

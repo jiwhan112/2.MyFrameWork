@@ -77,7 +77,7 @@ _int CGameObject_3D_Static::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.0f))
+	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 3.0f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
 
@@ -114,7 +114,6 @@ HRESULT CGameObject_3D_Static::Render()
 
 HRESULT CGameObject_3D_Static::CollisionFunc(_float3 PickPosition, _float dist)
 {
-	int i = 5;
 
 	return S_OK;
 }

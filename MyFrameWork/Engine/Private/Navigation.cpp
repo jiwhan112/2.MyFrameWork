@@ -62,7 +62,6 @@ HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNaviDataFilePath)
 HRESULT CNavigation::NativeConstruct(void * pArg)
 {
 	mCurrentIndex = 0;
-
 	return S_OK;
 }
 

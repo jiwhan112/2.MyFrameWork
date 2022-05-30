@@ -42,9 +42,7 @@ HRESULT CGameObject_3D_Tile::NativeConstruct(void* pArg)
 	float size = 0.4f;
 	float sizet = 0.6f;
 	mCollider_Desc.mOffset = _float3(0, 0.8f, 0);
-	mCollider_Desc.mSize = _float3(size, size*2.5f, size);
-//	mCollider_Desc.mOffset = _float3(0, 1.3f, 0);
-//	mCollider_Desc.mSize = _float3(size, size*2.0f, size);
+	mCollider_Desc.mSize = _float3(size, size*2.0f, size);
 	Set_LoadColliderDESC(mCollider_Desc);
 	Set_Component();	
 	return S_OK;

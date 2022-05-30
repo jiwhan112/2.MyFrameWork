@@ -42,9 +42,13 @@ public:
 	virtual HRESULT Render();
 
 public:
+	HRESULT						Set_MapSetting(E_MAPTYPE type);
+
 	CModel*						Get_ComModel() const { return mComModel; }
 	const list<CCollider*>*		Get_ComListCollider() const { return mComListCollider; }
-	CNavigation*				Get_ComNaviMesh() const { return mComNaviMesh; }
+
+	CGameObject_MyTerrain*		Get_Terrain(E_MAPTYPE type) const { return mTerrain_Maps[type]; }
+	CNavigation*				Get_ComNaviMesh(E_MAPTYPE type) const { return mComNavi[type]; }
 
 	const MODEL_DYNAMIC_DESC&	Get_ModelDESC() const { return mModelDesc; }
 
@@ -73,7 +77,6 @@ protected: // 3D모델 Com / DESC 추가
 	// 뼈애 달리게 수정
 	list<CCollider*>*			mComListCollider = nullptr;
 
-	CNavigation*				mComNaviMesh = nullptr;
 
 
 	MODEL_DYNAMIC_DESC			mModelDesc;
@@ -81,7 +84,6 @@ protected: // 3D모델 Com / DESC 추가
 
 	
 	E_UNITTYPE					meUnitType = UNIT_END;
-	E_MAPTYPE					meCurrentMap = MAPTYPE_END;
 
 	// MOVE
 
@@ -97,10 +99,16 @@ protected: // 3D모델 Com / DESC 추가
 
 	_float3						mCurrentPosition;
 
-	// 현재 지형
-	CGameObject_MyTerrain*		mCurrentTerrain= nullptr;
+	// 지형
+	E_MAPTYPE					meCurrentMap = MAPTYPE_END;
+	// 현재 
 
+	// 버퍼들 
+	CGameObject_MyTerrain*		mTerrain_Maps[MAPTYPE_END] = {nullptr,nullptr };
+	CNavigation*				mComNavi[MAPTYPE_END] = { nullptr, nullptr };
 
+	CGameObject_MyTerrain*		mCurrentMap = nullptr;
+	CNavigation*				mCurrentNavi = nullptr;
 
 //	E_BASEAI					meAI;
 
