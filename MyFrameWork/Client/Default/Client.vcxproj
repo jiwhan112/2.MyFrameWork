@@ -165,6 +165,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\AI\AI_Action.h" />
     <ClInclude Include="..\Public\Camera_Client.h" />
     <ClInclude Include="..\Public\Client_DESC.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -241,6 +242,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AI\AI_Action.cpp" />
     <ClCompile Include="..\Private\Camera_Client.cpp" />
     <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp" />
     <ClCompile Include="..\Private\FileIO\ObjectIO.cpp" />

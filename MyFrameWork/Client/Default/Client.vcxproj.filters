@@ -199,6 +199,18 @@
     <Filter Include="02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj">
       <UniqueIdentifier>{07b7e8cf-a459-472b-a26f-72280821cb9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai">
+      <UniqueIdentifier>{59932a11-1236-4c9a-96a9-1ff9ea5a83b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\01.Action">
+      <UniqueIdentifier>{d5b8c1ff-7ab5-4dad-b09f-204c2e2c786e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\02.Deco">
+      <UniqueIdentifier>{82c9527c-c4a3-4e01-9d36-22a31bc7f396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\03.Selector">
+      <UniqueIdentifier>{5b0373fd-f7a8-4466-a1ba-9de2749586b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -384,6 +396,9 @@
     <ClInclude Include="..\Public\GameObject\GameObject_Environment.h">
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AI\AI_Action.h">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -542,6 +557,9 @@
     <ClCompile Include="..\Public\Client_DESC.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Environment.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI\AI_Action.cpp">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

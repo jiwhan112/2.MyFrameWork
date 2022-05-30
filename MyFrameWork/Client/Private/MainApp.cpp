@@ -115,6 +115,9 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TRANSFORM),
 		CTransform::Create(m_pDevice, m_pDeviceContext)));
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_BEHAVIORTREE),
+		CBehaviorTree::Create(m_pDevice, m_pDeviceContext)));
+
 	// 충돌
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB),
 		CCollider::Create(m_pDevice, m_pDeviceContext, CCollider::COL_AABB)));
@@ -129,24 +132,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
 		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
 
-	// 높이맵으로 처리
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
-	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp"))));
-
-	// 지형 컴포넌트
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_TERRAIN),
-	//	CVIBuffer_Terrain::Create(m_pDevice, m_pDeviceContext,129,129)));
-
-	// 정적 오브젝트
-	// _float4x4		DefaultTransform;
-	// DefaultTransform = _float4x4::CreateScale(1) * _float4x4::CreateRotationY(XMConvertToRadians(180));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL),
-	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_NOANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
-
-	// 동적 오브젝트
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_MODEL_ANI),
-	//	CModel::Create(m_pDevice, m_pDeviceContext, CModel::MODEL_ANI, "../Bin/Resources/TestFBX/", "crea_Snot_a.fbx", DefaultTransform)));
-
+	
 	// 텍스처 컴포넌트
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_DEFAULT),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Logo.dds"), 1)));
@@ -160,6 +146,8 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(Ready_Prototype_Components_Texture());
 	FAILED_CHECK(Ready_Prototype_Components_Terrain());
 	FAILED_CHECK(Ready_Prototype_Components_Shader());
+
+
 
 	return S_OK;
 }
@@ -299,6 +287,8 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 
 	return S_OK;
 }
+
+
 
 HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 {

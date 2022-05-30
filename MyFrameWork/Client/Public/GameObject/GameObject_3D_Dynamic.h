@@ -94,7 +94,11 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	
 	E_UNITTYPE					meUnitType = UNIT_END;
 
+	// AI
+	CBehaviorTree*				mComBehavior = nullptr;
+
 	// MOVE
+
 
 	_float3						mGoalPosition;
 	_float3						mStartPosition;

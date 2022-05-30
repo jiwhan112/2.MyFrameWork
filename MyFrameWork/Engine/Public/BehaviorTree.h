@@ -22,7 +22,8 @@ public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual HRESULT Tick(_double timer);
-	virtual HRESULT Tick_Sequnce(_double timer);
+	virtual HRESULT LateTick(_double timer);
+
 
 	HRESULT				Add_Seqeunce(string strtag, CNode_Seqeunce * seq);
 	CNode_Seqeunce*		Find_Seqeunce(string strtag);
@@ -45,7 +46,7 @@ public:
 class ENGINE_DLL CNode_Seqeunce
 	:public CBase
 {
-private:
+protected:
 	CNode_Seqeunce() = default;
 	virtual ~CNode_Seqeunce() = default;
 
@@ -69,7 +70,7 @@ protected:
 	list< CNode_LeafTree*>::iterator Find_LeafTree_Iter(CNode_LeafTree* currentTree);
 
 
-private:
+protected:
 	CNode_LeafTree* mCurrentLeafTree;
 	CNode_LeafTree* mPreLeafTree;
 	
@@ -139,7 +140,7 @@ public:
 		DECOTYPE_END,
 	};
 
-private:
+protected:
 	explicit CNode_Decorator(const char* str);
 	virtual ~CNode_Decorator() = default;
 
@@ -150,7 +151,7 @@ public:
 class ENGINE_DLL CNode_Selector
 	: public CNode_LeafTree
 {
-private:
+protected:
 	explicit CNode_Selector(const char* str);
 	virtual ~CNode_Selector() = default;
 
@@ -164,7 +165,7 @@ public:
 class ENGINE_DLL CNode_Action
 	: public CNode_LeafTree
 {
-private:
+protected:
 	explicit CNode_Action(const char* str);
 	virtual ~CNode_Action() = default;
 

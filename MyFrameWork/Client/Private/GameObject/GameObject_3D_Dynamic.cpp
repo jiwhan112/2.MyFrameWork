@@ -63,7 +63,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 		}
 	}
 
-	
+	mComBehavior->Tick(TimeDelta);
 	return UPDATENONE;
 }
 
@@ -74,15 +74,16 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	if (mCurrentMap == nullptr)
 		return UPDATEERROR;
 
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
-	{
+	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+	//{
 
-	}
-
-	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+	//}
 
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+
+	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+
 
 	return UPDATENONE;
 }
@@ -143,6 +144,9 @@ HRESULT CGameObject_3D_Dynamic::Init_Unit()
 
 	mComModel->Get_Animaitor()->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
+	// AI ¼¼ÆÃ
+	
+	
 	return S_OK;
 }
 
@@ -292,6 +296,11 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 		string strModel = mModelDesc.mModelName;
 		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+	}
+	if (mComBehavior == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_BEHAVIORTREE), TEXT("Com_Behavior"), (CComponent**)&mComBehavior));
+
 	}
 
 	//if (mTerrain_Maps[MAPTYPE_DUNGEON] == nullptr || mTerrain_Maps[MAPTYPE_WORLD] == nullptr)

@@ -29,20 +29,19 @@ HRESULT CBehaviorTree::NativeConstruct(void * pArg)
 
 HRESULT CBehaviorTree::Tick(_double timer)
 {
-	Tick_Sequnce(timer);
-	return S_OK;
-}
-
-HRESULT CBehaviorTree::Tick_Sequnce(_double timer)
-{
 	if (mCurrentSequnence)
 		mCurrentSequnence->Tick_Sequnce(timer);
 
+	return S_OK;
+}
 
+HRESULT CBehaviorTree::LateTick(_double timer)
+{
 	if (mCurrentSequnence->Get_SeqEnd())
 	{
 		// 다른 시퀀스 선택
 	}
+
 	return S_OK;
 }
 
