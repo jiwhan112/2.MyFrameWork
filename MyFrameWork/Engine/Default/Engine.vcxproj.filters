@@ -160,6 +160,9 @@
     <Filter Include="01.Utility\13.RenderTarget\02.RenderTarget">
       <UniqueIdentifier>{178f3d48-cd3c-4d8d-aee0-aa0b61943511}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06.ComponentMgr\08.BehaviorTree">
+      <UniqueIdentifier>{e7a1c5cb-f1d1-430c-ba07-40498af2bb73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -305,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\EasingMgr.cpp">
       <Filter>01.Utility\01.EasingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BehaviorTree.cpp">
+      <Filter>01.Utility\06.ComponentMgr\08.BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,6 +481,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Enum.h">
       <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BehaviorTree.h">
+      <Filter>01.Utility\06.ComponentMgr\08.BehaviorTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

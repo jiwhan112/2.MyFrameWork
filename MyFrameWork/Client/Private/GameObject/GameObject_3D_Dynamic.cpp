@@ -34,18 +34,10 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
 HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	mComTransform->Scaled(_float3(0.5f,0.5f,0.5f));
 
-	mComModel->SetUp_AnimIndex(0);
-
-	COLLIDER_DESC desc;
-
-	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
-	desc.mSize = _float3(0.5f, 0.5f, 0.5f);
-	Add_ColliderDesc(&desc,1);
-	Update_Collider();
-	mIsMove = false;
-	mComModel->Get_Animaitor()->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
+	// 유닛별 초기화
+	Init_Unit();
+	
 
 	// test
 //	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
@@ -58,6 +50,9 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
+	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+	mCurrentNavi->Move_OnNavigation(mCurrentPosition);
+
 	// 충돌
 	if (mComListCollider != nullptr)
 	{
@@ -68,58 +63,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 		}
 	}
 
-	// 움직임
-	if (mIsMove)
-	{
-		mComModel->SetUp_AnimIndex(29);
-		// 경로 리스트에 있는 셀을 뺴서 이동
-		// #Tag 네비메시 움직임나중에 수정 
-		if (mIsMoveCell)
-		{
-			// 셀 이동
-			mGoalPosition = mMoveCell->Get_CenterPoint();
-			// Test
-			_float3 newLook = _float3(mGoalPosition.x, mStartPosition.y, mGoalPosition.z);
-			mComTransform->LookAt(newLook);
-			mTimer += TimeDelta;
-			mCurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mGoalPosition, mTimer, mTimeMax);
-			mCurrentNavi->Move_OnNavigation(mCurrentPosition);
-			
-			mCurrentPosition.y = mCurrentMap->Get_HeightY(mCurrentPosition);
-			Set_Position(mCurrentPosition);
-
-			if (mTimer > mTimeMax)
-			{
-				mIsMoveCell = false;
-			}
-			else if (_float3::Distance(mCurrentPosition, mGoalPosition) < 0.5f)
-			{
-				mIsMoveCell = false;
-			}
-		}
-
-		else
-		{
-			// 셀 설정
-			if (mCurrentPathList.empty())
-			{
-				mIsMove = false;
-				mIsMoveCell = false;
-				mTimeMax = 0.3f;
-				Set_Position(mGoalPosition);
-			}
-			else
-			{
-				mMoveCell = mCurrentPathList.front();
-				mCurrentPathList.pop_front();
-				mIsMoveCell = true;
-				mStartPosition = Get_WorldPostition();
-				mTimer = 0;
-			}
-			
-			
-		}
-	}
+	
 	return UPDATENONE;
 }
 
@@ -127,27 +71,13 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	//if (mCurrentMap == nullptr)
-	//	return UPDATEERROR;
+	if (mCurrentMap == nullptr)
+		return UPDATEERROR;
 
-	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
-	//{
-	//	_float3 worldPickPos = GetSingle(CGameManager)->Get_PickPos();
-	//	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+	{
 
-	//	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
-	//	_uint GoalIndex = StartIndex;
-
-	//	if (mIsMove == false && mCurrentPathList.empty())
-	//	{
-	//		if (mCurrentNavi->Get_PickPosForIndex(worldPickPos, &GoalIndex))
-	//		{
-	//			mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
-	//			mTimeMax = 0.3f;
-	//			mIsMove = true;
-	//		}
-	//	}
-	//}
+	}
 
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 
@@ -185,6 +115,7 @@ HRESULT CGameObject_3D_Dynamic::Render()
 			obj->Render();
 		}
 	}
+
 	if (mCurrentMap)
 	{
 		CTransform* terraintrans = mCurrentMap->Get_ComTransform();
@@ -192,6 +123,25 @@ HRESULT CGameObject_3D_Dynamic::Render()
 	}
 	
 #endif // _DEBUG
+
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Init_Unit()
+{
+	// 상속받아서 사용
+
+	mComTransform->Scaled(_float3(0.5f, 0.5f, 0.5f));
+	mComModel->SetUp_AnimIndex(0);
+
+	COLLIDER_DESC desc;
+	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
+	desc.mSize = _float3(0.5f, 0.5f, 0.5f);
+	Add_ColliderDesc(&desc, 1);
+	Update_Collider();
+	mIsNaviPath = false;
+
+	mComModel->Get_Animaitor()->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 	return S_OK;
 }
@@ -249,6 +199,82 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 
 
 	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::PathTrigger(CNavigation* MyNaviMesh, _float3 TargetXZ)
+{
+	// 위치 찾기
+	if (mIsNaviPath)
+		return S_FALSE;
+	
+	_uint StartIndex = MyNaviMesh->Get_CurrentCellIndex();
+	_uint GoalIndex = StartIndex;
+
+	if (mIsNaviPath == false && mCurrentPathList.empty())
+	{
+		// 해당 위치의 네비메시 셀 인덱스 반환
+		if (MyNaviMesh->Get_PickPosForIndex(TargetXZ, &GoalIndex))
+		{
+			// 경로 탐색
+			mCurrentPathList = MyNaviMesh->AstartPathFind(StartIndex, GoalIndex);
+			mIsNaviPath = true;
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Update_Move(_double TimeDelta)
+{
+	// 움직임 함수
+
+	if (mIsNaviPath)
+	{
+		mComModel->SetUp_AnimIndex(29);
+
+		if (mIsMoveCell)
+		{
+			// 셀 이동
+			mGoalPosition = mMoveCell->Get_CenterPoint();
+			_float3 newLook = _float3(mGoalPosition.x, mStartPosition.y, mGoalPosition.z);
+			mComTransform->LookAt(newLook);
+			mTimer += TimeDelta;
+			mCurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mGoalPosition, mTimer, mTimeMax);
+			Set_Position(mCurrentPosition);
+
+			if (mTimer > mTimeMax)
+			{
+				mIsMoveCell = false;
+			}
+			else if (_float3::Distance(mCurrentPosition, mGoalPosition) < 0.5f)
+			{
+				mIsMoveCell = false;
+			}
+		}
+
+		else
+		{
+			// 셀 설정
+			if (mCurrentPathList.empty())
+			{
+				mIsNaviPath = false;
+				mIsMoveCell = false;
+				Set_Position(mGoalPosition);
+			}
+			else
+			{
+				// Enter To Move
+				mMoveCell = mCurrentPathList.front();
+				mCurrentPathList.pop_front();
+				mIsMoveCell = true;
+				mStartPosition = Get_WorldPostition();
+				mTimer = 0;
+			}
+		}
+	}
+
+	return S_OK;
+
 }
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()

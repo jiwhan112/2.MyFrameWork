@@ -33,15 +33,19 @@ protected:
 	explicit CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs);
 	virtual ~CGameObject_3D_Dynamic() = default;
 
-public:
+public: // Base
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
 
 	virtual _int Tick(_double TimeDelta);
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
+	
+	virtual HRESULT Init_Unit();
 
-public:
+
+
+public: // GetSet
 	HRESULT						Set_MapSetting(E_MAPTYPE type);
 
 	CModel*						Get_ComModel() const { return mComModel; }
@@ -58,8 +62,13 @@ public:
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC desc);
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC* desc,int size);
 
-public:
+public: // Collision
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
+
+protected: // Move AI
+	HRESULT PathTrigger(CNavigation* MyNaviMesh, _float3 TargetXZ);
+	HRESULT Update_Move(_double Timer);
+
 
 
 protected:
@@ -68,7 +77,7 @@ protected:
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 
 
-//	void		GOMOVE(_double timer);
+	
 
 protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
@@ -91,7 +100,7 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	_float3						mStartPosition;
 	_double						mTimer;
 	_double						mTimeMax;
-	bool						mIsMove = false;
+	bool						mIsNaviPath = false;
 	bool						mIsMoveCell = false;
 
 	list<CCell*>				mCurrentPathList;
@@ -110,6 +119,7 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CGameObject_MyTerrain*		mCurrentMap = nullptr;
 	CNavigation*				mCurrentNavi = nullptr;
 
+	
 //	E_BASEAI					meAI;
 
 public:

@@ -9,6 +9,7 @@
 #include "Model.h"
 #include "Collider.h"
 #include "Navigation.h"
+#include "BehaviorTree.h"
 
 #include "VIBuffer.h"
 #include "VIBuffer_Rect.h"

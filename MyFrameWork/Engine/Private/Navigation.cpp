@@ -98,7 +98,6 @@ _bool CNavigation::Get_PickPosForIndex(_float3 PickPos , _uint* outIndex )
 	// 네비 메시 정점이랑 충돌
 	for (auto cell : mVecCells)
 	{
-
 		if (nullptr != cell->isIn_Cell(PickPos))
 		{
 			*outIndex = cell->Get_Index();

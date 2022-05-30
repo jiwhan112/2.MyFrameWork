@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Animatior.h" />
     <ClInclude Include="..\Public\AnimationClip.h" />
+    <ClInclude Include="..\Public\BehaviorTree.h" />
     <ClInclude Include="..\Public\EasingMgr.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\Frstum.h" />
@@ -216,6 +217,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\AnimationClip.cpp" />
     <ClCompile Include="..\Private\Animatior.cpp" />
+    <ClCompile Include="..\Private\BehaviorTree.cpp" />
     <ClCompile Include="..\Private\EasingMgr.cpp" />
     <ClCompile Include="..\Private\Frstum.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
