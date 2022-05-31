@@ -27,7 +27,8 @@ public:
 private:
 
 private:
-	HRESULT Edit_InGame(); 
+	HRESULT Edit_InGame();
+	HRESULT Edit_Unit();
 
 
 private:
@@ -37,6 +38,8 @@ private:
 	// 지형 오브젝트
 	class CGameObject_MyTerrain*	mTerrainDungeon= nullptr;
 	class CGameObject_MyTerrain*	mTerrainWorld = nullptr;
+
+	class CGameObject_Base*	mSelectObject = nullptr;
 
 	CDungeon_Manager::E_GAMEMODE	mGameMode;
 

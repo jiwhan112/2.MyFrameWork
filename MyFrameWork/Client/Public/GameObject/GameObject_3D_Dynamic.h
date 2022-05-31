@@ -49,6 +49,7 @@ public: // GetSet
 	HRESULT						Set_MapSetting(E_MAPTYPE type);
 
 	CModel*						Get_ComModel() const { return mComModel; }
+	CBehaviorTree*				Get_ComBehavior() const { return mComBehavior; }
 	const list<CCollider*>*		Get_ComListCollider() const { return mComListCollider; }
 
 	CGameObject_MyTerrain*		Get_Terrain(E_MAPTYPE type) const { return mTerrain_Maps[type]; }
@@ -69,6 +70,8 @@ protected: // Move AI
 	HRESULT PathTrigger(CNavigation* MyNaviMesh, _float3 TargetXZ);
 	HRESULT Update_Move(_double Timer);
 
+	// AI 루팅 설정
+	HRESULT Create_Sequnce();
 
 
 protected:
@@ -98,8 +101,6 @@ protected: // 3D모델 Com / DESC 추가
 	CBehaviorTree*				mComBehavior = nullptr;
 
 	// MOVE
-
-
 	_float3						mGoalPosition;
 	_float3						mStartPosition;
 	_double						mTimer;

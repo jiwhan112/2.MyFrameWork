@@ -139,7 +139,6 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_SKY),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/SkyBox/SkyTest.dds"), 1)));
 
-	
 	// ∏µ® / ≈ÿΩ∫√≥ ∏  / ºŒ¿Ã¥ı /
 	FAILED_CHECK(Ready_Prototype_Components_Model());
 	FAILED_CHECK(Ready_Prototype_Components_AniModel());

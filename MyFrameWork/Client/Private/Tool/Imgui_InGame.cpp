@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "Tool/Imgui_InGame.h"
-#include "GameObject/GameObject_MyTerrain.h"
+#include "GameObject/Client_Object.h"
 #include "Camera_Client.h"
-#include "GameObject/Dungeon_Manager.h"
-#include "GameObject/Dungeon_Objects.h"
+
 
 CImgui_InGame::CImgui_InGame(ID3D11Device * device, ID3D11DeviceContext * context)
 	:CImgui_Base(device, context)
@@ -21,6 +20,9 @@ HRESULT CImgui_InGame::NativeConstruct()
 HRESULT CImgui_InGame::Update(_double time)
 {
 	mGameMode = GetSingle(CGameManager)->Get_DaungonManager()->Get_CurrentGameMode();
+
+	mSelectObject =
+		(CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
 
 
 
@@ -54,6 +56,8 @@ HRESULT CImgui_InGame::Render_UI()
 				if (ImGui::CollapsingHeader("TerrainSetting"))
 				{
 					FAILED_CHECK(Edit_InGame());
+					FAILED_CHECK(Edit_Unit());
+					
 				}
 				ImGui::End();
 			}
@@ -96,6 +100,24 @@ HRESULT CImgui_InGame::Edit_InGame()
 		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(SpawnPos);
 	}
 
+	return S_OK;
+}
+
+HRESULT CImgui_InGame::Edit_Unit()
+{
+	// 현재 선택 유닛에 따라서 정보변경
+	if (mSelectObject == nullptr)
+		return S_OK;
+
+	E_OBJECT_TYPE id = (E_OBJECT_TYPE)mSelectObject->Get_ObjectTypeID();
+
+	if (id == OBJECT_TYPE_3D_DYNAMIC)
+	{
+		CGameObject_3D_Dynamic* dynamicunit = ((CGameObject_3D_Dynamic*)mSelectObject);
+
+		ImGui::Text(dynamicunit->Get_ComBehavior()->Get_StrCurrentLeafName());
+	}
+	
 	return S_OK;
 }
 

@@ -24,15 +24,22 @@ public:
 	virtual HRESULT Tick(_double timer);
 	virtual HRESULT LateTick(_double timer);
 
+	CNode_Seqeunce* Get_CurrentSequnce() { return mCurrentSequnence; }
+	const char* Get_StrCurrentLeafName();
 
 	HRESULT				Add_Seqeunce(string strtag, CNode_Seqeunce * seq);
 	CNode_Seqeunce*		Find_Seqeunce(string strtag);
+	HRESULT				Select_Sequnce(string seqTag);
 
 
 private:
 	// 각 시퀀스를 맵으로 저장
 	map<string, CNode_Seqeunce*>		mMapSequence;
+	string								mCurrentKey = "";
 	CNode_Seqeunce*						mCurrentSequnence = nullptr;
+
+	// 각 액션의 클론 생성을 위해 원본을 저장해두자.
+	map<string, CNode_LeafTree*>		mMapLeafNode;
 
 public:
 	static CBehaviorTree* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -47,12 +54,17 @@ class ENGINE_DLL CNode_Seqeunce
 	:public CBase
 {
 protected:
-	CNode_Seqeunce() = default;
+	explicit CNode_Seqeunce() = default;
 	virtual ~CNode_Seqeunce() = default;
 
 public:
 	virtual HRESULT NativeConstruct();
 	virtual HRESULT Tick_Sequnce(_double timer);
+
+	void Restart()
+	{
+		mbEnd_Sequnce = false;
+	}
 
 	// 노드가 끝났을떄만 다음노드 업데이트
 	virtual HRESULT Iter_Sequnce(bool next);
@@ -63,11 +75,17 @@ public:
 	CNode_LeafTree* PreNode();
 
 public:
-	_bool Get_SeqEnd() const { return bSeqEnd; };
+	// 시퀀스생성
+	HRESULT PushFront_LeafNode(CNode_LeafTree* leaf);
+	HRESULT PushBack_LeafNode(CNode_LeafTree* leaf);
+
+public:
+	_bool Get_SeqEnd() const { return mbEnd_Sequnce; };
+	CNode_LeafTree* Get_CurrentLeafNode() const { return mCurrentLeafTree; }
 
 
 protected:
-	list< CNode_LeafTree*>::iterator Find_LeafTree_Iter(CNode_LeafTree* currentTree);
+	list<CNode_LeafTree*>::iterator Find_LeafTree_Iter(CNode_LeafTree* currentTree);
 
 
 protected:
@@ -76,9 +94,10 @@ protected:
 	
 	// 시퀀스에서는 해당하는 Leaf 노드 라스트로 가지고 있는다.
 	list< CNode_LeafTree*> mListSequnce;	
-	_bool bSeqEnd = false;
+	_bool mbEnd_Sequnce = false;
 
 public:
+
 	static CNode_Seqeunce* Create();
 	virtual void Free()override;
 
@@ -108,11 +127,25 @@ protected:
 	virtual ~CNode_LeafTree() = default;
 
 public:
+	// 중복사용으로 초기화 필요
 	E_LEAFTREE_ID Get_TREEID() { return meTreeID; }
 	void Set_TREEID(E_LEAFTREE_ID e) { meTreeID = e;}
 	_bool Get_IsEnd() { return mIsEnd; }
 	_bool Get_IsSucceed() { return mIsSucceed; }
+	const char* Get_NodeName() { 
+		return mStrNodeName.c_str();
+	}
 
+	void Init_Parent()
+	{
+		mIsEnd = false;
+		mIsSucceed = false;
+	}
+public:
+	// 중복사용으로 초기화 필요
+	virtual HRESULT NativeConstruct() = 0;
+	// 중복사용 클론
+	virtual CNode_LeafTree* Clone(void* pArg =nullptr) = 0;
 
 protected:
 	string			mStrNodeName;
@@ -145,7 +178,10 @@ protected:
 	virtual ~CNode_Decorator() = default;
 
 public:
-	virtual E_DECOTYPE IsCorect (_double timer/*, void* pArg = nullptr*/) = 0;
+	virtual HRESULT NativeConstruct() = 0;
+	virtual CNode_Decorator* Clone(void* pArg = nullptr) = 0;
+	virtual HRESULT IsCorect(_double timer/*,void* pArg = nullptr*/) = 0;
+
 };
 
 class ENGINE_DLL CNode_Selector
@@ -156,7 +192,10 @@ protected:
 	virtual ~CNode_Selector() = default;
 
 public:
-	virtual HRESULT Selection(_double timer) = 0;
+	virtual HRESULT NativeConstruct() = 0;
+	virtual CNode_Selector* Clone(void* pArg = nullptr) = 0;
+	virtual HRESULT Selection(_double timer/*,void* pArg = nullptr*/) = 0;
+
 
 
 };
@@ -169,7 +208,10 @@ protected:
 	explicit CNode_Action(const char* str);
 	virtual ~CNode_Action() = default;
 
+
 public:
+	virtual HRESULT NativeConstruct() = 0;
+	virtual CNode_Action* Clone(void* pArg = nullptr) = 0;
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/)=0;
 };
 END

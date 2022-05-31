@@ -29,7 +29,8 @@ HRESULT CBehaviorTree::NativeConstruct(void * pArg)
 
 HRESULT CBehaviorTree::Tick(_double timer)
 {
-	if (mCurrentSequnence)
+
+	if (mCurrentSequnence && (mCurrentSequnence->Get_SeqEnd() == false))
 		mCurrentSequnence->Tick_Sequnce(timer);
 
 	return S_OK;
@@ -37,12 +38,40 @@ HRESULT CBehaviorTree::Tick(_double timer)
 
 HRESULT CBehaviorTree::LateTick(_double timer)
 {
+
+	// 전역 상태가 온다면 먼저 변환된다 그렇지 않다면 저장된 시퀀스 상태를 루프한다.
+
+	// 우선 시퀀스가 정해지지 않으면 시퀀스 루프
 	if (mCurrentSequnence->Get_SeqEnd())
 	{
-		// 다른 시퀀스 선택
+		auto iter = mMapSequence.find(mCurrentKey);
+		iter++;
+		if (iter == mMapSequence.end())
+		{
+			mCurrentKey = (*mMapSequence.begin()).first;
+			mCurrentSequnence = (*mMapSequence.begin()).second;
+			mCurrentSequnence->Restart();
+
+		}
+		else
+		{
+			mCurrentKey = (*iter).first;
+			mCurrentSequnence = (*iter).second;
+			mCurrentSequnence->Restart();
+		}
 	}
 
 	return S_OK;
+}
+
+const char* CBehaviorTree::Get_StrCurrentLeafName()
+{
+	if (mCurrentSequnence == nullptr)
+		return "";
+	if (mCurrentSequnence->Get_CurrentLeafNode() == nullptr)
+		return "";
+
+	return mCurrentSequnence->Get_CurrentLeafNode()->Get_NodeName();
 }
 
 HRESULT CBehaviorTree::Add_Seqeunce(string strtag, CNode_Seqeunce * seq)
@@ -65,6 +94,18 @@ CNode_Seqeunce* CBehaviorTree::Find_Seqeunce(string strtag)
 		return nullptr;
 
 	return iter->second;
+}
+
+HRESULT CBehaviorTree::Select_Sequnce(string seqTag)
+{
+	CNode_Seqeunce* seq = Find_Seqeunce(seqTag);
+	if (seq == nullptr)
+		return E_FAIL;
+
+	mCurrentSequnence = seq;
+	mCurrentKey = seqTag;
+
+	return S_OK;
 }
 
 CBehaviorTree * CBehaviorTree::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
@@ -142,7 +183,7 @@ HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 		// 성공하면 다음노드 이동
 		// 실패하면 시퀀드 탈락
 		// 실패하면 이전노드 이동 
-		CNode_Decorator::E_DECOTYPE type = static_cast<CNode_Decorator*>(mCurrentLeafTree)->IsCorect(timer);
+		/*CNode_Decorator::E_DECOTYPE type = static_cast<CNode_Decorator*>(mCurrentLeafTree)->IsCorect(timer);
 
 		switch (type)
 		{
@@ -160,7 +201,7 @@ HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 			break;
 		default:
 			break;
-		}
+		}*/
 	}
 		break;
 	case CNode_LeafTree::LEAFTREE_ID_SELECTER:
@@ -198,7 +239,7 @@ HRESULT CNode_Seqeunce::Iter_Sequnce(bool next)
 HRESULT CNode_Seqeunce::End_Sequnce()
 {
 	// 시퀀스 나가기
-	bSeqEnd = true;
+	mbEnd_Sequnce = true;
 	mCurrentLeafTree = nullptr;
 	mPreLeafTree = nullptr;
 
@@ -214,10 +255,12 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 	auto iter = Find_LeafTree_Iter(mCurrentLeafTree);
 	if (iter == mListSequnce.end())
 		return nullptr;
-
+	
 	iter++;
 	if (iter == mListSequnce.end())
 		return nullptr;
+
+	(*iter)->NativeConstruct();
 
 	return *iter;
 }
@@ -233,6 +276,19 @@ CNode_LeafTree * CNode_Seqeunce::PreNode()
 		return nullptr;
 	iter--;
 	return *iter;
+}
+
+HRESULT CNode_Seqeunce::PushFront_LeafNode(CNode_LeafTree * leaf)
+{
+	// Action / Deco 노드를 넣는다.
+	mListSequnce.push_front(leaf);
+	return S_OK;
+}
+
+HRESULT CNode_Seqeunce::PushBack_LeafNode(CNode_LeafTree * leaf)
+{
+	mListSequnce.push_back(leaf);
+	return S_OK;
 }
 
 list< CNode_LeafTree*>::iterator CNode_Seqeunce::Find_LeafTree_Iter(CNode_LeafTree * currentTree)
@@ -256,7 +312,7 @@ list< CNode_LeafTree*>::iterator CNode_Seqeunce::Find_LeafTree_Iter(CNode_LeafTr
 
 HRESULT CNode_Seqeunce::NativeConstruct()
 {
-	bSeqEnd = true;
+	mbEnd_Sequnce = true;
 	return S_OK;
 }
 
@@ -278,7 +334,7 @@ void CNode_Seqeunce::Free()
 	{
 		Safe_Release(leaf);
 	}
-	bSeqEnd = false;
+	mbEnd_Sequnce = false;
 }
 
 

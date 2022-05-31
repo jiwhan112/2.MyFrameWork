@@ -2,6 +2,7 @@
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_MyTerrain.h"
 #include "Animatior.h"
+#include "AI/AI_Action.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -38,10 +39,9 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	// 유닛별 초기화
 	Init_Unit();
 	
-
 	// test
-//	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
-	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
+	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
+//	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 
 	return S_OK;
 }
@@ -62,7 +62,6 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
 		}
 	}
-
 	mComBehavior->Tick(TimeDelta);
 	return UPDATENONE;
 }
@@ -70,7 +69,6 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
-
 	if (mCurrentMap == nullptr)
 		return UPDATEERROR;
 
@@ -79,11 +77,10 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 	//}
 
+	mComBehavior->LateTick(TimeDelta);
+	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
-
-	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
-
 
 	return UPDATENONE;
 }
@@ -145,7 +142,7 @@ HRESULT CGameObject_3D_Dynamic::Init_Unit()
 	mComModel->Get_Animaitor()->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 	// AI 세팅
-	
+	Create_Sequnce();
 	
 	return S_OK;
 }
@@ -278,7 +275,34 @@ HRESULT CGameObject_3D_Dynamic::Update_Move(_double TimeDelta)
 	}
 
 	return S_OK;
+}
 
+HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
+{
+	// #TEST 딜레이 루틴 2개 만들기
+	// A루틴 : 0.5초 딜레이 2번
+	// B루틴 : 0.3초 딜레이 10번
+
+
+	CNode_Seqeunce* Seq_DealyA = CNode_Seqeunce::Create();
+
+	// 클론 만들기
+	CAction_DEALY* dealy3 = CAction_DEALY::Create("Dealy0.3", this, 0.3f);
+	CAction_DEALY* dealy5 = CAction_DEALY::Create("Dealy0.5", this, 0.5f);
+
+	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
+	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
+
+	CNode_Seqeunce* Seq_DealyB = CNode_Seqeunce::Create();
+	for (int i =0; i<10 ;++i)
+	{
+		Seq_DealyB->PushBack_LeafNode(dealy3->Clone());
+	}
+
+	mComBehavior->Add_Seqeunce("DealyA",Seq_DealyA);
+	mComBehavior->Add_Seqeunce("DealyB",Seq_DealyB);
+	mComBehavior->Select_Sequnce("DealyA");
+	return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()
@@ -303,17 +327,17 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 
 	}
 
-	//if (mTerrain_Maps[MAPTYPE_DUNGEON] == nullptr || mTerrain_Maps[MAPTYPE_WORLD] == nullptr)
-	//{
-	//	// 현재 Terrain의 네비 메시 복사.
-	//	mTerrain_Maps[MAPTYPE_DUNGEON] = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
-	//	mTerrain_Maps[MAPTYPE_WORLD] = GetSingle(CGameManager)->Get_LevelObject_WORLDMAP();
-	//	Safe_AddRef(mTerrain_Maps[MAPTYPE_DUNGEON]);
-	//	Safe_AddRef(mTerrain_Maps[MAPTYPE_WORLD]);
+	if (mTerrain_Maps[MAPTYPE_DUNGEON] == nullptr || mTerrain_Maps[MAPTYPE_WORLD] == nullptr)
+	{
+		// 현재 Terrain의 네비 메시 복사.
+		mTerrain_Maps[MAPTYPE_DUNGEON] = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
+		mTerrain_Maps[MAPTYPE_WORLD] = GetSingle(CGameManager)->Get_LevelObject_WORLDMAP();
+		Safe_AddRef(mTerrain_Maps[MAPTYPE_DUNGEON]);
+		Safe_AddRef(mTerrain_Maps[MAPTYPE_WORLD]);
 
-	//	mComNavi[MAPTYPE_DUNGEON] = (CNavigation*)mTerrain_Maps[MAPTYPE_DUNGEON]->Get_ComNavimesh()->Clone(nullptr);
-	//	mComNavi[MAPTYPE_WORLD] = (CNavigation*)mTerrain_Maps[MAPTYPE_WORLD]->Get_ComNavimesh()->Clone(nullptr);
-	//}
+		mComNavi[MAPTYPE_DUNGEON] = (CNavigation*)mTerrain_Maps[MAPTYPE_DUNGEON]->Get_ComNavimesh()->Clone(nullptr);
+		mComNavi[MAPTYPE_WORLD] = (CNavigation*)mTerrain_Maps[MAPTYPE_WORLD]->Get_ComNavimesh()->Clone(nullptr);
+	}
 
 	return S_OK;
 }
