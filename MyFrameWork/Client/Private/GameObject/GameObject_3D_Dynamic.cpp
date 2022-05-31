@@ -62,7 +62,8 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
 		}
 	}
-	mComBehavior->Tick(TimeDelta);
+
+//	mComBehavior->Tick(TimeDelta);
 	return UPDATENONE;
 }
 
@@ -77,7 +78,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 	//}
 
-	mComBehavior->LateTick(TimeDelta);
+//	mComBehavior->LateTick(TimeDelta);
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
@@ -287,21 +288,27 @@ HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
 	CNode_Seqeunce* Seq_DealyA = CNode_Seqeunce::Create();
 
 	// 클론 만들기
-	CAction_DEALY* dealy3 = CAction_DEALY::Create("Dealy0.3", this, 0.3f);
 	CAction_DEALY* dealy5 = CAction_DEALY::Create("Dealy0.5", this, 0.5f);
 
 	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
 	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
 
-	CNode_Seqeunce* Seq_DealyB = CNode_Seqeunce::Create();
-	for (int i =0; i<10 ;++i)
-	{
-		Seq_DealyB->PushBack_LeafNode(dealy3->Clone());
-	}
+
+//	CAction_DEALY* dealy3 = CAction_DEALY::Create("Dealy0.3", this, 0.3f);
+	//CNode_Seqeunce* Seq_DealyB = CNode_Seqeunce::Create();
+	//for (int i =0; i<10 ;++i)
+	//{
+	//	Seq_DealyB->PushBack_LeafNode(dealy3->Clone());
+	//}
 
 	mComBehavior->Add_Seqeunce("DealyA",Seq_DealyA);
-	mComBehavior->Add_Seqeunce("DealyB",Seq_DealyB);
+	//mComBehavior->Add_Seqeunce("DealyB",Seq_DealyB);
 	mComBehavior->Select_Sequnce("DealyA");
+
+	//Safe_Release(dealy3);
+	//Safe_Release(dealy5);
+
+
 	return S_OK;
 }
 
@@ -324,7 +331,6 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 	if (mComBehavior == nullptr)
 	{
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_BEHAVIORTREE), TEXT("Com_Behavior"), (CComponent**)&mComBehavior));
-
 	}
 
 	if (mTerrain_Maps[MAPTYPE_DUNGEON] == nullptr || mTerrain_Maps[MAPTYPE_WORLD] == nullptr)
@@ -428,6 +434,7 @@ void CGameObject_3D_Dynamic::Free()
 	__super::Free();
 
 	Safe_Release(mComModel);
+	Safe_Release(mComBehavior);
 	
 	if (mComListCollider != nullptr)
 	{
@@ -446,4 +453,7 @@ void CGameObject_3D_Dynamic::Free()
 	}
 	mCurrentMap = nullptr;
 	mCurrentNavi = nullptr;
+
+
+
 }
