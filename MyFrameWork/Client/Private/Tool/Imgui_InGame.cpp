@@ -25,17 +25,19 @@ HRESULT CImgui_InGame::Update(_double time)
 		(CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
 
 
+	if (mTerrainDungeon == nullptr)
+	{
+		mTerrainDungeon = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
+		Safe_AddRef(mTerrainDungeon);
+	}
+	if (mTerrainWorld == nullptr)
+	{
+		mTerrainWorld = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
+		Safe_AddRef(mTerrainWorld);
 
-	 if (mTerrainDungeon == nullptr)
-	 {
-		 mTerrainDungeon = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
-	 }
-	 if (mTerrainWorld == nullptr)
-	 {
-		 mTerrainWorld = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
 
-	 }
-	 
+	}
+
 	FAILED_CHECK(Render_UI());
 
 	return S_OK;
@@ -137,6 +139,7 @@ CImgui_InGame * CImgui_InGame::Create(ID3D11Device* deviec, ID3D11DeviceContext*
 void CImgui_InGame::Free()
 {
 	__super::Free();
+	mSelectObject = nullptr;
 	Safe_Release(mTerrainDungeon);
 	Safe_Release(mTerrainWorld);
 }

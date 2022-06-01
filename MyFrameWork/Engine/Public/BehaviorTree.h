@@ -39,7 +39,7 @@ private:
 	CNode_Seqeunce*						mCurrentSequnence = nullptr;
 
 	// 각 액션의 클론 생성을 위해 원본을 저장해두자.
-	map<string, CNode_LeafTree*>		mMapLeafNode;
+	// map<string, CNode_LeafTree*>		mMapLeafNode;
 
 public:
 	static CBehaviorTree* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

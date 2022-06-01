@@ -438,6 +438,7 @@ HRESULT CDungeon_Objects::Setup_Collision_Navi2Object()
 
 	for (auto& obj : *Objects)
 	{
+		// #TODO: 못가는 타일 미리 계산해두기..
 		CCollider* objCollider = ((CGameObject_3D_Static*)obj)->Get_ComCollider();
 		objCollider->Update_Transform(((CGameObject_3D_Static*)obj)->Get_ComTransform()->GetWorldFloat4x4());
 

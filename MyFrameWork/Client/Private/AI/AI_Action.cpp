@@ -6,12 +6,11 @@
 CAction_DynamicBase::CAction_DynamicBase(const char * str, CGameObject_3D_Dynamic * obj)
 	:CNode_Action(str), mDynamicObject(obj)
 {
-	Safe_AddRef(mDynamicObject);
 }
 
 void CAction_DynamicBase::Free()
 {
-	Safe_Release(mDynamicObject);
+	mDynamicObject = nullptr;
 }
 
 //CDecorator_DynamicBase::CDecorator_DynamicBase(const char * str, CGameObject_3D_Dynamic * obj)

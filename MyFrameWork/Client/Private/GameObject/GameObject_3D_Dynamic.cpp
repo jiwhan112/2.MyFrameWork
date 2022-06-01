@@ -63,7 +63,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 		}
 	}
 
-//	mComBehavior->Tick(TimeDelta);
+	mComBehavior->Tick(TimeDelta);
 	return UPDATENONE;
 }
 
@@ -78,7 +78,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 	//}
 
-//	mComBehavior->LateTick(TimeDelta);
+	mComBehavior->LateTick(TimeDelta);
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
@@ -294,19 +294,19 @@ HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
 	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
 
 
-//	CAction_DEALY* dealy3 = CAction_DEALY::Create("Dealy0.3", this, 0.3f);
-	//CNode_Seqeunce* Seq_DealyB = CNode_Seqeunce::Create();
-	//for (int i =0; i<10 ;++i)
-	//{
-	//	Seq_DealyB->PushBack_LeafNode(dealy3->Clone());
-	//}
+	CAction_DEALY* dealy3 = CAction_DEALY::Create("Dealy0.3", this, 0.3f);
+	CNode_Seqeunce* Seq_DealyB = CNode_Seqeunce::Create();
+	for (int i = 0; i < 10; ++i)
+	{
+		Seq_DealyB->PushBack_LeafNode(dealy3->Clone());
+	}
 
 	mComBehavior->Add_Seqeunce("DealyA",Seq_DealyA);
-	//mComBehavior->Add_Seqeunce("DealyB",Seq_DealyB);
+	mComBehavior->Add_Seqeunce("DealyB",Seq_DealyB);
 	mComBehavior->Select_Sequnce("DealyA");
 
-	//Safe_Release(dealy3);
-	//Safe_Release(dealy5);
+	Safe_Release(dealy3);
+	Safe_Release(dealy5);
 
 
 	return S_OK;

@@ -20,11 +20,10 @@ public:
 	HRESULT	SetUp_Target(CGameObject_3D_Dynamic* targetobj)
 	{
 		mDynamicObject = targetobj;
-		Safe_AddRef(mDynamicObject);
 	}
 
 private:
-	CGameObject_3D_Dynamic* mDynamicObject;
+	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
 
 public:
 	virtual void Free()override;
