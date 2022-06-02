@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "HierarchyNode.h"
 #include "Shader.h"
+#include "AnimationClip.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CComponent(pDevice, pDeviceContext)
@@ -223,6 +224,16 @@ HRESULT CModel::SetUp_AnimEnum(CAnimatior::E_COMMON_ANINAME e)
 {
 	mAnimator->Set_AniEnum(e);
 	return S_OK;
+}
+
+_double CModel::Get_AniTime_Ratio() const
+{
+	return mAnimator->Get_CurrentAnimationTimeRatio(); 
+}
+
+_double CModel::Get_AniTimeMax() const
+{
+	return mAnimator->Get_CurrentAnimaion()->Get_MaxAnimaionTime();
 }
 
 HRESULT CModel::SetUp_AnimName(string tag)

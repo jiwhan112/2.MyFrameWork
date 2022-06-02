@@ -33,6 +33,11 @@ public:
 		return m_Duration;
 	}
 
+	_bool Get_Finished() const
+	{
+		return m_isFinished;
+	}
+
 
 
 public:

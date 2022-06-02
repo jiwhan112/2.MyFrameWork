@@ -137,6 +137,13 @@ CAnimationClip* CAnimatior::Get_CurrentAnimaion() const
 	return mVecAnimations[m_iCurrentAniIndex];
 }
 
+_double CAnimatior::Get_CurrentAnimationTimeRatio() const
+{
+	_double anitime = mVecAnimations[m_iCurrentAniIndex]->Get_AniMationTime();
+	_double anitimeMax = mVecAnimations[m_iCurrentAniIndex]->Get_MaxAnimaionTime();
+	return (anitime / anitimeMax);
+}
+
 HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 {
 	if (iAnimIndex >= m_iNumAnimations)
@@ -159,11 +166,23 @@ HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName)
 {
 	// 공통적인 애니메이션 재성
-	if (mVecAnimations.empty())
+	_int aniIndex =  Get_AniEnum2Index(AniName);
+	if (aniIndex < 0)
 		return E_FAIL;
+
+	SetUp_AnimIndex(aniIndex);
+	return S_OK;
+}
+
+_int CAnimatior::Get_AniEnum2Index(E_COMMON_ANINAME AniName)
+{
+	if (mVecAnimations.empty())
+		return -1;
 	string aniname = STR_CommonAniName(AniName);
-	int index = 0;
-	for (auto& ani:mVecAnimations)
+
+	_int index = 0;
+	_int GetIndex = -1;
+	for (auto& ani : mVecAnimations)
 	{
 		string STR_FullNames = ani->Get_Name();
 		vector<string> Name = CHelperClass::String_Split(STR_FullNames, '@');
@@ -174,13 +193,26 @@ HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName)
 
 		if (aniname == AniNames[0])
 		{
-			SetUp_AnimIndex(index);
-			return S_OK;
+			GetIndex = index;
+			return GetIndex;
 		}
 		index++;
 	}
+	return GetIndex;
+}
 
-	return E_FAIL;
+_double CAnimatior::Get_AniIndex2AniMaxTime(_int index)
+{
+	return mVecAnimations[index]->Get_MaxAnimaionTime();
+}
+_double CAnimatior::Get_NewIndexAniMaxTime() const
+{
+	return mVecAnimations[m_iNewAniIndex]->Get_MaxAnimaionTime();
+}
+
+_bool CAnimatior::Get_IsFinished_CurrentAnimation() const
+{
+	return mVecAnimations[m_iCurrentAniIndex]->Get_Finished();
 }
 
 HRESULT CAnimatior::Ready_Animation()

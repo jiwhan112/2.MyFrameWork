@@ -8,6 +8,8 @@ class CNode_Seqeunce;
 class CNode_Decorator;
 class CNode_Action;
 
+
+
 // 행동트리 컴포넌트
 class ENGINE_DLL CBehaviorTree final : public CComponent
 {
@@ -159,12 +161,28 @@ public:
 	virtual void Free() override;
 };
 
+
+// 실제 액션 
+class ENGINE_DLL CNode_Action
+	: public CNode_LeafTree
+{
+protected:
+	explicit CNode_Action(const char* str);
+	virtual ~CNode_Action() = default;
+
+
+public:
+	virtual HRESULT NativeConstruct() = 0;
+	virtual CNode_Action* Clone(void* pArg = nullptr) = 0;
+	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/) = 0;
+};
+
 // 조건 판단
 class ENGINE_DLL CNode_Decorator
 	: public CNode_LeafTree
 {
 public:
-	enum E_DECOTYPE 
+	enum E_DECOTYPE
 	{
 		DECOTYPE_NEXT,
 		DECOTYPE_PREV,
@@ -180,7 +198,7 @@ protected:
 public:
 	virtual HRESULT NativeConstruct() = 0;
 	virtual CNode_Decorator* Clone(void* pArg = nullptr) = 0;
-	virtual HRESULT IsCorect(_double timer/*,void* pArg = nullptr*/) = 0;
+	virtual E_DECOTYPE IsCorect(_double timer/*,void* pArg = nullptr*/) = 0;
 
 };
 
@@ -196,22 +214,8 @@ public:
 	virtual CNode_Selector* Clone(void* pArg = nullptr) = 0;
 	virtual HRESULT Selection(_double timer/*,void* pArg = nullptr*/) = 0;
 
-
-
 };
 
-// 실제 액션 
-class ENGINE_DLL CNode_Action
-	: public CNode_LeafTree
-{
-protected:
-	explicit CNode_Action(const char* str);
-	virtual ~CNode_Action() = default;
-
-
-public:
-	virtual HRESULT NativeConstruct() = 0;
-	virtual CNode_Action* Clone(void* pArg = nullptr) = 0;
-	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/)=0;
-};
 END
+
+

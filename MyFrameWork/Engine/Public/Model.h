@@ -36,11 +36,15 @@ public:
 	virtual HRESULT NativeConstruct_Prototype(E_MODEL_TYPE eModelType, const char* pModelFilePath, const char* pModelFileName, _fmatrix TransformMatrix);
 	virtual HRESULT NativeConstruct(void* pArg);
 
-public:
+public: // ani
 	HRESULT SetUp_AnimIndex(_uint iAnimIndex);
 	HRESULT SetUp_AnimName(string tag);
 	HRESULT SetUp_AnimEnum(CAnimatior::E_COMMON_ANINAME e);
+	_double Get_AniTime_Ratio()const;
+	_double Get_AniTimeMax()const;
 
+
+public:
 	HRESULT Update_CombinedTransformationMatrices(_double TimeDelta);
 	HRESULT Bind_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pValueName);
 	HRESULT Render(class CShader* pShader, _uint iPassIndex, _uint iMaterialIndex, const char* pBoneValueName = nullptr);

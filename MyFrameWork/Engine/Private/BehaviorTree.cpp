@@ -248,8 +248,14 @@ HRESULT CNode_Seqeunce::End_Sequnce()
 
 CNode_LeafTree* CNode_Seqeunce::NextNode()
 {
+	CNode_LeafTree* returnNode = nullptr;
 	if (mCurrentLeafTree == nullptr)
-		return mListSequnce.front();
+	{
+		returnNode = mListSequnce.front();
+		returnNode->NativeConstruct();
+
+		return returnNode;
+	}
 
 	// 현재 노드의 다음 노드를 넘긴다.
 	auto iter = Find_LeafTree_Iter(mCurrentLeafTree);
@@ -260,9 +266,9 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 	if (iter == mListSequnce.end())
 		return nullptr;
 
-	(*iter)->NativeConstruct();
-
-	return *iter;
+	returnNode = (*iter);
+	returnNode->NativeConstruct();
+	return returnNode;
 }
 
 CNode_LeafTree * CNode_Seqeunce::PreNode()
@@ -274,7 +280,10 @@ CNode_LeafTree * CNode_Seqeunce::PreNode()
 	auto iter = Find_LeafTree_Iter(mCurrentLeafTree);
 	if (iter == mListSequnce.begin())
 		return nullptr;
+
 	iter--;
+
+	(*iter)->NativeConstruct();
 	return *iter;
 }
 

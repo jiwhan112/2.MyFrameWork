@@ -27,52 +27,19 @@ HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	mComModel->SetUp_AnimIndex(0);
-//	meAI = CGameObject_Mine::BASEAI_IDLE;
 
-//	mComNaviMesh->Set_NaviObjType(CNavigation::NAVI_OBJTYPE_PLAYER);
 
 	return S_OK;
 }
 
 
-//void CGameObject_Mine::GOMOVE(_double delta)
-//{
-//	switch (meAI)
-//	{
-//	case Client::CGameObject_Mine::BASEAI_IDLE:
-//		mComModel->SetUp_AnimIndex(25);
-//		break;
-//	case Client::CGameObject_Mine::BASEAI_MOVE:
-//	{
-//		mComTransform->LookAt(mGoalPosition);
-//
-//		mComModel->SetUp_AnimIndex(29);
-//		mTimer += delta;
-//		_float3 CurrentPos = _float3::Lerp(mStartPosition, mGoalPosition, mTimer / mTimeMax);
-//		_float4 CurrentPos4;
-//		CurrentPos4 = CurrentPos;
-//		CurrentPos4.w = 1;
-//
-//		if (mComNaviMesh->Move_OnNavigation(CurrentPos4))
-//		{
-//			mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPos4);
-//		}
-//		else
-//			meAI = CGameObject_Mine::BASEAI_IDLE;
-//
-//		//	_float distance =  _float3::Distance(CurrentPos, mGoalPosition);
-//
-//		if (mTimer > mTimeMax)
-//			meAI = CGameObject_Mine::BASEAI_IDLE;
-//	}
-//
-//	break;
-//	case Client::CGameObject_Mine::BASEAI_END:
-//		break;
-//	default:
-//		break;
-//	}
-//}
+HRESULT CGameObject_Mine::Init_Unit()
+{
+	__super::Init_Unit();
+	
+	return S_OK;
+}
+
 
 CGameObject_Mine * CGameObject_Mine::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

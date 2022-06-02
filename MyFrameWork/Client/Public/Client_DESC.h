@@ -65,10 +65,10 @@ typedef struct tag_UIDESC
 {
 	 tag_UIDESC()
 	{
-		mPosX = g_iWinCX * 0.5f;
-		mPosY = g_iWinCY * 0.5f;
-		mSizeX = g_iWinCX;
-		mSizeY = g_iWinCY;
+		mPosX = (int)(g_iWinCX * 0.5f);
+		mPosY = (int)(g_iWinCY * 0.5f);
+		mSizeX = (int)g_iWinCX;
+		mSizeY = (int)g_iWinCY;
 		mDepth = 0;
 		mPivot = { 0.5f,0.5f };
 	};
@@ -90,12 +90,12 @@ typedef struct tag_UIDESC
 	//}
 
 
-	_int	mPosX = g_iWinCX * 0.5f;
-	_int	mPosY = g_iWinCY * 0.5f;
-	_int	mSizeX = g_iWinCX;
-	_int	mSizeY = g_iWinCY;
-	_int	mDepth = 0;
-	_float2 mPivot = { 0.5f,0.5f };
+	 _int	mPosX = (int)(g_iWinCX * 0.5f);
+	 _int	mPosY = (int)(g_iWinCY * 0.5f);
+	 _int	mSizeX = (int)g_iWinCX;
+	 _int	mSizeY = (int)g_iWinCY;
+	 _int	mDepth = 0;
+	 _float2 mPivot = { 0.5f,0.5f };
 }UI_DESC;
 
 // 텍스처 이름 8개 저장

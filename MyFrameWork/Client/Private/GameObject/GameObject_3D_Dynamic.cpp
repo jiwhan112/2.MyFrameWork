@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_MyTerrain.h"
-#include "Animatior.h"
 #include "AI/AI_Action.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -42,6 +41,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	// test
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 //	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
+	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 
 	return S_OK;
 }
@@ -49,9 +49,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
-	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
-	mCurrentNavi->Move_OnNavigation(mCurrentPosition);
 
 	// 충돌
 	if (mComListCollider != nullptr)
@@ -62,6 +59,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
 		}
 	}
+
 
 	mComBehavior->Tick(TimeDelta);
 	return UPDATENONE;
@@ -80,6 +78,8 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 	mComBehavior->LateTick(TimeDelta);
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+
+	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
@@ -131,16 +131,14 @@ HRESULT CGameObject_3D_Dynamic::Init_Unit()
 	// 상속받아서 사용
 
 	mComTransform->Scaled(_float3(0.5f, 0.5f, 0.5f));
-	mComModel->SetUp_AnimIndex(0);
 
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
 	desc.mSize = _float3(0.5f, 0.5f, 0.5f);
 	Add_ColliderDesc(&desc, 1);
 	Update_Collider();
-	mIsNaviPath = false;
 
-	mComModel->Get_Animaitor()->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE));
 
 	// AI 세팅
 	Create_Sequnce();
@@ -156,6 +154,9 @@ HRESULT  CGameObject_3D_Dynamic::Set_MapSetting(E_MAPTYPE type)
 	meCurrentMap = type;
 	mCurrentMap = mTerrain_Maps[type];
 	mCurrentNavi = mComNavi[type];
+
+	// 위치도 정해두기
+
 	return S_OK;
 }
 
@@ -203,80 +204,40 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::PathTrigger(CNavigation* MyNaviMesh, _float3 TargetXZ)
+HRESULT CGameObject_3D_Dynamic::FindPathForCurrentNavi(_float3 GoalPosition)
 {
-	// 위치 찾기
-	if (mIsNaviPath)
-		return S_FALSE;
-	
-	_uint StartIndex = MyNaviMesh->Get_CurrentCellIndex();
+	// 현재 네비메시로 경로 탐색
+	if (mCurrentNavi == nullptr)
+		return E_FAIL;
+
+	if (mCurrentPathList.empty() == false)
+		mCurrentPathList.clear();
+
+	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
 	_uint GoalIndex = StartIndex;
 
-	if (mIsNaviPath == false && mCurrentPathList.empty())
+	// 해당 위치의 네비메시 셀 인덱스 반환
+	if (mCurrentNavi->Get_PickPosForIndex(GoalPosition, &GoalIndex))
 	{
-		// 해당 위치의 네비메시 셀 인덱스 반환
-		if (MyNaviMesh->Get_PickPosForIndex(TargetXZ, &GoalIndex))
-		{
-			// 경로 탐색
-			mCurrentPathList = MyNaviMesh->AstartPathFind(StartIndex, GoalIndex);
-			mIsNaviPath = true;
-		}
+		// 경로 탐색
+		mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
+		return S_OK;
 	}
 
-	return S_OK;
+	return S_FALSE;
 }
 
-HRESULT CGameObject_3D_Dynamic::Update_Move(_double TimeDelta)
+_bool CGameObject_3D_Dynamic::Get_PathList_Frontpop(_float3 * NextPosition)
 {
-	// 움직임 함수
+	if (mCurrentPathList.empty())
+		return false;
 
-	if (mIsNaviPath)
-	{
-		mComModel->SetUp_AnimIndex(29);
+	*NextPosition = mCurrentPathList.front()->Get_CenterPoint();
+	mCurrentPathList.pop_front();
 
-		if (mIsMoveCell)
-		{
-			// 셀 이동
-			mGoalPosition = mMoveCell->Get_CenterPoint();
-			_float3 newLook = _float3(mGoalPosition.x, mStartPosition.y, mGoalPosition.z);
-			mComTransform->LookAt(newLook);
-			mTimer += TimeDelta;
-			mCurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mGoalPosition, mTimer, mTimeMax);
-			Set_Position(mCurrentPosition);
-
-			if (mTimer > mTimeMax)
-			{
-				mIsMoveCell = false;
-			}
-			else if (_float3::Distance(mCurrentPosition, mGoalPosition) < 0.5f)
-			{
-				mIsMoveCell = false;
-			}
-		}
-
-		else
-		{
-			// 셀 설정
-			if (mCurrentPathList.empty())
-			{
-				mIsNaviPath = false;
-				mIsMoveCell = false;
-				Set_Position(mGoalPosition);
-			}
-			else
-			{
-				// Enter To Move
-				mMoveCell = mCurrentPathList.front();
-				mCurrentPathList.pop_front();
-				mIsMoveCell = true;
-				mStartPosition = Get_WorldPostition();
-				mTimer = 0;
-			}
-		}
-	}
-
-	return S_OK;
+	return true;
 }
+
 
 HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
 {
@@ -289,26 +250,36 @@ HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
 
 	// 클론 만들기
 	CAction_DEALY* dealy5 = CAction_DEALY::Create("Dealy0.5", this, 0.5f);
+	CAction_DEALY* dealyani = CAction_DEALY::Create("DealyAni", this, 0.5f);
+	dealyani->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 
-	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
-	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
+	// CAction_MOVE* MoveRun = CAction_MOVE::Create("run", this, _float3(0, 0, 0), 0.2f);
+	// MoveRun->Set_AniType(CAction_MOVE::MOVE_RUN_ANI);
+	CAction_MOVE* MoveWalk = CAction_MOVE::Create("walk", this, _float3(0, 0, 0), 0.6f);
+	MoveWalk->Set_AniType(CAction_MOVE::MOVE_WALK_ANI);
+
+	Seq_DealyA->PushBack_LeafNode(dealyani->Clone());
+
+	// 이동
+//	Seq_DealyA->PushBack_LeafNode(MoveRun->Clone());
+	Seq_DealyA->PushBack_LeafNode(MoveWalk->Clone());
 
 
-	CAction_DEALY* dealy3 = CAction_DEALY::Create("Dealy0.3", this, 0.3f);
-	CNode_Seqeunce* Seq_DealyB = CNode_Seqeunce::Create();
-	for (int i = 0; i < 10; ++i)
-	{
-		Seq_DealyB->PushBack_LeafNode(dealy3->Clone());
-	}
+	//for (int i = 0; i < 2; ++i)
+	//{
+	//	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
+	//}
 
-	mComBehavior->Add_Seqeunce("DealyA",Seq_DealyA);
-	mComBehavior->Add_Seqeunce("DealyB",Seq_DealyB);
-	mComBehavior->Select_Sequnce("DealyA");
+	//Seq_DealyA->PushBack_LeafNode(MoveWalk->Clone());
 
-	Safe_Release(dealy3);
+	mComBehavior->Add_Seqeunce("IDLE1",Seq_DealyA);
+	mComBehavior->Select_Sequnce("IDLE1");
+
 	Safe_Release(dealy5);
-
-
+	//Safe_Release(MoveRun);
+	Safe_Release(MoveWalk);
+	Safe_Release(dealyani);
+	
 	return S_OK;
 }
 
@@ -402,6 +373,28 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 	mCurrentPosition.y = terrain->Get_HeightY(mCurrentPosition);
 	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, mCurrentPosition.ToVec4(1));
 	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Set_AniEnum(CAnimatior::E_COMMON_ANINAME name)
+{
+	if (mComModel == nullptr)
+		return E_FAIL;
+
+	return mComModel->Get_Animaitor()->Set_AniEnum(name);
+}
+
+HRESULT CGameObject_3D_Dynamic::Set_AniIndex(_uint AniIndex)
+{
+	if (mComModel == nullptr)
+		return E_FAIL;
+	return mComModel->Get_Animaitor()->SetUp_AnimIndex(AniIndex);
+
+}
+HRESULT CGameObject_3D_Dynamic::Set_AniString(string str)
+{
+	if (mComModel == nullptr)
+		return E_FAIL;
+	return mComModel->Get_Animaitor()->Set_AniString(str);
 }
 
 CGameObject_3D_Dynamic * CGameObject_3D_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)

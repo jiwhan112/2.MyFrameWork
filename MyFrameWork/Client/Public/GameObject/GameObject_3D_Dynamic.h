@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject_Base.h"
+#include "Animatior.h"
 
 BEGIN(Engine)
 class CModel;
@@ -18,6 +19,7 @@ public:
 	{
 		UNIT_PLAYER,
 		UNIT_ENEMY,
+		UNIT_BOSS,
 		UNIT_END,
 	};
 
@@ -43,8 +45,6 @@ public: // Base
 	
 	virtual HRESULT Init_Unit();
 
-
-
 public: // GetSet
 	HRESULT						Set_MapSetting(E_MAPTYPE type);
 
@@ -66,51 +66,43 @@ public: // GetSet
 public: // Collision
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
 
-protected: // Move AI
-	HRESULT PathTrigger(CNavigation* MyNaviMesh, _float3 TargetXZ);
-	HRESULT Update_Move(_double Timer);
+public: // Move AI
+	HRESULT FindPathForCurrentNavi(_float3 GoalPosition);
+	_bool	Get_PathList_Frontpop(_float3* NextPosition);
+//	HRESULT Update_Move(_double Timer);
 
-	// AI 루팅 설정
-	HRESULT Create_Sequnce();
+public: // Animation
+// 애니메이션 이름으로 설정
+	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name);
+	HRESULT Set_AniIndex(_uint AniIndex);
+	HRESULT Set_AniString(string str);
 
 
 protected:
+	// AI 루팅 설정
+	HRESULT Create_Sequnce();
 	virtual HRESULT Set_Component() override;
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 
 
-	
-
 protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
+	// AI
+	CBehaviorTree*				mComBehavior = nullptr;
 
 	// 콜라이더 리스트 추가 / 콜라이더는 맵에 넣지 않고 여기서만 관리한다.
 	// 뼈애 달리게 수정
 	list<CCollider*>*			mComListCollider = nullptr;
 
-
-
 	MODEL_DYNAMIC_DESC			mModelDesc;
 	list<COLLIDER_DESC>			mListColliderDesc;
-
 	
+
 	E_UNITTYPE					meUnitType = UNIT_END;
 
-	// AI
-	CBehaviorTree*				mComBehavior = nullptr;
-
 	// MOVE
-	_float3						mGoalPosition;
-	_float3						mStartPosition;
-	_double						mTimer;
-	_double						mTimeMax;
-	bool						mIsNaviPath = false;
-	bool						mIsMoveCell = false;
-
 	list<CCell*>				mCurrentPathList;
-	CCell*						mMoveCell; // 현재 셀
-
 	_float3						mCurrentPosition;
 
 	// 지형
@@ -123,9 +115,6 @@ protected: // 3D모델 Com / DESC 추가
 
 	CGameObject_MyTerrain*		mCurrentMap = nullptr;
 	CNavigation*				mCurrentNavi = nullptr;
-
-	
-//	E_BASEAI					meAI;
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

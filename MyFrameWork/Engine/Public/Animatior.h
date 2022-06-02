@@ -79,6 +79,15 @@ public: // Get Set
 	HRESULT SetUp_AnimIndex(_uint index);
 	HRESULT Set_AniString(string AniName);
 	HRESULT Set_AniEnum(E_COMMON_ANINAME AniName);
+	_int	Get_AniEnum2Index(E_COMMON_ANINAME AniName);
+	_double	Get_AniIndex2AniMaxTime(_int index);
+
+	_uint	Get_NewAniIndex()const
+	{
+		return  m_iNewAniIndex;
+	}
+	_double	Get_NewIndexAniMaxTime()const;
+	_bool	Get_IsFinished_CurrentAnimation()const;
 
 	const vector<CAnimationClip*>* Get_VecAnimaions() const
 	{
@@ -96,8 +105,7 @@ public: // Get Set
 
 	void Set_CurrentAnimaionTime(_float time);
 	CAnimationClip* Get_CurrentAnimaion()const;
-
-
+	_double Get_CurrentAnimationTimeRatio() const;
 
 
 public: 
@@ -126,8 +134,8 @@ private: // 애니메이션 클립
 	const aiScene*							m_pScene;
 
 	// 계층 // 영향을 주는 뼈정보 세팅 
-	vector<CHierarchyNode*>			m_HierarchyNodes;
-	typedef vector<CHierarchyNode*>	HIERARCHYNODES;
+	vector<CHierarchyNode*>					m_HierarchyNodes;
+	typedef vector<CHierarchyNode*>			HIERARCHYNODES;
 
 	_uint									m_iCurrentAniIndex = 0;
 	_uint									m_iNewAniIndex = 0;

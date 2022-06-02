@@ -211,6 +211,21 @@
     <Filter Include="03.GameSystems\07.BehaviorTree_Ai\03.Selector">
       <UniqueIdentifier>{5b0373fd-f7a8-4466-a1ba-9de2749586b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic\02.Orc">
+      <UniqueIdentifier>{de704d6a-e55d-4dc7-99bd-74e6df41a77c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic\03.Goblin">
+      <UniqueIdentifier>{fd4cd44c-3cb9-4e11-8974-129b672371c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic\04.Naga">
+      <UniqueIdentifier>{1ac05618-1ab7-4c43-82e7-7a3a5265ee00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic\05.Enemy">
+      <UniqueIdentifier>{1f3ebb2c-a885-4d41-bc07-b493690283f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic\06.Boss">
+      <UniqueIdentifier>{e124064c-8e5c-460f-a8c4-e6ccf521cb4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -399,6 +414,12 @@
     <ClInclude Include="..\Public\AI\AI_Action.h">
       <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Action</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Orc.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\02.Orc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Goblin.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\03.Goblin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -560,6 +581,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI\AI_Action.cpp">
       <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Orc.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\02.Orc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Goblin.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\03.Goblin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,15 +9,15 @@ END
 BEGIN(Client)
 
 // 마인 AI 설정
-class CGameObject_Mine final :
+class CGameObject_Goblin final :
 	public CGameObject_3D_Dynamic
 {
 public:
 
 protected:
-	explicit CGameObject_Mine(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	explicit CGameObject_Mine(const CGameObject_Mine& rhs);
-	virtual ~CGameObject_Mine() = default;
+	explicit CGameObject_Goblin(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CGameObject_Goblin(const CGameObject_Goblin& rhs);
+	virtual ~CGameObject_Goblin() = default;
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -36,8 +36,8 @@ public:
 protected:
 
 public:
-	static CGameObject_Mine* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
-	virtual CGameObject_Mine* Clone(void* pArg);
+	static CGameObject_Goblin* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
+	virtual CGameObject_Goblin* Clone(void* pArg);
 	virtual void Free() override;
 };
 
