@@ -31,7 +31,7 @@ HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 
 HRESULT CGameObject_Mine::Init_Unit()
 {
-	mComTransform->Scaled(_float3(0.5f, 0.5f, 0.5f));
+	mComTransform->Scaled(_float3(0.8f, 0.8f, 0.8f));
 
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;

@@ -420,6 +420,15 @@
     <ClInclude Include="..\Public\GameObject\GameObject_Goblin.h">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\03.Goblin</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Naga.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\04.Naga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Boss.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\06.Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_Enemy.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\05.Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -587,6 +596,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_Goblin.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\03.Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Naga.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\04.Naga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Boss.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\06.Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_Enemy.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\05.Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

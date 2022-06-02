@@ -74,15 +74,6 @@ void CGameObject_Orc::Free()
 {
 	__super::Free();
 
-	Safe_Release(mComModel);
-
-	for (auto& obj : *mComListCollider)
-	{
-		Safe_Release(obj);
-	}
-	mComListCollider->clear();
-	Safe_Delete(mComListCollider);
-
 
 	//	Safe_Release(mComNaviMesh);
 }

@@ -151,8 +151,6 @@ HRESULT CGameObject_3D_Static::Set_LoadColliderDESC(const COLLIDER_DESC & desc)
 		mComCollider = nullptr;
 	}
 
-	;
-
 	FAILED_CHECK(__super::Release_Component(TEXT("Com_Collider")));
 
 	switch (mCollider_Desc.meColliderType)

@@ -177,8 +177,11 @@
     <ClInclude Include="..\Public\GameObject\Dungeon_Objects.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Boss.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Enemy.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Environment.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Goblin.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Naga.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Orc.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Socket.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Mine.h" />
@@ -254,6 +257,9 @@
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Environment.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Boss.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Enemy.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Naga.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Orc.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Goblin.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Socket.cpp" />
