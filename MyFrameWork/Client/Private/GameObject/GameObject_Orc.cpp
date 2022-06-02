@@ -39,6 +39,11 @@ HRESULT CGameObject_Orc::Init_Unit()
 	return S_OK;
 }
 
+HRESULT CGameObject_Orc::Init_AI()
+{
+	return E_NOTIMPL;
+}
+
 
 CGameObject_Orc * CGameObject_Orc::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

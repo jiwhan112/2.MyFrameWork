@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_MyTerrain.h"
-#include "AI/AI_Action.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -35,13 +34,15 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	// 유닛별 초기화
-	Init_Unit();
-	
-	// test
+	// 생성시 유닛별 초기화 함수 따로 만들기..
+
+	// Test 용도
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 //	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+
+	Init_Unit();
+	Init_AI();
 
 	return S_OK;
 }
@@ -128,21 +129,13 @@ HRESULT CGameObject_3D_Dynamic::Render()
 
 HRESULT CGameObject_3D_Dynamic::Init_Unit()
 {
-	// 상속받아서 사용
+	// 유닛마다 상속해서 초기화
+	return S_OK;
+}
 
-	mComTransform->Scaled(_float3(0.5f, 0.5f, 0.5f));
-
-	COLLIDER_DESC desc;
-	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
-	desc.mSize = _float3(0.5f, 0.5f, 0.5f);
-	Add_ColliderDesc(&desc, 1);
-	Update_Collider();
-
-	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE));
-
-	// AI 세팅
-	Create_Sequnce();
-	
+HRESULT CGameObject_3D_Dynamic::Init_AI()
+{
+	// 유닛마다 상속해서 초기화
 	return S_OK;
 }
 
@@ -236,55 +229,6 @@ _bool CGameObject_3D_Dynamic::Get_PathList_Frontpop(_float3 * NextPosition)
 	mCurrentPathList.pop_front();
 
 	return true;
-}
-
-
-HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
-{
-	// #TEST 딜레이 루틴 2개 만들기
-	// A루틴 : 0.5초 딜레이 2번
-	// B루틴 : 0.3초 딜레이 10번
-
-
-	CNode_Seqeunce* Seq_DealyA = CNode_Seqeunce::Create();
-
-	// 클론 만들기
-	CAction_DEALY* dealy5 = CAction_DEALY::Create("Dealy0.5", this, 0.5f);
-	CAction_DEALY* dealyidle = CAction_DEALY::Create("dealyidle", this, 0.0);
-	CAction_DEALY* dealydig = CAction_DEALY::Create("dealydig", this, 0.0);
-	dealyidle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-	dealydig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
-
-	// CAction_MOVE* MoveRun = CAction_MOVE::Create("run", this, _float3(0, 0, 0), 0.2f);
-	// MoveRun->Set_AniType(CAction_MOVE::MOVE_RUN_ANI);
-	CAction_MOVE* MoveWalk = CAction_MOVE::Create("walk", this, _float3(0, 0, 0), 0.6f);
-	MoveWalk->Set_AniType(CAction_MOVE::MOVE_WALK_ANI);
-
-//	Seq_DealyA->PushBack_LeafNode(dealyidle->Clone());
-	Seq_DealyA->PushBack_LeafNode(dealydig->Clone());
-
-	// 이동
-//	Seq_DealyA->PushBack_LeafNode(MoveRun->Clone());
-	Seq_DealyA->PushBack_LeafNode(MoveWalk->Clone());
-
-
-	//for (int i = 0; i < 2; ++i)
-	//{
-	//	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
-	//}
-
-	//Seq_DealyA->PushBack_LeafNode(MoveWalk->Clone());
-
-	mComBehavior->Add_Seqeunce("IDLE1",Seq_DealyA);
-	mComBehavior->Select_Sequnce("IDLE1");
-
-	Safe_Release(dealy5);
-	//Safe_Release(MoveRun);
-	Safe_Release(MoveWalk);
-	Safe_Release(dealyidle);
-	Safe_Release(dealydig);
-	
-	return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()

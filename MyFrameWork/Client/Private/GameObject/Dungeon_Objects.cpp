@@ -319,11 +319,11 @@ HRESULT CDungeon_Objects::RemoveTile(CGameObject_3D_Tile * pTIle)
 	return S_OK;
 }
 
-HRESULT CDungeon_Objects::Create_Unit(_float3 PositionXZ)
+HRESULT CDungeon_Objects::Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ)
 {
 	CGameObject_Creater* pCreateManager = GetSingle(CGameManager)->Get_CreaterManager();
 
-	mTestUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(GAMEOBJECT_3D_DYNAMIC);
+	mTestUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(id);
 	PositionXZ.y += 1;
 	mTestUnit->Set_Position(PositionXZ);
 	NULL_CHECK_HR(mTestUnit);

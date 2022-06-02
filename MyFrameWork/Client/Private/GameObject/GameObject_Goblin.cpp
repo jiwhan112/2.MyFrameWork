@@ -39,6 +39,11 @@ HRESULT CGameObject_Goblin::Init_Unit()
 	return S_OK;
 }
 
+HRESULT CGameObject_Goblin::Init_AI()
+{
+	return E_NOTIMPL;
+}
+
 
 CGameObject_Goblin * CGameObject_Goblin::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

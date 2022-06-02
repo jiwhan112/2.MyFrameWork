@@ -61,7 +61,7 @@ public: // 지형
 	CGameObject_MyTerrain* Get_WorldMap() { return mWorldMap; }
 
 public: // 유닛
-	HRESULT Create_Unit(_float3 PositionXZ);
+	HRESULT Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ);
 
 
 private: // 지형

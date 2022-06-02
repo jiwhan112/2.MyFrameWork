@@ -26,6 +26,11 @@
 #include "GameObject/GameObject_Socket.h"
 #include "GameObject/GameObject_Environment.h"
 
+#include "GameObject/GameObject_Mine.h"
+#include "GameObject/GameObject_Goblin.h"
+#include "GameObject/GameObject_Orc.h"
+
+
 // ±×¿Ü
 #include "GameObject/GameObject_2D.h"
 #include "GameObject/GameObject_2D_Particle.h"

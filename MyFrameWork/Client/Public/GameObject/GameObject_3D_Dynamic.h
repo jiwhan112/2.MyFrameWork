@@ -44,6 +44,8 @@ public: // Base
 	virtual HRESULT Render();
 	
 	virtual HRESULT Init_Unit();
+	virtual HRESULT Init_AI();
+
 
 public: // GetSet
 	HRESULT						Set_MapSetting(E_MAPTYPE type);
@@ -58,7 +60,6 @@ public: // GetSet
 	const MODEL_DYNAMIC_DESC&	Get_ModelDESC() const { return mModelDesc; }
 
 	HRESULT		Set_LoadModelDynamicDESC(const MODEL_DYNAMIC_DESC& desc);
-	HRESULT		Setup_Colluder2(_float4x4 worldmat, _float scale);
 
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC desc);
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC* desc,int size);
@@ -80,7 +81,6 @@ public: // Animation
 
 protected:
 	// AI 루팅 설정
-	HRESULT Create_Sequnce();
 	virtual HRESULT Set_Component() override;
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);

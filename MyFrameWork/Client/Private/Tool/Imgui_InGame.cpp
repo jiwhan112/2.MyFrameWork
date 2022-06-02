@@ -90,17 +90,28 @@ HRESULT CImgui_InGame::Edit_InGame()
 		ImGui::DragInt("TILEINDEX:", &TileIndex);
 	}
 
-	if (ImGui::Button("Create_DungeonObject"))
+	if (ImGui::Button("Create_Dungeon_MINE"))
 	{
-		_float3 SpawnPos =  mTerrainDungeon->Get_TileWorld(mSpawnIndexDAUNGEON);
-		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(SpawnPos);
+		_float3 SpawnPos = mTerrainDungeon->Get_TileWorld(mSpawnIndexDAUNGEON);
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_MINE  ,SpawnPos);
+
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Create_Dungeon_Orc"))
+	{
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button("Create_Dungeon_Gobline"))
+	{
 	}
 
-	if (ImGui::Button("Create_WorldObject"))
-	{
-		_float3 SpawnPos =  mTerrainWorld->Get_TileWorld(mSpawnIndexWORLD_UNIT);
-		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(SpawnPos);
-	}
+	//if (ImGui::Button("Create_WorldObject"))
+	//{
+	//	_float3 SpawnPos =  mTerrainWorld->Get_TileWorld(mSpawnIndexWORLD_UNIT);
+	//	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(SpawnPos);
+	//}
 
 	return S_OK;
 }

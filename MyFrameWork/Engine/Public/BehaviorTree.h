@@ -214,6 +214,7 @@ public:
 	virtual CNode_Selector* Clone(void* pArg = nullptr) = 0;
 	virtual HRESULT Selection(_double timer/*,void* pArg = nullptr*/) = 0;
 
+
 };
 
 END

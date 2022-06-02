@@ -28,6 +28,7 @@ public:
 	//virtual HRESULT Render();
 
 	virtual HRESULT Init_Unit();
+	virtual HRESULT Init_AI();
 
 	// ¸ðµ¨ ±¸Çö 
 
