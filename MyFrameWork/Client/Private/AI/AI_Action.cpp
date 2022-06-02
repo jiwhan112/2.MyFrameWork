@@ -60,9 +60,8 @@ HRESULT CAction_DEALY::NativeConstruct()
 
 	if (meDealyType == CAction_DEALY::DEALY_ANI)
 	{
+		// #BUG 애니메이션 연속시 블랜딩 떄문에 End 판정 받음
 		mDynamicObject->Set_AniEnum(meAnimation);
-		//mTimeMax = mDynamicObject->Get_ComModel()->Get_Animaitor()->Get_NewIndexAniMaxTime();
-		//Get_IsFinished_CurrentAnimation
 	}
 
 	return S_OK;
@@ -70,9 +69,10 @@ HRESULT CAction_DEALY::NativeConstruct()
 
 HRESULT CAction_DEALY::Action(_double timer)
 {
+	mCurrentTimer += timer;
+
 	if (meDealyType == CAction_DEALY::DEALY_NONE)
 	{
-		mCurrentTimer += timer;
 		if (mCurrentTimer > mTimeMax)
 		{
 			mIsEnd = true;
@@ -159,7 +159,6 @@ HRESULT CAction_MOVE::NativeConstruct()
 
 	if (mDynamicObject == nullptr)
 		return E_FAIL;
-
 
 	// Test
 	mGoalPosition = GetSingle(CGameManager)->Get_PickPos();

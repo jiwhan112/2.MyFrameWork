@@ -250,15 +250,18 @@ HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
 
 	// 클론 만들기
 	CAction_DEALY* dealy5 = CAction_DEALY::Create("Dealy0.5", this, 0.5f);
-	CAction_DEALY* dealyani = CAction_DEALY::Create("DealyAni", this, 0.5f);
-	dealyani->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
+	CAction_DEALY* dealyidle = CAction_DEALY::Create("dealyidle", this, 0.0);
+	CAction_DEALY* dealydig = CAction_DEALY::Create("dealydig", this, 0.0);
+	dealyidle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
+	dealydig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
 
 	// CAction_MOVE* MoveRun = CAction_MOVE::Create("run", this, _float3(0, 0, 0), 0.2f);
 	// MoveRun->Set_AniType(CAction_MOVE::MOVE_RUN_ANI);
 	CAction_MOVE* MoveWalk = CAction_MOVE::Create("walk", this, _float3(0, 0, 0), 0.6f);
 	MoveWalk->Set_AniType(CAction_MOVE::MOVE_WALK_ANI);
 
-	Seq_DealyA->PushBack_LeafNode(dealyani->Clone());
+//	Seq_DealyA->PushBack_LeafNode(dealyidle->Clone());
+	Seq_DealyA->PushBack_LeafNode(dealydig->Clone());
 
 	// 이동
 //	Seq_DealyA->PushBack_LeafNode(MoveRun->Clone());
@@ -278,7 +281,8 @@ HRESULT CGameObject_3D_Dynamic::Create_Sequnce()
 	Safe_Release(dealy5);
 	//Safe_Release(MoveRun);
 	Safe_Release(MoveWalk);
-	Safe_Release(dealyani);
+	Safe_Release(dealyidle);
+	Safe_Release(dealydig);
 	
 	return S_OK;
 }

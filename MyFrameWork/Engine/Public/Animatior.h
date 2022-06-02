@@ -21,6 +21,7 @@ public:
 		E_COMMON_ANINAME_WALK,
 		E_COMMON_ANINAME_IDLE,
 		E_COMMON_ANINAME_RUN,
+		E_COMMON_ANINAME_DIG,
 		E_COMMON_ANINAME_DANCE,
 		E_COMMON_ANINAME_SLEEPING,
 		E_COMMON_ANINAME_DRAG,
@@ -38,6 +39,8 @@ public:
 			return "idle";
 		case E_COMMON_ANINAME_RUN:
 			return "run";
+		case E_COMMON_ANINAME_DIG:
+			return "dig";
 		case E_COMMON_ANINAME_DANCE:
 			return "dance";
 		case E_COMMON_ANINAME_SLEEPING:

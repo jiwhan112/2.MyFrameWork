@@ -182,6 +182,7 @@ _int CAnimatior::Get_AniEnum2Index(E_COMMON_ANINAME AniName)
 
 	_int index = 0;
 	_int GetIndex = -1;
+	vector<int>		VecInts;
 	for (auto& ani : mVecAnimations)
 	{
 		string STR_FullNames = ani->Get_Name();
@@ -190,15 +191,20 @@ _int CAnimatior::Get_AniEnum2Index(E_COMMON_ANINAME AniName)
 		string Full_AniNames = Name[1];
 
 		vector<string> AniNames = CHelperClass::String_Split(Full_AniNames, '_');
-
+		
+	
 		if (aniname == AniNames[0])
 		{
-			GetIndex = index;
-			return GetIndex;
+			VecInts.push_back(index);
 		}
 		index++;
 	}
-	return GetIndex;
+	if (VecInts.empty())
+		return -1;
+	
+	int randIndex = CHelperClass::RandomInt(0,VecInts.size());
+	return VecInts[randIndex];
+
 }
 
 _double CAnimatior::Get_AniIndex2AniMaxTime(_int index)
