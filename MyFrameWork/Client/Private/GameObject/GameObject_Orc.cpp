@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Orc.h"
+#include "AI/AI_Action.h"
+
 
 CGameObject_Orc::CGameObject_Orc(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_3D_Dynamic(pDevice, pDeviceContext)
@@ -16,17 +18,18 @@ CGameObject_Orc::CGameObject_Orc(const CGameObject_Orc& rhs)
 HRESULT CGameObject_Orc::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-
 	mCurrentShaderPass = 0;
-
 	return S_OK;
 }
 
 HRESULT CGameObject_Orc::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	mComModel->SetUp_AnimIndex(0);
+	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 
+	string str("crea_Orc.fbx");
+	strcpy_s(mModelDesc.mModelName, str.c_str());
+	Set_LoadModelDynamicDESC(mModelDesc);
 
 	return S_OK;
 }
@@ -34,14 +37,26 @@ HRESULT CGameObject_Orc::NativeConstruct(void* pArg)
 
 HRESULT CGameObject_Orc::Init_Unit()
 {
-	__super::Init_Unit();
+	_float size = 0.8f;
 
+	mComTransform->Scaled(_float3(size, size, size));
+
+	COLLIDER_DESC desc;
+	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc.mSize = _float3(size, size, size);
+	Add_ColliderDesc(&desc, 1);
+	Update_Collider();
+
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE));
+	return S_OK;
 	return S_OK;
 }
 
 HRESULT CGameObject_Orc::Init_AI()
 {
-	return E_NOTIMPL;
+	
+
+	return S_OK;
 }
 
 

@@ -90,7 +90,6 @@ public: // Get Set
 		return  m_iNewAniIndex;
 	}
 	_double	Get_NewIndexAniMaxTime()const;
-	_bool	Get_IsFinished_CurrentAnimation()const;
 
 	const vector<CAnimationClip*>* Get_VecAnimaions() const
 	{
@@ -110,6 +109,10 @@ public: // Get Set
 	CAnimationClip* Get_CurrentAnimaion()const;
 	_double Get_CurrentAnimationTimeRatio() const;
 
+	_bool Get_CurrentAniEnd() const
+	{
+		return mIsCurrentAniEnd;
+	}
 
 public: 
 	HRESULT NativeConstruct(const vector<CMeshContainer*>* meshcon);
@@ -153,6 +156,7 @@ private: // 애니메이터
 	bool									misBlend = false;
 	_double									mBlendMaxTime = 0.2f;
 	_double									mBlendTimer = 0;
+	_bool									mIsCurrentAniEnd = false;
 
 
 public:

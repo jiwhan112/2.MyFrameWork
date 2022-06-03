@@ -13,8 +13,7 @@ CCamera_Client::CCamera_Client(const CCamera_Client & rhs)
 	, meCameraMode(rhs.meCameraMode)
 	, mTargetObject(nullptr)
 
-{
-}
+{}
 
 HRESULT CCamera_Client::NativeConstruct_Prototype()
 {
@@ -53,21 +52,16 @@ _int CCamera_Client::Tick(_double TimeDelta)
 			FAILED_CHECK_NONERETURN(Update_Target_Unit(TimeDelta));
 		}
 		break;
-	case CCamera_Client::CAMERA_MODE_GAME_D:
+	case CCamera_Client::CAMERA_MODE_MOVE:
+		CameraMoving_Bezior(TimeDelta);
+		//CameraMoving(TYPE_Linear, TimeDelta);
+		break;
+	case CCamera_Client::CAMERA_MODE_TERRAIN:
 		if (mTargetObject)
 		{
-		FAILED_CHECK_NONERETURN(Update_Target_Terrain(TimeDelta));
+			FAILED_CHECK_NONERETURN(Update_Target_Terrain(TimeDelta));
 		}
 		break;
-	case CCamera_Client::CAMERA_MODE_GAME_W:
-		if (mTargetObject)
-		{
-
-		FAILED_CHECK_NONERETURN(Update_Target_Terrain(TimeDelta));
-		}
-
-		break;
-
 	case CCamera_Client::CAMERA_MODE_END:
 		meCameraMode = CAMERA_MODE_DEFAULT;
 		break;
@@ -89,7 +83,7 @@ HRESULT CCamera_Client::Render()
 	return S_OK;
 }
 
-void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, CGameObject * target)
+void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, E_CAMERA_MOVEPOS_STATE eMove,CGameObject * target)
 {
 	if (target == mTargetObject)
 	{
@@ -104,6 +98,7 @@ void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, CGameObject * target)
 		Safe_AddRef(mTargetObject);
 	}
 
+	EnterCamera(eMove, 2.0f);
 	
 }
 
@@ -139,7 +134,7 @@ HRESULT CCamera_Client::Update_Default(_double TimeDelta)
 
 	_long		MouseMove = 0;
 
-	const _float MouseSpeed = 2.0f;
+	const _float MouseSpeed = 0.3f;
 	if (MouseMove = pGameInstance->Get_DIMouseMoveState(CInput_Device::MMS_X))
 	{
 		mComTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), TimeDelta * MouseMove * MouseSpeed);
@@ -210,16 +205,18 @@ HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 
 	if (mbTargetSet == false)
 	{
-		_uint size =  static_cast<CGameObject_MyTerrain*>(mTargetObject)->Get_MapSize();
-		size *= 0.3f;
+		/*	_uint size =  static_cast<CGameObject_MyTerrain*>(mTargetObject)->Get_MapSize();
+			size *= 0.3f;
 
-		_float3 Postition = _float3(size, 5, size);
+			_float3 Postition = _float3(size, 5, size);
+
+			_float3 Dir = GameCameraDir;
+
+			mComTransform->Set_State(CTransform::STATE_POSITION, Postition);
+			mComTransform->LookAtDir(Dir);*/
 
 		_float3 Dir = GameCameraDir;
-
-		mComTransform->Set_State(CTransform::STATE_POSITION, Postition);
-		mComTransform->LookAtDir(Dir);
-
+		mComTransform->LookAtDir(Dir); 
 		mbTargetSet = true;
 	}
 
@@ -264,17 +261,129 @@ HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 	return S_OK;
 }
 
-HRESULT CCamera_Client::Update_Target_Dungeon(_double TimeDelta)
+HRESULT CCamera_Client::EnterCamera(E_CAMERA_MOVEPOS_STATE mode, _double TimeMax)
 {
+	// 카메라 시작
+
+	switch (mode)
+	{
+	case Client::CCamera_Client::CAMERA_MOVEPOS_STATE_D:
+		mCurrentMovePosition = mDungeon_CenterPos;
+		break;
+	case Client::CCamera_Client::CAMERA_MOVEPOS_STATE_W:
+		mCurrentMovePosition = mWorld_CenterPos;
+		break;
+	case Client::CCamera_Client::CAMERA_MOVEPOS_STATE_INTRO:
+		break;
+	case Client::CCamera_Client::CAMERA_MOVEPOS_STATE_BOSS:
+		break;
+	case Client::CCamera_Client::CAMERA_MOVEPOS_STATE_END:
+		break;
+	default:
+		return E_FAIL;
+	}
+
+	meCameraMode = CCamera_Client::CAMERA_MODE_MOVE;
+
+	// Enter
+	/*mCurrentMovePosition = mCurrentListPostition.front();
+	mCurrentListPostition.pop_front();*/
+	mStartPosition = mComTransform->GetState(CTransform::STATE_POSITION);
+	mCurrentBeziorMovePosition = mStartPosition- mCurrentMovePosition;
 	
+
+	mCurrentBeziorMovePosition *= 0.5f;
+	_float3 UpVec = _float3::Up;
+	mCurrentBeziorMovePosition += UpVec * 50;
+
+	mIsMovingCamera = true;
+	mTimerMax = TimeMax;
+	mCurrentTimer = 0;
+}
+
+
+HRESULT CCamera_Client::CameraMoving_Bezior(_double TimeDelta)
+{
+	if (mIsMovingCamera == false)
+	{
+		meCameraMode = CCamera_Client::CAMERA_MODE_TERRAIN;
+		return S_OK;
+	}
+
+	mCurrentTimer += TimeDelta;
+
+	// 현재 위치 -> 중심점
+	// 중심점 -> 목표 위치
+	_float3 lerpPos1 = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mCurrentBeziorMovePosition, mCurrentTimer, mTimerMax);
+	_float3 lerpPos2 = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mCurrentBeziorMovePosition, mCurrentMovePosition, mCurrentTimer, mTimerMax);
+	_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, lerpPos1, lerpPos2, mCurrentTimer, mTimerMax);
+	mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPosition);
+
+	if (mCurrentTimer > mTimerMax)
+	{
+		mIsMovingCamera = false;		
+	}
 	return S_OK;
 }
 
-HRESULT CCamera_Client::Update_Target_World(_double TimeDelta)
+HRESULT CCamera_Client::CameraMoving(EasingTypeID EasingID, _double TimeDelta)
 {
+	// 카메라 움직임 테스트
+	if (mIsMovingCamera == false)
+	{
+		meCameraMode = CCamera_Client::CAMERA_MODE_TERRAIN;
+		return S_OK;
+	}
 
+	mCurrentTimer += TimeDelta;
+
+	_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(EasingID, mStartPosition, mCurrentMovePosition, mCurrentTimer, mTimerMax);
+	mComTransform->Set_State(CTransform::STATE_POSITION, CurrentPosition);
+
+	if (mCurrentTimer > mTimerMax)
+	{
+		mStartPosition = CurrentPosition;
+		if (mCurrentListPostition.empty())
+		{
+			mIsMovingCamera = false;
+		}
+
+		else
+		{
+			Set_NextMove(0.5f);
+		}
+	}
 
 	return S_OK;
+}
+
+HRESULT CCamera_Client::Update_Target_D(_double TimeDelta)
+{
+	return S_OK;
+}
+
+HRESULT CCamera_Client::Update_Target_W(_double TimeDelta)
+{
+	return S_OK;
+}
+
+
+void CCamera_Client::Set_ListPosition(list<_float3> VecLoadPos)
+{
+	mCurrentListPostition.clear();
+	for (auto pos: VecLoadPos)
+	{
+		// 위치 복사
+		mCurrentListPostition.push_back(pos);
+	}
+}
+
+void CCamera_Client::Set_NextMove(_double timeMax)
+{
+	mCurrentMovePosition = mCurrentListPostition.front();
+	mCurrentListPostition.pop_front();
+	mCurrentTimer = 0;
+
 }
 
 CCamera_Client * CCamera_Client::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)

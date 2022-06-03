@@ -38,7 +38,7 @@ HRESULT CImgui_Terrain::Update(_double time)
 		if (type == OBJECT_TYPE_TERRAIN)
 		{
 			mCurrent_TerrainObject = static_cast<CGameObject_MyTerrain*>(SelectObject);
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_D, SelectObject);
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TERRAIN, CCamera_Client::CAMERA_MOVEPOS_STATE_END, SelectObject);
 		}
 	}
 	else

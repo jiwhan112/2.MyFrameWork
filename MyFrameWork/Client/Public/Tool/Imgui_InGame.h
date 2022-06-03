@@ -29,11 +29,12 @@ private:
 private:
 	HRESULT Edit_InGame();
 	HRESULT Edit_Unit();
+	HRESULT Edit_Camera();
 
 
 private:
 	// 카메라
-	// class CCamera_Client*			mCameraClient = nullptr;
+	class CCamera_Client*			mCameraClient = nullptr;
 
 	// 지형 오브젝트
 	class CGameObject_MyTerrain*	mTerrainDungeon= nullptr;
@@ -46,6 +47,9 @@ private:
 	const int mSpawnIndexDAUNGEON = 481;
 	const int mSpawnIndexWORLD_UNIT = 480;
 	const int mSpawnIndexWORLD_ENEMY= 1624;
+
+	const char* ToTextFloat3(_float3 pos);
+
 
 public:
 	static CImgui_InGame* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);

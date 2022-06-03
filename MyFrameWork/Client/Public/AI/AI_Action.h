@@ -83,11 +83,12 @@ protected:
 	
 public: 
 	// 생성 초기화
-	HRESULT NativeConstruct_Action(_double TimeMax);	
+	HRESULT NativeConstruct_Action();	
 public:
 	virtual HRESULT NativeConstruct();
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
 	void Set_Animation(CAnimatior::E_COMMON_ANINAME e);
+	void Set_TimeMax(_double timeMax);
 
 private:
 	_double	mTimeMax;
@@ -97,7 +98,7 @@ private:
 	CAnimatior::E_COMMON_ANINAME	meAnimation = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE;
 
 public:
-	static	CAction_DEALY*				Create(const char* str, CGameObject_3D_Dynamic* obj, _double TimeMax);
+	static	CAction_DEALY*				Create(const char* str, CGameObject_3D_Dynamic* obj);
 	virtual CAction_DEALY*				Clone(void* pArg = nullptr) override;
 	virtual void Free()override;
 };

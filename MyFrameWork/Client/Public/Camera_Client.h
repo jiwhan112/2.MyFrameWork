@@ -15,19 +15,18 @@ public:
 		CAMERA_MODE_DEFAULT,
 		CAMERA_MODE_RETURN,
 		CAMERA_MODE_TARGET,
-		CAMERA_MODE_GAME_D,
-		CAMERA_MODE_GAME_W,
+		CAMERA_MODE_TERRAIN,
+		CAMERA_MODE_MOVE,
 		CAMERA_MODE_END,
 	};
 
-	enum E_CAMERA_MOVE_STATE
+	enum E_CAMERA_MOVEPOS_STATE
 	{
-		CAMERA_UPDATE_STATE_NONE,
-		CAMERA_UPDATE_STATE_ENTER,
-		CAMERA_UPDATE_STATE_STAY,
-		CAMERA_UPDATE_STATE_EXIT,
-		CAMERA_UPDATE_STATE_END,
-
+		CAMERA_MOVEPOS_STATE_D,
+		CAMERA_MOVEPOS_STATE_W,
+		CAMERA_MOVEPOS_STATE_INTRO,
+		CAMERA_MOVEPOS_STATE_BOSS,
+		CAMERA_MOVEPOS_STATE_END
 	};
 
 
@@ -44,7 +43,7 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
-	void Set_CameraMode(E_CAMERA_MODE e, CGameObject* target = nullptr);
+	void Set_CameraMode(E_CAMERA_MODE e, E_CAMERA_MOVEPOS_STATE eMove = CAMERA_MOVEPOS_STATE_END,CGameObject* target = nullptr);
 	void ReleaseTarget();
 
 	void Set_CamerDIr(_float3 Dir)
@@ -52,23 +51,54 @@ public:
 		mComTransform->LookAtDir(Dir);
 	}
 
+	HRESULT Set_GameCameraMode();
+	HRESULT EnterCamera(E_CAMERA_MOVEPOS_STATE mode, _double TimeMax);
+
 private:
 	HRESULT Update_Default(_double TimeDelta);
 	HRESULT Update_Target_Unit(_double TimeDelta);
 	HRESULT Update_Target_Terrain(_double TimeDelta);
-	HRESULT Update_Target_Dungeon(_double TimeDelta);
-	HRESULT Update_Target_World(_double TimeDelta);
+
+	// 카메라 연출
+	HRESULT CameraMoving(EasingTypeID EasingID, _double TimeDelta);
+	HRESULT CameraMoving_Bezior(_double TimeDelta);
+
+	HRESULT Update_Target_D(_double TimeDelta);
+	HRESULT Update_Target_W(_double TimeDelta);
+	
+	void Set_ListPosition(list<_float3> VecLoadPos);
+	void Set_NextMove(_double timeMax);
+
 
 private:
 	// 지속 상태
-	E_CAMERA_MODE meCameraMode;
+	E_CAMERA_MODE				meCameraMode;
 
-	// 움직일 때 연출용
-	E_CAMERA_MOVE_STATE meCameraMoveState;
+	_float4x4					mStartWorlMat;
+	CGameObject*				mTargetObject = nullptr;
+	bool						mbTargetSet = false;
 
-	_float4x4 mStartWorlMat;
-	CGameObject* mTargetObject = nullptr;
-	bool		mbTargetSet = false;
+	_bool						mIsMovingCamera = false;
+//	_bool						mIsMovingCamera_Delta = false;
+
+	list<_float3>				mCurrentListPostition;
+
+	_float3						mStartPosition;
+	_float3						mCurrentMovePosition;
+	_float3						mCurrentBeziorMovePosition;
+	_double						mCurrentTimer;
+	_double						mTimerMax;
+
+public:
+	// 저장된 위치
+	list<_float3>				mListMove_Dungeon;
+	list<_float3>				mListMove_World;
+
+	// 각 던전의 중심위치
+
+	const _float3				mDungeon_CenterPos = _float3(19.64f,8.74f,11.57f);
+	const _float3				mWorld_CenterPos = _float3(60.35f,23.6f,5.9f);
+
 
 public:
 	static CCamera_Client* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

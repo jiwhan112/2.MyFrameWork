@@ -30,31 +30,11 @@ _int CDungeon_Manager::Tick(_double TimeDelta)
 		// 모드 변경 연출
 		if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_WORLD)
 		{
-			// 카메라 변경
-			meCurrentGameMode = CDungeon_Manager::GAMEMODE_DUNGEON;
-			mGameCamera->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_D, (CGameObject*)mDungeon_Objects->Get_DungeonMap());
-			// 오브젝트 Visble
-			mDungeon_Objects->Get_DungeonMap()->Set_isVisible(true);
-			mDungeon_Objects->Get_WorldMap()->Set_isVisible(false);
-
-			GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_D), true);
-			GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_CUBETILE), true);
-			GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_W), false);
+			Set_CameraMove(CDungeon_Manager::CAMERAMODE_DUNGEON);
 		}
 		else
 		{
-			// 카메라 변경
-			meCurrentGameMode = CDungeon_Manager::GAMEMODE_WORLD;
-			mGameCamera->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_W, (CGameObject*)mDungeon_Objects->Get_WorldMap());
-			// 오브젝트 Visble
-			mDungeon_Objects->Get_DungeonMap()->Set_isVisible(false);
-			mDungeon_Objects->Get_WorldMap()->Set_isVisible(true);
-
-			GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_D),false);
-			GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_CUBETILE), false);
-			GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_W), true);
-
-
+			Set_CameraMove(CDungeon_Manager::CAMERAMODE_WORLD);
 		}
 	}
 
@@ -97,18 +77,68 @@ HRESULT CDungeon_Manager::NativeConstruct_Level(E_LEVEL level)
 	mGameCamera =  (CCamera_Client*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA));
 	Safe_AddRef(mGameCamera);
 
-	mGameCamera->Get_ComTransform()->Set_State(CTransform::STATE_POSITION,_float3(16,3,16));
-
-	mGameCamera->Set_CameraMode(CCamera_Client::CAMERA_MODE_GAME_D, (CGameObject*)mDungeon_Objects->Get_DungeonMap());
-
-
-
+	mGameCamera->Get_ComTransform()->Set_State(CTransform::STATE_POSITION,_float3(13,3,13));
+	Set_CameraMove(E_CAMERAMODE::CAMERAMODE_DUNGEON);
 	return S_OK;
 }
 
 void CDungeon_Manager::Release_DaungonData()
 {
 	Safe_Release(mDungeon_Objects);
+}
+
+HRESULT CDungeon_Manager::Set_CameraMove(E_CAMERAMODE eMode)
+{
+	// 월드 < - > 던전 카메라 이동 플레그
+	// 카메라 연출
+	switch (eMode)
+	{
+	case Client::CDungeon_Manager::CAMERAMODE_DUNGEON:
+		meCurrentGameMode = GAMEMODE_DUNGEON;
+		mGameCamera->Set_CameraMode(CCamera_Client::CAMERA_MODE_MOVE, CCamera_Client::CAMERA_MOVEPOS_STATE_D, (CGameObject*)mDungeon_Objects->Get_DungeonMap());
+		break;
+	
+	case Client::CDungeon_Manager::CAMERAMODE_WORLD:
+		meCurrentGameMode = GAMEMODE_WORLD;
+		mGameCamera->Set_CameraMode(CCamera_Client::CAMERA_MODE_MOVE, CCamera_Client::CAMERA_MOVEPOS_STATE_W, (CGameObject*)mDungeon_Objects->Get_WorldMap());
+		break;
+
+	case Client::CDungeon_Manager::CAMERAMODE_INTRO:
+		meCurrentGameMode = GAMEMODE_DUNGEON;
+		mGameCamera->Set_CameraMode(CCamera_Client::CAMERA_MODE_MOVE, CCamera_Client::CAMERA_MOVEPOS_STATE_INTRO, (CGameObject*)mDungeon_Objects->Get_DungeonMap());
+		break;
+
+	case Client::CDungeon_Manager::CAMERAMODE_BOSS:
+		meCurrentGameMode = GAMEMODE_WORLD;
+		mGameCamera->Set_CameraMode(CCamera_Client::CAMERA_MODE_MOVE, CCamera_Client::CAMERA_MOVEPOS_STATE_BOSS, (CGameObject*)mDungeon_Objects->Get_WorldMap());
+
+		break;
+	case Client::CDungeon_Manager::CAMERAMODE_END:
+		break;
+	}	
+
+	if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_DUNGEON)
+	{
+		// 오브젝트 Visble
+		mDungeon_Objects->Get_DungeonMap()->Set_isVisible(true);
+		mDungeon_Objects->Get_WorldMap()->Set_isVisible(false);
+
+		GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_D), true);
+		GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_CUBETILE), true);
+		GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_W), false);
+	}
+	else
+	{
+		// 오브젝트 Visble
+		mDungeon_Objects->Get_DungeonMap()->Set_isVisible(false);
+		mDungeon_Objects->Get_WorldMap()->Set_isVisible(true);
+
+		GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_D), false);
+		GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_CUBETILE), false);
+		GetSingle(CGameManager)->Set_VisibleTag(TAGLAY(LAY_OBJECT_W), true);
+
+	}
+	return S_OK;
 }
 
 CGameObject_3D_Tile * CDungeon_Manager::FInd_TIleForIndex(_int TileIndex) const
@@ -127,6 +157,16 @@ HRESULT CDungeon_Manager::Setup_TileState(_int tileIndex)
 {
 	NULL_CHECK_BREAK(mDungeon_Objects);
 	return mDungeon_Objects->Setup_TileState(tileIndex);
+}
+
+HRESULT CDungeon_Manager::Add_Task_Tile()
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CDungeon_Manager::Add_Task_Gold()
+{
+	return E_NOTIMPL;
 }
 
 CDungeon_Manager * CDungeon_Manager::Create(ID3D11Device* device, ID3D11DeviceContext* deviceContext)

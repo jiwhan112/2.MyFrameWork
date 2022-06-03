@@ -31,7 +31,9 @@ HRESULT CBehaviorTree::Tick(_double timer)
 {
 
 	if (mCurrentSequnence && (mCurrentSequnence->Get_SeqEnd() == false))
-		mCurrentSequnence->Tick_Sequnce(timer);
+	{
+		FAILED_CHECK(mCurrentSequnence->Tick_Sequnce(timer));
+	}
 
 	return S_OK;
 }
@@ -252,7 +254,7 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 	if (mCurrentLeafTree == nullptr)
 	{
 		returnNode = mListSequnce.front();
-		returnNode->NativeConstruct();
+		FAILED_CHECK_NONERETURN(returnNode->NativeConstruct());
 
 		return returnNode;
 	}
@@ -267,7 +269,7 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 		return nullptr;
 
 	returnNode = (*iter);
-	returnNode->NativeConstruct();
+	FAILED_CHECK_NONERETURN(returnNode->NativeConstruct());
 	return returnNode;
 }
 
@@ -282,8 +284,7 @@ CNode_LeafTree * CNode_Seqeunce::PreNode()
 		return nullptr;
 
 	iter--;
-
-	(*iter)->NativeConstruct();
+	FAILED_CHECK_NONERETURN((*iter)->NativeConstruct());
 	return *iter;
 }
 

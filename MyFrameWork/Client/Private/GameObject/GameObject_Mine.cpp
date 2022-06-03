@@ -25,17 +25,27 @@ HRESULT CGameObject_Mine::NativeConstruct_Prototype()
 HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
+
+	if (strlen(mModelDesc.mModelName) < 2)
+	{
+		string str("crea_Snot_a.fbx");
+		strcpy_s(mModelDesc.mModelName, str.c_str());
+	}
+	Set_LoadModelDynamicDESC(mModelDesc);
+
 	return S_OK;
 }
 
 
 HRESULT CGameObject_Mine::Init_Unit()
 {
-	mComTransform->Scaled(_float3(0.8f, 0.8f, 0.8f));
+	_float size = 0.6f;
+
+	mComTransform->Scaled(_float3(size, size, size));
 
 	COLLIDER_DESC desc;
-	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_AABB;
-	desc.mSize = _float3(0.5f, 0.5f, 0.5f);
+	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Update_Collider();
 
@@ -47,44 +57,59 @@ HRESULT CGameObject_Mine::Init_AI()
 {
 	// AI ¼¼ºÎ ±¸Çö
 
-	CNode_Seqeunce* Seq_DealyA = CNode_Seqeunce::Create();
+	// IDLE ½ÃÄö½º 3°³
+	CNode_Seqeunce* Seq_IDLE1 = CNode_Seqeunce::Create();
+	CNode_Seqeunce* Seq_IDLE2 = CNode_Seqeunce::Create();
+	CNode_Seqeunce* Seq_IDLE3 = CNode_Seqeunce::Create();
 
-	// Å¬·Ð ¸¸µé±â
-	CAction_DEALY* dealy5 = CAction_DEALY::Create("Dealy0.5", this, 0.5f);
-	CAction_DEALY* dealyidle = CAction_DEALY::Create("dealyidle", this, 0.0);
-	CAction_DEALY* dealydig = CAction_DEALY::Create("dealydig", this, 0.0);
-	dealyidle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-	dealydig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+	// Set Action
+	CAction_DEALY* dealyTime = CAction_DEALY::Create("DealyTime", this);
+	CAction_DEALY* dealyAniIdle = CAction_DEALY::Create("DealyIdle", this);
+	CAction_DEALY* dealyAniDig = CAction_DEALY::Create("DealyDig", this);
+	CAction_DEALY* dealyAniDance = CAction_DEALY::Create("DelayDance", this);
 
-	// CAction_MOVE* MoveRun = CAction_MOVE::Create("run", this, _float3(0, 0, 0), 0.2f);
-	// MoveRun->Set_AniType(CAction_MOVE::MOVE_RUN_ANI);
+	dealyTime->Set_TimeMax(3.0f);
+	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
+	dealyAniDig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+	dealyAniDance->Set_Animation(CAnimatior::E_COMMON_ANINAME_DANCE);
+
 	CAction_MOVE* MoveWalk = CAction_MOVE::Create("walk", this, _float3(0, 0, 0), 0.6f);
+	CAction_MOVE* MoveRun = CAction_MOVE::Create("run", this, _float3(0, 0, 0), 0.3f);
 	MoveWalk->Set_AniType(CAction_MOVE::MOVE_WALK_ANI);
+	MoveRun->Set_AniType(CAction_MOVE::MOVE_RUN_ANI);
 
-	//	Seq_DealyA->PushBack_LeafNode(dealyidle->Clone());
-	Seq_DealyA->PushBack_LeafNode(dealydig->Clone());
+	// SetSeq
+	// IDLE1: µ¹¾Æ´Ù´Ô
+	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
+	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
+	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
+	Seq_IDLE1->PushBack_LeafNode(MoveWalk->Clone());
 
-	// ÀÌµ¿
-//	Seq_DealyA->PushBack_LeafNode(MoveRun->Clone());
-	Seq_DealyA->PushBack_LeafNode(MoveWalk->Clone());
+	// IDLE2: ¶Ù¾î´Ù´Ô
+	Seq_IDLE2->PushBack_LeafNode(dealyAniIdle->Clone());
+	Seq_IDLE2->PushBack_LeafNode(dealyAniDig->Clone());
+	Seq_IDLE2->PushBack_LeafNode(dealyAniDance->Clone());
+	Seq_IDLE2->PushBack_LeafNode(MoveRun->Clone());
 
+	// IDLE3: ÃãÃß±â
+	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
+	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
+	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
+	Seq_IDLE3->PushBack_LeafNode(MoveWalk->Clone());
 
-	//for (int i = 0; i < 2; ++i)
-	//{
-	//	Seq_DealyA->PushBack_LeafNode(dealy5->Clone());
-	//}
-
-	//Seq_DealyA->PushBack_LeafNode(MoveWalk->Clone());
-
-	mComBehavior->Add_Seqeunce("IDLE1", Seq_DealyA);
+	mComBehavior->Add_Seqeunce("IDLE1", Seq_IDLE1);
+	mComBehavior->Add_Seqeunce("IDLE2", Seq_IDLE2);
+	mComBehavior->Add_Seqeunce("IDLE3", Seq_IDLE3);
 	mComBehavior->Select_Sequnce("IDLE1");
 
-	Safe_Release(dealy5);
-	//Safe_Release(MoveRun);
-	Safe_Release(MoveWalk);
-	Safe_Release(dealyidle);
-	Safe_Release(dealydig);
+	// Release
+	Safe_Release(dealyTime);
+	Safe_Release(dealyAniIdle);
+	Safe_Release(dealyAniDig);
+	Safe_Release(dealyAniDig);
 
+	Safe_Release(MoveWalk);
+	Safe_Release(MoveRun);
 	return S_OK;
 }
 

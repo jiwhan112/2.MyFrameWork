@@ -39,26 +39,26 @@ HRESULT CImgui_Model::Update(_double time)
 
 		if (type == OBJECT_TYPE_3D_STATIC)
 		{
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, CCamera_Client::CAMERA_MOVEPOS_STATE_END, SelectObject);
 			mCurrent_ModelStaticObject = static_cast<CGameObject_3D_Static*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_STATIC;
 		}
 
 		else if (type == OBJECT_TYPE_3D_DYNAMIC)
 		{
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, CCamera_Client::CAMERA_MOVEPOS_STATE_END, SelectObject);
 			mCurrent_ModelDynamicObject = static_cast<CGameObject_3D_Dynamic*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_DYNAMIC;
 		}
 		else if (type == OBJECT_TYPE_3D_STATIC_PARENT)
 		{
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, CCamera_Client::CAMERA_MOVEPOS_STATE_END, SelectObject);
 			mCurrent_ModelStaticObject_Parent = static_cast<CGameObject_3D_Static2*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_STATIC_PARENT;
 		}
 		else if (type == OBJECT_TYPE_3D_STATIC_TILES)
 		{
-			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, SelectObject);
+			mCameraClient->Set_CameraMode(CCamera_Client::CAMERA_MODE_TARGET, CCamera_Client::CAMERA_MOVEPOS_STATE_END,SelectObject);
 			mCurrent_Model_Tiles = static_cast<CGameObject_3D_Tile*>(SelectObject);
 			meModelMode = CImgui_Model::TOOLMODE_MODEL_TILE;
 		}

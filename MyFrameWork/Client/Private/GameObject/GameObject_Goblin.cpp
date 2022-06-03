@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Goblin.h"
+#include "AI/AI_Action.h"
 
 CGameObject_Goblin::CGameObject_Goblin(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_3D_Dynamic(pDevice, pDeviceContext)
@@ -25,23 +26,36 @@ HRESULT CGameObject_Goblin::NativeConstruct_Prototype()
 HRESULT CGameObject_Goblin::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	mComModel->SetUp_AnimIndex(0);
 
-
+	string str("crea_Goblin.fbx");
+	strcpy_s(mModelDesc.mModelName, str.c_str());
+	Set_LoadModelDynamicDESC(mModelDesc);
 	return S_OK;
 }
 
 
 HRESULT CGameObject_Goblin::Init_Unit()
 {
-	__super::Init_Unit();
+	_float size = 0.8f;
 
+	mComTransform->Scaled(_float3(size, size, size));
+
+	COLLIDER_DESC desc;
+	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc.mSize = _float3(size, size, size);
+	Add_ColliderDesc(&desc, 1);
+	Update_Collider();
+
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE));
 	return S_OK;
+
 }
 
 HRESULT CGameObject_Goblin::Init_AI()
 {
-	return E_NOTIMPL;
+	
+
+	return S_OK;
 }
 
 
@@ -74,6 +88,4 @@ void CGameObject_Goblin::Free()
 {
 	__super::Free();
 
-
-	//	Safe_Release(mComNaviMesh);
 }

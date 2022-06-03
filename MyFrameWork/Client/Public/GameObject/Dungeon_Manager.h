@@ -22,6 +22,15 @@ public:
 		GAMEMODE_WORLD,
 		GAMEMODE_END
 	};
+	enum E_CAMERAMODE
+	{
+		CAMERAMODE_DUNGEON,
+		CAMERAMODE_WORLD,
+		CAMERAMODE_INTRO,
+		CAMERAMODE_BOSS,
+		CAMERAMODE_END,
+	};
+
 
 protected:
 	explicit CDungeon_Manager();
@@ -47,14 +56,22 @@ public:
 	// 레벨 나갈떄마다
 	void Release_DaungonData();
 
+public: // For. Camera
+	HRESULT Set_CameraMove(E_CAMERAMODE mode);
+
 public: // For. Tile
 	CGameObject_3D_Tile* FInd_TIleForIndex(_int TileIndex) const;
 	HRESULT RemoveTile(CGameObject_3D_Tile* pTIle);
 	HRESULT Setup_TileState(_int tileIndex = -1);
 
 public: // For. object
-	HRESULT Create_DynamicObject();
+//	HRESULT Get_Layer();
 
+
+public:	// For. Task
+	// golbalTask
+	HRESULT Add_Task_Tile();
+	HRESULT Add_Task_Gold();
 
 
 

@@ -226,6 +226,9 @@
     <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic\06.Boss">
       <UniqueIdentifier>{e124064c-8e5c-460f-a8c4-e6ccf521cb4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameSystems\06.Dungeon_Manager\Dungeon_Task">
+      <UniqueIdentifier>{409d1b70-3935-4cb6-910b-a9985372e4b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -429,6 +432,9 @@
     <ClInclude Include="..\Public\GameObject\GameObject_Enemy.h">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\05.Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\Dungeon_Task.h">
+      <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Task</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -605,6 +611,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_Enemy.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\05.Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\Dungeon_Task.cpp">
+      <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Task</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

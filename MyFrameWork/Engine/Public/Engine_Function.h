@@ -113,12 +113,13 @@ namespace Engine
 			return answer;
 		}
 
-		static int RandomInt(int min, int max)
+		static int RandomInt(int MIN, int MAX)
 		{
-			if (max <= min)
-				return min;
+			if (MAX <= MIN)
+				return MIN;
 
-			return rand() % (min + max) - min;
+			int newint = MAX + abs(MIN);
+			return rand() % newint + MIN;
 		}
 
 		static std::string to_utf8(const wchar_t* buffer, int len)

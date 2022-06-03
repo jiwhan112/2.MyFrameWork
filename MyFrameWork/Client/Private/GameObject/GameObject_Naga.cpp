@@ -73,7 +73,5 @@ CGameObject_Naga* CGameObject_Naga::Clone(void* pArg)
 void CGameObject_Naga::Free()
 {
 	__super::Free();
-
-
 	//	Safe_Release(mComNaviMesh);
 }

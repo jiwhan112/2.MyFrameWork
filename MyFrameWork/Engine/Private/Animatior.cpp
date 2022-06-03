@@ -48,6 +48,7 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices(_double timer)
 	if (misBlend)
 	{
 		AniMationBlend(m_iCurrentAniIndex, m_iNewAniIndex, timer);
+		mIsCurrentAniEnd = false;
 	}
 
 	else
@@ -55,6 +56,8 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices(_double timer)
 		// 현재 애니메이션을 시간에 맞게 업데이트를 시켜준다.
 		// 애니메이션 채널의 해당 시간에 따른 뼈 위치 갱신
 		mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices(timer);
+		if(mVecAnimations[m_iCurrentAniIndex]->Get_Finished())
+			mIsCurrentAniEnd = true;
 	}
 
 	// 갱신된 뼈행렬을 계층으로 업데이트 시켜준다.
@@ -159,6 +162,7 @@ HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 	else
 	{
 		m_iCurrentAniIndex = iAnimIndex;
+		mIsCurrentAniEnd = false;
 	}
 	return S_OK;
 }
@@ -214,11 +218,6 @@ _double CAnimatior::Get_AniIndex2AniMaxTime(_int index)
 _double CAnimatior::Get_NewIndexAniMaxTime() const
 {
 	return mVecAnimations[m_iNewAniIndex]->Get_MaxAnimaionTime();
-}
-
-_bool CAnimatior::Get_IsFinished_CurrentAnimation() const
-{
-	return mVecAnimations[m_iCurrentAniIndex]->Get_Finished();
 }
 
 HRESULT CAnimatior::Ready_Animation()

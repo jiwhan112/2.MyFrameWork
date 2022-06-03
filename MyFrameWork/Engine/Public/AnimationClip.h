@@ -35,9 +35,8 @@ public:
 
 	_bool Get_Finished() const
 	{
-		return m_isFinished;
+		return m_IsFinished;
 	}
-
 
 
 public:
@@ -68,7 +67,7 @@ private:
 	vector<class CChannel*>			m_Channels;
 	typedef vector<class CChannel*>	CHANNELS;
 
-	_bool		m_isFinished = false;
+	_bool		m_IsFinished = false;
 
 
 public:

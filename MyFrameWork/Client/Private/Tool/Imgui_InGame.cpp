@@ -59,7 +59,7 @@ HRESULT CImgui_InGame::Render_UI()
 				{
 					FAILED_CHECK(Edit_InGame());
 					FAILED_CHECK(Edit_Unit());
-					
+					FAILED_CHECK(Edit_Camera());
 				}
 				ImGui::End();
 			}
@@ -100,11 +100,17 @@ HRESULT CImgui_InGame::Edit_InGame()
 	ImGui::SameLine();
 	if (ImGui::Button("Create_Dungeon_Orc"))
 	{
+		_float3 SpawnPos = mTerrainDungeon->Get_TileWorld(mSpawnIndexDAUNGEON);
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ORC, SpawnPos);
 	}
 	ImGui::SameLine();
 
 	if (ImGui::Button("Create_Dungeon_Gobline"))
 	{
+		_float3 SpawnPos = mTerrainDungeon->Get_TileWorld(mSpawnIndexDAUNGEON);
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_GOBLIN, SpawnPos);
 	}
 
 	//if (ImGui::Button("Create_WorldObject"))
@@ -134,6 +140,90 @@ HRESULT CImgui_InGame::Edit_Unit()
 	return S_OK;
 }
 
+HRESULT CImgui_InGame::Edit_Camera()
+{
+	// 카메라 
+	mCameraClient = (CCamera_Client*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA));
+	if (mCameraClient == nullptr)
+		return S_OK;
+	// 카메라 위치 설정
+	/*IMGUI_TREE_BEGIN("CameraMove_LIST")
+	{
+		static _float3 newFLoat;
+		ImGui::DragFloat3("SaveFloat3", (float*)&newFLoat, 0.1f, -100, 500);
+
+		if (ImGui::Button("PushFloat"))
+		{
+			mCameraClient->mListMove_Dungeon.push_back(newFLoat);
+		}
+		if (ImGui::Button("PushFloat_Current"))
+		{
+			_float3 curPos = mCameraClient->Get_ComTransform()->GetState(CTransform::STATE_POSITION);
+			mCameraClient->mListMove_Dungeon.push_back(curPos);
+		}
+
+		if (ImGui::Button("ClearList"))
+		{
+			mCameraClient->mListMove_Dungeon.clear();
+		}
+
+		if (ImGui::Button("Reverse"))
+		{
+			mCameraClient->mListMove_Dungeon.reverse();
+		}
+
+		IMGUI_LISTBOX_BEGIN("Visible")
+		{
+			for (auto pos : mCameraClient->mListMove_Dungeon)
+			{
+				char buf[64] = "";
+				sprintf_s(buf, sizeof(buf), "%.3f, %.3f, %.3f", pos.x, pos.y, pos.z);
+				ImGui::Text(buf);
+			}
+
+			IMGUI_LISTBOX_END
+		}
+		IMGUI_TREE_END
+	}*/
+
+	IMGUI_TREE_BEGIN("CameraMove_Bezior")
+	{
+		//if (ImGui::Button("CurrentPosSetCenterPos"))
+		//{
+		//	_float3 curPos = mCameraClient->Get_ComTransform()->GetState(CTransform::STATE_POSITION);
+		//	mCameraClient->mDungeon_CenterPos = curPos;
+		//}
+
+		//char buf[64] = "";
+		//_float3 pos = mCameraClient->mDungeon_CenterPos;
+		//sprintf_s(buf, sizeof(buf), "%.3f, %.3f, %.3f", pos.x, pos.y, pos.z);
+		//ImGui::Text(buf);
+
+
+		//if (ImGui::Button("CAMERA_DUNGEON"))
+		//{
+		//	GetSingle(CGameManager)->Get_DaungonManager()->Set_CameraMove(CDungeon_Manager::CAMERAMODE_DUNGEON);
+		//}
+
+		//if (ImGui::Button("CAMERA_WORLD"))
+		//{
+		//	GetSingle(CGameManager)->Get_DaungonManager()->Set_CameraMove(CDungeon_Manager::CAMERAMODE_DUNGEON);
+		//}
+
+		IMGUI_TREE_END
+	}
+
+
+}
+
+const char * CImgui_InGame::ToTextFloat3(_float3 pos)
+{
+	char buf[256] = "";
+	sprintf_s(buf, "(%f,%f,%f)", pos.x, pos.y, pos.z);
+	   
+	return buf;
+}
+
 CImgui_InGame * CImgui_InGame::Create(ID3D11Device* deviec, ID3D11DeviceContext* context)
 {
 	CImgui_InGame*	pInstance = NEW CImgui_InGame(deviec, context);
@@ -151,6 +241,7 @@ void CImgui_InGame::Free()
 {
 	__super::Free();
 	mSelectObject = nullptr;
+	mCameraClient = nullptr;
 	Safe_Release(mTerrainDungeon);
 	Safe_Release(mTerrainWorld);
 }

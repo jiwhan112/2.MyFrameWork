@@ -51,6 +51,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
+
 	// 충돌
 	if (mComListCollider != nullptr)
 	{
@@ -61,7 +62,6 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 		}
 	}
 
-
 	mComBehavior->Tick(TimeDelta);
 	return UPDATENONE;
 }
@@ -71,11 +71,6 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 	if (mCurrentMap == nullptr)
 		return UPDATEERROR;
-
-	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
-	//{
-
-	//}
 
 	mComBehavior->LateTick(TimeDelta);
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
@@ -231,6 +226,33 @@ _bool CGameObject_3D_Dynamic::Get_PathList_Frontpop(_float3 * NextPosition)
 	return true;
 }
 
+_bool CGameObject_3D_Dynamic::FindPathRandAblePostition(_int Range,_float3* GoalPos)
+{
+	// 범위내에서 갈 수 있는 타일 
+	
+	int count = 0;
+	while (true)
+	{
+		_float3 CurrentPos = Get_WorldPostition();
+		_int RangeX = CHelperClass::RandomInt(-Range, Range);
+		_int RangeZ = CHelperClass::RandomInt(-Range, Range);
+
+		CurrentPos.x += RangeX;
+		CurrentPos.z += RangeZ;
+		FindPathForCurrentNavi(CurrentPos);
+		if (mCurrentPathList.empty() == false)
+		{
+			*GoalPos = CurrentPos;
+			return true;
+		}
+		count++;
+		if (count > 30)
+			return false;
+	}
+
+	return true;
+}
+
 HRESULT CGameObject_3D_Dynamic::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -244,7 +266,7 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 	{
 		// 동적 모델은 자동으로 동적으로 컴포넌트가 적용된다.
 		string strModel = mModelDesc.mModelName;
-		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);
+		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);		
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 	}
 	if (mComBehavior == nullptr)

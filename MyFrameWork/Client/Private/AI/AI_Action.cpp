@@ -42,13 +42,14 @@ CAction_DEALY::CAction_DEALY(const CAction_DEALY & rhs)
 {
 	meDealyType = rhs.meDealyType;
 	meAnimation = rhs.meAnimation;
+	mTimeMax = rhs.mTimeMax;
 
 }
 
 
-HRESULT CAction_DEALY::NativeConstruct_Action(_double TimeMax)
+HRESULT CAction_DEALY::NativeConstruct_Action()
 {
-	mTimeMax = TimeMax;
+
 	mCurrentTimer = 0;
 	return S_OK;
 }
@@ -82,7 +83,7 @@ HRESULT CAction_DEALY::Action(_double timer)
 	}
 	else if (meDealyType == CAction_DEALY::DEALY_ANI)
 	{
-		_bool aniend = mDynamicObject->Get_ComModel()->Get_Animaitor()->Get_IsFinished_CurrentAnimation();
+		_bool aniend = mDynamicObject->Get_ComModel()->Get_Animaitor()->Get_CurrentAniEnd();
 		if (aniend)
 		{
 			mIsEnd = true;
@@ -99,11 +100,16 @@ void CAction_DEALY::Set_Animation(CAnimatior::E_COMMON_ANINAME e)
 	meAnimation = e;
 }
 
-CAction_DEALY * CAction_DEALY::Create(const char * str, CGameObject_3D_Dynamic* obj, _double TimeMax)
+void CAction_DEALY::Set_TimeMax(_double timeMax)
+{
+	mTimeMax = timeMax;
+}
+
+CAction_DEALY * CAction_DEALY::Create(const char * str, CGameObject_3D_Dynamic* obj)
 {
 	CAction_DEALY* pInstance = NEW CAction_DEALY(str, obj);
 
-	if (FAILED(pInstance->NativeConstruct_Action(TimeMax)))
+	if (FAILED(pInstance->NativeConstruct_Action()))
 	{
 		MSGBOX("Failed to Created CAction_DEALY");
 		Safe_Release(pInstance);
@@ -160,8 +166,18 @@ HRESULT CAction_MOVE::NativeConstruct()
 	if (mDynamicObject == nullptr)
 		return E_FAIL;
 
-	// Test
-	mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
+	// 0. Test
+//	mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
+	
+	// 1. 랜덤으로 주변위치 넣기
+	if (mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition) == false)
+	{
+		return E_FAIL;
+	}
+
+	// 2. 게임 매니저에서 특정 위치 받아오기
+	// mGoalPosition = GetSingle(CGameManager)->Get_TaskPos();
+
 	// 위치 결정 플래그
 	// 1. 특정 위치를 받아서 간다.
 	//	금광 / 벽위치
@@ -169,7 +185,7 @@ HRESULT CAction_MOVE::NativeConstruct()
 	//	범위 랜덤 / 이외 랜덤
 
 	// 패스 찾기
-	mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
+//	mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
 	mIsMoveNaviPath = true;
 	mIsMoveCell = false;
 	mCurrentTimer = 0;

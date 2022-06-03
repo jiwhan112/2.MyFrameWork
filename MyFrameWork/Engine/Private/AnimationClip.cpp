@@ -41,17 +41,17 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 	if (m_PlayTimeAcc >= m_Duration)
 	{
 		m_PlayTimeAcc = 0.0;
-		m_isFinished = true;
+		m_IsFinished = true;
 	}
 	else
-		m_isFinished = false;
+		m_IsFinished = false;
 
 	_vector			vScale, vRotation, vPosition;
 
 	/* 현재 내 애니메이션 상태에서 재생된 시간에 따른 모든 뼈의 상태를 갱신한다.  */
 	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
-		if (true == m_isFinished)
+		if (true == m_IsFinished)
 			m_Channels[i]->Set_CurrentKeyFrame(0);
 
 		/* 각각의 뼈들이 시간값에 따른 상태값을 표현한 키프레임들을 가져온다. */

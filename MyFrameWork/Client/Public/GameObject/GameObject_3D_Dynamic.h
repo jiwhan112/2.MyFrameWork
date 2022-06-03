@@ -70,7 +70,8 @@ public: // Collision
 public: // Move AI
 	HRESULT FindPathForCurrentNavi(_float3 GoalPosition);
 	_bool	Get_PathList_Frontpop(_float3* NextPosition);
-//	HRESULT Update_Move(_double Timer);
+	// 갈 수 있는 위치 뽑기
+	_bool	FindPathRandAblePostition(_int fRange, _float3* GoalPos);
 
 public: // Animation
 // 애니메이션 이름으로 설정
