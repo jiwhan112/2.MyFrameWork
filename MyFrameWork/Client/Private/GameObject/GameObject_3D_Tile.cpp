@@ -51,6 +51,27 @@ HRESULT CGameObject_3D_Tile::NativeConstruct(void* pArg)
 _int CGameObject_3D_Tile::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+
+	switch (meTileTickState)
+	{
+	case Client::CGameObject_3D_Tile::E_TICKE_NONE:
+		mCurrentShaderPass = 0;
+		break;
+	case Client::CGameObject_3D_Tile::E_TICKE_PICK:
+		mCurrentShaderPass = 1;
+		meTileTickState = CGameObject_3D_Tile::E_TICKE_NONE;
+		break;
+	case Client::CGameObject_3D_Tile::E_TICKE_TASK:
+		mCurrentShaderPass = 3;
+		break;
+	case Client::CGameObject_3D_Tile::E_TICKE_END:
+		break;
+	default:
+		break;
+	}
+
+
+
 	GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_STATIC, this);
 
 	return UPDATENONE;
@@ -59,8 +80,6 @@ _int CGameObject_3D_Tile::Tick(_double TimeDelta)
 HRESULT CGameObject_3D_Tile::Render()
 {
 	FAILED_CHECK(__super::Render());
-	
-	
 	return S_OK;
 }
 
@@ -68,8 +87,19 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 {
 	FAILED_CHECK(__super::CollisionFunc(PickPosition,dist));
 	   
-	mCurrentShaderPass = 1;
-	
+	if (meTileTickState == CGameObject_3D_Tile::E_TICKE_TASK)
+		return S_OK;
+
+	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+	{
+		meTileTickState = CGameObject_3D_Tile::E_TICKE_TASK;
+		GetSingle(CGameManager)->Get_DaungonManager()->Add_Task_Tile(mIndex);
+		return S_OK;
+	}
+		
+	meTileTickState = CGameObject_3D_Tile::E_TICKE_PICK;
+	return S_OK;
+
 	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_WHEEL)& DIS_Down)
 	//{
 	//	Update_Debug_TILESTATE();
@@ -80,7 +110,7 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 		// 상하좌우에 연결된 타일이 있다면 자신의 인덱스를 지운다.
 		// 타일 리스트 가져오기
 
-		for (int i =0;i< NEIGHBOR_TILE_END;++i)
+		/*for (int i =0;i< NEIGHBOR_TILE_END;++i)
 		{
 			if (mNeighborIndex[i] != -1)
 			{
@@ -90,12 +120,12 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 
 				findtile->Set_EmptySearchNeighbor(mIndex);
 				findtile->Update_NeighborTile();
-				
+
 			}
-		}	
+		}
 		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Setup_TileState(mIndex));
 		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->RemoveTile(this));
-		Set_Dead();
+		Set_Dead();*/
 	}
 	return S_OK;
 }

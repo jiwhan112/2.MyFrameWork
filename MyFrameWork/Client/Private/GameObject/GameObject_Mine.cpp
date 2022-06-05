@@ -113,6 +113,16 @@ HRESULT CGameObject_Mine::Init_AI()
 	return S_OK;
 }
 
+void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
+{
+	// ≈∏¿œ √§±º
+}
+
+void CGameObject_Mine::Set_Dig_Gold(CGameObject_3D_Tile * tile)
+{
+	// ∞ÒµÂ √§±º
+}
+
 
 CGameObject_Mine * CGameObject_Mine::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

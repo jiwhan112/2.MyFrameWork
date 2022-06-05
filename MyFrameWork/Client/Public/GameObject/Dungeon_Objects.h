@@ -55,13 +55,15 @@ public: // 지형
 	HRESULT Setup_Terrain_World(CGameObject_MyTerrain* toolmap = nullptr);
 	HRESULT ResetTile_Tool(TERRAIN_DESC * data);
 
-	const list<CGameObject_3D_Tile*>* Get_TileList() const { return mListVecTiles; }
+	const list<CGameObject_3D_Tile*>*	Get_TileList() const { return mListVecTiles; }
 
-	CGameObject_MyTerrain* Get_DungeonMap() { return mDungeonMap; }
-	CGameObject_MyTerrain* Get_WorldMap() { return mWorldMap; }
+	CGameObject_MyTerrain*				Get_DungeonMap() { return mDungeonMap; }
+	CGameObject_MyTerrain*				Get_WorldMap() { return mWorldMap; }
 
 public: // 유닛
-	HRESULT Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ);
+	HRESULT								Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ);
+	list<CGameObject_Base*>				Get_ListObjecID(E_OBJECT_TYPE id);
+//	HRESULT Get_Unit_Map(E_TAYGAMEOBJECT id, _float3 PositionXZ);
 
 
 private: // 지형

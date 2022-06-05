@@ -45,6 +45,7 @@ VS_OUT VS_MAIN_DEFAULT(VS_IN In)
 	Out.vTexUV = In.vTexUV;
 	return Out;
 }
+
 VS_OUT VS_MAIN_SOCKET(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
@@ -143,10 +144,21 @@ PS_OUT PS_MAIN_RED(PS_IN In)
 
 	return Out;
 }
+PS_OUT PS_MAIN_GREEN(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vColor.rgba = 0.0f;
+	Out.vColor.g = 1.0f;
+	Out.vColor.a = 1.0f;
+
+	return Out;
+}
+
 
 technique11		DefaultTechnique
 {
-	pass Default
+	pass Default // 0
 	{
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
@@ -158,7 +170,7 @@ technique11		DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT();
 	}
 
-	pass Red
+	pass Red // 1
 	{
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
@@ -170,7 +182,7 @@ technique11		DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_RED();
 	}
 
-	pass SOCKET
+	pass SOCKET // 2
 	{
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
@@ -180,5 +192,17 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_SOCKET();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_DEFAULT();
+	}
+
+	pass Green // 3
+	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(ZTestAndWriteState, 0);
+		//	SetRasterizerState(CullMode_ccw);
+		SetRasterizerState(CullMode_None);
+
+		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_GREEN();
 	}
 }

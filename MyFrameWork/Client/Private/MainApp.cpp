@@ -29,6 +29,8 @@ _int CMainApp::Tick(_double TimeDelta)
 	m_pGameManager->Tick(TimeDelta);
 
 	m_pGameInstance->LateTick_Engine(TimeDelta);
+	m_pGameManager->LateTick(TimeDelta);
+
 	return _int();
 }
 

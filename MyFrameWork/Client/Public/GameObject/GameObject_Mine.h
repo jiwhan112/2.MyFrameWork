@@ -31,6 +31,8 @@ public:
 	virtual HRESULT Init_AI();
 
 	// ¸ðµ¨ ±¸Çö 
+	void Set_Dig_Tile(class CGameObject_3D_Tile* tile);
+	void Set_Dig_Gold(class CGameObject_3D_Tile* tile);
 
 
 

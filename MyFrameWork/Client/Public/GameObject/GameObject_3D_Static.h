@@ -13,7 +13,7 @@ class CGameObject_3D_Static :
 	public CGameObject_Base
 {
 	// 업데이트 모드
-	enum E_UPDATETYPE
+	enum E_TICKTYPE
 	{
 		// 기본
 		E_UPDATETYPE_NONE,
@@ -77,7 +77,7 @@ protected: // 3D모델 Com / DESC 추가
 	MODEL_STATIC_DESC			mModelStatic_Desc;
 	COLLIDER_DESC				mCollider_Desc;
 
-	E_UPDATETYPE				meUpdateType = E_UPDATETYPE_NONE;
+	E_TICKTYPE				meUpdateType = E_UPDATETYPE_NONE;
 	_float						mOffsetY = 0;
 
 public:

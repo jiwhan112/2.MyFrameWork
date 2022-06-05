@@ -201,6 +201,7 @@ const list<CGameObject*>* CGameManager::Get_LevelObject_List(const wchar_t * lay
 		return nullptr;
 	return GameObjectList;
 }
+
 HRESULT CGameManager::Set_VisibleTag(const wchar_t * layerTag, bool b)
 {
 	auto TagObjectList = GetSingle(CGameManager)->Get_LevelObject_List(layerTag);

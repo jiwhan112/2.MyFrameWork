@@ -331,6 +331,34 @@ HRESULT CDungeon_Objects::Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ)
 	return S_OK;
 }
 
+list<CGameObject_Base*> CDungeon_Objects::Get_ListObjecID(E_OBJECT_TYPE id)
+{
+	// 오브젝트 ID로 리스트
+	list<CGameObject_Base*> ListObjectID;
+
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
+
+	for (int i = 0; i < LAY_END; ++i)
+	{
+		if((E_TAYLAY)i == LAY_CAMERA)
+			continue;
+
+		const list<CGameObject*>* GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, TAGLAY((E_TAYLAY)i));
+		if (GameObjectList == nullptr)
+			continue;
+
+		for (auto& obj: *GameObjectList)
+		{
+			CGameObject_Base* base = (CGameObject_Base*)obj;
+			if (base == nullptr)
+				continue;
+			if (base->Get_ObjectTypeID() == id)
+				ListObjectID.push_front(base);
+		}
+	}
+	return ListObjectID;
+}
+
 HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 {
 	// 타일 생성 

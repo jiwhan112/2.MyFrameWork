@@ -51,18 +51,20 @@ public:
 	CDungeon_Manager*			Get_DaungonManager();
 	CColliderManager*			Get_ColliderManager();
 
-	const list<MYFILEPATH*>* Get_PathList(E_PATHTYPE type) const;
+	const list<MYFILEPATH*>*	Get_PathList(E_PATHTYPE type) const;
 
 	// 경로데이터 업데이트
 	HRESULT Set_ReListPath(E_PATHTYPE type);
 
 	// 카메라나 플레이어 가져올때 좀더 편하게 가져옴
-	CGameObject* Get_LevelObject_LayerTag(const wchar_t* layerTag, _uint index = 0);
-	CCamera_Client* Get_LevelObject_Camera();
-	CGameObject_MyTerrain* Get_LevelObject_DUNGEONMAP();
-	CGameObject_MyTerrain* Get_LevelObject_WORLDMAP();
+	CGameObject*				Get_LevelObject_LayerTag(const wchar_t* layerTag, _uint index = 0);
+	CCamera_Client*				Get_LevelObject_Camera();
+	CGameObject_MyTerrain*		Get_LevelObject_DUNGEONMAP();
+	CGameObject_MyTerrain*		Get_LevelObject_WORLDMAP();
 
 	const list<CGameObject*>* Get_LevelObject_List(const wchar_t* layerTag);
+	// list<CGameObject_Base*> Get_ListObjecID(E_OBJECT_TYPE id);
+
 	E_LEVEL Get_CurrentLevel() const { return mCurrentLevel; }
 	HRESULT Set_VisibleTag(const wchar_t* layerTag,bool b);
 

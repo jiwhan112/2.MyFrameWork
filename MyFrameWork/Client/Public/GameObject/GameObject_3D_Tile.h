@@ -14,12 +14,13 @@ class CGameObject_3D_Tile  final:
 {
 public:
 	// 업데이트 모드
-	enum E_UPDATETYPE
+	enum E_TICKTYPE
 	{
 		// 기본
-		E_UPDATETYPE_NONE,
-		E_UPDATETYPE_PICK, // 피킹시 일꾼에 전달
-		E_UPDATETYPE_END
+		E_TICKE_NONE,
+		E_TICKE_PICK, // 피킹
+		E_TICKE_TASK, // 피킹시 일꾼에 전달
+		E_TICKE_END
 	};
 	
 	enum E_TILETYPE
@@ -95,6 +96,7 @@ public:
 	void Set_TileIndex(_int index) { mIndex = index; }
 	_int Get_TileIndex()const { return mIndex; }
 
+	void Set_TileTickState(E_TICKTYPE e) { meTileTickState = e; }
 	void Set_TileIndex(E_NEIGHBOR_TILE e, _int index) { mNeighborIndex[e] = index; }
 	bool Set_EmptySearchNeighbor(int searchIndex);
 	void Set_ColliderPosition();
@@ -123,6 +125,7 @@ protected:
 	string mTileNames[TILETYPE_END];
 
 	E_TILESTATE	meTileState = TILESTATE_TOP;
+	E_TICKTYPE meTileTickState = E_TICKE_NONE;
 
 //	CModel* mComModel_deco = nullptr;
 

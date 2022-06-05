@@ -22,7 +22,6 @@ HRESULT CGameObject_3D_Static::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
-
 	mCurrentShaderPass = 0;
 	return S_OK;
 }

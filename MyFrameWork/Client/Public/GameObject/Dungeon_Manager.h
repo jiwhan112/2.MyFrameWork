@@ -69,22 +69,30 @@ public: // For. object
 
 
 public:	// For. Task
-	// golbalTask
-	HRESULT Add_Task_Tile();
-	HRESULT Add_Task_Gold();
+	// 피킹시 각 타일에서 자신을 할일로 등록한다.
+	// 인터페이스 함수
+	HRESULT Add_Task_Tile(_uint index);
+	HRESULT Add_Task_Gold(_uint index);
+	HRESULT Check_Task();
+
+private:
+	// 테스크에 따른 유닛 할당
+	_bool Task_Trigger(class MyTask* task);
+	_bool Task_Mine(class MyTask* task);
 
 
 
 private:
 	// 던전에 들어가는 오브젝트들 생성
 	class CDungeon_Objects*		mDungeon_Objects = nullptr;
+	// 던전의 할일 목록
+	class CDungeon_Task*		mDungeon_TaskMgr = nullptr;
 
-	ID3D11Device*			mDevice = nullptr;
-	ID3D11DeviceContext*	mDeviceContext = nullptr;
-
+	E_GAMEMODE					meCurrentGameMode;
 	class CCamera_Client*		mGameCamera= nullptr;
 
-	E_GAMEMODE				meCurrentGameMode;
+	ID3D11Device*				mDevice = nullptr;
+	ID3D11DeviceContext*		mDeviceContext = nullptr;
 
 public:
 	static CDungeon_Manager* Create(ID3D11Device* device, ID3D11DeviceContext* deviceContext);

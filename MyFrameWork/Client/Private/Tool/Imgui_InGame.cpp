@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Tool/Imgui_InGame.h"
 #include "GameObject/Client_Object.h"
+#include "GameObject/Dungeon_Objects.h"
 #include "Camera_Client.h"
 
 
