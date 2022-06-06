@@ -81,9 +81,6 @@ protected:
 	explicit CAction_DEALY(const CAction_DEALY& rhs);
 	virtual ~CAction_DEALY() = default;
 	
-public: 
-	// 생성 초기화
-	HRESULT NativeConstruct_Action();	
 public:
 	virtual HRESULT NativeConstruct();
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
@@ -110,6 +107,7 @@ class CAction_MOVE
 	:public CAction_DynamicBase
 {
 public:
+	// 움직이는 애니메이션
 	enum E_MOVEFLAG
 	{
 		MOVE_WALK_ANI,
@@ -118,20 +116,34 @@ public:
 
 	};
 
+	// 움직이는 위치
+	enum E_MOVEPOSFLAG
+	{
+		MOVE_POS_NEAR,
+		MOVE_POS_TILE,
+		MOVE_POS_PICK,
+		MOVE_POS_END,
+	};
+
 protected:
 	explicit CAction_MOVE(const char* str, CGameObject_3D_Dynamic* obj);
 	explicit CAction_MOVE(const CAction_MOVE& rhs);
 	virtual ~CAction_MOVE() = default;
 
 public:
-	// 생성 초기화
-	HRESULT NativeConstruct_Action(_float3 GoalPostition, _double TimeMax);
-public:
 	virtual HRESULT NativeConstruct();
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
 	void Set_AniType(E_MOVEFLAG anitype)
 	{
 		meMoveAni = anitype;
+	}
+	void Set_TimeMax(_float TimeMax)
+	{
+		mTimeMax = TimeMax;
+	}
+	void Set_Postition(E_MOVEPOSFLAG eMoveType)
+	{
+		meMoveType = eMoveType;
 	}
 
 
@@ -148,11 +160,49 @@ private:
 	bool						mIsMoveCell = false;
 
 	E_MOVEFLAG					meMoveAni = MOVE_WALK_ANI;
+	E_MOVEPOSFLAG				meMoveType = MOVE_POS_NEAR;
 
 public:
-	static	CAction_MOVE*				Create(const char* str, CGameObject_3D_Dynamic* obj, _float3 goalpos, _double TimeMax);
+	static	CAction_MOVE*				Create(const char* str, CGameObject_3D_Dynamic* obj);
 	virtual CAction_MOVE*				Clone(void* pArg = nullptr) override;
 	virtual void Free()override;
+};
+
+// 임의의 함수 실행
+class CAction_Function
+	:public CAction_DynamicBase
+{
+public:
+	enum E_FUNCION
+	{
+		FUNCION_NONE,
+		FUNCION_REMOVE_TILE,
+		FUNCION_LOOK,
+		FUNCION_END,
+
+	};
+
+protected:
+	explicit CAction_Function(const char* str, CGameObject_3D_Dynamic* obj);
+	explicit CAction_Function(const CAction_Function& rhs);
+	virtual ~CAction_Function() = default;
+
+
+public:
+	virtual HRESULT NativeConstruct();
+	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
+	
+	void Set_Funcion(E_FUNCION e) { meFuncion = e; }
+
+private:
+	E_FUNCION meFuncion = FUNCION_NONE;
+
+
+public:
+	static	CAction_Function*				Create(const char* str, CGameObject_3D_Dynamic* obj);
+	virtual CAction_Function*				Clone(void* pArg = nullptr) override;
+	virtual void Free()override;
+
 };
 
 #pragma endregion ACTIONS

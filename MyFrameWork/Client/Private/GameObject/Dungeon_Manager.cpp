@@ -242,6 +242,8 @@ _bool CDungeon_Manager::Task_Mine(MyTask* task)
 	else if(task->mTaskID == CDungeon_Task::TASK_GOLD)
 		SearchMine->Set_Dig_Gold(tile);
 
+
+	Safe_Release(task);
 	return true;
 }
 

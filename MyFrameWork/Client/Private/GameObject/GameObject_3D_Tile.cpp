@@ -90,44 +90,48 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 	if (meTileTickState == CGameObject_3D_Tile::E_TICKE_TASK)
 		return S_OK;
 
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
-	{
-		meTileTickState = CGameObject_3D_Tile::E_TICKE_TASK;
-		GetSingle(CGameManager)->Get_DaungonManager()->Add_Task_Tile(mIndex);
-		return S_OK;
-	}
-		
-	meTileTickState = CGameObject_3D_Tile::E_TICKE_PICK;
-	return S_OK;
+	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+	//{
+	//	meTileTickState = CGameObject_3D_Tile::E_TICKE_TASK;
+	//	RemoveThisTile();
+	//	return S_OK;
+	//}
 
 	//if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_WHEEL)& DIS_Down)
 	//{
 	//	Update_Debug_TILESTATE();
+	//	return S_OK;
 	//}
+
 
 	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
 	{
-		// 상하좌우에 연결된 타일이 있다면 자신의 인덱스를 지운다.
-		// 타일 리스트 가져오기
-
-		/*for (int i =0;i< NEIGHBOR_TILE_END;++i)
-		{
-			if (mNeighborIndex[i] != -1)
-			{
-				CGameObject_3D_Tile* findtile = GetSingle(CGameManager)->Get_DaungonManager()->FInd_TIleForIndex(mNeighborIndex[i]);
-				if(findtile == nullptr)
-					continue;
-
-				findtile->Set_EmptySearchNeighbor(mIndex);
-				findtile->Update_NeighborTile();
-
-			}
-		}
-		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Setup_TileState(mIndex));
-		FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->RemoveTile(this));
-		Set_Dead();*/
+		Add_TileTask_this();
+		return S_OK;
 	}
+
+	meTileTickState = CGameObject_3D_Tile::E_TICKE_PICK;
 	return S_OK;
+
+	
+
+
+	return S_OK;
+}
+
+void CGameObject_3D_Tile::Add_TileTask_this()
+{
+	// 타일 채굴에 넣기
+	if (meTileDigType == CGameObject_3D_Tile::TILE_DIGTYPE_WALL)
+	{
+		meTileTickState = CGameObject_3D_Tile::E_TICKE_TASK;
+		GetSingle(CGameManager)->Get_DaungonManager()->Add_Task_Tile(mIndex);
+	}
+	else if (meTileDigType == CGameObject_3D_Tile::TILE_DIGTYPE_GOLD)
+	{
+		meTileTickState = CGameObject_3D_Tile::E_TICKE_TASK;
+		GetSingle(CGameManager)->Get_DaungonManager()->Add_Task_Gold(mIndex);
+	}
 }
 
 
@@ -158,6 +162,80 @@ void CGameObject_3D_Tile::Set_ColliderPosition()
 	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 }
 
+_bool CGameObject_3D_Tile::Get_IsBlocked() const
+{
+	if (
+		(mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_LEFT] == -1	)||
+		(mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_TOP] == -1	)||
+		(mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_RIGHT] == -1 )||
+		(mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_BOTTOM] == -1)
+		)
+		return false;
+
+	return true;
+}
+
+_float3 CGameObject_3D_Tile::Get_AbleTilePos(_float offset)
+{
+	// 상하좌우를 검사해서 갈 뚫려있는 위치 반환
+
+	_float offsetPos = offset;
+
+	_float3 worldPos = Get_WorldPostition();
+	_float3 goalPos = worldPos;
+
+	if (mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_LEFT] == -1)
+	{ 
+		goalPos = _float3(worldPos.x - offsetPos,worldPos.y,worldPos.z);
+
+	}
+
+	else if (mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_RIGHT] == -1)
+	{
+		goalPos = _float3(worldPos.x + offsetPos, worldPos.y, worldPos.z);
+
+	}
+
+	else if (mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_TOP] == -1)
+	{
+		goalPos = _float3(worldPos.x , worldPos.y, worldPos.z + offsetPos);
+
+	}
+
+	else if (mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_BOTTOM] == -1)
+	{
+		goalPos = _float3(worldPos.x , worldPos.y, worldPos.z - offsetPos);
+
+	}
+
+	return goalPos;
+}
+
+HRESULT CGameObject_3D_Tile::RemoveThisTile()
+{
+	// 상하좌우에 연결된 타일이 있다면 자신의 인덱스를 지운다.
+	// 타일 리스트 가져오기
+
+	for (int i = 0; i < NEIGHBOR_TILE_END; ++i)
+	{
+		if (mNeighborIndex[i] != -1)
+		{
+			CGameObject_3D_Tile* findtile = GetSingle(CGameManager)->Get_DaungonManager()->FInd_TIleForIndex(mNeighborIndex[i]);
+			if (findtile == nullptr)
+				continue;
+
+			findtile->Set_EmptySearchNeighbor(mIndex);
+			findtile->Update_NeighborTile();
+
+		}
+	}
+	FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->Setup_TileState(mIndex));
+	FAILED_CHECK(GetSingle(CGameManager)->Get_DaungonManager()->RemoveTile(this));
+	Set_Dead();
+	return S_OK;
+
+}
+
 HRESULT CGameObject_3D_Tile::Update_NeighborTile()
 {
 	// 타일이 삭제됐다고 가정하고 -1인 지점에 따라 타일이 변경된다.	
@@ -165,9 +243,48 @@ HRESULT CGameObject_3D_Tile::Update_NeighborTile()
 	// 타일 상태 결정
 	meTileState = CGameObject_3D_Tile::TILESTATE_TOP;
 
+	// 4
+	if (
+		mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_TOP] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1
+		)
+	{
+		meTileState = CGameObject_3D_Tile::TILESTATE_DIAGTEST_BOTTOM;
+	}
+
+	// 3
+	else if (
+		mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_BOTTOM] == -1
+		)
+	{
+		meTileState = CGameObject_3D_Tile::TILESTATE_CONER_RB;
+	}
+	else if (
+		mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_TOP] == -1
+		)
+	{
+		meTileState = CGameObject_3D_Tile::TILESTATE_CONER_RT;
+	}
+
+
+
+	
+	else if (
+		mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1 &&
+		mNeighborIndex[NEIGHBOR_TILE_RIGHT] == -1 
+		)
+	{
+		meTileState = CGameObject_3D_Tile::TILESTATE_WALL_RIGHT;
+	}
 
 	// L
-	if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
+	else if (mNeighborIndex[NEIGHBOR_TILE_LEFT] == -1)
 	{
 		if (mNeighborIndex[NEIGHBOR_TILE_TOP] == -1)
 		{

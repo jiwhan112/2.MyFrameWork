@@ -29,14 +29,22 @@ public:
 
 	virtual HRESULT Init_Unit();
 	virtual HRESULT Init_AI();
+	virtual HRESULT Init_AI_Default();
+	virtual HRESULT Init_AI_Tile();
 
 	// ¸ðµ¨ ±¸Çö 
 	void Set_Dig_Tile(class CGameObject_3D_Tile* tile);
 	void Set_Dig_Gold(class CGameObject_3D_Tile* tile);
 
+	class CGameObject_3D_Tile* Get_SearchTile()const { return mSearchTile; }
 
+	HRESULT RemoveTile();
+	HRESULT LookTile();
+	
 
 protected:
+	class CGameObject_3D_Tile* mSearchTile = nullptr;
+	_float3 mTileGoalPostiton;
 
 public:
 	static CGameObject_Mine* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

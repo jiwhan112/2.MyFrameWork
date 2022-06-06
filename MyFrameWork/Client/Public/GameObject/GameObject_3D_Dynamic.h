@@ -73,6 +73,8 @@ public: // Move AI
 	// 갈 수 있는 위치 뽑기
 	_bool	FindPathRandAblePostition(_int fRange, _float3* GoalPos);
 
+	_float3 Get_GoalPostiton()const;
+
 public: // Animation
 // 애니메이션 이름으로 설정
 	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name);

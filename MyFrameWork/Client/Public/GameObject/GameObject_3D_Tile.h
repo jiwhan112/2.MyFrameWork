@@ -76,6 +76,15 @@ public:
 		NEIGHBOR_TILE_END
 	};
 
+	enum E_TILE_DIGTYPE
+	{
+		TILE_DIGTYPE_WALL,
+		TILE_DIGTYPE_GOLD,
+		TILE_DIGTYPE_END,
+
+	};
+
+
 
 protected:
 	explicit CGameObject_3D_Tile(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -91,6 +100,7 @@ public:
 	virtual HRESULT Render()override;
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist) override;
 
+	void Add_TileTask_this();
 
 	HRESULT Set_LoadNewFBX(E_TILETYPE type);
 	void Set_TileIndex(_int index) { mIndex = index; }
@@ -101,6 +111,13 @@ public:
 	bool Set_EmptySearchNeighbor(int searchIndex);
 	void Set_ColliderPosition();
 
+	_bool Get_IsBlocked()const;
+	_float3 Get_AbleTilePos(_float offset);
+
+	E_TILE_DIGTYPE Get_TileDigType()const { return meTileDigType; }
+	void Set_TileDigType(E_TILE_DIGTYPE e){ meTileDigType = e; }
+
+	HRESULT RemoveThisTile();
 //	HRESULT Set_LoadModel_Deco_DESC(E_TILETYPE tileIndex);
 public:
 
@@ -126,6 +143,7 @@ protected:
 
 	E_TILESTATE	meTileState = TILESTATE_TOP;
 	E_TICKTYPE meTileTickState = E_TICKE_NONE;
+	E_TILE_DIGTYPE meTileDigType = TILE_DIGTYPE_WALL;
 
 //	CModel* mComModel_deco = nullptr;
 

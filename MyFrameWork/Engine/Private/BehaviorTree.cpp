@@ -40,29 +40,7 @@ HRESULT CBehaviorTree::Tick(_double timer)
 
 HRESULT CBehaviorTree::LateTick(_double timer)
 {
-
-	// 전역 상태가 온다면 먼저 변환된다 그렇지 않다면 저장된 시퀀스 상태를 루프한다.
-
-	// 우선 시퀀스가 정해지지 않으면 시퀀스 루프
-	if (mCurrentSequnence->Get_SeqEnd())
-	{
-		auto iter = mMapSequence.find(mCurrentKey);
-		iter++;
-		if (iter == mMapSequence.end())
-		{
-			mCurrentKey = (*mMapSequence.begin()).first;
-			mCurrentSequnence = (*mMapSequence.begin()).second;
-			mCurrentSequnence->Restart();
-
-		}
-		else
-		{
-			mCurrentKey = (*iter).first;
-			mCurrentSequnence = (*iter).second;
-			mCurrentSequnence->Restart();
-		}
-	}
-
+	FAILED_CHECK(Set_IDLE_Seq());
 	return S_OK;
 }
 
@@ -106,7 +84,53 @@ HRESULT CBehaviorTree::Select_Sequnce(string seqTag)
 
 	mCurrentSequnence = seq;
 	mCurrentKey = seqTag;
+	mCurrentSequnence->Restart();
+	return S_OK;
+}
 
+HRESULT CBehaviorTree::Set_IDLE_Seq()
+{
+	if (mCurrentKey == "")
+	{
+		auto iter = mMapSequence.begin();
+		while (!(iter->second->Get_SeqType() == CNode_Seqeunce::SEQTYPE_IDLE))
+		{
+			iter++;
+			if (iter == mMapSequence.end())
+			return E_FAIL;
+		}
+		mCurrentKey = iter->first;
+		mCurrentSequnence = iter->second;
+		mCurrentSequnence->Restart();
+	}
+
+
+	if (mCurrentSequnence->Get_SeqEnd())
+	{
+		auto iter = mMapSequence.find(mCurrentKey);
+		iter++;
+		if (iter == mMapSequence.end())
+			iter = mMapSequence.begin();
+
+		while (!(iter->second->Get_SeqType() == CNode_Seqeunce::SEQTYPE_IDLE))
+		{
+			iter++;
+			if (iter == mMapSequence.end())
+			{
+				iter = mMapSequence.begin();				
+			}
+		}
+
+		mCurrentKey = iter->first;
+		mCurrentSequnence = iter->second;
+		mCurrentSequnence->Restart();
+	}
+
+	return S_OK;
+}
+
+HRESULT CBehaviorTree::Set_LOOP_Seq()
+{
 	return S_OK;
 }
 
@@ -322,7 +346,7 @@ list< CNode_LeafTree*>::iterator CNode_Seqeunce::Find_LeafTree_Iter(CNode_LeafTr
 
 HRESULT CNode_Seqeunce::NativeConstruct()
 {
-	mbEnd_Sequnce = true;
+	mbEnd_Sequnce = false;
 	return S_OK;
 }
 

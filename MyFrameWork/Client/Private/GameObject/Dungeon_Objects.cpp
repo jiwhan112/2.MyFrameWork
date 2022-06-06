@@ -226,11 +226,10 @@ HRESULT CDungeon_Objects::Setup_Terrain_Daungeon(CGameObject_MyTerrain* map)
 	FAILED_CHECK(Create_Tiles(mCurrentLevel));
 	// 타일 이웃 설정
 	FAILED_CHECK(Setup_Neigbor_Tile());
-	// 타일 메쉬 설정
-	FAILED_CHECK(Setup_TileState());
 	// 네비메시와 타일 충돌
 	FAILED_CHECK(Setup_Collision_Navi2Tile());
-
+	// 타일 메쉬 설정
+	FAILED_CHECK(Setup_TileState());
 	return S_OK;
 }
 

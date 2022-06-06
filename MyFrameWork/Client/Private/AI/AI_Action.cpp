@@ -2,6 +2,7 @@
 #include "AI/AI_Action.h"
 
 #include "GameObject/GameObject_3D_Dynamic.h"
+#include "GameObject/GameObject_Mine.h"
 
 CAction_DynamicBase::CAction_DynamicBase(const char * str, CGameObject_3D_Dynamic * obj)
 	:CNode_Action(str), mDynamicObject(obj)
@@ -44,14 +45,6 @@ CAction_DEALY::CAction_DEALY(const CAction_DEALY & rhs)
 	meAnimation = rhs.meAnimation;
 	mTimeMax = rhs.mTimeMax;
 
-}
-
-
-HRESULT CAction_DEALY::NativeConstruct_Action()
-{
-
-	mCurrentTimer = 0;
-	return S_OK;
 }
 
 HRESULT CAction_DEALY::NativeConstruct()
@@ -109,7 +102,7 @@ CAction_DEALY * CAction_DEALY::Create(const char * str, CGameObject_3D_Dynamic* 
 {
 	CAction_DEALY* pInstance = NEW CAction_DEALY(str, obj);
 
-	if (FAILED(pInstance->NativeConstruct_Action()))
+	if (FAILED(pInstance->NativeConstruct()))
 	{
 		MSGBOX("Failed to Created CAction_DEALY");
 		Safe_Release(pInstance);
@@ -142,21 +135,12 @@ CAction_MOVE::CAction_MOVE(const char * str, CGameObject_3D_Dynamic * obj)
 }
 
 CAction_MOVE::CAction_MOVE(const CAction_MOVE & rhs)
-	:CAction_DynamicBase(rhs)
+	: CAction_DynamicBase(rhs)
 {
 	mTimeMax = rhs.mTimeMax;
 	meMoveAni = rhs.meMoveAni;
-}
+	meMoveType = rhs.meMoveType;
 
-HRESULT CAction_MOVE::NativeConstruct_Action(_float3 GoalPostition, _double TimeMax)
-{
-	mTimeMax = TimeMax;
-	// Test
-	mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
-	mIsMoveNaviPath = false;
-	mIsMoveCell = false;
-
-	return S_OK;
 }
 
 HRESULT CAction_MOVE::NativeConstruct()
@@ -166,26 +150,36 @@ HRESULT CAction_MOVE::NativeConstruct()
 	if (mDynamicObject == nullptr)
 		return E_FAIL;
 
-	// 0. Test
-//	mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
-	
-	// 1. 랜덤으로 주변위치 넣기
-	if (mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition) == false)
+	// 목표위치 설정
+	// 1. 랜덤
+	// 2. 특정 위치
+	// 3. 마우스 위치
+	switch (meMoveType)
 	{
-		return E_FAIL;
+	case Client::CAction_MOVE::MOVE_POS_NEAR:
+		if (mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition) == false)
+		{
+			return S_FALSE;
+		}
+		break;
+	case Client::CAction_MOVE::MOVE_POS_TILE:
+		// 이미 탐색된 정보 활용
+		mGoalPosition = mDynamicObject->Get_GoalPostiton();
+		if (mGoalPosition == _float3())
+			return E_FAIL;
+
+		break;
+	case Client::CAction_MOVE::MOVE_POS_PICK:
+		mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
+		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
+		break;
+	case Client::CAction_MOVE::MOVE_POS_END:
+		break;
+	default:
+		break;
 	}
 
-	// 2. 게임 매니저에서 특정 위치 받아오기
-	// mGoalPosition = GetSingle(CGameManager)->Get_TaskPos();
 
-	// 위치 결정 플래그
-	// 1. 특정 위치를 받아서 간다.
-	//	금광 / 벽위치
-	// 2. 랜덤 위치를 받아서 간다.
-	//	범위 랜덤 / 이외 랜덤
-
-	// 패스 찾기
-//	mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
 	mIsMoveNaviPath = true;
 	mIsMoveCell = false;
 	mCurrentTimer = 0;
@@ -247,11 +241,11 @@ HRESULT CAction_MOVE::Action(_double TimeDelta)
 	}
 }
 
-CAction_MOVE * CAction_MOVE::Create(const char * str, CGameObject_3D_Dynamic * obj, _float3 goalpos, _double TimeMax)
+CAction_MOVE * CAction_MOVE::Create(const char * str, CGameObject_3D_Dynamic * obj)
 {
 	CAction_MOVE* pInstance = NEW CAction_MOVE(str, obj);
 
-	if (FAILED(pInstance->NativeConstruct_Action(goalpos,TimeMax)))
+	if (FAILED(pInstance->NativeConstruct()))
 	{
 		MSGBOX("Failed to Created CAction_MOVE");
 		Safe_Release(pInstance);
@@ -275,4 +269,71 @@ void CAction_MOVE::Free()
 {
 	__super::Free();
 	
+}
+
+CAction_Function::CAction_Function(const char * str, CGameObject_3D_Dynamic * obj)
+	:CAction_DynamicBase(str,obj)
+{
+}
+
+CAction_Function::CAction_Function(const CAction_Function & rhs)
+	: CAction_DynamicBase(rhs)
+	, meFuncion(rhs.meFuncion)
+
+{
+}
+
+HRESULT CAction_Function::NativeConstruct()
+{
+	__super::NativeConstruct();
+	
+	return S_OK;
+}
+
+HRESULT CAction_Function::Action(_double timer)
+{
+	switch (meFuncion)
+	{
+	case CAction_Function::FUNCION_REMOVE_TILE:
+		((CGameObject_Mine*)mDynamicObject)->RemoveTile();
+		break;
+	case CAction_Function::FUNCION_LOOK:
+		((CGameObject_Mine*)mDynamicObject)->LookTile();
+	default:
+		break;
+	}
+
+	mIsEnd = true;
+	mIsSucceed = true;
+
+	return S_OK;
+}
+
+CAction_Function * CAction_Function::Create(const char * str, CGameObject_3D_Dynamic * obj)
+{
+	CAction_Function* pInstance = NEW CAction_Function(str, obj);
+
+	if (FAILED(pInstance->NativeConstruct()))
+	{
+		MSGBOX("Failed to Created CAction_Function");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CAction_Function * CAction_Function::Clone(void * pArg)
+{
+	CAction_Function* pInstance = NEW CAction_Function(*this);
+
+	if (FAILED(pInstance->NativeConstruct()))
+	{
+		MSGBOX("Failed to Created CAction_Function");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CAction_Function::Free()
+{
+	__super::Free();
 }

@@ -131,11 +131,13 @@ HRESULT CImgui_InGame::Edit_Unit()
 
 	E_OBJECT_TYPE id = (E_OBJECT_TYPE)mSelectObject->Get_ObjectTypeID();
 
-	if (id == OBJECT_TYPE_3D_DYNAMIC)
+	if (id == OBJECT_TYPE_3D_DYNAMIC_MINE)
 	{
 		CGameObject_3D_Dynamic* dynamicunit = ((CGameObject_3D_Dynamic*)mSelectObject);
 
 		ImGui::Text(dynamicunit->Get_ComBehavior()->Get_StrCurrentLeafName());
+		ImGui::Text(dynamicunit->Get_ComBehavior()->Get_CurrentSeqKey().c_str());
+
 	}
 	
 	return S_OK;

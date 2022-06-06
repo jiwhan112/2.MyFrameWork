@@ -29,9 +29,9 @@ public:
 
 	virtual HRESULT Init_Unit();
 	virtual HRESULT Init_AI();
+	HRESULT Init_AI_Default();
+
 	// ¸ðµ¨ ±¸Çö 
-
-
 
 protected:
 

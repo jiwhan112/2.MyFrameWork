@@ -32,6 +32,15 @@ public:
 	HRESULT				Add_Seqeunce(string strtag, CNode_Seqeunce * seq);
 	CNode_Seqeunce*		Find_Seqeunce(string strtag);
 	HRESULT				Select_Sequnce(string seqTag);
+	string				Get_CurrentSeqKey() const
+	{
+		return mCurrentKey;
+	}
+
+private:
+	HRESULT Set_IDLE_Seq();
+	HRESULT Set_LOOP_Seq();
+	
 
 
 private:
@@ -55,6 +64,15 @@ public:
 class ENGINE_DLL CNode_Seqeunce
 	:public CBase
 {
+public:
+	enum E_SEQTYPE
+	{
+		SEQTYPE_IDLE, // 기본 순회 가능
+		SEQTYPE_LOOP, // 연속 상태
+		SEQTYPE_ONETIME, // 한번만
+		SEQTYPE_END,
+	};
+
 protected:
 	explicit CNode_Seqeunce() = default;
 	virtual ~CNode_Seqeunce() = default;
@@ -85,6 +103,11 @@ public:
 	_bool Get_SeqEnd() const { return mbEnd_Sequnce; };
 	CNode_LeafTree* Get_CurrentLeafNode() const { return mCurrentLeafTree; }
 
+	void Set_SeqType(E_SEQTYPE e)  { meSeqType = e; };
+	void Set_SeqLevel(_uint level) { mSeqLevel = level;};
+	E_SEQTYPE Get_SeqType() const { return meSeqType; };
+	_uint Get_SeqLevel() const { return mSeqLevel; };
+
 
 protected:
 	list<CNode_LeafTree*>::iterator Find_LeafTree_Iter(CNode_LeafTree* currentTree);
@@ -96,7 +119,10 @@ protected:
 	
 	// 시퀀스에서는 해당하는 Leaf 노드 라스트로 가지고 있는다.
 	list< CNode_LeafTree*> mListSequnce;	
-	_bool mbEnd_Sequnce = false;
+	_bool		mbEnd_Sequnce = false;
+	E_SEQTYPE	meSeqType = SEQTYPE_IDLE;
+	_uint		mSeqLevel = 0;
+
 
 public:
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Mine.h"
+#include "GameObject/GameObject_3D_Tile.h"
 #include "AI/AI_Action.h"
 
 CGameObject_Mine::CGameObject_Mine(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -26,11 +27,8 @@ HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	if (strlen(mModelDesc.mModelName) < 2)
-	{
-		string str("crea_Snot_a.fbx");
-		strcpy_s(mModelDesc.mModelName, str.c_str());
-	}
+	string str("crea_Snot_a.fbx");
+	strcpy_s(mModelDesc.mModelName, str.c_str());
 	Set_LoadModelDynamicDESC(mModelDesc);
 
 	return S_OK;
@@ -55,6 +53,13 @@ HRESULT CGameObject_Mine::Init_Unit()
 
 HRESULT CGameObject_Mine::Init_AI()
 {
+	FAILED_CHECK(Init_AI_Default());
+	FAILED_CHECK(Init_AI_Tile());
+	return S_OK;
+}
+
+HRESULT CGameObject_Mine::Init_AI_Default()
+{
 	// AI ¼¼ºÎ ±¸Çö
 
 	// IDLE ½ÃÄö½º 3°³
@@ -65,29 +70,31 @@ HRESULT CGameObject_Mine::Init_AI()
 	// Set Action
 	CAction_DEALY* dealyTime = CAction_DEALY::Create("DealyTime", this);
 	CAction_DEALY* dealyAniIdle = CAction_DEALY::Create("DealyIdle", this);
-	CAction_DEALY* dealyAniDig = CAction_DEALY::Create("DealyDig", this);
+//	CAction_DEALY* dealyAniDig = CAction_DEALY::Create("DealyDig", this);
 	CAction_DEALY* dealyAniDance = CAction_DEALY::Create("DelayDance", this);
 
 	dealyTime->Set_TimeMax(3.0f);
 	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-	dealyAniDig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+//	dealyAniDig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
 	dealyAniDance->Set_Animation(CAnimatior::E_COMMON_ANINAME_DANCE);
 
-	CAction_MOVE* MoveWalk = CAction_MOVE::Create("walk", this, _float3(0, 0, 0), 0.6f);
-	CAction_MOVE* MoveRun = CAction_MOVE::Create("run", this, _float3(0, 0, 0), 0.3f);
+	CAction_MOVE* MoveWalk = CAction_MOVE::Create("Walk", this);
+	CAction_MOVE* MoveRun = CAction_MOVE::Create("Run", this);
 	MoveWalk->Set_AniType(CAction_MOVE::MOVE_WALK_ANI);
-	MoveRun->Set_AniType(CAction_MOVE::MOVE_RUN_ANI);
+	MoveWalk->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
+	MoveWalk->Set_TimeMax(0.6f);
+	MoveRun->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
+	MoveRun->Set_TimeMax(0.3f);
 
 	// SetSeq
 	// IDLE1: µ¹¾Æ´Ù´Ô
 	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
+	Seq_IDLE1->PushBack_LeafNode(dealyAniDance->Clone());
 	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
 	Seq_IDLE1->PushBack_LeafNode(MoveWalk->Clone());
 
 	// IDLE2: ¶Ù¾î´Ù´Ô
 	Seq_IDLE2->PushBack_LeafNode(dealyAniIdle->Clone());
-	Seq_IDLE2->PushBack_LeafNode(dealyAniDig->Clone());
 	Seq_IDLE2->PushBack_LeafNode(dealyAniDance->Clone());
 	Seq_IDLE2->PushBack_LeafNode(MoveRun->Clone());
 
@@ -105,22 +112,141 @@ HRESULT CGameObject_Mine::Init_AI()
 	// Release
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAniIdle);
-	Safe_Release(dealyAniDig);
-	Safe_Release(dealyAniDig);
+	Safe_Release(dealyAniDance);
 
 	Safe_Release(MoveWalk);
 	Safe_Release(MoveRun);
 	return S_OK;
 }
 
+HRESULT CGameObject_Mine::Init_AI_Tile()
+{
+	// AI ¼¼ºÎ ±¸Çö
+
+	// Tile ½ÃÄö½º 2°³
+	CNode_Seqeunce* Seq_Dig_Tile = CNode_Seqeunce::Create();
+//	CNode_Seqeunce* Seq_Dig_Gold = CNode_Seqeunce::Create();
+
+
+	// Set Action
+	CAction_DEALY* dealyTime = CAction_DEALY::Create("DealyTime", this);
+	CAction_DEALY* dealyAniDig = CAction_DEALY::Create("DealyDig", this);
+
+	dealyTime->Set_TimeMax(3.0f);
+	dealyAniDig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+
+	CAction_MOVE* MoveRun = CAction_MOVE::Create("Run", this);
+	MoveRun->Set_AniType(CAction_MOVE::MOVE_RUN_ANI);
+	MoveRun->Set_TimeMax(0.3f);
+	MoveRun->Set_Postition(CAction_MOVE::MOVE_POS_TILE);
+
+	CAction_Function* Function1 = CAction_Function::Create("RemoveTile", this);
+	Function1->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
+
+	CAction_Function* Function2 = CAction_Function::Create("LookFunction", this);
+	Function2->Set_Funcion(CAction_Function::FUNCION_LOOK);
+
+	// SetSeq
+	// Tile: Å¸ÀÏÀ» Ã¤±¼
+	Seq_Dig_Tile->PushBack_LeafNode(MoveRun->Clone());
+	Seq_Dig_Tile->PushBack_LeafNode(Function2->Clone());
+	Seq_Dig_Tile->PushBack_LeafNode(dealyAniDig->Clone());
+	Seq_Dig_Tile->PushBack_LeafNode(Function1->Clone());
+
+
+
+	// Gold: °è¼Ó Ä³±â
+	//Seq_Dig_Gold->PushBack_LeafNode(dealyAniIdle->Clone());
+	//Seq_Dig_Gold->PushBack_LeafNode(dealyAniDig->Clone());
+	//Seq_Dig_Gold->PushBack_LeafNode(dealyAniDance->Clone());
+	//Seq_Dig_Gold->PushBack_LeafNode(MoveRun->Clone());
+
+	Seq_Dig_Tile->Set_SeqType(CNode_Seqeunce::E_SEQTYPE::SEQTYPE_ONETIME);
+	mComBehavior->Add_Seqeunce("DIG", Seq_Dig_Tile);
+	// mComBehavior->Add_Seqeunce("GOLD", Seq_Dig_Gold);
+
+	// Release
+	Safe_Release(dealyTime);
+	Safe_Release(dealyAniDig);
+	Safe_Release(MoveRun);
+	Safe_Release(Function1);
+	Safe_Release(Function2);
+
+	return S_OK;
+}
+
 void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
 {
+	// ¸ø°¡´Â Å¸ÀÏ µÚ¿¡ ³Ö±â
+	if (tile->Get_IsBlocked())
+	{
+		tile->Add_TileTask_this();
+		return;
+	}
+
+	// ¶Õ¸° Å¸ÀÏ À§Ä¡ Ã£±â
+	_float3 GoalPos =  tile->Get_AbleTilePos(0.5f);
+	mTileGoalPostiton = GoalPos;
+
+	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
+	_uint GoalIndex = StartIndex;
+
+	// ÇØ´ç À§Ä¡ÀÇ ³×ºñ¸Þ½Ã ¼¿ ÀÎµ¦½º ¹ÝÈ¯
+	if (mCurrentNavi->Get_PickPosForIndex(mTileGoalPostiton, &GoalIndex))
+	{
+		// °æ·Î Å½»ö
+		mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
+	}
+
+	else
+	{
+		tile->Add_TileTask_this();
+		return;
+	}
+
 	// Å¸ÀÏ Ã¤±¼
+	mSearchTile = tile;
+	mComBehavior->Select_Sequnce("DIG");
+
 }
 
 void CGameObject_Mine::Set_Dig_Gold(CGameObject_3D_Tile * tile)
 {
-	// °ñµå Ã¤±¼
+	//if (tile->Get_IsBlocked())
+	//{
+	//	tile->Add_TileTask_this();
+	//	return;
+	//}
+
+	//if (FindPathRandAblePostition)
+	//{
+
+	//}
+
+	//// °ñµå Ã¤±¼
+	//mSearchTile = tile;
+	//mComBehavior->Select_Sequnce("GOLD");
+
+}
+
+HRESULT CGameObject_Mine::RemoveTile()
+{
+	if (mSearchTile)
+	{
+		mSearchTile->RemoveThisTile();
+		mSearchTile = nullptr;
+
+		// ÀÌÆåÆ® Ãß°¡
+	}
+
+	return S_OK;
+}
+
+HRESULT CGameObject_Mine::LookTile()
+{
+	_float3 dirPos = mSearchTile->Get_WorldPostition();
+	mComTransform->LookAt(dirPos);
+	return S_OK;
 }
 
 

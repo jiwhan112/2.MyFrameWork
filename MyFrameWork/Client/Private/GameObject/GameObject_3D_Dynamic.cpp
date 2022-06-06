@@ -76,6 +76,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 
@@ -251,6 +252,14 @@ _bool CGameObject_3D_Dynamic::FindPathRandAblePostition(_int Range,_float3* Goal
 	}
 
 	return true;
+}
+
+_float3 CGameObject_3D_Dynamic::Get_GoalPostiton() const
+{
+	if (mCurrentPathList.empty())
+		return _float3();
+
+	return mCurrentPathList.back()->Get_CenterPoint();
 }
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()
