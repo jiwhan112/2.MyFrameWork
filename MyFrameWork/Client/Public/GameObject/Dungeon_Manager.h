@@ -94,6 +94,9 @@ private:
 	ID3D11Device*				mDevice = nullptr;
 	ID3D11DeviceContext*		mDeviceContext = nullptr;
 
+public: // DEBUG
+	_float						mDebugValue = 5;
+
 public:
 	static CDungeon_Manager* Create(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	virtual void Free() override;

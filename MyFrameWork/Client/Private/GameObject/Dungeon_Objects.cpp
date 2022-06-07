@@ -324,7 +324,7 @@ HRESULT CDungeon_Objects::Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ)
 	CGameObject_3D_Dynamic* mCreateUnit = nullptr;
 
 	mCreateUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(id);
-	PositionXZ.y += 20;
+	PositionXZ.y += 100;
 	mCreateUnit->Set_Position(PositionXZ);
 	NULL_CHECK_HR(mCreateUnit);
 	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_OBJECT_UNIT), mCreateUnit));

@@ -18,6 +18,7 @@ public:
 	enum E_COMMON_ANINAME
 	{
 		// 걷기 달리기 공격같은 공통 이름 정의
+		E_COMMON_ANINAME_SKINPOSE,
 		E_COMMON_ANINAME_WALK,
 		E_COMMON_ANINAME_IDLE,
 		E_COMMON_ANINAME_RUN,
@@ -34,6 +35,8 @@ public:
 	{
 		switch (e)
 		{
+		case E_COMMON_ANINAME_SKINPOSE:
+			return "skinpose";
 		case E_COMMON_ANINAME_WALK:
 			return "walk";
 		case E_COMMON_ANINAME_IDLE:

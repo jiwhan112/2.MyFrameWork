@@ -72,6 +72,7 @@ public:
 public: // Collider 
 	const _float3& Get_PickPos() const;
 	const _bool& Get_IsMousePick()const;
+	const _ray& Get_WorldRay()const;
 	HRESULT Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE e, CGameObject_Base * col);
 
 

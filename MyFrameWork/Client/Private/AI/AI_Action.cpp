@@ -377,7 +377,8 @@ HRESULT CAction_MOVE_TARGET::NativeConstruct()
 	if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_FALL)
 	{
 		mDynamicObject->Set_IsTerrainHeight(false);
-		mStartPosition = mDynamicObject->Get_WorldPostition();
+		mStartPosition = GetSingle(CGameManager)->Get_PickPos();
+		mStartPosition.y += 20;
 		mGoalPosition = mDynamicObject->Get_TerrainHeightPostition();
 	}
 

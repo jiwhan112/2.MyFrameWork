@@ -343,8 +343,11 @@ HRESULT CTransform::LookAt(_fvector targetPos)
 HRESULT CTransform::LookAtDir(_float3 Dir)
 {
 	_float3 vLook, vRight, vUp;
+	_float3 vScale = GetScaleXYZ();
+
 	vLook = Dir;
 	vLook.Normalize();
+	vLook *= vScale.z;
 
 	if (vLook == _float3(0, 1, 0))
 	{
@@ -354,10 +357,13 @@ HRESULT CTransform::LookAtDir(_float3 Dir)
 	{
 		vRight = _float3::Up.Cross(vLook);
 		vRight.Normalize();
+		vRight *= vScale.x;
 	}
 
 	vUp = vLook.Cross(vRight);
 	vUp.Normalize();
+	vUp *= vScale.y;
+
 
 	Set_State(CTransform::STATE_RIGHT, vRight);
 	Set_State(CTransform::STATE_UP, vUp);

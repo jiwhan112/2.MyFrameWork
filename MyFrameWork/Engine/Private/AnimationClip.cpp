@@ -37,22 +37,30 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 {
 	/* 현재 내 애니메이션의 재생 위치. */
 	m_PlayTimeAcc += m_TickPerSecond * TimeDelta;
+	if (m_IsFinished)
+	{
+		m_PlayTimeAcc = 0;
+		m_IsFrame = true;
+	}
 
 	if (m_PlayTimeAcc >= m_Duration)
 	{
-		m_PlayTimeAcc = 0.0;
 		m_IsFinished = true;
 	}
 	else
+	{
 		m_IsFinished = false;
+	}
 
 	_vector			vScale, vRotation, vPosition;
 
 	/* 현재 내 애니메이션 상태에서 재생된 시간에 따른 모든 뼈의 상태를 갱신한다.  */
 	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
-		if (true == m_IsFinished)
+		if (true == m_IsFrame)
+		{
 			m_Channels[i]->Set_CurrentKeyFrame(0);
+		}
 
 		/* 각각의 뼈들이 시간값에 따른 상태값을 표현한 키프레임들을 가져온다. */
 		const vector<KEYFRAME*>*	pKeyFrames = m_Channels[i]->Get_KeyFrames();
@@ -105,6 +113,7 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 		m_Channels[i]->Set_TransformationMatrix(TransformationMatrix);
 	}
 
+	m_IsFrame = false;
 	return S_OK;
 }
 

@@ -205,7 +205,9 @@ _int CAnimatior::Get_AniEnum2Index(E_COMMON_ANINAME AniName)
 	}
 	if (VecInts.empty())
 		return -1;
-	
+	if (VecInts.size() == 1)
+		return	VecInts[0];
+
 	int randIndex = CHelperClass::RandomInt(0,VecInts.size());
 	return VecInts[randIndex];
 

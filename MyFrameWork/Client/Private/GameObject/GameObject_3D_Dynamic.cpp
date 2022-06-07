@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_MyTerrain.h"
+#include "GameObject/Dungeon_Manager.h"
 #include "AI/AI_Action.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -45,7 +46,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 
 	Init_Unit();
 	Init_AI();
-
+	
 	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 	return S_OK;
 }
@@ -74,19 +75,21 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 	}
 	else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
 	{
-		CGameObject_Base* mouse = (CGameObject_Base*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_MOUSE));
-		if (mouse == nullptr)
-			meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-		else
-		{
-			_float3 newPos = mouse->Get_WorldPostition();
-			Set_Position(newPos);
-		}
+		_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
+		_float3	newPos = ray.position;
+		newPos += ray.direction * 6;
+		CTransform* CamTrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA))->Get_ComTransform();
+		_float3 CamDir =  CamTrans->GetWorldFloat4x4().Backward();
+		CamDir.y = 0;
+		CamDir.Normalize();
+		mComTransform->LookAtDir(CamDir);
+		Set_Position(newPos);
 
 	}
 
 	return UPDATENONE;
 }
+
 
 _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
@@ -264,13 +267,23 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 
 	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
 	{
-		// Drag·Î º¯°æ
+		// Drag
 		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
 		{
 			if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON && meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
 			{
 				mComBehavior->Select_Sequnce("DRAG");
 				meTickType = CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK;
+			}
+		}
+
+		// Drag->Fall
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+		{
+			if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON && meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
+			{
+				mComBehavior->Select_Sequnce("FALL");
+				meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 			}
 		}
 	}

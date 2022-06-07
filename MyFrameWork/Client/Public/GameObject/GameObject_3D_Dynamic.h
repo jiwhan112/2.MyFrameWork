@@ -101,6 +101,8 @@ protected:
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 
+	//Test
+	//_float2 WorldToView(_float3 pos);
 
 protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	CModel*						mComModel = nullptr;
@@ -139,6 +141,7 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	// TICKTYPE
 	E_TICK_TYPE					meTickType = TICK_TYPE_END;
 
+	const _float mMouseOffset = 4;
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

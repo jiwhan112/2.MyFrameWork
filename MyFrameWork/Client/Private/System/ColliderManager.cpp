@@ -161,13 +161,12 @@ bool CColliderManager::ColCheck_MOUSE()
 	mIsMousePick = false;
 
 	// 모든 충돌체랑 마우스위치랑 비교
-	_ray worldRay =  GetSingle(CGameInstance)->Get_Ray_World();
-	
+	mWorldRay =  GetSingle(CGameInstance)->Get_Ray_World();
 	// 1차적으로 월드의 모든 오브젝트와 비교한다.
 	// 후 구현
 
 	// Static / Dynamic
-	if (mIsMousePick = Check_Mouse_Object(worldRay))
+	if (mIsMousePick = Check_Mouse_Object(mWorldRay))
 	{
 		return mIsMousePick;
 	}

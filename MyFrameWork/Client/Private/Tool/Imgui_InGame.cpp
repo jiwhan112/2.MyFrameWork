@@ -120,6 +120,11 @@ HRESULT CImgui_InGame::Edit_InGame()
 	//	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(SpawnPos);
 	//}
 
+	// _float ss =  GetSingle(CGameManager)->Get_DaungonManager()->mOffsetMouse;
+
+	ImGui::DragFloat("OffsetY", &GetSingle(CGameManager)->Get_DaungonManager()->mDebugValue);
+
+
 	return S_OK;
 }
 

@@ -146,6 +146,8 @@ HRESULT CGameObject_Mouse::Render()
 //	return S_OK;
 //}
 
+
+
 CGameObject_Mouse * CGameObject_Mouse::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
 	CGameObject_Mouse*	pInstance = NEW CGameObject_Mouse(pDevice, pDeviceContext);

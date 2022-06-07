@@ -230,6 +230,16 @@ const _bool & CGameManager::Get_IsMousePick() const
 	// TODO: 여기에 반환 구문을 삽입합니다.
 	return mColliderManager->Get_IsMousePick();
 }
+const _ray & CGameManager::Get_WorldRay() const
+{
+	if (mColliderManager == nullptr)
+		return _ray();
+
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	return mColliderManager->Get_MouseRay();
+}
+
+
 HRESULT CGameManager::Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE e, CGameObject_Base * col)
 {
 	if (mColliderManager != nullptr)

@@ -31,6 +31,7 @@ public:
 public:
 	const _float3& Get_PickPos()const { return mWorldPickPos; }
 	const _bool& Get_IsMousePick()const { return mIsMousePick; }
+	const _ray& Get_MouseRay()const { return mWorldRay; }
 
 public:
 	HRESULT Add_ColliderObject(E_COLLIDEROBJ_TYPE e, CGameObject_Base* col);
@@ -51,6 +52,8 @@ private:
 
 	_float3		mWorldPickPos;
 	_bool		mIsMousePick = false;
+	_ray		mWorldRay;
+
 
 public:
 	static CColliderManager* Create();
