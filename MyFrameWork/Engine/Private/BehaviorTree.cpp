@@ -15,6 +15,8 @@ CBehaviorTree::CBehaviorTree(const CBehaviorTree & rhs)
 		Safe_AddRef(seq.second);
 	}
 	mCurrentSequnence = nullptr;
+
+	mMapLeafNode = rhs.mMapLeafNode;
 }
 
 HRESULT CBehaviorTree::NativeConstruct_Prototype()

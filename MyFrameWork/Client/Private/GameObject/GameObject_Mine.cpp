@@ -54,8 +54,8 @@ HRESULT CGameObject_Mine::Init_AI()
 {
 	FAILED_CHECK(__super::Init_AI());
 	
-	//	FAILED_CHECK(Init_AI_IDLE());
-	//	FAILED_CHECK(Init_AI_Tile());
+	FAILED_CHECK(Init_AI_IDLE());
+	FAILED_CHECK(Init_AI_Tile());
 	return S_OK;
 }
 
