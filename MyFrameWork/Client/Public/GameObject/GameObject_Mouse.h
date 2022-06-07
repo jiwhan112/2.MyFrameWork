@@ -24,16 +24,16 @@ public:
 
 
 
-#ifdef _DEBUG
-private:
-	BasicEffect*									mBaseEffect = nullptr;
-	ID3D11InputLayout*								mInputLayout = nullptr;
-	PrimitiveBatch<DirectX::VertexPositionColor>*	mBatch = nullptr;
-#endif // _DEBUG
+//#ifdef _DEBUG
+//private:
+//	BasicEffect*									mBaseEffect = nullptr;
+//	ID3D11InputLayout*								mInputLayout = nullptr;
+//	PrimitiveBatch<DirectX::VertexPositionColor>*	mBatch = nullptr;
+//#endif // _DEBUG
 
 
 
-protected: // DESC
+protected: 
 	_float2			mMousePos;
 	_viewport		mViewPort;
 

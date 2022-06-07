@@ -30,12 +30,13 @@ public:
 		MAPTYPE_END,
 	};
 
-	//enum E_TICK_TYPE
-	//{
-	//	TICK_TYPE_NONE,
-	//	TICK_TYPE_PICK,
-	//	MAPTYPE_END,
-	//};
+	enum E_TICK_TYPE
+	{
+		TICK_TYPE_NONE,
+		TICK_TYPE_DUNGION_PICK, // 객체를 클릭하면 Pick으로 전환
+		TICK_TYPE_WORLD_PICK, 
+		TICK_TYPE_END,
+	};
 
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -123,6 +124,7 @@ protected: // 3D모델 Com / DESC 추가
 
 	// 지형
 	E_MAPTYPE					meCurrentMap = MAPTYPE_END;
+	
 	// 현재 
 
 	// 버퍼들 
@@ -133,6 +135,10 @@ protected: // 3D모델 Com / DESC 추가
 	CNavigation*				mCurrentNavi = nullptr;
 
 	_bool						mIsTerrainHeight = false;
+
+	// TICKTYPE
+	E_TICK_TYPE					meTickType = TICK_TYPE_END;
+
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

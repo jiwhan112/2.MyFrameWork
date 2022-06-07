@@ -172,8 +172,6 @@ HRESULT CAction_MOVE::NativeConstruct()
 	case Client::CAction_MOVE::MOVE_POS_TILE:
 		// 이미 탐색된 정보 활용
 		mGoalPosition = mDynamicObject->Get_GoalPostiton();
-		if (mGoalPosition == _float3())
-			return E_FAIL;
 
 		break;
 	case Client::CAction_MOVE::MOVE_POS_PICK:

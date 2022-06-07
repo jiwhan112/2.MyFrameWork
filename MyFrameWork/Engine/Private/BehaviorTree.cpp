@@ -42,7 +42,7 @@ HRESULT CBehaviorTree::Tick(_double timer)
 
 HRESULT CBehaviorTree::LateTick(_double timer)
 {
-	FAILED_CHECK(Set_IDLE_Seq());
+	FAILED_CHECK(Round_Sequnce());
 	return S_OK;
 }
 
@@ -118,8 +118,9 @@ CNode_LeafTree * CBehaviorTree::Clone_Leaf(string strtag)
 
 }
 
-HRESULT CBehaviorTree::Set_IDLE_Seq()
+HRESULT CBehaviorTree::Round_Sequnce()
 {
+	// INIT
 	if (mCurrentKey == "")
 	{
 		auto iter = mMapSequence.begin();
@@ -134,9 +135,15 @@ HRESULT CBehaviorTree::Set_IDLE_Seq()
 		mCurrentSequnence->Restart();
 	}
 
-
+	// 다음 시퀀스 결정
 	if (mCurrentSequnence->Get_SeqEnd())
 	{
+		if (mCurrentSequnence->Get_SeqType() == CNode_Seqeunce::SEQTYPE_LOOP)
+		{
+			mCurrentSequnence->Restart();
+			return S_OK;
+		}
+
 		auto iter = mMapSequence.find(mCurrentKey);
 		iter++;
 		if (iter == mMapSequence.end())

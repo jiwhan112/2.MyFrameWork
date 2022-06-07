@@ -29,6 +29,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
 	}
 
 	mCurrentShaderPass = 0;
+
 	return S_OK;
 }
 
@@ -65,8 +66,24 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 	mComBehavior->Tick(TimeDelta);
 
-	if (mIsTerrainHeight)
-		Set_Terrain_HeightY(mCurrentMap);
+	if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
+	{
+		if (mIsTerrainHeight)
+			Set_Terrain_HeightY(mCurrentMap);
+
+	}
+	else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
+	{
+		CGameObject_Base* mouse = (CGameObject_Base*)GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_MOUSE));
+		if (mouse == nullptr)
+			meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
+		else
+		{
+			_float3 newPos = mouse->Get_WorldPostition();
+			Set_Position(newPos);
+		}
+
+	}
 
 	return UPDATENONE;
 }
@@ -145,39 +162,47 @@ HRESULT CGameObject_3D_Dynamic::Init_Create()
 {
 	// 내려오는 연출 / PICK
 	CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
-//	CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
+	CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
 
 	// CloneAction
 	CAction_DEALY* dealyTime = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	dealyTime->SetUp_Target(this);
-	CAction_DEALY* dealyAniUp = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	dealyAniUp->SetUp_Target(this);
+	CAction_DEALY* dealyAnimation = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	dealyAnimation->SetUp_Target(this);
 	CAction_DEALY* dealyAniIdle = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	dealyAniIdle->SetUp_Target(this);
 	CAction_MOVE_TARGET* fallMove = (CAction_MOVE_TARGET*)mComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
 	fallMove->SetUp_Target(this);
 
+	// Set_Fall
 	dealyTime->Set_TimeMax(0.2f);
 	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_FALL);
-	dealyAniUp->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
+	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
 	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 
-	// SetSeq
+
 
 	Seq_Fall->PushBack_LeafNode(fallMove->Clone());
-	Seq_Fall->PushBack_LeafNode(dealyTime->Clone());
-//	Seq_Fall->PushBack_LeafNode(dealyAniUp->Clone());
+//	Seq_Fall->PushBack_LeafNode(dealyTime->Clone());
+	Seq_Fall->PushBack_LeafNode(dealyAnimation->Clone());
 	Seq_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
 
 
 	Seq_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 	mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
-	//mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
+
+	// Set_Pick
+	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG);
+	Seq_Pick->PushBack_LeafNode(dealyAnimation->Clone());
+	// LOOP 타입은 시퀀스를 반복한다.
+	Seq_Pick->Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
+	mComBehavior->Add_Seqeunce("DRAG", Seq_Pick);
+
 
 	mComBehavior->Select_Sequnce("FALL");
 
 	Safe_Release(dealyTime);
-	Safe_Release(dealyAniUp);
+	Safe_Release(dealyAnimation);
 	Safe_Release(fallMove);
 	Safe_Release(dealyAniIdle);
 	return S_OK;
@@ -237,6 +262,18 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 {
 	// 잘된다.
 
+	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
+	{
+		// Drag로 변경
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)
+		{
+			if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON && meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
+			{
+				mComBehavior->Select_Sequnce("DRAG");
+				meTickType = CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK;
+			}
+		}
+	}
 
 	return S_OK;
 }

@@ -44,7 +44,7 @@ public: // Leaf
 
 
 private:
-	HRESULT Set_IDLE_Seq();
+	HRESULT Round_Sequnce();
 	HRESULT Set_LOOP_Seq();
 	
 

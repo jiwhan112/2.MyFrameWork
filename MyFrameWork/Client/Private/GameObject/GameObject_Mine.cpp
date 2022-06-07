@@ -36,8 +36,10 @@ HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 
 HRESULT CGameObject_Mine::Init_Unit()
 {
-	_float size = 0.6f;
+	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
+	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 
+	_float size = 0.6f;
 	mComTransform->Scaled(_float3(size, size, size));
 
 	COLLIDER_DESC desc;
@@ -46,7 +48,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 	Add_ColliderDesc(&desc, 1);
 	Update_Collider();
 
-	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_UP));	
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
 	return S_OK;
 }
 
@@ -114,8 +116,8 @@ HRESULT CGameObject_Mine::Init_AI_IDLE()
 	Seq_IDLE3->PushBack_LeafNode(moveWalk->Clone());
 
 	mComBehavior->Add_Seqeunce("IDLE1", Seq_IDLE1);
-//	mComBehavior->Add_Seqeunce("IDLE2", Seq_IDLE2);
-//	mComBehavior->Add_Seqeunce("IDLE3", Seq_IDLE3);
+	mComBehavior->Add_Seqeunce("IDLE2", Seq_IDLE2);
+	mComBehavior->Add_Seqeunce("IDLE3", Seq_IDLE3);
 
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAniIdle);
