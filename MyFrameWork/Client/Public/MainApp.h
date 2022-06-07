@@ -34,6 +34,7 @@ private:
 	HRESULT Ready_Prototype_Components_Texture();
 	HRESULT Ready_Prototype_Components_Terrain();
 	HRESULT Ready_Prototype_Components_Shader();
+	HRESULT Ready_Prototype_Components_AI();
 
 	HRESULT Ready_Prototype_GameObject_Emptyobject();
 

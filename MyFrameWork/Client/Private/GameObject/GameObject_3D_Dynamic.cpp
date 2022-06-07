@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_MyTerrain.h"
+#include "AI/AI_Action.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -11,6 +12,7 @@ CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11Devi
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs)
 	: CGameObject_Base(rhs)
 	, mModelDesc(rhs.mModelDesc)
+	, mIsTerrainHeight(false)
 
 {
 }
@@ -36,7 +38,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 
 	// 생성시 유닛별 초기화 함수 따로 만들기..
 
-	// Test 용도
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 //	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
@@ -44,13 +45,13 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	Init_Unit();
 	Init_AI();
 
+	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 	return S_OK;
 }
 
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
 
 	// 충돌
 	if (mComListCollider != nullptr)
@@ -63,6 +64,10 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 	}
 
 	mComBehavior->Tick(TimeDelta);
+
+	if (mIsTerrainHeight)
+		Set_Terrain_HeightY(mCurrentMap);
+
 	return UPDATENONE;
 }
 
@@ -132,6 +137,49 @@ HRESULT CGameObject_3D_Dynamic::Init_Unit()
 HRESULT CGameObject_3D_Dynamic::Init_AI()
 {
 	// 유닛마다 상속해서 초기화
+	FAILED_CHECK(Init_Create());
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Init_Create()
+{
+	// 내려오는 연출 / PICK
+	CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
+//	CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
+
+	// CloneAction
+	CAction_DEALY* dealyTime = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	dealyTime->SetUp_Target(this);
+	CAction_DEALY* dealyAniUp = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	dealyAniUp->SetUp_Target(this);
+	CAction_DEALY* dealyAniIdle = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	dealyAniIdle->SetUp_Target(this);
+	CAction_MOVE_TARGET* fallMove = (CAction_MOVE_TARGET*)mComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
+	fallMove->SetUp_Target(this);
+
+	dealyTime->Set_TimeMax(0.2f);
+	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_FALL);
+	dealyAniUp->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
+	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
+
+	// SetSeq
+
+	Seq_Fall->PushBack_LeafNode(fallMove->Clone());
+	Seq_Fall->PushBack_LeafNode(dealyTime->Clone());
+//	Seq_Fall->PushBack_LeafNode(dealyAniUp->Clone());
+	Seq_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
+
+
+	Seq_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
+	//mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
+
+	mComBehavior->Select_Sequnce("FALL");
+
+	Safe_Release(dealyTime);
+	Safe_Release(dealyAniUp);
+	Safe_Release(fallMove);
+	Safe_Release(dealyAniIdle);
 	return S_OK;
 }
 
@@ -262,6 +310,18 @@ _float3 CGameObject_3D_Dynamic::Get_GoalPostiton() const
 	return mCurrentPathList.back()->Get_CenterPoint();
 }
 
+_float3 CGameObject_3D_Dynamic::Get_TerrainHeightPostition()
+{
+	// 현재위치에서 지형을 탄 위치 반환
+	_float3 TargetPos = Get_WorldPostition();
+
+	if (mCurrentMap == nullptr)
+		return TargetPos;
+
+	TargetPos.y = mCurrentMap->Get_HeightY(TargetPos);
+	return TargetPos;
+}
+
 HRESULT CGameObject_3D_Dynamic::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -340,7 +400,6 @@ HRESULT CGameObject_3D_Dynamic::Update_Collider()
 		col->Update_Transform(mComTransform->GetWorldFloat4x4());
 		mComListCollider->push_back(static_cast<CCollider*>(col));
 	}
-
 	return S_OK;
 }
 
@@ -349,6 +408,7 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 	if (terrain == nullptr)
 		return E_FAIL;
 
+	mCurrentPosition = Get_WorldPostition();
 	mCurrentPosition.y = terrain->Get_HeightY(mCurrentPosition);
 	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, mCurrentPosition.ToVec4(1));
 	return S_OK;

@@ -68,6 +68,7 @@
 #define END }
 
 #define MSGBOX(MESSAGE) MessageBox(0, TEXT(MESSAGE), TEXT("System Message"), MB_OK);
+#define DEBUGBREAK  __debugbreak()
 
 #define NO_COPY(CLASSNAME)										\
 		private:												\

@@ -108,7 +108,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 	float4  Diffuse = g_vLightDiffuse * DiffuseMap;
 	float4  Shade = saturate(Noraml + (g_vLightAmbient * g_vMtrlAmbient));
-	float4  Specular = (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+	float4  Specular = 0;//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
 
 	float4 color = Diffuse * Shade + Specular;
 	color.a = DiffuseMap.a;

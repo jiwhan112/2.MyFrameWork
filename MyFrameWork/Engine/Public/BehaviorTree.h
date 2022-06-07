@@ -37,6 +37,12 @@ public:
 		return mCurrentKey;
 	}
 
+public: // Leaf
+	HRESULT				Add_Leaf_Proto(string strtag, CNode_LeafTree * seq);
+	CNode_LeafTree*		Find_Leaf(string strtag);
+	CNode_LeafTree*		Clone_Leaf(string strtag);
+
+
 private:
 	HRESULT Set_IDLE_Seq();
 	HRESULT Set_LOOP_Seq();
@@ -50,7 +56,7 @@ private:
 	CNode_Seqeunce*						mCurrentSequnence = nullptr;
 
 	// 각 액션의 클론 생성을 위해 원본을 저장해두자.
-	// map<string, CNode_LeafTree*>		mMapLeafNode;
+	map<string, CNode_LeafTree*>		mMapLeafNode;
 
 public:
 	static CBehaviorTree* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -169,6 +175,19 @@ public:
 		mIsEnd = false;
 		mIsSucceed = false;
 	}
+
+	void End_Succed()
+	{
+		mIsEnd = true;
+		mIsSucceed = true;
+	}
+
+	void End_Fail()
+	{
+		mIsEnd = true;
+		mIsSucceed = false;
+	}
+
 public:
 	// 중복사용으로 초기화 필요
 	virtual HRESULT NativeConstruct() = 0;

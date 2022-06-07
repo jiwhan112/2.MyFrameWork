@@ -30,6 +30,13 @@ public:
 		MAPTYPE_END,
 	};
 
+	//enum E_TICK_TYPE
+	//{
+	//	TICK_TYPE_NONE,
+	//	TICK_TYPE_PICK,
+	//	MAPTYPE_END,
+	//};
+
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs);
@@ -45,6 +52,7 @@ public: // Base
 	
 	virtual HRESULT Init_Unit();
 	virtual HRESULT Init_AI();
+	virtual HRESULT Init_Create();
 
 
 public: // GetSet
@@ -75,6 +83,10 @@ public: // Move AI
 
 	_float3 Get_GoalPostiton()const;
 
+	void	Set_IsTerrainHeight(_bool b) { mIsTerrainHeight = b; }
+	_bool	Get_IsTerrainHeight() const { return mIsTerrainHeight; }
+	_float3	Get_TerrainHeightPostition() ;
+
 public: // Animation
 // 애니메이션 이름으로 설정
 	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name);
@@ -98,6 +110,7 @@ protected: // 3D모델 Com / DESC 추가
 	// 뼈애 달리게 수정
 	list<CCollider*>*			mComListCollider = nullptr;
 
+
 	MODEL_DYNAMIC_DESC			mModelDesc;
 	list<COLLIDER_DESC>			mListColliderDesc;
 	
@@ -118,6 +131,8 @@ protected: // 3D모델 Com / DESC 추가
 
 	CGameObject_MyTerrain*		mCurrentMap = nullptr;
 	CNavigation*				mCurrentNavi = nullptr;
+
+	_bool						mIsTerrainHeight = false;
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

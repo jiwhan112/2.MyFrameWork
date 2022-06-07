@@ -15,6 +15,7 @@ enum E_TAYLAY
 	LAY_MOUSE,
 	LAY_PLAYER,
 	LAY_OBJECT,
+	LAY_OBJECT_UNIT,
 	LAY_OBJECT_D,
 	LAY_OBJECT_W,
 	LAY_EFFECT,
@@ -44,6 +45,8 @@ static const wchar_t* STR_TAYLAY(E_TAYLAY lay)
 		return L"LAY_PLAYER";
 	case LAY_OBJECT:
 		return L"LAY_OBJECT";
+	case LAY_OBJECT_UNIT:
+		return L"LAY_OBJECT_UNIT";
 	case LAY_OBJECT_D:
 		return L"LAY_OBJECT_D";
 	case LAY_OBJECT_W:
@@ -407,9 +410,46 @@ enum E_SHADERPASS_STATICMODEL
 	E_SHADERPASS_STATICMODEL_END = 1,
 };
 
+// AI е╦ют
+enum E_AI_TYPE
+{
+	AI_NONE = 0,
+	AI_DEALY, 
+	AI_MOVE, 
+	AI_MOVETARGET,
+	AI_FUNCTION,
+	AI_END, 
+};
+
+static const char* STR_TAYAI(E_AI_TYPE str)
+{
+	switch (str)
+	{
+	case AI_NONE:
+		return "AI_NONE";
+		break;
+	case AI_DEALY:
+		return "AI_DEALY";
+		break;
+	case AI_MOVE:
+		return "AI_MOVE";
+		break;
+	case AI_MOVETARGET:
+		return "AI_MOVETARGET";
+		break;
+	case AI_FUNCTION:
+		return "AI_FUNCTION";
+	default:
+		return "";
+		break;
+	}
+
+}
+
 
 #define  TAGLAY			STR_TAYLAY
 #define  TAGCOM			STR_TAYCOM
 #define  TAGOBJ			STR_TAYOBJ
 #define  TAGOBJTYPE		STR_TAGOBJ_TYPE
 #define  TAGFONT		STR_TAYFONT
+#define  TAGAI			STR_TAYAI

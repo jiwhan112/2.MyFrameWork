@@ -68,6 +68,7 @@ private:
 	typedef vector<class CChannel*>	CHANNELS;
 
 	_bool		m_IsFinished = false;
+//	_bool		mIsLoop = true;
 
 
 public:

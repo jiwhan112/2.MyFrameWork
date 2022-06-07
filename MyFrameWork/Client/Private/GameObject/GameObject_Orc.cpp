@@ -78,7 +78,7 @@ HRESULT CGameObject_Orc::Init_AI_Default()
 
 	CAction_MOVE* MoveWalk = CAction_MOVE::Create("Walk", this);
 	CAction_MOVE* MoveRun = CAction_MOVE::Create("Run", this);
-	MoveWalk->Set_AniType(CAction_MOVE::MOVE_WALK_ANI);
+	MoveWalk->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
 	MoveWalk->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
 	MoveWalk->Set_TimeMax(1.2f);
 	MoveRun->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);

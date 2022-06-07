@@ -13,16 +13,19 @@ class CAction_DynamicBase
 {
 protected:
 	explicit CAction_DynamicBase(const char* str, CGameObject_3D_Dynamic* obj);
+	explicit CAction_DynamicBase(const CAction_DynamicBase& rhs);
 	virtual ~CAction_DynamicBase() = default;
 
 public:
 	virtual HRESULT					NativeConstruct()override;
-	virtual CAction_DynamicBase*	Clone(void* pArg = nullptr) = 0;
 	virtual HRESULT					Action(_double timer/*,void* pArg = nullptr*/) = 0;
 
-	HRESULT	SetUp_Target(CGameObject_3D_Dynamic* targetobj)
+	CAction_DynamicBase*			Clone(void* pArg = nullptr)=0;
+
+	void SetUp_Target(CGameObject_3D_Dynamic* targetobj)
 	{
 		mDynamicObject = targetobj;
+
 	}
 
 protected:
@@ -108,11 +111,11 @@ class CAction_MOVE
 {
 public:
 	// 움직이는 애니메이션
-	enum E_MOVEFLAG
+	enum E_MOVE_ANI_FLAG
 	{
-		MOVE_WALK_ANI,
-		MOVE_RUN_ANI,
-		MOVE_END,
+		MOVE_ANI_WALK,
+		MOVE_ANI_RUN,
+		MOVE_ANI_END,
 
 	};
 
@@ -133,7 +136,7 @@ protected:
 public:
 	virtual HRESULT NativeConstruct();
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
-	void Set_AniType(E_MOVEFLAG anitype)
+	void Set_AniType(E_MOVE_ANI_FLAG anitype)
 	{
 		meMoveAni = anitype;
 	}
@@ -159,13 +162,70 @@ private:
 	bool						mIsMoveNaviPath = false;
 	bool						mIsMoveCell = false;
 
-	E_MOVEFLAG					meMoveAni = MOVE_WALK_ANI;
+	E_MOVE_ANI_FLAG				meMoveAni = MOVE_ANI_WALK;
 	E_MOVEPOSFLAG				meMoveType = MOVE_POS_NEAR;
 
 public:
 	static	CAction_MOVE*				Create(const char* str, CGameObject_3D_Dynamic* obj);
 	virtual CAction_MOVE*				Clone(void* pArg = nullptr) override;
 	virtual void Free()override;
+};
+
+// 네비메시 영향 X 움직임
+class CAction_MOVE_TARGET
+	:public CAction_DynamicBase
+{
+public:
+	// 움직이는 애니메이션
+	//enum E_ANIFLAG
+	//{
+	//	ANIFLAG_IDLE,
+	//	ANIFLAG_END,
+
+	//};
+
+	enum E_MOVETARGET_FALG
+	{
+		MOVETARGETFALG_FALL,
+		MOVETARGETFALG_END,
+
+	};
+
+protected:
+	explicit CAction_MOVE_TARGET(const char* str, CGameObject_3D_Dynamic* obj);
+	explicit CAction_MOVE_TARGET(const CAction_MOVE_TARGET& rhs);
+	virtual ~CAction_MOVE_TARGET() = default;
+
+public:
+	virtual HRESULT NativeConstruct();
+	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
+
+//	void Set_AniFlag(E_ANIFLAG e) { meAniFlag = e; };
+	void Set_EasingFlag(EasingTypeID e) { meEasingID = e; };
+	void Set_MoveTargetFlag(E_MOVETARGET_FALG e) { meMoveTargetFlag = e; };
+	//void Set_Postition(_float3 s,_float3 g) 
+	//{
+	//	mStartPosition = s;
+	//	mGoalPosition = g;
+	//};
+
+private:
+	_double						mTimeMax;
+	_double						mCurrentTimer;
+
+	_float3						mGoalPosition;
+	_float3						mStartPosition;
+
+//	bool						mIsMoving = false;
+
+	EasingTypeID				meEasingID = TYPE_Linear;
+//	E_ANIFLAG					meAniFlag = ANIFLAG_IDLE;
+	E_MOVETARGET_FALG			meMoveTargetFlag = MOVETARGETFALG_FALL;
+public:
+	static	CAction_MOVE_TARGET*				Create(const char* str, CGameObject_3D_Dynamic* obj);
+	virtual CAction_MOVE_TARGET*				Clone(void* pArg = nullptr) override;
+	virtual void Free()override;
+
 };
 
 // 임의의 함수 실행

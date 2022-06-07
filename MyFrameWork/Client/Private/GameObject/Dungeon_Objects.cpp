@@ -68,7 +68,7 @@ HRESULT CDungeon_Objects::Release_Objects()
 
 	Safe_Release(mDungeonMap);
 	Safe_Release(mWorldMap);
-	Safe_Release(mTestUnit);
+//	Safe_Release(mTestUnit);
 
 	if (mListVecTiles != nullptr)
 	{
@@ -321,12 +321,13 @@ HRESULT CDungeon_Objects::RemoveTile(CGameObject_3D_Tile * pTIle)
 HRESULT CDungeon_Objects::Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ)
 {
 	CGameObject_Creater* pCreateManager = GetSingle(CGameManager)->Get_CreaterManager();
+	CGameObject_3D_Dynamic* mCreateUnit = nullptr;
 
-	mTestUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(id);
-	PositionXZ.y += 1;
-	mTestUnit->Set_Position(PositionXZ);
-	NULL_CHECK_HR(mTestUnit);
-	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_OBJECT), mTestUnit)); 
+	mCreateUnit = (CGameObject_3D_Dynamic*)pCreateManager->CreateEmptyObject(id);
+	PositionXZ.y += 20;
+	mCreateUnit->Set_Position(PositionXZ);
+	NULL_CHECK_HR(mCreateUnit);
+	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_OBJECT_UNIT), mCreateUnit));
 	return S_OK;
 }
 

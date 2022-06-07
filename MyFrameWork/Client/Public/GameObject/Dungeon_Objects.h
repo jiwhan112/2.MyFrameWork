@@ -95,7 +95,7 @@ private: // value Tile
 
 
 private:
-	CGameObject_3D_Dynamic*				mTestUnit = nullptr;
+//	CGameObject_3D_Dynamic*				mTestUnit = nullptr;
 
 
 private:

@@ -26,6 +26,7 @@ public:
 		E_COMMON_ANINAME_SLEEPING,
 		E_COMMON_ANINAME_DRAG,
 		E_COMMON_ANINAME_MELEE,
+		E_COMMON_ANINAME_UP,
 		E_COMMON_ANINAME_END,
 	};
 
@@ -49,6 +50,8 @@ public:
 			return "drag";
 		case E_COMMON_ANINAME_MELEE:
 			return "melee";
+		case E_COMMON_ANINAME_UP:
+			return "up";
 		default:
 			return "";
 		}

@@ -88,6 +88,34 @@ HRESULT CBehaviorTree::Select_Sequnce(string seqTag)
 	return S_OK;
 }
 
+HRESULT CBehaviorTree::Add_Leaf_Proto(string strtag, CNode_LeafTree * seq)
+{
+	CNode_LeafTree* leaf = Find_Leaf(strtag);
+	if (leaf == nullptr)
+	{
+		mMapLeafNode.emplace(strtag, seq);
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+CNode_LeafTree * CBehaviorTree::Find_Leaf(string strtag)
+{
+	auto findNode = mMapLeafNode.find(strtag);
+	if (findNode == mMapLeafNode.end())
+		return nullptr;
+	return findNode->second;
+}
+
+CNode_LeafTree * CBehaviorTree::Clone_Leaf(string strtag)
+{
+	auto leaf = Find_Leaf(strtag);
+	if (leaf)
+		return leaf->Clone();
+	return nullptr;
+
+}
+
 HRESULT CBehaviorTree::Set_IDLE_Seq()
 {
 	if (mCurrentKey == "")
@@ -164,13 +192,22 @@ void CBehaviorTree::Free()
 {
 	__super::Free();
 	mCurrentSequnence = nullptr;
-	for (auto node: mMapSequence)
+
+	for (auto node : mMapSequence)
 	{
 		Safe_Release(node.second);
 	}
 	mMapSequence.clear();
 
-	
+	if (m_isCloned == false)
+	{
+		for (auto seq : mMapLeafNode)
+		{
+			Safe_Release(seq.second);
+
+		}
+		mMapLeafNode.clear();
+	}
 }
 
 ////////////////////////////////////////////////////////////

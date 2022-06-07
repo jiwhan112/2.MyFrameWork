@@ -4,6 +4,7 @@
 #include "Level_Logo.h"
 #include "Level_Loader.h"
 #include "GameObject/Client_Object.h""
+#include "AI/AI_Action.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -117,8 +118,6 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TRANSFORM),
 		CTransform::Create(m_pDevice, m_pDeviceContext)));
 
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_BEHAVIORTREE),
-		CBehaviorTree::Create(m_pDevice, m_pDeviceContext)));
 
 	// Ãæµ¹
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_AABB),
@@ -141,7 +140,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_SKY),
 		CTexture::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/Resources/Textures/SkyBox/SkyTest.dds"), 1)));
 
-	// ¸ğµ¨ / ÅØ½ºÃ³ ¸Ê / ¼ÎÀÌ´õ /
+	FAILED_CHECK(Ready_Prototype_Components_AI());
 	FAILED_CHECK(Ready_Prototype_Components_Model());
 	FAILED_CHECK(Ready_Prototype_Components_AniModel());
 	FAILED_CHECK(Ready_Prototype_Components_Texture());
@@ -285,6 +284,32 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxAni.hlsl"),
 			VTXANIMODEL_DECLARATION::Elements, VTXANIMODEL_DECLARATION::iNumElements)));
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_Components_AI()
+{
+
+	CBehaviorTree* baseTree = CBehaviorTree::Create(m_pDevice, m_pDeviceContext);
+	// baseTree->addLeaf();
+
+	CAction_DEALY*			Dealy = CAction_DEALY::Create("Dealy", nullptr);
+	CAction_MOVE*			Move = CAction_MOVE::Create("Move", nullptr);
+	CAction_MOVE_TARGET*	MoveTarget = CAction_MOVE_TARGET::Create("MoveTarget", nullptr);
+	CAction_Function*		Func = CAction_Function::Create("Func", nullptr);
+
+	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGAI(AI_DEALY), Dealy));
+	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGAI(AI_MOVE), Move));
+	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGAI(AI_MOVETARGET), MoveTarget));
+	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGAI(AI_FUNCTION), Func));
+
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_BEHAVIORTREE),
+		baseTree));
+
+	// CAction_DEALY* dealyclone = (CAction_DEALY*)baseTree->Clone_Leaf(TAGAI(AI_MOVE));
+	// dealyclone->SetUp_Target(this);
 
 	return S_OK;
 }

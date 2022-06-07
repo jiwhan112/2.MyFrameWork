@@ -29,7 +29,7 @@ public:
 
 	virtual HRESULT Init_Unit();
 	virtual HRESULT Init_AI();
-	virtual HRESULT Init_AI_Default();
+	virtual HRESULT Init_AI_IDLE();
 	virtual HRESULT Init_AI_Tile();
 
 	// ¸ðµ¨ ±¸Çö 
