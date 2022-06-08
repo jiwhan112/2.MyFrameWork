@@ -10,14 +10,16 @@ CColliderManager::CColliderManager()
 HRESULT CColliderManager::NativeConstruct_Prototype()
 {
 	mWorldPickPos = _float3(0, 0, 0);
-	mIsMousePick = false;
+	mIsMousePick_Object = false;
+	mIsMousePick_Terrain = false;
 	return S_OK;
 }
 
 HRESULT CColliderManager::Tick_ColliderCheck(_double Timer)
 {
 	// 1. 마우스 충돌체크
-	ColCheck_MOUSE();
+	ColCheck_MOUSE_Object();
+	ColCheck_MOUSE_Terrain();
 
 	// 2. 객체들의 충돌 체크
 
@@ -176,28 +178,33 @@ bool CColliderManager::Check_Mouse_Terrain()
 	return false;
 }
 
-bool CColliderManager::ColCheck_MOUSE()
+bool CColliderManager::ColCheck_MOUSE_Object()
 {
-	mIsMousePick = false;
-
 	// 모든 충돌체랑 마우스위치랑 비교
-	mWorldRay =  GetSingle(CGameInstance)->Get_Ray_World();
-	
-
-	// 현재 게임 모드에 따라 특정 네비 메시와 비교
-	if (mIsMousePick = Check_Mouse_Terrain())
-	{
-		return mIsMousePick;
-	}
+	mWorldRay = GetSingle(CGameInstance)->Get_Ray_World();
+	mIsMousePick_Object = false;
 
 	// Static / Dynamic
-	if (mIsMousePick = Check_Mouse_Object(mWorldRay))
+	if (mIsMousePick_Object = Check_Mouse_Object(mWorldRay))
 	{
-		return mIsMousePick;
-	}	
+		return mIsMousePick_Object;
+	}
+	return mIsMousePick_Object;
+}
 
-	return mIsMousePick;
-	
+bool CColliderManager::ColCheck_MOUSE_Terrain()
+{
+	// 모든 충돌체랑 마우스위치랑 비교
+	mWorldRay = GetSingle(CGameInstance)->Get_Ray_World();
+	mIsMousePick_Terrain = false;
+
+	// 현재 게임 모드에 따라 특정 네비 메시와 비교
+	if (mIsMousePick_Terrain = Check_Mouse_Terrain())
+	{
+		return mIsMousePick_Terrain;
+	}
+
+	return mIsMousePick_Terrain;
 }
 
 CColliderManager * CColliderManager::Create()

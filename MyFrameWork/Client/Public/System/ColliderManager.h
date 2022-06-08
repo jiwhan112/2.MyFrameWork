@@ -30,7 +30,8 @@ public:
 
 public:
 	const _float3& Get_PickPos()const { return mWorldPickPos; }
-	const _bool& Get_IsMousePick()const { return mIsMousePick; }
+	const _bool& Get_IsMousePick_Object()const { return mIsMousePick_Object; }
+	const _bool& Get_IsMousePick_Terrain()const { return mIsMousePick_Terrain; }
 	const _ray& Get_MouseRay()const { return mWorldRay; }
 
 public:
@@ -39,7 +40,8 @@ public:
 	
 private:	
 	HRESULT ColCheck_OBJECTS();
-	bool	ColCheck_MOUSE();
+	bool	ColCheck_MOUSE_Object();
+	bool	ColCheck_MOUSE_Terrain();
 	
 	bool Check_Navi(_float4x4 worldinv,CNavigation* navi);
 
@@ -51,8 +53,9 @@ private:
 	list<CGameObject_Base*> mListColliders[E_COLLIDEROBJ_TYPE::COLLIDEROBJ_END];
 
 	_float3		mWorldPickPos;
-	_bool		mIsMousePick = false;
 	_ray		mWorldRay;
+	_bool		mIsMousePick_Terrain = false;
+	_bool		mIsMousePick_Object = false;
 
 
 public:

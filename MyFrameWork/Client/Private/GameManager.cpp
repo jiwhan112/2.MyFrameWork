@@ -222,13 +222,19 @@ const _float3 & CGameManager::Get_PickPos() const
 
 	return mColliderManager->Get_PickPos();
 }
-const _bool & CGameManager::Get_IsMousePick() const
+const _bool & CGameManager::Get_IsMousePick_Terran() const
 {
 	if (mColliderManager == nullptr)
 		return false;
 
-	// TODO: 여기에 반환 구문을 삽입합니다.
-	return mColliderManager->Get_IsMousePick();
+	return mColliderManager->Get_IsMousePick_Terrain();
+}
+const _bool & CGameManager::Get_IsMousePick_Object() const
+{
+	if (mColliderManager == nullptr)
+		return false;
+
+	return mColliderManager->Get_IsMousePick_Object();
 }
 const _ray & CGameManager::Get_WorldRay() const
 {
