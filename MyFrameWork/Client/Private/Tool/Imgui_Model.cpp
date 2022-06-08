@@ -773,39 +773,80 @@ HRESULT CImgui_Model::Edit_ANI()
 
 	}
 
+	
+
+
+
+	static _int select = -1;
+
 	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "SocketObjectTest")))
-	{
-
-		if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "SocketButton")))
+	{		
+		// 소켓 목록
+		if (!mSocketList.empty())
 		{
-			CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+			// 소켓 목록에서 선택 
+			_int cnt = 0;
 
-			CGameObject_3D_Socket::SOCKETDESC desc;
-			// 뼈이름
-			desc.mSocketName = Select_Bonestr.c_str();
-			if (strlen(desc.mSocketName) < 1)
+			static ImGuiTextFilter filter;
+			filter.Draw();
+
+			for (auto iter = mSocketList.begin(); iter != mSocketList.end(); ++cnt, iter++)
 			{
-				ImGui::EndListBox();
-				return S_FALSE;
+				char bufName[256] = "";
+				string str = (*iter)->Get_SocketDesc().mSocketName;
+				sprintf_s(bufName, 256, "Sock_%s_%d", str.c_str(),cnt);
+
+				if (filter.PassFilter(bufName))
+				{
+					if (ImGui::Selectable(bufName, select == cnt))
+					{
+						select = cnt;
+						mSelectSocketObject = *iter;
+					}
+				}
 			}
-
-			// 붙일 모델
-			desc.mTargetModel = mCurrent_ModelDynamicObject->Get_ComModel();
-			desc.mTransform = mCurrent_ModelDynamicObject->Get_ComTransform();
-
-			// 소켓 오브젝트 테스트
-			CGameObject_3D_Socket* Socket = (CGameObject_3D_Socket*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_SOCKET);
-
-			
-
-			Socket->Set_LoadSocketDESC("crea_SnotPickaxe.fbx", desc);
-
-			_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-			Create_Manager->PushObject((CGameObject_Base**)&Socket, levelindex, TAGLAY(meCreateLayer));
 		}
 		ImGui::EndListBox();
+	}
+
+	if (mSelectSocketObject)
+	{
+		_float3 pos = mSelectSocketObject->Get_WorldPostition();
+		ImGui::DragFloat3("SocketWorld:", (float*)&pos, 0.1f, -100, 100);
+		mSelectSocketObject->Set_Position(pos);
+	}
+
+
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "SocketButton")))
+	{
+		CGameObject_Creater* Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+
+		CGameObject_3D_Socket::SOCKETDESC desc;
+		// 뼈이름
+		desc.mSocketName = Select_Bonestr.c_str();
+		if (strlen(desc.mSocketName) < 1)
+		{
+			ImGui::EndListBox();
+			return S_FALSE;
+		}
+
+		// 붙일 모델
+		desc.mTargetModel = mCurrent_ModelDynamicObject->Get_ComModel();
+		desc.mTransform = mCurrent_ModelDynamicObject->Get_ComTransform();
+
+		// 소켓 오브젝트 테스트
+		CGameObject_3D_Socket* Socket = (CGameObject_3D_Socket*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_SOCKET);
+
+		Socket->Set_LoadSocketDESC("crea_SnotPickaxe.fbx", desc);
+		mSocketList.push_front(Socket);
+
+		_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+		Create_Manager->PushObject((CGameObject_Base**)&Socket, levelindex, TAGLAY(meCreateLayer));
 
 	}
+
+
+
 	return S_OK;
 }
 
@@ -857,6 +898,8 @@ CImgui_Model * CImgui_Model::Create(ID3D11Device* deviec, ID3D11DeviceContext* c
 void CImgui_Model::Free()
 {
 	__super::Free();
+	mSocketList.clear();
+
 	Safe_Release(mCameraClient);
 
 	Safe_Release(mCurrent_ModelStaticObject);

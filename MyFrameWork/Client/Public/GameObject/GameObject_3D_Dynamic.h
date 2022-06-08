@@ -10,6 +10,7 @@ END
 
 // 애니메이션 3D 오브젝트 출력
 BEGIN(Client)
+class CGameObject_3D_Socket;
 
 class CGameObject_3D_Dynamic  :
 	public CGameObject_Base
@@ -35,6 +36,7 @@ public:
 		TICK_TYPE_NONE,
 		TICK_TYPE_DUNGION_PICK, // 객체를 클릭하면 Pick으로 전환
 		TICK_TYPE_WORLD_PICK, 
+		TICK_TOOL,
 		TICK_TYPE_END,
 	};
 
@@ -114,35 +116,40 @@ protected:
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 
-	//Test
-	//_float2 WorldToView(_float3 pos);
+protected:
+	HRESULT Add_Socket(string modelName,string boneName);
+	HRESULT Tick_Socket(_double timer);
+	HRESULT Render_Socket();
+
 
 protected: // 3D모델 Com / DESC 추가
-	CModel*						mComModel = nullptr;
+	CModel*							mComModel = nullptr;
 	// AI
-	CBehaviorTree*				mComBehavior = nullptr;
+	CBehaviorTree*					mComBehavior = nullptr;
 
 	// 콜라이더 리스트 추가 / 콜라이더는 맵에 넣지 않고 여기서만 관리한다.
 	// 뼈애 달리게 수정
-	list<CCollider*>*			mComListCollider = nullptr;
+	list<CCollider*>*				mComListCollider = nullptr;
 
+	// 달기
+	list<CGameObject_3D_Socket*>	mListSocket;
 
-	MODEL_DYNAMIC_DESC			mModelDesc;
-	list<COLLIDER_DESC>			mListColliderDesc;
+	MODEL_DYNAMIC_DESC				mModelDesc;
+	list<COLLIDER_DESC>				mListColliderDesc;
 	
 
-	E_UNITTYPE					meUnitType = UNIT_END;
+	E_UNITTYPE						meUnitType = UNIT_END;
 
 	// MOVE
-	list<CCell*>				mCurrentPathList;
-	_float3						mGoalPosition; // 목표위치
-	_float3						mLookPostiton;
+	list<CCell*>					mCurrentPathList;
+	_float3							mGoalPosition; // 목표위치
+	_float3							mLookPostiton;
 
-	_float3						mCustomMovePostition = _float3();
+	_float3							mCustomMovePostition = _float3();
 
 
 	// 지형
-	E_MAPTYPE					meCurrentMap = MAPTYPE_END;
+	E_MAPTYPE						meCurrentMap = MAPTYPE_END;
 	
 	// 현재 
 

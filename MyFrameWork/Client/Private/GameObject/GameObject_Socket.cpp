@@ -28,8 +28,6 @@ HRESULT CGameObject_3D_Socket::NativeConstruct(void* pArg)
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	FAILED_CHECK(Set_Component());
 
-//	mComTransform->Scaled();
-//	mComTransform->Rotation();
 	mCurrentShaderPass = 2;
 	
 	return S_OK;
@@ -37,10 +35,9 @@ HRESULT CGameObject_3D_Socket::NativeConstruct(void* pArg)
 
 _int CGameObject_3D_Socket::Tick(_double TimeDelta)
 {
-	// _matrix			TransformMatrix = XMLoadFloat4x4(mBoneMatrixPtr.pOffsetMatrix) * XMLoadFloat4x4(mBoneMatrixPtr.pCombinedMatrix) * XMLoadFloat4x4(&mSocketTransformMatrix) * mSocketDESC.mTransform->GetWorldMatrix();
-	// mComCollider->Update_Transform(TransformMatrix);
-
-	return _int();
+	mMatSocket = (*mBoneMatrixPtr.pCombinedMatrix) * mSocketTransformMatrix * mSocketDESC.mTransform->GetWorldMatrix();
+	mComCollider->Update_Transform(mMatSocket);
+	return UPDATENONE;
 }
 
 HRESULT CGameObject_3D_Socket::Render()
@@ -50,18 +47,20 @@ HRESULT CGameObject_3D_Socket::Render()
 	if (mComShader == nullptr)
 		return E_FAIL;
 
-	_matrix			TransformMatrix = XMLoadFloat4x4(mBoneMatrixPtr.pOffsetMatrix)
-		* XMLoadFloat4x4(mBoneMatrixPtr.pCombinedMatrix) * XMLoadFloat4x4(&mSocketTransformMatrix) 
-		* mSocketDESC.mTransform->GetWorldMatrix();
 	
 
-	TransformMatrix.r[0] = XMVector3Normalize(TransformMatrix.r[0]);
-	TransformMatrix.r[1] = XMVector3Normalize(TransformMatrix.r[1]);
-	TransformMatrix.r[2] = XMVector3Normalize(TransformMatrix.r[2]);
+	//_matrix TransformMatrix = XMLoadFloat4x4(mBoneMatrixPtr.pOffsetMatrix)
+	//	* XMLoadFloat4x4(mBoneMatrixPtr.pCombinedMatrix) * XMLoadFloat4x4(&mSocketTransformMatrix) 
+	//	* mSocketDESC.mTransform->GetWorldMatrix();
+
 	
-	TransformMatrix = mComTransform->GetWorldMatrix() * TransformMatrix *  mSocketDESC.mTransform->GetWorldMatrix();
+	//mMatSocket.Right().Normalize();
+	//mMatSocket.Up().Normalize();
+	//mMatSocket.Backward().Normalize();
 	
-	mComShader->Set_RawValue("g_SocketMatrix", &XMMatrixTranspose(TransformMatrix), sizeof(_matrix));
+	//mMatSocket = mComTransform->GetWorldMatrix() * XMLoadFloat4x4(&mMatSocket) *  mSocketDESC.mTransform->GetWorldMatrix();
+	
+	mComShader->Set_RawValue("g_SocketMatrix", &XMMatrixTranspose(mMatSocket), sizeof(_float4x4));
 
 	__super::Render();
 	return S_OK;
@@ -81,6 +80,7 @@ HRESULT CGameObject_3D_Socket::Set_LoadSocketDESC(const char* MyFbxname, const S
 
 	mBoneMatrixPtr = mSocketDESC.mTargetModel->Get_BoneMatrixPtr(mSocketDESC.mSocketName);
 	mSocketTransformMatrix = mSocketDESC.mTargetModel->Get_DefaultMatrix();
+
 
 	return S_OK;
 }

@@ -97,6 +97,9 @@ void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, E_CAMERA_MOVEPOS_STATE eMov
 		mTargetObject = target;
 		Safe_AddRef(mTargetObject);
 	}
+	if (meCameraMode == CCamera_Client::CAMERA_MODE_TARGET)
+		return;
+	
 
 	EnterCamera(eMove, 2.0f);
 	
@@ -159,7 +162,6 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 	{
 		CTransform* targetTrans = mTargetObject->Get_ComTransform();
 		_float3 targetPos = targetTrans->GetState(CTransform::STATE_POSITION);
-
 		mComTransform->LookAt(targetPos);
 		mbTargetSet = true;
 	}

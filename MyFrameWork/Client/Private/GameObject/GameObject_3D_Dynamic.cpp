@@ -3,6 +3,8 @@
 #include "GameObject/GameObject_MyTerrain.h"
 #include "GameObject/Dungeon_Manager.h"
 #include "GameObject/Dungeon_Objects.h"
+#include "GameObject/GameObject_Socket.h"
+
 #include "AI/AI_Action.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -15,8 +17,12 @@ CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs
 	: CGameObject_Base(rhs)
 	, mModelDesc(rhs.mModelDesc)
 	, mIsTerrainHeight(false)
+	, meTickType(rhs.meTickType)
 
 {
+	// TOOLTEST
+	// meTickType = CGameObject_3D_Dynamic::TICK_TOOL;
+
 }
 
 HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()
@@ -39,55 +45,75 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
+	if (meTickType == TICK_TOOL)
+		return UPDATENONE;
+
 	// 생성시 유닛별 초기화 함수 따로 만들기..
 
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 //	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+	
+	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 	Init_Unit();
 	Init_AI();
 	
-	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 	return S_OK;
 }
 
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+	Tick_Socket(TimeDelta);
+
 
 	// 충돌
-	if (mComListCollider != nullptr)
+	if (meTickType == TICK_TOOL)
 	{
-		for (auto& col : *mComListCollider)
+		if (mComListCollider != nullptr)
 		{
-			col->Update_Transform(mComTransform->GetWorldFloat4x4());
-			GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
+			for (auto& col : *mComListCollider)
+			{
+				col->Update_Transform(mComTransform->GetWorldFloat4x4());
+				GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
+			}
 		}
 	}
-
-	mComBehavior->Tick(TimeDelta);
-	Tick_LookUpdate(TimeDelta);
-
-
-	if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
+	else
 	{
-		if (mIsTerrainHeight)
-			Set_Terrain_HeightY(mCurrentMap);
+		if (mComListCollider != nullptr)
+		{
+			for (auto& col : *mComListCollider)
+			{
+				col->Update_Transform(mComTransform->GetWorldFloat4x4());
+				GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
+			}
+		}
 
-	}
-	else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
-	{
-		_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
-		_float3	newPos = ray.position;
-		newPos += ray.direction * mMouseOffset;
-		CTransform* CamTrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA))->Get_ComTransform();
-		_float3 CamDir =  CamTrans->GetWorldFloat4x4().Backward();
-		CamDir.y = 0;
-		CamDir.Normalize();
-		mComTransform->LookAtDir(CamDir);
-		Set_Position(newPos);
+		mComBehavior->Tick(TimeDelta);
+		Tick_LookUpdate(TimeDelta);
 
+
+		if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
+		{
+			if (mIsTerrainHeight)
+				Set_Terrain_HeightY(mCurrentMap);
+
+		}
+		else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
+		{
+			_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
+			_float3	newPos = ray.position;
+			newPos += ray.direction * mMouseOffset;
+			CTransform* CamTrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA))->Get_ComTransform();
+			_float3 CamDir = CamTrans->GetWorldFloat4x4().Backward();
+			CamDir.y = 0;
+			CamDir.Normalize();
+			mComTransform->LookAtDir(CamDir);
+			Set_Position(newPos);
+
+		}
 	}
 
 	return UPDATENONE;
@@ -97,22 +123,32 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
-	if (mCurrentMap == nullptr)
-		return UPDATEERROR;
+	if (meTickType == TICK_TOOL)
+	{
+		mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+		if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
+			mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+	}
 
-	mComBehavior->LateTick(TimeDelta);
-	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+	else
+	{
+		if (mCurrentMap == nullptr)
+			return UPDATEERROR;
 
-	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+		mComBehavior->LateTick(TimeDelta);
+		mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 
-	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
-		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+		mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 
+		if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
+			mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+	}
 	return UPDATENONE;
 }
 
 HRESULT CGameObject_3D_Dynamic::Render()
 {
+	Render_Socket();
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Light());
 
@@ -154,6 +190,8 @@ HRESULT CGameObject_3D_Dynamic::Render()
 HRESULT CGameObject_3D_Dynamic::Init_Unit()
 {
 	// 유닛마다 상속해서 초기화
+
+
 	return S_OK;
 }
 
@@ -189,8 +227,6 @@ HRESULT CGameObject_3D_Dynamic::Init_Create()
 	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL);
 	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
 	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-
-
 
 	Seq_Create_Fall->PushBack_LeafNode(fallMove->Clone());
 	Seq_Create_Fall->PushBack_LeafNode(dealyAnimation->Clone());
@@ -280,7 +316,6 @@ HRESULT CGameObject_3D_Dynamic::Add_ColliderDesc(COLLIDER_DESC * desc, int size)
 	{
 		Add_ColliderDesc(desc[i]);
 	}
-
 	return S_OK;
 }
 
@@ -469,6 +504,9 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 
 	if (mTerrain_Maps[MAPTYPE_DUNGEON] == nullptr || mTerrain_Maps[MAPTYPE_WORLD] == nullptr)
 	{
+		if (meTickType == TICK_TOOL)
+			return S_OK;
+
 		// 현재 Terrain의 네비 메시 복사.
 		mTerrain_Maps[MAPTYPE_DUNGEON] = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
 		mTerrain_Maps[MAPTYPE_WORLD] = GetSingle(CGameManager)->Get_LevelObject_WORLDMAP();
@@ -534,6 +572,51 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 	_float3 CurrentPostiton = Get_WorldPostition();;
 	CurrentPostiton.y = terrain->Get_HeightY(CurrentPostiton);
 	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, CurrentPostiton.ToVec4(1));
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Add_Socket(string modelName,string boneName)
+{
+	auto Create_Manager =  GetSingle(CGameManager)->Get_CreaterManager();
+
+	CGameObject_3D_Socket::SOCKETDESC socketDesc;
+	socketDesc.mTargetModel = Get_ComModel();
+	socketDesc.mTransform = Get_ComTransform();
+	socketDesc.mSocketName = boneName.c_str();
+	
+	// "crea_SnotPickaxe.fbx"
+	CGameObject_3D_Socket* Socket = (CGameObject_3D_Socket*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_SOCKET);
+	Socket->Set_LoadSocketDESC(modelName.c_str(), socketDesc);
+	Safe_AddRef(Socket);
+	mListSocket.push_front(Socket);
+
+	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
+	Create_Manager->PushObject((CGameObject_Base**)&Socket, levelindex, TAGLAY(LAY_OBJECT_UNIT));
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Tick_Socket(_double timer)
+{
+	if (mListSocket.empty() == false)
+	{
+		for (auto& sock : mListSocket)
+		{
+			sock->Tick(timer);
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Render_Socket()
+{
+	if (mListSocket.empty() == false)
+	{
+		for (auto& sock : mListSocket)
+		{
+			sock->Render();
+		}
+	}
+
 	return S_OK;
 }
 
@@ -609,6 +692,11 @@ void CGameObject_3D_Dynamic::Free()
 	mCurrentMap = nullptr;
 	mCurrentNavi = nullptr;
 
+	for (auto& socket: mListSocket)
+	{
+		Safe_Release(socket);
+	}
+	mListSocket.clear();
 
 
 }

@@ -82,7 +82,9 @@ private:
 	list<string>*					mProtoDynamicModelList = nullptr;
 	list<string>*					mProtoParentModelList = nullptr;
 
+	list<class CGameObject_3D_Socket*>	mSocketList;
 
+	CGameObject_3D_Socket* mSelectSocketObject = nullptr;
 
 	
 private:

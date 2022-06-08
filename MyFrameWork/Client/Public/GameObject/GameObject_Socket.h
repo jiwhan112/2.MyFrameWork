@@ -15,12 +15,10 @@ class CGameObject_3D_Socket  final
 public:
 	typedef struct tagSocketDesc
 	{
-		// 위치와 
 		CModel*			mTargetModel = nullptr;
 		CTransform*		mTransform = nullptr;
 		const char*		mSocketName = nullptr;
 	}SOCKETDESC;
-
 
 protected:
 	explicit CGameObject_3D_Socket(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -39,13 +37,15 @@ public:
 
 public:
 	HRESULT		Set_LoadSocketDESC(const char* MyFbxname, const SOCKETDESC& desc);
-
+	const SOCKETDESC&	Get_SocketDesc() const { return mSocketDESC; }
 	virtual HRESULT Set_Component()override;
 
 protected: // 소켓의 정보 / 타겟의 뼈 행렬 정보 
 	SOCKETDESC				mSocketDESC;
 	CModel::BONEMATRIX_PTR	mBoneMatrixPtr;
 	_float4x4				mSocketTransformMatrix;
+
+	_float4x4				mMatSocket;
 
 public:
 	static CGameObject_3D_Socket* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
