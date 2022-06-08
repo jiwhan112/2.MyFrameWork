@@ -51,7 +51,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 	Update_Collider();
 
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
-	Add_Socket("crea_SnotPickaxe.fbx","R_BONE");
+	Add_Socket("crea_SnotPickaxe.fbx","RArmDigit31");
 
 	return S_OK;
 }

@@ -64,9 +64,8 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 
 _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
-	FAILED_UPDATE(__super::Tick(TimeDelta));
-	Tick_Socket(TimeDelta);
 
+	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	// Ãæµ¹
 	if (meTickType == TICK_TOOL)
@@ -115,6 +114,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 		}
 	}
+	Tick_Socket(TimeDelta);
 
 	return UPDATENONE;
 }
@@ -122,6 +122,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
+	
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 	if (meTickType == TICK_TOOL)
 	{
@@ -143,12 +144,13 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 		if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
 			mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
 	}
+
+
 	return UPDATENONE;
 }
 
 HRESULT CGameObject_3D_Dynamic::Render()
 {
-	Render_Socket();
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Light());
 
@@ -184,6 +186,7 @@ HRESULT CGameObject_3D_Dynamic::Render()
 	
 #endif // _DEBUG
 
+	Render_Socket();
 	return S_OK;
 }
 
@@ -587,11 +590,7 @@ HRESULT CGameObject_3D_Dynamic::Add_Socket(string modelName,string boneName)
 	// "crea_SnotPickaxe.fbx"
 	CGameObject_3D_Socket* Socket = (CGameObject_3D_Socket*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_SOCKET);
 	Socket->Set_LoadSocketDESC(modelName.c_str(), socketDesc);
-	Safe_AddRef(Socket);
 	mListSocket.push_front(Socket);
-
-	_uint levelindex = GetSingle(CGameInstance)->Get_CurrentLevelIndex();
-	Create_Manager->PushObject((CGameObject_Base**)&Socket, levelindex, TAGLAY(LAY_OBJECT_UNIT));
 	return S_OK;
 }
 

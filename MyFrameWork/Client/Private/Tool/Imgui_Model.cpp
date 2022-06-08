@@ -845,7 +845,16 @@ HRESULT CImgui_Model::Edit_ANI()
 
 	}
 
+	if (ImGui::Button(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "ClearSocket")))
+	{
 
+		for (auto& socket: mSocketList)
+		{
+			socket->Set_Dead();
+
+		}
+		mSocketList.clear();
+	}
 
 	return S_OK;
 }
