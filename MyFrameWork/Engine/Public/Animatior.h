@@ -87,8 +87,9 @@ public: // Get Set
 
 	HRESULT SetUp_AnimIndex(_uint index);
 	HRESULT Set_AniString(string AniName);
-	HRESULT Set_AniEnum(E_COMMON_ANINAME AniName);
-	_int	Get_AniEnum2Index(E_COMMON_ANINAME AniName);
+	HRESULT Set_AniEnum(E_COMMON_ANINAME AniName, _int index = -1); // enum Áß ·£´ý È¤Àº index
+	_int	Get_AniEnum2Index(E_COMMON_ANINAME AniName,_int index=-1);
+
 	_double	Get_AniIndex2AniMaxTime(_int index);
 
 	_uint	Get_NewAniIndex()const

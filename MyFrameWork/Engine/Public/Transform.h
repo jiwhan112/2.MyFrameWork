@@ -111,6 +111,9 @@ public:
 
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);
+	void Turn_CW(_float3 vAxis, _float fDeltaTime  ,_float speed);
+	void Turn_CCW(_float3 vAxis, _float fDeltaTime ,_float speed);
+
 	HRESULT Rotation(_fvector vAxis, _float fRadian);
 	HRESULT Rotation_Add(_fvector vAxis, _float fRadian);
 
@@ -121,7 +124,8 @@ public:
 
 
 	HRESULT Chase(_fvector TargetPos, _double time);
-	HRESULT LookAt(_fvector TargetPos, _double time);
+	HRESULT LookAt(_fvector TargetPos, _double time, _float speed = 1);
+	HRESULT LookAtY(_fvector TargetPos, _double time, _float speed = 1);
 	HRESULT LookAt(_fvector TargetPos);
 	HRESULT LookAtDir(_float3 Dir);
 

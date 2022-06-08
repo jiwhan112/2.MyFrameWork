@@ -252,6 +252,29 @@ HRESULT CTransform::Turn(_fvector vAxis, _double time)
 	return S_OK;
 }
 
+void CTransform::Turn_CW(_float3 vAxis, _float fDeltaTime,_float Speed)
+{
+	_vector		vRight = GetState(CTransform::STATE_RIGHT);
+	_vector		vUp = GetState(CTransform::STATE_UP);
+	_vector		vLook = GetState(CTransform::STATE_LOOK);
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, Speed * fDeltaTime);
+
+	vRight = XMVector4Transform(vRight, RotationMatrix);
+	vUp = XMVector4Transform(vUp, RotationMatrix);
+	vLook = XMVector4Transform(vLook, RotationMatrix);
+
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);
+}
+
+void CTransform::Turn_CCW(_float3 vAxis, _float fDeltaTime,_float speed)
+{
+	Turn_CW(vAxis * -1, fDeltaTime, speed);
+}
+
+
 HRESULT CTransform::Rotation(_fvector vAxis, _float fRadian)
 {
 	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * XMVectorGetX(XMVector3Length(GetState(CTransform::STATE_RIGHT)));
@@ -301,9 +324,77 @@ HRESULT CTransform::Chase(_fvector TargetPos, _double time)
 	return S_OK;
 }
 
-HRESULT CTransform::LookAt(_fvector TargetPos, _double time)
+HRESULT CTransform::LookAt(_fvector targetPos, _double time,_float speed)
 {
+	_float3 TargetPos = targetPos;
+	_float3 vPos = mWorldMatrix.Translation();
+	_float3 vScale = GetScaleXYZ();
+
+	_float3 CurrentLook = GetState(CTransform::STATE_LOOK);
+	CurrentLook.Normalize();
+	_float3 TargetLook = TargetPos - vPos;
+	TargetLook.Normalize();
+
+	_float3 vLook, vRight, vUp;
+	vLook = _float3::Lerp(CurrentLook, TargetLook, time*speed);
+	vLook.Normalize();
+	vLook *= vScale.z;
+
+	if (vLook == _float3(0, 1, 0))
+	{
+		return S_OK;
+	}
+	else
+	{
+		vRight = _float3::Up.Cross(vLook);
+		vRight.Normalize();
+		vRight *= vScale.x;
+	}
+
+	vUp = vLook.Cross(vRight);
+	vUp.Normalize();
+	vUp *= vScale.y;
+
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);
 	return S_OK;
+}
+
+HRESULT CTransform::LookAtY(_fvector targetPos, _double time, _float speed)
+{
+	// Y만 
+
+	_float3 CurrentLook = GetState(CTransform::STATE_LOOK);
+	CurrentLook.Normalize();
+
+	_float3 TargetPos = targetPos;
+	_float3 vPos = mWorldMatrix.Translation();
+	_float3 TargetLook = TargetPos - vPos;
+	TargetLook.Normalize();
+
+	_float lookDot = CurrentLook.Dot(TargetLook);
+
+	if (0.8 < lookDot)
+	{
+		// 회전 한계
+		return S_OK;
+	}
+	else
+	{
+		// 회전방향
+		_float3 CurrentRight = GetState(CTransform::STATE_RIGHT);
+		CurrentRight.Normalize();
+		_float rightLeft = CurrentRight.Dot(TargetLook);
+		
+		if (rightLeft > 0)
+			Turn_CW(_float3::Up, time, speed);
+		else
+			Turn_CCW(_float3::Up, time, speed);
+		return S_OK;
+
+	}
+
 }
 
 HRESULT CTransform::LookAt(_fvector targetPos)

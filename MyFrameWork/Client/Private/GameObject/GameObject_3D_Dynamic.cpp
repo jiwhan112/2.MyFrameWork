@@ -66,6 +66,8 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 	}
 
 	mComBehavior->Tick(TimeDelta);
+	Tick_LookUpdate(TimeDelta);
+
 
 	if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
 	{
@@ -77,7 +79,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 	{
 		_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
 		_float3	newPos = ray.position;
-		newPos += ray.direction * 6;
+		newPos += ray.direction * mMouseOffset;
 		CTransform* CamTrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA))->Get_ComTransform();
 		_float3 CamDir =  CamTrans->GetWorldFloat4x4().Backward();
 		CamDir.y = 0;
@@ -308,6 +310,8 @@ HRESULT CGameObject_3D_Dynamic::FindPathForCurrentNavi(_float3 GoalPosition)
 	{
 		// °æ·Î Å½»ö
 		mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
+		if (!mCurrentPathList.empty())
+			mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
 		return S_OK;
 	}
 
@@ -338,7 +342,7 @@ _bool CGameObject_3D_Dynamic::FindPathRandAblePostition(_int Range,_float3* Goal
 
 		CurrentPos.x += RangeX;
 		CurrentPos.z += RangeZ;
-		FindPathForCurrentNavi(CurrentPos);
+		FAILED_CHECK_NONERETURN(FindPathForCurrentNavi(CurrentPos));
 		if (mCurrentPathList.empty() == false)
 		{
 			*GoalPos = CurrentPos;
@@ -352,12 +356,9 @@ _bool CGameObject_3D_Dynamic::FindPathRandAblePostition(_int Range,_float3* Goal
 	return true;
 }
 
-_float3 CGameObject_3D_Dynamic::Get_GoalPostiton() const
+_float3 CGameObject_3D_Dynamic::Get_PathGoalPostition() const
 {
-	if (mCurrentPathList.empty())
-		return _float3();
-
-	return mCurrentPathList.back()->Get_CenterPoint();
+	return mGoalPosition;
 }
 
 _float3 CGameObject_3D_Dynamic::Get_TerrainHeightPostition()
@@ -370,6 +371,12 @@ _float3 CGameObject_3D_Dynamic::Get_TerrainHeightPostition()
 
 	TargetPos.y = mCurrentMap->Get_HeightY(TargetPos);
 	return TargetPos;
+}
+
+void CGameObject_3D_Dynamic::Tick_LookUpdate(_double time)
+{
+	if (mLookPostiton != _float3())
+		mComTransform->LookAtY(mLookPostiton, time, mRotSpeed);
 }
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()
@@ -457,19 +464,18 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 {
 	if (terrain == nullptr)
 		return E_FAIL;
-
-	mCurrentPosition = Get_WorldPostition();
-	mCurrentPosition.y = terrain->Get_HeightY(mCurrentPosition);
-	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, mCurrentPosition.ToVec4(1));
+	_float3 CurrentPostiton = Get_WorldPostition();;
+	CurrentPostiton.y = terrain->Get_HeightY(CurrentPostiton);
+	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, CurrentPostiton.ToVec4(1));
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Set_AniEnum(CAnimatior::E_COMMON_ANINAME name)
+HRESULT CGameObject_3D_Dynamic::Set_AniEnum(CAnimatior::E_COMMON_ANINAME name,_int index)
 {
 	if (mComModel == nullptr)
 		return E_FAIL;
 
-	return mComModel->Get_Animaitor()->Set_AniEnum(name);
+	return mComModel->Get_Animaitor()->Set_AniEnum(name, index);
 }
 
 HRESULT CGameObject_3D_Dynamic::Set_AniIndex(_uint AniIndex)

@@ -167,10 +167,10 @@ HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 	return S_OK;
 }
 
-HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName)
+HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName, _int index)
 {
 	// 공통적인 애니메이션 재성
-	_int aniIndex =  Get_AniEnum2Index(AniName);
+	_int aniIndex = Get_AniEnum2Index(AniName, index);
 	if (aniIndex < 0)
 		return E_FAIL;
 
@@ -178,14 +178,14 @@ HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName)
 	return S_OK;
 }
 
-_int CAnimatior::Get_AniEnum2Index(E_COMMON_ANINAME AniName)
+_int CAnimatior::Get_AniEnum2Index(E_COMMON_ANINAME AniName, _int index)
 {
 	if (mVecAnimations.empty())
 		return -1;
 	string aniname = STR_CommonAniName(AniName);
 
-	_int index = 0;
-	_int GetIndex = -1;
+	_int aniInex = 0;
+
 	vector<int>		VecInts;
 	for (auto& ani : mVecAnimations)
 	{
@@ -195,22 +195,27 @@ _int CAnimatior::Get_AniEnum2Index(E_COMMON_ANINAME AniName)
 		string Full_AniNames = Name[1];
 
 		vector<string> AniNames = CHelperClass::String_Split(Full_AniNames, '_');
-		
-	
+
+
 		if (aniname == AniNames[0])
 		{
-			VecInts.push_back(index);
+			VecInts.push_back(aniInex);
 		}
-		index++;
+		aniInex++;
 	}
+
 	if (VecInts.empty())
 		return -1;
 	if (VecInts.size() == 1)
 		return	VecInts[0];
 
-	int randIndex = CHelperClass::RandomInt(0,VecInts.size());
-	return VecInts[randIndex];
+	int randIndex = CHelperClass::RandomInt(0, VecInts.size());
 
+	if (index == -1)
+		return VecInts[randIndex];
+	if (index >= VecInts.size())
+		return VecInts[0];
+	return VecInts[index];
 }
 
 _double CAnimatior::Get_AniIndex2AniMaxTime(_int index)

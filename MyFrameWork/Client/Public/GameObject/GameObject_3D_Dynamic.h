@@ -72,6 +72,10 @@ public: // GetSet
 
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC desc);
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC* desc,int size);
+	void		Set_LookPos(_float3 lookpos)
+	{
+		mLookPostiton = lookpos;
+	}
 
 public: // Collision
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
@@ -82,15 +86,17 @@ public: // Move AI
 	// 갈 수 있는 위치 뽑기
 	_bool	FindPathRandAblePostition(_int fRange, _float3* GoalPos);
 
-	_float3 Get_GoalPostiton()const;
+	_float3 Get_PathGoalPostition()const;
 
 	void	Set_IsTerrainHeight(_bool b) { mIsTerrainHeight = b; }
 	_bool	Get_IsTerrainHeight() const { return mIsTerrainHeight; }
 	_float3	Get_TerrainHeightPostition() ;
+	void	Tick_LookUpdate(_double time);
+
 
 public: // Animation
 // 애니메이션 이름으로 설정
-	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name);
+	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name, _int index=-1);
 	HRESULT Set_AniIndex(_uint AniIndex);
 	HRESULT Set_AniString(string str);
 
@@ -122,7 +128,9 @@ protected: // 3D모델 Com / DESC 추가
 
 	// MOVE
 	list<CCell*>				mCurrentPathList;
-	_float3						mCurrentPosition;
+	//_float3						mCurrentPosition;
+	_float3						mGoalPosition; // 목표위치
+	_float3						mLookPostiton;
 
 	// 지형
 	E_MAPTYPE					meCurrentMap = MAPTYPE_END;
@@ -138,8 +146,13 @@ protected: // 3D모델 Com / DESC 추가
 
 	_bool						mIsTerrainHeight = false;
 
+	_float						mRotSpeed= 3.0f;
+	_float						mTimeForSpeed=0.3f;
+
+
 	// TICKTYPE
 	E_TICK_TYPE					meTickType = TICK_TYPE_END;
+
 
 	const _float mMouseOffset = 4;
 

@@ -90,6 +90,9 @@ public:
 	void Restart()
 	{
 		mbEnd_Sequnce = false;
+		mCurrentLeafTree = nullptr;
+		mPreLeafTree = nullptr;
+
 	}
 
 	// 노드가 끝났을떄만 다음노드 업데이트

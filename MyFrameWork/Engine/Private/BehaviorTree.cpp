@@ -83,7 +83,8 @@ HRESULT CBehaviorTree::Select_Sequnce(string seqTag)
 	CNode_Seqeunce* seq = Find_Seqeunce(seqTag);
 	if (seq == nullptr)
 		return E_FAIL;
-
+	if (mCurrentSequnence)
+		mCurrentSequnence->End_Sequnce();
 	mCurrentSequnence = seq;
 	mCurrentKey = seqTag;
 	mCurrentSequnence->Restart();

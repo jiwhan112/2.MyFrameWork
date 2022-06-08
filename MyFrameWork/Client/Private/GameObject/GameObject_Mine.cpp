@@ -38,6 +38,8 @@ HRESULT CGameObject_Mine::Init_Unit()
 {
 	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
+	mTimeForSpeed = 0.5f;
+	mRotSpeed = 3.0f;
 
 	_float size = 0.6f;
 	mComTransform->Scaled(_float3(size, size, size));
@@ -84,6 +86,8 @@ HRESULT CGameObject_Mine::Init_AI_IDLE()
 	moveRun->SetUp_Target(this);
 
 	// Set Action
+	_float WalkTimeMax = mTimeForSpeed;
+	_float RunTimeMax = mTimeForSpeed*0.5f;
 
 	dealyTime->Set_TimeMax(3.0f);
 	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
@@ -91,28 +95,28 @@ HRESULT CGameObject_Mine::Init_AI_IDLE()
 
 	moveWalk->Set_AniType(CAction_MOVE::MOVE_ANI_WALK);
 	moveWalk->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-	moveWalk->Set_TimeMax(0.6f);
+	moveWalk->Set_TimeMax(WalkTimeMax);
 
 	moveRun->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
 	moveRun->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-	moveRun->Set_TimeMax(0.3f);
+	moveRun->Set_TimeMax(RunTimeMax);
 
 	// SetSeq
 	// IDLE1: µ¹¾Æ´Ù´Ô
-	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-	Seq_IDLE1->PushBack_LeafNode(dealyAniDance->Clone());
+//	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
+//	Seq_IDLE1->PushBack_LeafNode(dealyAniDance->Clone());
 //	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
 	Seq_IDLE1->PushBack_LeafNode(moveWalk->Clone());
 
 	// IDLE2: ¶Ù¾î´Ù´Ô
-	Seq_IDLE2->PushBack_LeafNode(dealyAniIdle->Clone());
-	Seq_IDLE2->PushBack_LeafNode(dealyAniDance->Clone());
+//	Seq_IDLE2->PushBack_LeafNode(dealyAniIdle->Clone());
+//	Seq_IDLE2->PushBack_LeafNode(dealyAniDance->Clone());
 	Seq_IDLE2->PushBack_LeafNode(moveRun->Clone());
 
 	// IDLE3: ÃãÃß±â
 	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
+//	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
+//	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
 	Seq_IDLE3->PushBack_LeafNode(moveWalk->Clone());
 
 	mComBehavior->Add_Seqeunce("IDLE1", Seq_IDLE1);
@@ -148,10 +152,13 @@ HRESULT CGameObject_Mine::Init_AI_Tile()
 	CAction_Function* function2 = (CAction_Function*)mComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 	function2->SetUp_Target(this);
 
+	_float WalkTimeMax = mTimeForSpeed;
+	_float RunTimeMax = mTimeForSpeed * 0.5f;
+
 	dealyTime->Set_TimeMax(3.0f);
 	dealyAniDig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
 	moveRun->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	moveRun->Set_TimeMax(0.3f);
+	moveRun->Set_TimeMax(RunTimeMax);
 	moveRun->Set_Postition(CAction_MOVE::MOVE_POS_TILE);
 
 	function1->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
@@ -196,16 +203,16 @@ void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
 
 	// ¶Õ¸° Å¸ÀÏ À§Ä¡ Ã£±â
 	_float3 GoalPos =  tile->Get_AbleTilePos(0.5f);
-	mTileGoalPostiton = GoalPos;
-
+	
 	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
 	_uint GoalIndex = StartIndex;
 
 	// ÇØ´ç À§Ä¡ÀÇ ³×ºñ¸Ş½Ã ¼¿ ÀÎµ¦½º ¹İÈ¯
-	if (mCurrentNavi->Get_PickPosForIndex(mTileGoalPostiton, &GoalIndex))
+	if (mCurrentNavi->Get_PickPosForIndex(GoalPos, &GoalIndex))
 	{
 		// °æ·Î Å½»ö
 		mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
+		mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
 	}
 
 	else

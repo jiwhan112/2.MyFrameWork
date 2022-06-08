@@ -164,15 +164,12 @@ HRESULT CAction_MOVE::NativeConstruct()
 	switch (meMoveType)
 	{
 	case Client::CAction_MOVE::MOVE_POS_NEAR:
-		if (mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition) == false)
-		{
-			return S_FALSE;
-		}
+		mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition);
+		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
 		break;
 	case Client::CAction_MOVE::MOVE_POS_TILE:
 		// 이미 탐색된 정보 활용
-		mGoalPosition = mDynamicObject->Get_GoalPostiton();
-
+		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
 		break;
 	case Client::CAction_MOVE::MOVE_POS_PICK:
 		mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
@@ -183,7 +180,6 @@ HRESULT CAction_MOVE::NativeConstruct()
 	default:
 		break;
 	}
-
 
 	mIsMoveNaviPath = true;
 	mIsMoveCell = false;
@@ -201,13 +197,15 @@ HRESULT CAction_MOVE::Action(_double TimeDelta)
 		{
 			// 애니메이션 결정
 			if (meMoveAni == CAction_MOVE::MOVE_ANI_RUN)
-				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN);
+				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN,0);
 
 			else if (meMoveAni == CAction_MOVE::MOVE_ANI_WALK)
-				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_WALK);
+				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_WALK,0);
 
-			_float3 newLook = _float3(mNextGoalPosition.x, mStartPosition.y, mNextGoalPosition.z);
-			mDynamicObject->Get_ComTransform()->LookAt(newLook);
+			// _float3 newLook = _float3(mNextGoalPosition.x, mStartPosition.y, mNextGoalPosition.z);
+			// mDynamicObject->Get_ComTransform()->LookAt(newLook);
+			mDynamicObject->Set_LookPos(mNextGoalPosition);
+
 			mCurrentTimer += TimeDelta;
 			_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mNextGoalPosition, mCurrentTimer, mTimeMax);
 
@@ -236,7 +234,7 @@ HRESULT CAction_MOVE::Action(_double TimeDelta)
 			{
 				mIsMoveNaviPath = false;
 				End_Succed();
-				mDynamicObject->Set_Position(mGoalPosition);
+			//	mDynamicObject->Set_Position(mGoalPosition);
 				// mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 			}
@@ -378,7 +376,7 @@ HRESULT CAction_MOVE_TARGET::NativeConstruct()
 	{
 		mDynamicObject->Set_IsTerrainHeight(false);
 		mStartPosition = GetSingle(CGameManager)->Get_PickPos();
-		mStartPosition.y += 20;
+		mStartPosition.y += 5;
 		mGoalPosition = mDynamicObject->Get_TerrainHeightPostition();
 	}
 

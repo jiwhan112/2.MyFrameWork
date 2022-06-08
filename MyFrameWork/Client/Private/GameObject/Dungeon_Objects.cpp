@@ -27,23 +27,7 @@ HRESULT CDungeon_Objects::NativeConstruct_Prototype(ID3D11Device* device, ID3D11
 		FAILED_CHECK(Ready_Camera());
 		FAILED_CHECK(Ready_BackGround());
 		FAILED_CHECK(Ready_GameObjects());
-
-
-		//if (Option == CDungeon_Objects::LEVEL_GAMEOPTION_GAME_DUNGEON)
-		//{
-		//	// 던전 테스트
-		//	Init_GameScene_Dungeon();
-		//}
-		//else if (Option == CDungeon_Objects::LEVEL_GAMEOPTION_GAME_WORLD)
-		//{
-		//	// 월드맵 테스트
-		//	Init_GameScene_World();
-		//}
-		//else if (Option == CDungeon_Objects::LEVEL_GAMEOPTION_GAME)
-		//{
-		//	// 게임
-		//}
-
+		FAILED_CHECK(Ready_StaticObject());
 		
 
 		return S_OK;
@@ -68,7 +52,6 @@ HRESULT CDungeon_Objects::Release_Objects()
 
 	Safe_Release(mDungeonMap);
 	Safe_Release(mWorldMap);
-//	Safe_Release(mTestUnit);
 
 	if (mListVecTiles != nullptr)
 	{
@@ -79,6 +62,12 @@ HRESULT CDungeon_Objects::Release_Objects()
 		mListVecTiles->clear();
 		Safe_Delete(mListVecTiles);
 	}
+
+	for (auto& obj : mStatic_InterActive_Objects)
+	{
+		Safe_Release(obj);
+	}
+
 
 	return S_OK;
 }
@@ -207,6 +196,38 @@ HRESULT CDungeon_Objects::Ready_GameObjects()
 	FAILED_CHECK(GetSingle(CGameInstance)->Push_Object(mCurrentLevel, TAGLAY(LAY_TERRAIN_WORLD), mWorldMap));
 	this->Setup_Terrain_World();
 
+
+	return S_OK;
+}
+
+HRESULT CDungeon_Objects::Ready_StaticObject()
+{
+
+	ZeroMemory(mStatic_InterActive_Objects, sizeof(CGameObject_3D_Static*)*STATICOBJECT_END);
+
+	// 모델명으로 객체 가져오기
+	mStatic_InterActive_Objects[STATICOBJECT_DUNGEONDOOR] = Get_ModelName("Entrance_Outside.fbx");
+	mStatic_InterActive_Objects[STATICOBJECT_WORLDDOOR] = Get_ModelName("Entrance_Outside.fbx", mStatic_InterActive_Objects[STATICOBJECT_DUNGEONDOOR]);
+	mStatic_InterActive_Objects[STATICOBJECT_HEART] = Get_ModelName("ThroneRoom_DungeonHeart.fbx");
+
+
+	COLLIDER_DESC desc;
+	desc.meColliderType = CCollider::COL_SPHERE;
+	desc.mSize = _float3::One * 8;
+
+	mStatic_InterActive_Objects[STATICOBJECT_DUNGEONDOOR]->Set_LoadColliderDESC(desc);
+	mStatic_InterActive_Objects[STATICOBJECT_WORLDDOOR]->Set_LoadColliderDESC(desc);
+
+	COLLIDER_DESC heartColDesc;
+	heartColDesc.meColliderType = CCollider::COL_AABB;
+	heartColDesc.mSize = _float3(1, 5.f, 1);
+
+	mStatic_InterActive_Objects[STATICOBJECT_HEART]->Set_LoadColliderDESC(heartColDesc);
+
+	for (auto& obj : mStatic_InterActive_Objects)
+	{
+		Safe_AddRef(obj);
+	}
 
 	return S_OK;
 }
@@ -357,6 +378,27 @@ list<CGameObject_Base*> CDungeon_Objects::Get_ListObjecID(E_OBJECT_TYPE id)
 		}
 	}
 	return ListObjectID;
+}
+
+CGameObject_3D_Static * CDungeon_Objects::Get_ModelName(string name, CGameObject_3D_Static* samename)
+{
+	auto staticlist = Get_ListObjecID(OBJECT_TYPE_3D_STATIC);
+
+	bool match = false;
+	for (auto& obj : staticlist)
+	{
+		match = (((CGameObject_3D_Static*)obj)->Get_ModelDESC().mModelName == name);
+
+		if (match)
+		{
+			if (samename == obj)
+				continue;
+			else
+				return (CGameObject_3D_Static*)obj;
+		}
+			
+	}
+	return nullptr;
 }
 
 HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)

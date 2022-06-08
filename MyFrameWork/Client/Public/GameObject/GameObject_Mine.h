@@ -44,7 +44,6 @@ public:
 
 protected:
 	class CGameObject_3D_Tile* mSearchTile = nullptr;
-	_float3 mTileGoalPostiton;
 
 public:
 	static CGameObject_Mine* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

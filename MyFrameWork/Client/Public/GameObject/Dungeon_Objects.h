@@ -26,6 +26,16 @@ public:
 	//	LEVEL_GAMEOPTION_END,
 	//};
 
+	enum E_STATICOBJECT
+	{
+		// 각 던전 / 월드에 있는 문
+		STATICOBJECT_DUNGEONDOOR,
+		STATICOBJECT_WORLDDOOR,
+		STATICOBJECT_HEART,
+		STATICOBJECT_END
+
+	};
+
 protected:
 	explicit CDungeon_Objects();
 	virtual ~CDungeon_Objects() = default;
@@ -42,6 +52,8 @@ private:
 	HRESULT Ready_Camera();
 	HRESULT Ready_BackGround();
 	HRESULT Ready_GameObjects();
+	HRESULT Ready_StaticObject();
+
 
 public: // 지형
 	// 타일 찾기
@@ -63,7 +75,11 @@ public: // 지형
 public: // 유닛
 	HRESULT								Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ);
 	list<CGameObject_Base*>				Get_ListObjecID(E_OBJECT_TYPE id);
-//	HRESULT Get_Unit_Map(E_TAYGAMEOBJECT id, _float3 PositionXZ);
+	CGameObject_3D_Static*				Get_ModelName(string name, CGameObject_3D_Static* samename = nullptr);
+	CGameObject_3D_Static*				Get_InterActiveModel(E_STATICOBJECT e)
+	{
+		return mStatic_InterActive_Objects[e];
+	}
 
 
 private: // 지형
@@ -93,9 +109,10 @@ private: // value Tile
 	// 타일객체 벡터 저장
 	list<CGameObject_3D_Tile*>*			mListVecTiles = nullptr;
 
+private: // 상호작용하는 Static 오브젝트
+	CGameObject_3D_Static*				mStatic_InterActive_Objects[E_STATICOBJECT::STATICOBJECT_END];
 
-private:
-//	CGameObject_3D_Dynamic*				mTestUnit = nullptr;
+private: // 상호작용 트리거 볼륨
 
 
 private:
