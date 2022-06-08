@@ -121,6 +121,8 @@ private:
 	ID3D11Device*						mDevice = nullptr;
 	ID3D11DeviceContext*				mDeviceContext = nullptr;
 
+
+
 public:
 	static CDungeon_Objects* Create(ID3D11Device* device, ID3D11DeviceContext* context, E_LEVEL level);
 	virtual void Free() override;

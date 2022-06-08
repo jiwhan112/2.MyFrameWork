@@ -2,6 +2,7 @@
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_MyTerrain.h"
 #include "GameObject/Dungeon_Manager.h"
+#include "GameObject/Dungeon_Objects.h"
 #include "AI/AI_Action.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -165,9 +166,13 @@ HRESULT CGameObject_3D_Dynamic::Init_AI()
 
 HRESULT CGameObject_3D_Dynamic::Init_Create()
 {
-	// 내려오는 연출 / PICK
+	// 시퀀스 정의
+	// 내려오기 PICK OpenDoor
+
+	CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
 	CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
 	CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
+	CNode_Seqeunce* Seq_OpenDoor = CNode_Seqeunce::Create();
 
 	// CloneAction
 	CAction_DEALY* dealyTime = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
@@ -181,17 +186,24 @@ HRESULT CGameObject_3D_Dynamic::Init_Create()
 
 	// Set_Fall
 	dealyTime->Set_TimeMax(0.2f);
-	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_FALL);
+	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL);
 	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
 	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 
 
+	Seq_Create_Fall->PushBack_LeafNode(fallMove->Clone());
+	Seq_Create_Fall->PushBack_LeafNode(dealyAnimation->Clone());
+	Seq_Create_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
+
+	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_MOUSEPOS_FALL);
 	Seq_Fall->PushBack_LeafNode(fallMove->Clone());
-//	Seq_Fall->PushBack_LeafNode(dealyTime->Clone());
 	Seq_Fall->PushBack_LeafNode(dealyAnimation->Clone());
 	Seq_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
 
+
+	Seq_Create_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_Create_Fall);
 
 	Seq_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 	mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
@@ -203,8 +215,17 @@ HRESULT CGameObject_3D_Dynamic::Init_Create()
 	Seq_Pick->Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
 	mComBehavior->Add_Seqeunce("DRAG", Seq_Pick);
 
+	// Set_Door
+	dealyTime->Set_TimeMax(5.0f);
+	Seq_OpenDoor->PushBack_LeafNode(dealyTime->Clone());
+	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET);
+	Seq_OpenDoor->PushBack_LeafNode(fallMove->Clone());
+	Seq_OpenDoor->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	mComBehavior->Add_Seqeunce("DOOR", Seq_OpenDoor);
 
-	mComBehavior->Select_Sequnce("FALL");
+
+
+	mComBehavior->Select_Sequnce("CREATE_FALL");
 
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAnimation);
@@ -217,12 +238,12 @@ HRESULT  CGameObject_3D_Dynamic::Set_MapSetting(E_MAPTYPE type)
 {
 	if (type == CGameObject_3D_Dynamic::MAPTYPE_END)
 		return E_FAIL;
-
 	meCurrentMap = type;
 	mCurrentMap = mTerrain_Maps[type];
 	mCurrentNavi = mComNavi[type];
 
-	// 위치도 정해두기
+
+
 
 	return S_OK;
 }
@@ -263,6 +284,47 @@ HRESULT CGameObject_3D_Dynamic::Add_ColliderDesc(COLLIDER_DESC * desc, int size)
 	return S_OK;
 }
 
+
+HRESULT CGameObject_3D_Dynamic::Switch_MapType()
+{
+
+	// 맵 / 네비메시 변경
+	if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
+		Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
+	else
+		Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
+
+
+	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
+
+	// 초기위치 // 
+	// 초기상태 // 문 나오는 연출
+	_float3 GoalPos = _float3();										
+
+	switch (meCurrentMap)
+	{
+	case CGameObject_3D_Dynamic::MAPTYPE_DUNGEON:
+		// 던전으로 전환
+		GoalPos = mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mDungeonDoorStartPos;
+		mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mDungeonDoorGoalPos;
+		break;
+	case CGameObject_3D_Dynamic::MAPTYPE_WORLD:
+		// 월드로 전환
+		GoalPos = mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mWorldDoorStartPos;
+		mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mWorldDoorGoalPos;
+		break;
+	default:
+		return E_FAIL;
+	}
+	Set_Position(GoalPos);
+	mIsTerrainHeight = false;
+	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN, 0);
+
+	FAILED_CHECK(mComBehavior->Select_Sequnce("DOOR"));
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex)
 {
 	// 잘된다.
@@ -287,6 +349,10 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 				mComBehavior->Select_Sequnce("FALL");
 				meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 			}
+		}
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_WHEEL)& DIS_Down)
+		{
+			Switch_MapType();
 		}
 	}
 
@@ -378,6 +444,7 @@ void CGameObject_3D_Dynamic::Tick_LookUpdate(_double time)
 	if (mLookPostiton != _float3())
 		mComTransform->LookAtY(mLookPostiton, time, mRotSpeed);
 }
+
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()
 {

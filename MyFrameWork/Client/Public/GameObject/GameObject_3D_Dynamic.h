@@ -77,6 +77,11 @@ public: // GetSet
 		mLookPostiton = lookpos;
 	}
 
+	HRESULT Switch_MapType();
+
+	_float3 Get_CustomMovePosition()const { return mCustomMovePostition; }
+
+
 public: // Collision
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
 
@@ -92,7 +97,6 @@ public: // Move AI
 	_bool	Get_IsTerrainHeight() const { return mIsTerrainHeight; }
 	_float3	Get_TerrainHeightPostition() ;
 	void	Tick_LookUpdate(_double time);
-
 
 public: // Animation
 // 애니메이션 이름으로 설정
@@ -128,9 +132,11 @@ protected: // 3D모델 Com / DESC 추가
 
 	// MOVE
 	list<CCell*>				mCurrentPathList;
-	//_float3						mCurrentPosition;
 	_float3						mGoalPosition; // 목표위치
 	_float3						mLookPostiton;
+
+	_float3						mCustomMovePostition = _float3();
+
 
 	// 지형
 	E_MAPTYPE					meCurrentMap = MAPTYPE_END;

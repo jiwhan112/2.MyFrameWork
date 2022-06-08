@@ -206,8 +206,8 @@ HRESULT CDungeon_Objects::Ready_StaticObject()
 	ZeroMemory(mStatic_InterActive_Objects, sizeof(CGameObject_3D_Static*)*STATICOBJECT_END);
 
 	// 모델명으로 객체 가져오기
-	mStatic_InterActive_Objects[STATICOBJECT_DUNGEONDOOR] = Get_ModelName("Entrance_Outside.fbx");
-	mStatic_InterActive_Objects[STATICOBJECT_WORLDDOOR] = Get_ModelName("Entrance_Outside.fbx", mStatic_InterActive_Objects[STATICOBJECT_DUNGEONDOOR]);
+	mStatic_InterActive_Objects[STATICOBJECT_WORLDDOOR] = Get_ModelName("Entrance_Outside.fbx");
+	mStatic_InterActive_Objects[STATICOBJECT_DUNGEONDOOR] = Get_ModelName("Entrance_Outside.fbx", mStatic_InterActive_Objects[STATICOBJECT_DUNGEONDOOR]);
 	mStatic_InterActive_Objects[STATICOBJECT_HEART] = Get_ModelName("ThroneRoom_DungeonHeart.fbx");
 
 

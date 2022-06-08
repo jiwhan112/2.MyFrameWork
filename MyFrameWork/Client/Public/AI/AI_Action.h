@@ -186,9 +186,10 @@ public:
 
 	enum E_MOVETARGET_FALG
 	{
-		MOVETARGETFALG_FALL,
+		MOVETARGETFALG_CREATE_FALL,
+		MOVETARGETFALG_MOUSEPOS_FALL,
+		MOVETARGETFALG_OBJECTTARGET,// °´Ã¼¿¡¼­ Å¸°ÙÀ» °¡Á®¿È
 		MOVETARGETFALG_END,
-
 	};
 
 protected:
@@ -220,7 +221,7 @@ private:
 
 	EasingTypeID				meEasingID = TYPE_Linear;
 //	E_ANIFLAG					meAniFlag = ANIFLAG_IDLE;
-	E_MOVETARGET_FALG			meMoveTargetFlag = MOVETARGETFALG_FALL;
+	E_MOVETARGET_FALG			meMoveTargetFlag = MOVETARGETFALG_CREATE_FALL;
 public:
 	static	CAction_MOVE_TARGET*				Create(const char* str, CGameObject_3D_Dynamic* obj);
 	virtual CAction_MOVE_TARGET*				Clone(void* pArg = nullptr) override;

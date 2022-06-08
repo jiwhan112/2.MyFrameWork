@@ -371,13 +371,25 @@ HRESULT CAction_MOVE_TARGET::NativeConstruct()
 	
 	mCurrentTimer = 0;
 	// 타일을 설정하면 위에서 이동
-
-	if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_FALL)
+	if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL)
+	{
+		mDynamicObject->Set_IsTerrainHeight(false);
+		mStartPosition = mDynamicObject->Get_WorldPostition();
+		mStartPosition.y = 10;
+		mGoalPosition = mDynamicObject->Get_TerrainHeightPostition();
+	}
+	else if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_MOUSEPOS_FALL)
 	{
 		mDynamicObject->Set_IsTerrainHeight(false);
 		mStartPosition = GetSingle(CGameManager)->Get_PickPos();
 		mStartPosition.y += 5;
 		mGoalPosition = mDynamicObject->Get_TerrainHeightPostition();
+	}
+	else if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET)
+	{
+		mDynamicObject->Set_IsTerrainHeight(false);
+		mStartPosition = mDynamicObject->Get_WorldPostition();
+		mGoalPosition = mDynamicObject->Get_CustomMovePosition();
 	}
 
 	return S_OK;
@@ -387,6 +399,12 @@ HRESULT CAction_MOVE_TARGET::Action(_double TimeDelta)
 {
 	mCurrentTimer += TimeDelta;
 	_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(meEasingID, mStartPosition, mGoalPosition, mCurrentTimer, mTimeMax);
+
+	if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET)
+	{
+		mDynamicObject->Get_ComTransform()->LookAt(CurrentPosition);
+	}
+	
 
 	if (mCurrentTimer > mTimeMax)
 	{

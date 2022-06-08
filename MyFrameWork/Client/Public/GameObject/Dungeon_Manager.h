@@ -97,6 +97,15 @@ private:
 public: // DEBUG
 	_float						mDebugValue = 5;
 
+public: // SETTING
+	const _float3 mDungeonDoorGoalPos = _float3(22.4f, 0.010f, 23.5f);
+	const _float3 mDungeonDoorStartPos = _float3(22, 0.010f, 28.5f);
+	const _float3 mWorldDoorStartPos = _float3(59.3f, 8.72f, 4.15f);
+	const _float3 mWorldDoorGoalPos= _float3(52.24f, 8.72f, 11.3f);
+
+
+
+
 public:
 	static CDungeon_Manager* Create(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	virtual void Free() override;
