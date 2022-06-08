@@ -401,6 +401,50 @@ CGameObject_3D_Static * CDungeon_Objects::Get_ModelName(string name, CGameObject
 	return nullptr;
 }
 
+list<CGameObject_3D_Dynamic*>* CDungeon_Objects::Get_UnitList_Dungeon()
+{
+	const list<CGameObject*>* listUnit = GetSingle(CGameManager)->Get_LevelObject_List(TAGLAY(LAY_OBJECT_UNIT));
+	if (listUnit == nullptr)
+		return nullptr;
+	if (mListUnitDanumgeonMap == nullptr)
+		mListUnitDanumgeonMap = NEW list<CGameObject_3D_Dynamic *>();
+
+	mListUnitDanumgeonMap->clear();
+
+	for (auto& obj: *listUnit)
+	{
+		auto oobj = static_cast<CGameObject_3D_Dynamic*>(obj);
+		if (oobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
+		{
+			mListUnitDanumgeonMap->push_front(oobj);
+		}
+	}
+
+	return mListUnitDanumgeonMap;
+}
+
+list<CGameObject_3D_Dynamic*>* CDungeon_Objects::Get_UnitList_World()
+{
+	const list<CGameObject*>* listUnit = GetSingle(CGameManager)->Get_LevelObject_List(TAGLAY(LAY_OBJECT_UNIT));
+	if (listUnit == nullptr)
+		return nullptr;
+	if (mListUnitDanumgeonMap == nullptr)
+		mListUnitDanumgeonMap = NEW list<CGameObject_3D_Dynamic *>();
+
+	mListUnitDanumgeonMap->clear();
+
+	for (auto& obj : *listUnit)
+	{
+		auto oobj = static_cast<CGameObject_3D_Dynamic*>(obj);
+		if (oobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+		{
+			mListUnitDanumgeonMap->push_front(oobj);
+		}
+	}
+
+	return mListUnitDanumgeonMap;
+}
+
 HRESULT CDungeon_Objects::Create_Tiles(E_LEVEL level)
 {
 	// 타일 생성 

@@ -63,8 +63,9 @@ public:
 	_uint		Get_MapSize();
 
 
-	void	Set_ColorFiter(E_SOURCETYPE type, _color* color, _float val);
-	void	Set_MapType(E_MAPTYPE type) { meMapType = type; }
+	void		Set_ColorFiter(E_SOURCETYPE type, _color* color, _float val);
+	void		Set_MapType(E_MAPTYPE type) { meMapType = type; }
+	E_MAPTYPE	Get_MapType()const { return meMapType; }
 
 
 public: // DESC

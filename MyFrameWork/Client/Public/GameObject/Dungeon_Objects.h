@@ -17,14 +17,7 @@ class CDungeon_Objects final :
 	public CBase
 {
 public:
-	//enum E_LEVEL_GAMEOPTION
-	//{
-	//	LEVEL_GAMEOPTION_GAME,
-	//	LEVEL_GAMEOPTION_GAME_DUNGEON,
-	//	LEVEL_GAMEOPTION_GAME_WORLD,
-	//	LEVEL_GAMEOPTION_TOOL,
-	//	LEVEL_GAMEOPTION_END,
-	//};
+
 
 	enum E_STATICOBJECT
 	{
@@ -81,6 +74,9 @@ public: // 유닛
 		return mStatic_InterActive_Objects[e];
 	}
 
+	list<CGameObject_3D_Dynamic*>*			Get_UnitList_Dungeon();
+	list<CGameObject_3D_Dynamic*>*			Get_UnitList_World();
+
 
 private: // 지형
 	HRESULT Create_Tiles(E_LEVEL level);
@@ -108,6 +104,9 @@ private: // value Tile
 	CGameObject_MyTerrain*				mWorldMap = nullptr;
 	// 타일객체 벡터 저장
 	list<CGameObject_3D_Tile*>*			mListVecTiles = nullptr;
+
+	list<CGameObject_3D_Dynamic*>*		mListUnitDanumgeonMap = nullptr;
+	list<CGameObject_3D_Dynamic*>*		mListUnitWorldMap= nullptr;
 
 private: // 상호작용하는 Static 오브젝트
 	CGameObject_3D_Static*				mStatic_InterActive_Objects[E_STATICOBJECT::STATICOBJECT_END];

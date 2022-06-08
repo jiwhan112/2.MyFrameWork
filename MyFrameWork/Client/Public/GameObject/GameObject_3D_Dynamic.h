@@ -80,7 +80,10 @@ public: // GetSet
 	HRESULT Switch_MapType();
 
 	_float3 Get_CustomMovePosition()const { return mCustomMovePostition; }
-
+	E_MAPTYPE Get_CurrentMap() const
+	{
+		return meCurrentMap;
+	}
 
 public: // Collision
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);

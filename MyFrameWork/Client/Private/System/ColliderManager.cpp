@@ -143,6 +143,26 @@ bool CColliderManager::Check_Mouse_Terrain()
 		if (terrain == nullptr)
 			continue;
 
+		// 지형 체크
+		auto mapType = terrain->Get_MapType();
+		auto gameModeType = GetSingle(CGameManager)->Get_DaungonManager()->Get_CurrentGameMode();
+		if (gameModeType == CDungeon_Manager::GAMEMODE_DUNGEON)
+		{
+			if ((mapType == CGameObject_MyTerrain::MAPTYPE_DUNGEON) == false)
+			{
+				continue;
+			}
+		}
+		else if (gameModeType == CDungeon_Manager::GAMEMODE_WORLD)
+		{
+			if ((mapType == CGameObject_MyTerrain::MAPTYPE_WORLD) == false)
+			{
+				continue;
+			}
+		}
+
+		
+
 		_float4x4 WorldMatrixInverse = terrain->Get_ComTransform()->GetInvert();
 		CNavigation* navi = terrain->Get_ComNavimesh();
 
@@ -162,21 +182,19 @@ bool CColliderManager::ColCheck_MOUSE()
 
 	// 모든 충돌체랑 마우스위치랑 비교
 	mWorldRay =  GetSingle(CGameInstance)->Get_Ray_World();
-	// 1차적으로 월드의 모든 오브젝트와 비교한다.
-	// 후 구현
+	
+
+	// 현재 게임 모드에 따라 특정 네비 메시와 비교
+	if (mIsMousePick = Check_Mouse_Terrain())
+	{
+		return mIsMousePick;
+	}
 
 	// Static / Dynamic
 	if (mIsMousePick = Check_Mouse_Object(mWorldRay))
 	{
 		return mIsMousePick;
-	}
-
-	// 2차로 지형과 비교한다.
-	// 네비메시와 비교
-	if (mIsMousePick = Check_Mouse_Terrain())
-	{
-		return mIsMousePick;
-	}
+	}	
 
 	return mIsMousePick;
 	
