@@ -86,6 +86,7 @@ public: // GetSet
 	{
 		return meCurrentMap;
 	}
+	_float Get_TimeForSpeed() const { return mTimeForSpeed; }
 
 public: // Collision
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);

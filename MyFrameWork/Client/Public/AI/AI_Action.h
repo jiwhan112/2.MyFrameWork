@@ -18,8 +18,7 @@ protected:
 
 public:
 	// 중복사용으로 초기화 필요
-	virtual HRESULT ReStart(void* pArg = nullptr) = 0;
-	virtual CAction_DynamicBase* Clone() = 0;
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
 
 	void SetUp_Target(CGameObject_3D_Dynamic* targetobj)
 	{
@@ -32,33 +31,6 @@ protected:
 public:
 	virtual void Free()override;
 };
-
-//// Decoator_Base
-//class CDecorator_DynamicBase
-//	:public CNode_Decorator
-//
-//{
-//protected:
-//	explicit CDecorator_DynamicBase(const char* str, CGameObject_3D_Dynamic* obj);
-//	virtual ~CDecorator_DynamicBase() = default;
-//
-//public:
-//	virtual HRESULT									NativeConstruct() = 0;
-//	virtual CDecorator_DynamicBase*					Clone(void* pArg = nullptr) = 0;
-//	virtual E_DECOTYPE								IsCorect(_double timer/*,void* pArg = nullptr*/) = 0;
-//
-//public:
-//	HRESULT	SetUp_Target(CGameObject_3D_Dynamic* targetobj)
-//	{
-//		mDynamicObject = targetobj;
-//	}
-//
-//private:
-//	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
-//
-//public:
-//	virtual void Free()override;
-//};
 
 #pragma endregion AI_Base
 

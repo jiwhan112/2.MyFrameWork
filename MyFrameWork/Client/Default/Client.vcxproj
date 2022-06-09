@@ -165,6 +165,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\AI\AI_Deco.h" />
+    <ClInclude Include="..\Public\AI\AI_Select.h" />
     <ClInclude Include="..\Public\AI\AI_Sequnce.h" />
     <ClInclude Include="..\Public\AI\AI_Action.h" />
     <ClInclude Include="..\Public\Camera_Client.h" />
@@ -249,6 +251,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AI\AI_Select.cpp" />
+    <ClCompile Include="..\Private\AI\AI_Deco.cpp" />
     <ClCompile Include="..\Private\AI\AI_Sequnce.cpp" />
     <ClCompile Include="..\Private\AI\AI_Action.cpp" />
     <ClCompile Include="..\Private\Camera_Client.cpp" />

@@ -441,6 +441,12 @@
     <ClInclude Include="..\Public\AI\AI_Sequnce.h">
       <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Sequnce</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AI\AI_Deco.h">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\03.Deco</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI\AI_Select.h">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\04.Selector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -623,6 +629,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI\AI_Sequnce.cpp">
       <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Sequnce</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI\AI_Deco.cpp">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\03.Deco</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI\AI_Select.cpp">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\04.Selector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

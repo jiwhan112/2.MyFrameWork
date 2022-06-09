@@ -26,20 +26,6 @@ void CAction_DynamicBase::Free()
 	mDynamicObject = nullptr;
 }
 
-//CDecorator_DynamicBase::CDecorator_DynamicBase(const char * str, CGameObject_3D_Dynamic * obj)
-//	:CNode_Decorator(str), mDynamicObject(obj)
-//
-//{
-//
-//}
-//
-//void CDecorator_DynamicBase::Free()
-//{
-//	mDynamicObject = nullptr;
-//}
-
-
-
 CAction_DEALY::CAction_DEALY(const char * str, CGameObject_3D_Dynamic * obj)
 	:CAction_DynamicBase(str, obj)
 {}
@@ -50,7 +36,6 @@ CAction_DEALY::CAction_DEALY(const CAction_DEALY & rhs)
 	meDealyType = rhs.meDealyType;
 	meAnimation = rhs.meAnimation;
 	mTimeMax = rhs.mTimeMax;
-
 }
 
 HRESULT CAction_DEALY::ReStart(void* pArg)

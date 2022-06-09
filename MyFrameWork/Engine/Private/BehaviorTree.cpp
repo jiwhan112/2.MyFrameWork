@@ -396,7 +396,6 @@ list< CNode_LeafTree*>::iterator CNode_Seqeunce::Find_LeafTree_Iter(CNode_LeafTr
 
 HRESULT CNode_Seqeunce::NativeConstruct()
 {
-	mbEnd_Sequnce = false;
 	return S_OK;
 }
 
