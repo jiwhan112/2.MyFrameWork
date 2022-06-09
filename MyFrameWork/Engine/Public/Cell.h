@@ -79,6 +79,7 @@ public:
 
 private:
 	_float3 Get_MeshCenter();
+	_float3 Get_MeshTangent();
 
 
 private:

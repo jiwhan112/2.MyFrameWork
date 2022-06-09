@@ -46,8 +46,6 @@ class CSequnce_IDLE :
 public:
 	typedef struct tag_SeqIdle
 	{
-		_int MinTime = 1;
-		_int MaxTime = 5;
 		CAnimatior::E_COMMON_ANINAME	AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
 		EasingTypeID					mMoveEasingId= TYPE_Linear;
 	}SEQIDLE;

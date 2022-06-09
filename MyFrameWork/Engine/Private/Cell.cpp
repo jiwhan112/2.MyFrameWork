@@ -18,7 +18,7 @@ HRESULT CCell::NativeConstruct(const _float3 * pPoints, _uint iIndex)
 	mLineDir[LINE_BC] = mPoints[POINT_C] - mPoints[POINT_B];
 	mLineDir[LINE_CA] = mPoints[POINT_A] - mPoints[POINT_C];
 
-	mCenterPoint = Get_MeshCenter();
+	mCenterPoint = Get_MeshTangent();
 
 	return S_OK;
 }
@@ -117,7 +117,24 @@ _float3 CCell::Get_MeshCenter()
 
 	return centerPoint;
 }
+_float3 CCell::Get_MeshTangent()
+{
+	_float3 centerTangent = _float3(0,0,0);
 
+
+	if (mIndex % 2)
+	{
+		centerTangent = mPoints[0] + mPoints[1];
+
+	}
+	else
+	{
+		centerTangent = mPoints[0] + mPoints[2];
+
+	}
+	centerTangent *= 0.5f;
+	return centerTangent;
+}
 CCell * CCell::Create( const _float3 * pPoints, _uint iIndex)
 {
 	CCell*	pInstance = NEW CCell();

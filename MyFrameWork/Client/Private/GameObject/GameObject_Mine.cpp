@@ -40,7 +40,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
-	mRotSpeed = 3.0f;
+	mRotSpeed = 10.0f;
 
 	_float size = 0.6f;
 	mComTransform->Scaled(_float3(size, size, size));
@@ -70,8 +70,7 @@ HRESULT CGameObject_Mine::Init_AI_MINE()
 	// IDLE TILE 정보 생성
 	CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
 	CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
-	DefaultIdleDesc.MinTime = 1;
-	DefaultIdleDesc.MaxTime = 3;
+
 	DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
 	DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
 

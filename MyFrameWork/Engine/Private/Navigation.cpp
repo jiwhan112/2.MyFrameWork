@@ -451,6 +451,28 @@ const list<CCell*>& CNavigation::AstartPathFind(_uint StartTileIndex, _uint Goal
 			ParentCell = mVecCells[parentIndex];
 		}
 	}
+
+	
+	if (mListPathList.empty() == false)
+	{
+		_float3 prePoint = _float3();
+		// 같은 경로 제외
+		for (auto iter = mListPathList.begin();iter !=mListPathList.end();)
+		{
+			_float3 CurrentCenter = (*iter)->Get_CenterPoint();
+			if (_float3::Distance(CurrentCenter, prePoint) < 0.1f)
+			{
+				iter = mListPathList.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+			prePoint = CurrentCenter;
+		}
+	}
+
+
 	return mListPathList;
 }
 

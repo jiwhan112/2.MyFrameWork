@@ -94,24 +94,20 @@ HRESULT CSequnce_IDLE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	// IDLE에서 사용할 상태 정의
 	// 딜레이 -> 애니메이션 -> PathMove
-	CAction_DEALY*	dealyTime = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_DEALY*	dealyAni = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_MOVE*	pathMove = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
 
 	_float defaultSpeed = obj->Get_TimeForSpeed();
 
-	dealyTime->Set_TimeMax(1.0f);
 	dealyAni->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 
 	pathMove->Set_AniType(CAction_MOVE::MOVE_ANI_WALK);
 	pathMove->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
 	pathMove->Set_TimeMax(defaultSpeed);
 
-	PushBack_LeafNode(dealyTime->Clone());
 	PushBack_LeafNode(dealyAni->Clone());
 	PushBack_LeafNode(pathMove->Clone());
 
-	Safe_Release(dealyTime);
 	Safe_Release(dealyAni);
 	Safe_Release(pathMove);
 
@@ -128,12 +124,12 @@ void CSequnce_IDLE::Restart(void * SeqData)
 		memcpy(&mSeqData, SeqData, sizeof(SEQIDLE));
 	}
 
-	auto delay = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
-	NULL_CHECK_BREAK(delay);
-	int randTime = CHelperClass::RandomInt(mSeqData.MinTime, mSeqData.MaxTime);
-	((CAction_DEALY*)delay)->Set_TimeMax(randTime);
+	//auto delay = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	//NULL_CHECK_BREAK(delay);
+	//int randTime = CHelperClass::RandomInt(mSeqData.MinTime, mSeqData.MaxTime);
+	//((CAction_DEALY*)delay)->Set_TimeMax(randTime);
 
-	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY, 1);
+	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
 	NULL_CHECK_BREAK(ani);
 	((CAction_DEALY*)ani)->Set_Animation(mSeqData.AniType);
 
@@ -186,6 +182,7 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	PushBack_LeafNode(dealyTime->Clone());
 	PushBack_LeafNode(moveTarget->Clone());
 	PushBack_LeafNode(dealyAnimation->Clone());
+	PushBack_LeafNode(dealyAnimation->Clone());
 
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAnimation);
@@ -222,6 +219,9 @@ void CSequnce_MOVETARGET::Restart(void * SeqData)
 	NULL_CHECK_BREAK(ani);
 	((CAction_DEALY*)ani)->Set_Animation((CAnimatior::E_COMMON_ANINAME)mSeqData.AniType);
 
+	auto ani2 = Find_Action(CAction_DynamicBase::E_ACION_DEALY, 2);
+	NULL_CHECK_BREAK(ani2);
+	((CAction_DEALY*)ani2)->Set_Animation((CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE));
 }
 
 CSequnce_MOVETARGET * CSequnce_MOVETARGET::Create(CGameObject_3D_Dynamic * targetobj)

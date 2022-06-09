@@ -373,7 +373,7 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 		{
 			if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON && meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
 			{
-				mComBehavior->Select_Sequnce("DRAG");
+				mComBehavior->Select_Sequnce("PICK");
 				meTickType = CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK;
 			}
 		}
@@ -608,7 +608,8 @@ HRESULT CGameObject_3D_Dynamic::Select_Door()
 		return E_FAIL;
 	}
 
-
+	Set_Position(Desc.StartPosition);
+	mComTransform->LookAt(Desc.EndPosition);
 	mComBehavior->Select_Sequnce("DOOR",&Desc);
 	return S_OK;
 }
@@ -617,17 +618,17 @@ HRESULT CGameObject_3D_Dynamic::Select_Fall()
 {
 	// 상태전환시 데이터 추가
 	CSequnce_MOVETARGET::SEQMOVETARGET Desc;
-	Desc.Dealytime = 5;
-	Desc.TimeMax = 2;
-	Desc.EasingID = TYPE_Linear;
-	Desc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_RUN;
+	Desc.Dealytime = 0.2f;
+	Desc.TimeMax = 2.0f;
+	Desc.EasingID = TYPE_SinIn;
+	Desc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP;
 
 	_float3 mousePos = GetSingle(CGameManager)->Get_PickPos();
-	mousePos.y += 5;
+	mousePos.y += 10;
+	Set_Position(mousePos);
 	Desc.StartPosition = mousePos;
-	Set_Position(Desc.StartPosition);
-
 	Desc.EndPosition = Get_TerrainHeightPostition();
+	Set_IsTerrainHeight(false);
 
 	mComBehavior->Select_Sequnce("FALL", &Desc);
 	return S_OK;
