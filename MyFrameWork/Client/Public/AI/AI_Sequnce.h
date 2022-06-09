@@ -1,5 +1,9 @@
 #include "BehaviorTree.h"
 
+#include "AI/AI_Action.h"
+#include "AI/AI_Deco.h"
+#include "AI/AI_Select.h"
+
 BEGIN(Client)
 class CGameObject_3D_Dynamic;
 
@@ -19,10 +23,14 @@ public:
 	virtual void Restart(void* SeqData = nullptr)override;
 	void	Setup_Dynamic(CGameObject_3D_Dynamic* obj) { mDynamicObject = obj; }
 
+public: // Search_Action
+	CAction_DynamicBase* Find_Action(CAction_DynamicBase::E_AcionID id,_int index = 0);
+	//CDeco_DynamicBase* Find_Deco();
+	//CSelect_DynamicBase* Find_Select();
+
 protected:
 	void	Setup_TargetNode(CGameObject_3D_Dynamic* obj);
 	void	Setup_RestartNodes();
-
 
 protected:
 	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
@@ -60,21 +68,20 @@ public:
 	virtual void Free()override;
 };
 
-// Seq_MOVETARGET
-class CSequnce_MOVETARGET :
-public CSequnce_Base
+// 임의의 위치 이동 시퀀스
+class CSequnce_MOVETARGET 
+	:public CSequnce_Base
 {
-public:
-	enum E_MOVETYPE
-	{
-		MOVETYPE_FALL_CREATE,
-		MOVETYPE_FALL,
-		MOVETYPE_DOOR,
-		MOVETYPE_END
-	};
+public:	
 	typedef struct tag_SeqMoveTarget
 	{
-		E_MOVETYPE eMoveType;
+		// 대기 -> 움직임 -> 애니메이션;
+		_int Dealytime=1;
+		_uint eEasingID = 0;
+		_uint AniType = 0;
+
+		_float3 StartPosition;
+		_float3 EndPosition;
 
 	}SEQMOVETARGET;
 
@@ -96,6 +103,7 @@ public:
 };
 
 // Seq_TIle
+// 타일 이동 시퀀스
 class CSequnce_TILE:
 	public CSequnce_Base
 {
@@ -125,6 +133,7 @@ public:
 };
 
 // Seq_Pick
+// 클릭 상태 시퀀스
 class CSequnce_PICK:
 	public CSequnce_Base
 {

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+// 시퀀스 해더 XXX
 #include "AI/AI_Action.h"
 
 #include "GameObject/GameObject_3D_Dynamic.h"
@@ -36,6 +37,7 @@ CAction_DEALY::CAction_DEALY(const CAction_DEALY & rhs)
 	meDealyType = rhs.meDealyType;
 	meAnimation = rhs.meAnimation;
 	mTimeMax = rhs.mTimeMax;
+	meAcionID = CAction_DynamicBase::E_ACION_DEALY;
 }
 
 HRESULT CAction_DEALY::ReStart(void* pArg)
@@ -127,12 +129,14 @@ CAction_MOVE::CAction_MOVE(const char * str, CGameObject_3D_Dynamic * obj)
 {
 }
 
-CAction_MOVE::CAction_MOVE(const CAction_MOVE & rhs)
+CAction_MOVE::CAction_MOVE(const CAction_MOVE&  rhs)
 	: CAction_DynamicBase(rhs)
 {
 	mTimeMax = rhs.mTimeMax;
 	meMoveAni = rhs.meMoveAni;
 	meMoveType = rhs.meMoveType;
+	meAcionID = CAction_DynamicBase::E_ACION_MOVEPATH;
+
 
 }
 
@@ -272,6 +276,8 @@ CAction_Function::CAction_Function(const CAction_Function & rhs)
 	, meFuncion(rhs.meFuncion)
 
 {
+	meAcionID = CAction_DynamicBase::E_ACION_FUNCTION;
+
 }
 
 HRESULT CAction_Function::ReStart(void* pArg)
@@ -346,10 +352,9 @@ CAction_MOVE_TARGET::CAction_MOVE_TARGET(const CAction_MOVE_TARGET & rhs)
 {
 	mCurrentTimer = 0;
 	mTimeMax = 2;
-
 	meEasingID = rhs.meEasingID;
-//	meAniFlag = rhs.meAniFlag;
-	meMoveTargetFlag = rhs.meMoveTargetFlag;
+	meAcionID = CAction_DynamicBase::E_ACION_MOVETARGET;
+
 }
 
 HRESULT CAction_MOVE_TARGET::ReStart(void* pArg)
@@ -360,27 +365,7 @@ HRESULT CAction_MOVE_TARGET::ReStart(void* pArg)
 	__super::ReStart(pArg);
 	
 	mCurrentTimer = 0;
-	// 타일을 설정하면 위에서 이동
-	if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL)
-	{
-		mDynamicObject->Set_IsTerrainHeight(false);
-		mStartPosition = mDynamicObject->Get_WorldPostition();
-		mStartPosition.y = 10;
-		mGoalPosition = mDynamicObject->Get_TerrainHeightPostition();
-	}
-	else if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_MOUSEPOS_FALL)
-	{
-		mDynamicObject->Set_IsTerrainHeight(false);
-		mStartPosition = GetSingle(CGameManager)->Get_PickPos();
-		mStartPosition.y += 5;
-		mGoalPosition = mDynamicObject->Get_TerrainHeightPostition();
-	}
-	else if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET)
-	{
-		mDynamicObject->Set_IsTerrainHeight(false);
-		mStartPosition = mDynamicObject->Get_WorldPostition();
-		mGoalPosition = mDynamicObject->Get_CustomMovePosition();
-	}
+	mDynamicObject->Set_IsTerrainHeight(false);
 
 	return S_OK;
 }
@@ -389,12 +374,7 @@ HRESULT CAction_MOVE_TARGET::Action(_double TimeDelta)
 {
 	mCurrentTimer += TimeDelta;
 	_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(meEasingID, mStartPosition, mGoalPosition, mCurrentTimer, mTimeMax);
-
-	if (meMoveTargetFlag == CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET)
-	{
-		mDynamicObject->Get_ComTransform()->LookAt(CurrentPosition);
-	}
-	
+	// mDynamicObject->Get_ComTransform()->LookAt(CurrentPosition);
 
 	if (mCurrentTimer > mTimeMax)
 	{
@@ -404,6 +384,7 @@ HRESULT CAction_MOVE_TARGET::Action(_double TimeDelta)
 	}
 	else
 		mDynamicObject->Set_Position(CurrentPosition);
+
 	// if (_float3::Distance(CurrentPosition, mGoalPosition) < 0.2f)
 	// {
 	// IsMoving = false;

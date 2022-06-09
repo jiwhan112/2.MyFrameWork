@@ -221,7 +221,7 @@ void CBehaviorTree::Free()
 
 HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 {
-	if (mListSequnce.empty())
+	if (mListLeafNodes.empty())
 		return E_FAIL;
 	if (mCurrentLeafTree == nullptr)
 		mCurrentLeafTree = NextNode();
@@ -327,7 +327,7 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 	CNode_LeafTree* returnNode = nullptr;
 	if (mCurrentLeafTree == nullptr)
 	{
-		returnNode = mListSequnce.front();
+		returnNode = mListLeafNodes.front();
 		FAILED_CHECK_NONERETURN(returnNode->ReStart(nullptr));
 
 		return returnNode;
@@ -335,11 +335,11 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 
 	// 현재 노드의 다음 노드를 넘긴다.
 	auto iter = Find_LeafTree_Iter(mCurrentLeafTree);
-	if (iter == mListSequnce.end())
+	if (iter == mListLeafNodes.end())
 		return nullptr;
 	
 	iter++;
-	if (iter == mListSequnce.end())
+	if (iter == mListLeafNodes.end())
 		return nullptr;
 
 	returnNode = (*iter);
@@ -354,7 +354,7 @@ CNode_LeafTree * CNode_Seqeunce::PreNode()
 
 	// 현재 노드의 다음 노드를 넘긴다.
 	auto iter = Find_LeafTree_Iter(mCurrentLeafTree);
-	if (iter == mListSequnce.begin())
+	if (iter == mListLeafNodes.begin())
 		return nullptr;
 
 	iter--;
@@ -365,20 +365,20 @@ CNode_LeafTree * CNode_Seqeunce::PreNode()
 HRESULT CNode_Seqeunce::PushFront_LeafNode(CNode_LeafTree * leaf)
 {
 	// Action / Deco 노드를 넣는다.
-	mListSequnce.push_front(leaf);
+	mListLeafNodes.push_front(leaf);
 	return S_OK;
 }
 
 HRESULT CNode_Seqeunce::PushBack_LeafNode(CNode_LeafTree * leaf)
 {
-	mListSequnce.push_back(leaf);
+	mListLeafNodes.push_back(leaf);
 	return S_OK;
 }
 
 list< CNode_LeafTree*>::iterator CNode_Seqeunce::Find_LeafTree_Iter(CNode_LeafTree * currentTree)
 {
-	list< CNode_LeafTree*>::iterator  iter_begin = mListSequnce.begin();
-	list< CNode_LeafTree*>::iterator  iter_end = mListSequnce.end();
+	list< CNode_LeafTree*>::iterator  iter_begin = mListLeafNodes.begin();
+	list< CNode_LeafTree*>::iterator  iter_end = mListLeafNodes.end();
 
 	list< CNode_LeafTree*>::iterator  iter_retun = iter_end;
 
@@ -413,7 +413,7 @@ CNode_Seqeunce * CNode_Seqeunce::Create()
 
 void CNode_Seqeunce::Free()
 {
-	for (auto leaf: mListSequnce)
+	for (auto leaf: mListLeafNodes)
 	{
 		Safe_Release(leaf);
 	}

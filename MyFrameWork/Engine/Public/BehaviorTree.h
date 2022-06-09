@@ -117,7 +117,7 @@ protected:
 	CNode_LeafTree* mPreLeafTree;
 	
 	// 시퀀스에서는 해당하는 Leaf 노드 라스트로 가지고 있는다.
-	list< CNode_LeafTree*> mListSequnce;	
+	list< CNode_LeafTree*> mListLeafNodes;	
 	_bool		mbEnd_Sequnce = false;
 	E_SEQTYPE	meSeqType = SEQTYPE_IDLE;
 	_uint		mSeqLevel = 0;

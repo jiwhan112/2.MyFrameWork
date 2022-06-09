@@ -11,6 +11,16 @@ class CAction_DynamicBase
 	:public CNode_Action
 
 {
+public:
+	enum E_AcionID
+	{
+		E_ACION_DEALY,
+		E_ACION_MOVEPATH,
+		E_ACION_MOVETARGET,
+		E_ACION_FUNCTION,
+		E_ACION_END,
+	};
+
 protected:
 	explicit CAction_DynamicBase(const char* str, CGameObject_3D_Dynamic* obj);
 	explicit CAction_DynamicBase(const CAction_DynamicBase& rhs);
@@ -24,9 +34,11 @@ public:
 	{
 		mDynamicObject = targetobj;
 	}
+	E_AcionID Get_ACIONID() const { return meAcionID; };
 
 protected:
 	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
+	E_AcionID				meAcionID = E_ACION_END;
 
 public:
 	virtual void Free()override;
@@ -147,21 +159,6 @@ class CAction_MOVE_TARGET
 	:public CAction_DynamicBase
 {
 public:
-	// 움직이는 애니메이션
-	//enum E_ANIFLAG
-	//{
-	//	ANIFLAG_IDLE,
-	//	ANIFLAG_END,
-
-	//};
-
-	enum E_MOVETARGET_FALG
-	{
-		MOVETARGETFALG_CREATE_FALL,
-		MOVETARGETFALG_MOUSEPOS_FALL,
-		MOVETARGETFALG_OBJECTTARGET,// 객체에서 타겟을 가져옴
-		MOVETARGETFALG_END,
-	};
 
 protected:
 	explicit CAction_MOVE_TARGET(const char* str, CGameObject_3D_Dynamic* obj);
@@ -174,12 +171,11 @@ public:
 
 //	void Set_AniFlag(E_ANIFLAG e) { meAniFlag = e; };
 	void Set_EasingFlag(EasingTypeID e) { meEasingID = e; };
-	void Set_MoveTargetFlag(E_MOVETARGET_FALG e) { meMoveTargetFlag = e; };
-	//void Set_Postition(_float3 s,_float3 g) 
-	//{
-	//	mStartPosition = s;
-	//	mGoalPosition = g;
-	//};
+	void Set_Postition(_float3 s, _float3 g)
+	{
+		mStartPosition = s;
+		mGoalPosition = g;
+	};
 
 private:
 	_double						mTimeMax;
@@ -188,11 +184,8 @@ private:
 	_float3						mGoalPosition;
 	_float3						mStartPosition;
 
-//	bool						mIsMoving = false;
-
 	EasingTypeID				meEasingID = TYPE_Linear;
-//	E_ANIFLAG					meAniFlag = ANIFLAG_IDLE;
-	E_MOVETARGET_FALG			meMoveTargetFlag = MOVETARGETFALG_CREATE_FALL;
+
 public:
 	static	CAction_MOVE_TARGET*				Create(const char* str, CGameObject_3D_Dynamic* obj);
 	virtual CAction_MOVE_TARGET*				Clone() override;

@@ -1,9 +1,5 @@
 #include "stdafx.h"
 #include "AI/AI_Sequnce.h"
-#include "AI/AI_Action.h"
-#include "AI/AI_Deco.h"
-#include "AI/AI_Select.h"
-
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_Mine.h"
 
@@ -17,13 +13,33 @@ HRESULT CSequnce_Base::NativeConstruct(CGameObject_3D_Dynamic * obj)
 void CSequnce_Base::Restart(void * SeqData)
 {
 	__super::Restart(SeqData);
-	
+}
+
+CAction_DynamicBase * CSequnce_Base::Find_Action(CAction_DynamicBase::E_AcionID id, _int index)
+{
+	int cnt = 0;
+	for (auto& obj: mListLeafNodes)
+	{
+		if (obj->Get_TREEID() == CNode_LeafTree::LEAFTREE_ID_ACTION)
+		{
+			CAction_DynamicBase* castObj = static_cast<CAction_DynamicBase*>(obj);
+			if (castObj->Get_ACIONID() == id)
+			{
+				if (cnt == index)
+					return castObj;
+				else
+					cnt++;
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 void CSequnce_Base::Setup_TargetNode(CGameObject_3D_Dynamic * obj)
 {
 	// 내부에 같은 타겟 세팅
-	for (auto & node : mListSequnce)
+	for (auto & node : mListLeafNodes)
 	{
 		CNode_LeafTree::E_LEAFTREE_ID eId = node->Get_TREEID();
 
@@ -32,12 +48,12 @@ void CSequnce_Base::Setup_TargetNode(CGameObject_3D_Dynamic * obj)
 		case Engine::CNode_LeafTree::LEAFTREE_ID_ACTION:
 			static_cast<CAction_DynamicBase*>(node)->SetUp_Target(obj);
 			break;
-		case Engine::CNode_LeafTree::LEAFTREE_ID_DECORATOR:
-			static_cast<CDeco_DynamicBase*>(node)->SetUp_Target(obj);
-			break;
-		case Engine::CNode_LeafTree::LEAFTREE_ID_SELECTER:
-			static_cast<CSelect_DynamicBase*>(node)->SetUp_Target(obj);
-			break;
+		//case Engine::CNode_LeafTree::LEAFTREE_ID_DECORATOR:
+		//	static_cast<CDeco_DynamicBase*>(node)->SetUp_Target(obj);
+		//	break;
+		//case Engine::CNode_LeafTree::LEAFTREE_ID_SELECTER:
+		//	static_cast<CSelect_DynamicBase*>(node)->SetUp_Target(obj);
+		//	break;
 		case Engine::CNode_LeafTree::LEAFTREE_ID_END:
 			break;
 		default:
@@ -50,7 +66,7 @@ void CSequnce_Base::Setup_TargetNode(CGameObject_3D_Dynamic * obj)
 void CSequnce_Base::Setup_RestartNodes()
 {
 	// 전체 초기화
-	for (auto & node : mListSequnce)
+	for (auto & node : mListLeafNodes)
 	{
 		FAILED_CHECK_NONERETURN(node->ReStart());
 	}
@@ -132,7 +148,6 @@ HRESULT CSequnce_IDLE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	// 객체 연결
 	Setup_TargetNode(obj);
-	Setup_RestartNodes();
 	return S_OK;
 }
 
@@ -172,52 +187,26 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	if (ComBehavior == nullptr)
 		return E_FAIL;
 
-
-	//CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
-	//CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
-	//CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
-	//CNode_Seqeunce* Seq_OpenDoor = CNode_Seqeunce::Create();
-
 	// CloneAction
-	CAction_DEALY* dealyTime = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	CAction_DEALY* dealyAnimation = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	CAction_MOVE_TARGET* moveTarget = (CAction_MOVE_TARGET*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
+	// 대기 -> 움직임 -> 애니메이션;
+	CAction_DEALY*			dealyTime = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_MOVE_TARGET*	moveTarget = (CAction_MOVE_TARGET*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
+	CAction_DEALY*			dealyAnimation = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 
-	// Set_Fall
+	// Create Fall
 	dealyTime->Set_TimeMax(0.2f);
 	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
-	moveTarget->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL);
 
+	PushBack_LeafNode(dealyTime->Clone());
 	PushBack_LeafNode(moveTarget->Clone());
 	PushBack_LeafNode(dealyAnimation->Clone());
-	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-	PushBack_LeafNode(dealyAnimation->Clone());
 
-	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_MOUSEPOS_FALL);
-	//Seq_Fall->PushBack_LeafNode(fallMove->Clone());
-	//Seq_Fall->PushBack_LeafNode(dealyAnimation->Clone());
-	//Seq_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
-
-
-	//mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_Create_Fall);
-
-	//Seq_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
-	//mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
-
-	//// Set_Door
-	//dealyTime->Set_TimeMax(5.0f);
-	//Seq_OpenDoor->PushBack_LeafNode(dealyTime->Clone());
-	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET);
-	//Seq_OpenDoor->PushBack_LeafNode(fallMove->Clone());
-	//mComBehavior->Add_Seqeunce("DOOR", Seq_OpenDoor);
-	
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAnimation);
 	Safe_Release(moveTarget);
 
 	// 객체 연결
 	Setup_TargetNode(obj);
-	Setup_RestartNodes();
 
 	return S_OK;
 }
@@ -229,6 +218,20 @@ void CSequnce_MOVETARGET::Restart(void * SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQMOVETARGET));
 	}
+	// 초기화시 정의된 Key 값으로 객체에 넣는다. 
+
+	// 대기 -> 움직임 -> 애니메이션;
+	auto delay = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	((CAction_DEALY*)delay)->Set_TimeMax(mSeqData.Dealytime);
+
+
+	auto targetMove = Find_Action(CAction_DynamicBase::E_ACION_MOVETARGET);
+	((CAction_MOVE_TARGET*)targetMove)->Set_EasingFlag((EasingTypeID)mSeqData.eEasingID);
+	((CAction_MOVE_TARGET*)targetMove)->Set_Postition(mSeqData.StartPosition, mSeqData.EndPosition);
+
+	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY, 1);
+	((CAction_DEALY*)ani)->Set_Animation((CAnimatior::E_COMMON_ANINAME)mSeqData.AniType);
+
 }
 
 CSequnce_MOVETARGET * CSequnce_MOVETARGET::Create(CGameObject_3D_Dynamic * targetobj)
@@ -294,7 +297,6 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	// 객체 연결
 	Setup_TargetNode(obj);
-	Setup_RestartNodes();
 	return S_OK;
 }
 
@@ -348,7 +350,6 @@ HRESULT CSequnce_PICK::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	// 객체 연결
 	Setup_TargetNode(obj);
-	Setup_RestartNodes();
 
 	return S_OK;
 }
