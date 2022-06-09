@@ -115,6 +115,8 @@ protected:
 	virtual HRESULT Set_Component() override;
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
+	HRESULT Set_Sequnce(const char* statename, void* desc);
+
 
 protected:
 	HRESULT Add_Socket(string modelName,string boneName);

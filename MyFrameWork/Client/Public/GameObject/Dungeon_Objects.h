@@ -17,8 +17,6 @@ class CDungeon_Objects final :
 	public CBase
 {
 public:
-
-
 	enum E_STATICOBJECT
 	{
 		// 각 던전 / 월드에 있는 문
@@ -50,7 +48,7 @@ private:
 
 public: // 지형
 	// 타일 찾기
-	CGameObject_3D_Tile* FInd_TIleForIndex(_int TileIndex) const;
+	CGameObject_3D_Tile* Find_TileForIndex(_int TileIndex) const;
 	// 타일 지우기
 	HRESULT RemoveTile(CGameObject_3D_Tile* pTIle);
 	// 타일 업데이트

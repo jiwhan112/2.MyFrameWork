@@ -22,21 +22,21 @@ HRESULT CDungeon_Task::Add_Task(TASKBASE * task)
 	return E_FAIL;
 }
 
-HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,_uint index)
+HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,void* desc)
 {
 	TASKBASE* base = nullptr;
 	switch (id)
 	{
 	case Client::CDungeon_Task::TASK_TILE:
-		base = NEW TASKTILE(index);
+		base = NEW TASKTILE(*(_uint*)desc);
 		base->mTaskID = id;
 		break;
 	case Client::CDungeon_Task::TASK_GOLD:
-		base = NEW TASKTILE(index);
+		base = NEW TASKTILE(*(_uint*)desc);
 		base->mTaskID = id;	
 		break;
 	case Client::CDungeon_Task::TASK_MOVE_WORLD:
-		base = NEW TASKMAP(index);
+		base = NEW TASKMAP(*(_float3*)desc);
 		base->mTaskID = id; 
 		break;
 	case Client::CDungeon_Task::TASK_END:
@@ -50,18 +50,18 @@ HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,_uint index)
 
 HRESULT CDungeon_Task::Add_Task_Tile_Rock(_uint index)
 {
-	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_TILE, index);
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_TILE, (void*)&index);
 }
 
 HRESULT CDungeon_Task::Add_Task_Tile_Gold(_uint index)
 {
-	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_GOLD, index);
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_GOLD, (void*)&index);
 }
 
-HRESULT CDungeon_Task::Add_Task_Tile_MoveWorld(_uint index)
+HRESULT CDungeon_Task::Add_Task_Tile_MoveWorld(_float3 Worldpos)
 {
 
-	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_MOVE_WORLD, index);
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_MOVE_WORLD, (void*)&Worldpos);
 }
 
 

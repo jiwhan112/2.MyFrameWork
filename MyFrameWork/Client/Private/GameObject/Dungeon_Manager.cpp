@@ -153,7 +153,7 @@ HRESULT CDungeon_Manager::Set_CameraMove(E_CAMERAMODE eMode)
 CGameObject_3D_Tile * CDungeon_Manager::FInd_TIleForIndex(_int TileIndex) const
 {
 	NULL_CHECK_BREAK(mDungeon_Objects);
-	return mDungeon_Objects->FInd_TIleForIndex(TileIndex);
+	return mDungeon_Objects->Find_TileForIndex(TileIndex);
 }
 
 HRESULT CDungeon_Manager::RemoveTile(CGameObject_3D_Tile * pTIle)
@@ -218,7 +218,7 @@ _bool CDungeon_Manager::Task_Mine(TASKBASE* task)
 	// 1. 유닛과 타일을 찾음
 	auto unitlist = mDungeon_Objects->Get_ListObjecID(OBJECT_TYPE_3D_DYNAMIC_MINE);
 	_uint tileindex =  static_cast<TASKTILE*>(task)->mTileIndex;
-	CGameObject_3D_Tile* tile = mDungeon_Objects->FInd_TIleForIndex(tileindex);
+	CGameObject_3D_Tile* tile = mDungeon_Objects->Find_TileForIndex(tileindex);
 
 	_float maxdis = INT8_MAX;
 	CGameObject_Mine *SearchMine = nullptr;
@@ -257,37 +257,19 @@ _bool CDungeon_Manager::Task_WorldUnit(TASKBASE * task)
 
 	// 1. 월드 유닛 / 월드 타일 인덱스 검색
 	auto unitlist = mDungeon_Objects->Get_UnitList_World(); 
-	_uint worldIndex = static_cast<TASKMAP*>(task)->mMapIndex;
-	//_float3 Postiton = mDungeon_Objects->FInd_TIleForIndex(worldIndex);
+	_float3 worldPos = static_cast<TASKMAP*>(task)->mWorldMapPickPos;
+	_uint  GoalTileIndex = mDungeon_Objects->Get_WorldMap()->Get_TileIndex(worldPos);
 
 
-	//// 2. 정보전달 
-	//for (auto& unit : unitlist)
-	//{
-	//	// 타일과 가까운 유닛 찾기
-	//	_float distance = _float3::Distance(unit->Get_WorldPostition(), tile->Get_WorldPostition());
-	//	if (distance < maxdis)
-	//	{
-	//		maxdis = distance;
-	//		SearchMine = (CGameObject_Mine*)unit;
-	//	}
-	//}
+	// 2. 유닛에게 정보 전달 
+	for (auto& unit : *unitlist)
+	{
+		//unit->Set_WorldGoalIndex(GoalTileIndex);
 
-	//if (SearchMine == nullptr)
-	//	return false;
+		//unit->Set_State();>
+	}
 
-
-	//// 3. 유닛에게 정보전달
-	//if (task->mTaskID == CDungeon_Task::TASK_TILE)
-	//	SearchMine->Set_Dig_Tile(tile);
-
-	//else if (task->mTaskID == CDungeon_Task::TASK_GOLD)
-	//	SearchMine->Set_Dig_Gold(tile);
-
-
-	//Safe_Release(task);
-
-
+	Safe_Delete(task);
 	return true;
 }
 

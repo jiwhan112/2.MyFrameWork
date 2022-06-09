@@ -28,13 +28,13 @@ public:
 
 private:
 	HRESULT Add_Task(TASKBASE* task);
-	HRESULT Add_Task(CDungeon_Task::E_TASK_TYPE id, _uint index);
+	HRESULT Add_Task(CDungeon_Task::E_TASK_TYPE id, void* desc);
 
 public:
 	// 글로벌 작업 저장
 	HRESULT Add_Task_Tile_Rock(_uint index);
 	HRESULT Add_Task_Tile_Gold(_uint index);
-	HRESULT Add_Task_Tile_MoveWorld(_uint index);
+	HRESULT Add_Task_Tile_MoveWorld(_float3 Worldpos);
 
 	TASKBASE* Get_BackTask();
 
@@ -70,10 +70,10 @@ struct TASKMAP
 	:public TASKBASE
 {
 public:
-	TASKMAP(_uint index) { mMapIndex = index; }
+	TASKMAP(_float3 Pos) { mWorldMapPickPos = Pos; }
 
 public:
-	_uint						mMapIndex = 0;
+	_float3						mWorldMapPickPos ;
 
 };
 

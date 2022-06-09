@@ -262,8 +262,6 @@ HRESULT CGameObject_3D_Dynamic::Init_Create()
 	Seq_OpenDoor->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 	mComBehavior->Add_Seqeunce("DOOR", Seq_OpenDoor);
 
-
-
 	mComBehavior->Select_Sequnce("CREATE_FALL");
 
 	Safe_Release(dealyTime);
@@ -573,6 +571,13 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 	CurrentPostiton.y = terrain->Get_HeightY(CurrentPostiton);
 	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, CurrentPostiton.ToVec4(1));
 	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Set_Sequnce(const char * statename, void * desc)
+{
+	// 각 상태마다 void 포인터로 넘겨서 정보전달..
+	FAILED_CHECK(mComBehavior->Select_Sequnce(statename));
+	return E_NOTIMPL;
 }
 
 HRESULT CGameObject_3D_Dynamic::Add_Socket(string modelName,string boneName)

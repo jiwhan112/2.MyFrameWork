@@ -315,7 +315,7 @@ HRESULT CDungeon_Objects::ResetTile_Tool(TERRAIN_DESC * data)
 	return S_OK;
 }
 
-CGameObject_3D_Tile * CDungeon_Objects::FInd_TIleForIndex(_int TileIndex) const
+CGameObject_3D_Tile * CDungeon_Objects::Find_TileForIndex(_int TileIndex) const
 {
 	for (auto& obj : *mListVecTiles)
 	{
@@ -589,7 +589,7 @@ HRESULT CDungeon_Objects::Update_Collision_Navi2Tile(_uint index)
 		return E_FAIL;
 
 	// 네비 메시와 충돌체 충돌..
-	CGameObject_3D_Tile* tile = FInd_TIleForIndex(index);
+	CGameObject_3D_Tile* tile = Find_TileForIndex(index);
 	int maxcount = 0;
 	if (tile == nullptr)
 		return E_FAIL;
