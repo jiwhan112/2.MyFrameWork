@@ -239,19 +239,6 @@ public:
 
 #pragma endregion ACTIONS
 
-#pragma region DECO
 
-//class CDecorator_INT
-//	:public CNode_Decorator
-//{
-//	virtual ~CDecorator_INT() = default;
-//
-//public:
-//	// CNode_Decorator을(를) 통해 상속됨
-//	virtual E_DECOTYPE IsCorect(_double timer) override;
-//
-//};
-
-#pragma endregion DECO
 
 END

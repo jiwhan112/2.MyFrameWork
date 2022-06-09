@@ -5,7 +5,7 @@
 #include "GameObject/Dungeon_Objects.h"
 #include "GameObject/GameObject_Socket.h"
 
-#include "AI/AI_Action.h"
+#include "AI/AI_Sequnce.h"
 
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
@@ -201,73 +201,77 @@ HRESULT CGameObject_3D_Dynamic::Init_Unit()
 HRESULT CGameObject_3D_Dynamic::Init_AI()
 {
 	// 유닛마다 상속해서 초기화
-	FAILED_CHECK(Init_Create());
+	FAILED_CHECK(Init_AI_Dynamic());
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Init_Create()
+HRESULT CGameObject_3D_Dynamic::Init_AI_Dynamic()
 {
-	// 시퀀스 정의
+	// 다이나믹 객체 공통 정의 AI
+
 	// 내려오기 PICK OpenDoor
 
-	CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
-	CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
-	CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
-	CNode_Seqeunce* Seq_OpenDoor = CNode_Seqeunce::Create();
+	CSequnce_MOVETARGET* Seq_CreateFall = CSequnce_MOVETARGET::Create(this);
+	mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_CreateFall);
 
-	// CloneAction
-	CAction_DEALY* dealyTime = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	dealyTime->SetUp_Target(this);
-	CAction_DEALY* dealyAnimation = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	dealyAnimation->SetUp_Target(this);
-	CAction_DEALY* dealyAniIdle = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	dealyAniIdle->SetUp_Target(this);
-	CAction_MOVE_TARGET* fallMove = (CAction_MOVE_TARGET*)mComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
-	fallMove->SetUp_Target(this);
+	CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
+	mComBehavior->Add_Seqeunce("FALL", Seq_CreateFall);
 
-	// Set_Fall
-	dealyTime->Set_TimeMax(0.2f);
-	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL);
-	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
-	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
+	CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
+	mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
 
-	Seq_Create_Fall->PushBack_LeafNode(fallMove->Clone());
-	Seq_Create_Fall->PushBack_LeafNode(dealyAnimation->Clone());
-	Seq_Create_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
-
-	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_MOUSEPOS_FALL);
-	Seq_Fall->PushBack_LeafNode(fallMove->Clone());
-	Seq_Fall->PushBack_LeafNode(dealyAnimation->Clone());
-	Seq_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
-
-
-	Seq_Create_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
-	mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_Create_Fall);
-
-	Seq_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
-	mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
-
-	// Set_Pick
-	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG);
-	Seq_Pick->PushBack_LeafNode(dealyAnimation->Clone());
-	// LOOP 타입은 시퀀스를 반복한다.
-	Seq_Pick->Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
-	mComBehavior->Add_Seqeunce("DRAG", Seq_Pick);
-
-	// Set_Door
-	dealyTime->Set_TimeMax(5.0f);
-	Seq_OpenDoor->PushBack_LeafNode(dealyTime->Clone());
-	fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET);
-	Seq_OpenDoor->PushBack_LeafNode(fallMove->Clone());
-	Seq_OpenDoor->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
-	mComBehavior->Add_Seqeunce("DOOR", Seq_OpenDoor);
+	CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
+	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 
 	mComBehavior->Select_Sequnce("CREATE_FALL");
 
-	Safe_Release(dealyTime);
-	Safe_Release(dealyAnimation);
-	Safe_Release(fallMove);
-	Safe_Release(dealyAniIdle);
+	
+	//CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
+	//CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
+	//CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
+	//CNode_Seqeunce* Seq_OpenDoor = CNode_Seqeunce::Create();
+	//// CloneAction
+	//CAction_DEALY* dealyTime = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	//dealyTime->SetUp_Target(this);
+	//CAction_DEALY* dealyAnimation = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	//dealyAnimation->SetUp_Target(this);
+	//CAction_DEALY* dealyAniIdle = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	//dealyAniIdle->SetUp_Target(this);
+	//CAction_MOVE_TARGET* fallMove = (CAction_MOVE_TARGET*)mComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
+	//fallMove->SetUp_Target(this);
+	//// Set_Fall
+	//dealyTime->Set_TimeMax(0.2f);
+	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL);
+	//dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
+	//dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
+	//Seq_Create_Fall->PushBack_LeafNode(fallMove->Clone());
+	//Seq_Create_Fall->PushBack_LeafNode(dealyAnimation->Clone());
+	//Seq_Create_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
+	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_MOUSEPOS_FALL);
+	//Seq_Fall->PushBack_LeafNode(fallMove->Clone());
+	//Seq_Fall->PushBack_LeafNode(dealyAnimation->Clone());
+	//Seq_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
+	//Seq_Create_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	//mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_Create_Fall);
+	//Seq_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	//mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
+	//// Set_Pick
+	//dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG);
+	//Seq_Pick->PushBack_LeafNode(dealyAnimation->Clone());
+	//// LOOP 타입은 시퀀스를 반복한다.
+	//Seq_Pick->Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
+	//mComBehavior->Add_Seqeunce("DRAG", Seq_Pick);
+	//// Set_Door
+	//dealyTime->Set_TimeMax(5.0f);
+	//Seq_OpenDoor->PushBack_LeafNode(dealyTime->Clone());
+	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET);
+	//Seq_OpenDoor->PushBack_LeafNode(fallMove->Clone());
+	//Seq_OpenDoor->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	//mComBehavior->Add_Seqeunce("DOOR", Seq_OpenDoor);
+	//Safe_Release(dealyTime);
+	//Safe_Release(dealyAnimation);
+	//Safe_Release(fallMove);
+	//Safe_Release(dealyAniIdle);
 	return S_OK;
 }
 

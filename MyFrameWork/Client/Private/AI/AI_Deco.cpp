@@ -29,3 +29,49 @@ void CDeco_DynamicBase::Free()
 	mDynamicObject = nullptr;
 
 }
+
+CDeco_Count::CDeco_Count(const char * str, CGameObject_3D_Dynamic * obj)
+	:CDeco_DynamicBase(str,obj)
+{
+
+}
+
+CDeco_Count::CDeco_Count(const CDeco_Count & rhs)
+	: CDeco_DynamicBase(rhs)
+{
+
+}
+
+HRESULT CDeco_Count::ReStart(void * pArg)
+{
+	MaxCount = 10;
+	   
+	return S_OK;
+}
+
+CDeco_DynamicBase::E_DECOTYPE CDeco_Count::IsCollect(_double timer)
+{
+	if (MaxCount <= 0)
+		return DECOTYPE_NEXT;
+
+	E_DECOTYPE e = CNode_Decorator::DECOTYPE_PREV;
+
+
+	return e;
+}
+
+CDeco_Count * CDeco_Count::Create(const char * str, CGameObject_3D_Dynamic * obj)
+{
+	return nullptr;
+}
+
+CDeco_Count * CDeco_Count::Clone()
+{
+	return nullptr;
+}
+
+void CDeco_Count::Free()
+{
+	__super::Free();
+	
+}

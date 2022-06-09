@@ -58,9 +58,6 @@ protected:
 public:
 	static CSequnce_IDLE* Create(CGameObject_3D_Dynamic* targetobj);
 	virtual void Free()override;
-
-
-
 };
 
 // Seq_MOVETARGET
@@ -68,9 +65,16 @@ class CSequnce_MOVETARGET :
 public CSequnce_Base
 {
 public:
+	enum E_MOVETYPE
+	{
+		MOVETYPE_FALL_CREATE,
+		MOVETYPE_FALL,
+		MOVETYPE_DOOR,
+		MOVETYPE_END
+	};
 	typedef struct tag_SeqMoveTarget
 	{
-		int data;
+		E_MOVETYPE eMoveType;
 
 	}SEQMOVETARGET;
 
@@ -82,7 +86,6 @@ public:
 	// 초기화와 다시시작시 정보 전달과 다름
 	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
 	virtual void Restart(void* SeqData = nullptr)override;
-
 
 protected:
 	SEQMOVETARGET					mSeqData;
@@ -121,9 +124,33 @@ public:
 	virtual void Free()override;
 };
 
-
 // Seq_Pick
+class CSequnce_PICK:
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqTILE
+	{
+		int data;
 
+	}SEQPICK;
+
+protected:
+	explicit CSequnce_PICK() = default;
+	virtual ~CSequnce_PICK() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQPICK					mSeqData;
+
+public:
+	static CSequnce_PICK* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
 
 #pragma endregion SEQ_BASE
 

@@ -55,7 +55,7 @@ public: // Base
 	
 	virtual HRESULT Init_Unit();
 	virtual HRESULT Init_AI();
-	virtual HRESULT Init_Create();
+	virtual HRESULT Init_AI_Dynamic();
 
 
 public: // GetSet

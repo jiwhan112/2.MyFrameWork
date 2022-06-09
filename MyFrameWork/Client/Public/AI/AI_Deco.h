@@ -35,4 +35,52 @@ public:
 
 #pragma endregion AI_Base
 
+#pragma region DECO
+
+// 조건 체크
+
+class CDeco_Count
+	:public CDeco_DynamicBase
+{
+public:
+	struct DECO
+	{
+
+	};
+	/*
+	enum E_DECOTYPE
+	{
+		DECOTYPE_NEXT,
+		DECOTYPE_PREV,
+		DECOTYPE_BREAK,
+		DECOTYPE_BACKFIRST,
+		DECOTYPE_END,
+	};	
+
+	*/
+
+protected:
+	explicit CDeco_Count(const char* str, CGameObject_3D_Dynamic* obj);
+	explicit CDeco_Count(const CDeco_Count& rhs);
+	virtual ~CDeco_Count() = default;
+
+public:
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
+	virtual E_DECOTYPE IsCollect(_double timer);
+
+protected:
+	int MaxCount = -1;
+	int CurrentCont = 0;
+
+
+public:
+	static	CDeco_Count*				Create(const char* str, CGameObject_3D_Dynamic* obj);
+	virtual CDeco_Count*				Clone()override;
+	virtual void Free()override;
+};
+
+#pragma endregion DECO
+
+
+
 END
