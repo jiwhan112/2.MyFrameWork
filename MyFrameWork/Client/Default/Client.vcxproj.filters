@@ -202,15 +202,6 @@
     <Filter Include="03.GameSystems\07.BehaviorTree_Ai">
       <UniqueIdentifier>{59932a11-1236-4c9a-96a9-1ff9ea5a83b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\01.Action">
-      <UniqueIdentifier>{d5b8c1ff-7ab5-4dad-b09f-204c2e2c786e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\02.Deco">
-      <UniqueIdentifier>{82c9527c-c4a3-4e01-9d36-22a31bc7f396}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\03.Selector">
-      <UniqueIdentifier>{5b0373fd-f7a8-4466-a1ba-9de2749586b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\02.3DObject\0.Base\02.Dynamic\02.Orc">
       <UniqueIdentifier>{de704d6a-e55d-4dc7-99bd-74e6df41a77c}</UniqueIdentifier>
     </Filter>
@@ -228,6 +219,18 @@
     </Filter>
     <Filter Include="03.GameSystems\06.Dungeon_Manager\Dungeon_Task">
       <UniqueIdentifier>{409d1b70-3935-4cb6-910b-a9985372e4b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\02.Action">
+      <UniqueIdentifier>{d5b8c1ff-7ab5-4dad-b09f-204c2e2c786e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\03.Deco">
+      <UniqueIdentifier>{82c9527c-c4a3-4e01-9d36-22a31bc7f396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\04.Selector">
+      <UniqueIdentifier>{5b0373fd-f7a8-4466-a1ba-9de2749586b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameSystems\07.BehaviorTree_Ai\01.Sequnce">
+      <UniqueIdentifier>{d0bc3fe3-2ca1-46f9-9b87-7329eef44593}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -415,7 +418,7 @@
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI\AI_Action.h">
-      <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Action</Filter>
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\02.Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_Orc.h">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\02.Orc</Filter>
@@ -434,6 +437,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\Dungeon_Task.h">
       <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI\AI_Sequnce.h">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Sequnce</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -595,7 +601,7 @@
       <Filter>02.GameObject\02.3DObject\0.Base\01.Static\03.Environment_Obj</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI\AI_Action.cpp">
-      <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Action</Filter>
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\02.Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_Orc.cpp">
       <Filter>02.GameObject\02.3DObject\0.Base\02.Dynamic\02.Orc</Filter>
@@ -614,6 +620,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\Dungeon_Task.cpp">
       <Filter>03.GameSystems\06.Dungeon_Manager\Dungeon_Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI\AI_Sequnce.cpp">
+      <Filter>03.GameSystems\07.BehaviorTree_Ai\01.Sequnce</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -328,7 +328,7 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 	if (mCurrentLeafTree == nullptr)
 	{
 		returnNode = mListSequnce.front();
-		FAILED_CHECK_NONERETURN(returnNode->NativeConstruct());
+		FAILED_CHECK_NONERETURN(returnNode->ReStart(nullptr));
 
 		return returnNode;
 	}
@@ -343,7 +343,7 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 		return nullptr;
 
 	returnNode = (*iter);
-	FAILED_CHECK_NONERETURN(returnNode->NativeConstruct());
+	FAILED_CHECK_NONERETURN(returnNode->ReStart(nullptr));
 	return returnNode;
 }
 
@@ -358,7 +358,7 @@ CNode_LeafTree * CNode_Seqeunce::PreNode()
 		return nullptr;
 
 	iter--;
-	FAILED_CHECK_NONERETURN((*iter)->NativeConstruct());
+	FAILED_CHECK_NONERETURN((*iter)->ReStart(nullptr));
 	return *iter;
 }
 

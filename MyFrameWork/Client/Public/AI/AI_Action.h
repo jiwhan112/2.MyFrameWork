@@ -17,15 +17,13 @@ protected:
 	virtual ~CAction_DynamicBase() = default;
 
 public:
-	virtual HRESULT					NativeConstruct()override;
-	virtual HRESULT					Action(_double timer/*,void* pArg = nullptr*/) = 0;
-
-	CAction_DynamicBase*			Clone(void* pArg = nullptr)=0;
+	// 중복사용으로 초기화 필요
+	virtual HRESULT ReStart(void* pArg = nullptr) = 0;
+	virtual CAction_DynamicBase* Clone() = 0;
 
 	void SetUp_Target(CGameObject_3D_Dynamic* targetobj)
 	{
 		mDynamicObject = targetobj;
-
 	}
 
 protected:
@@ -35,32 +33,33 @@ public:
 	virtual void Free()override;
 };
 
-// Decoator_Base
-class CDecorator_DynamicBase
-	:public CNode_Decorator
+//// Decoator_Base
+//class CDecorator_DynamicBase
+//	:public CNode_Decorator
+//
+//{
+//protected:
+//	explicit CDecorator_DynamicBase(const char* str, CGameObject_3D_Dynamic* obj);
+//	virtual ~CDecorator_DynamicBase() = default;
+//
+//public:
+//	virtual HRESULT									NativeConstruct() = 0;
+//	virtual CDecorator_DynamicBase*					Clone(void* pArg = nullptr) = 0;
+//	virtual E_DECOTYPE								IsCorect(_double timer/*,void* pArg = nullptr*/) = 0;
+//
+//public:
+//	HRESULT	SetUp_Target(CGameObject_3D_Dynamic* targetobj)
+//	{
+//		mDynamicObject = targetobj;
+//	}
+//
+//private:
+//	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
+//
+//public:
+//	virtual void Free()override;
+//};
 
-{
-protected:
-	explicit CDecorator_DynamicBase(const char* str, CGameObject_3D_Dynamic* obj);
-	virtual ~CDecorator_DynamicBase() = default;
-
-public:
-	virtual HRESULT									NativeConstruct() = 0;
-	virtual CDecorator_DynamicBase*					Clone(void* pArg = nullptr) = 0;
-	virtual E_DECOTYPE								IsCorect(_double timer/*,void* pArg = nullptr*/) = 0;
-
-public:
-	HRESULT	SetUp_Target(CGameObject_3D_Dynamic* targetobj)
-	{
-		mDynamicObject = targetobj;
-	}
-
-private:
-	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
-
-public:
-	virtual void Free()override;
-};
 #pragma endregion AI_Base
 
 
@@ -85,7 +84,7 @@ protected:
 	virtual ~CAction_DEALY() = default;
 	
 public:
-	virtual HRESULT NativeConstruct();
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
 	void Set_Animation(CAnimatior::E_COMMON_ANINAME e);
 	void Set_TimeMax(_double timeMax);
@@ -99,7 +98,7 @@ private:
 
 public:
 	static	CAction_DEALY*				Create(const char* str, CGameObject_3D_Dynamic* obj);
-	virtual CAction_DEALY*				Clone(void* pArg = nullptr) override;
+	virtual CAction_DEALY*				Clone()override;
 	virtual void Free()override;
 };
 
@@ -134,7 +133,7 @@ protected:
 	virtual ~CAction_MOVE() = default;
 
 public:
-	virtual HRESULT NativeConstruct();
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
 	void Set_AniType(E_MOVE_ANI_FLAG anitype)
 	{
@@ -167,7 +166,7 @@ private:
 
 public:
 	static	CAction_MOVE*				Create(const char* str, CGameObject_3D_Dynamic* obj);
-	virtual CAction_MOVE*				Clone(void* pArg = nullptr) override;
+	virtual CAction_MOVE*				Clone() override;
 	virtual void Free()override;
 };
 
@@ -198,7 +197,7 @@ protected:
 	virtual ~CAction_MOVE_TARGET() = default;
 
 public:
-	virtual HRESULT NativeConstruct();
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
 
 //	void Set_AniFlag(E_ANIFLAG e) { meAniFlag = e; };
@@ -224,7 +223,7 @@ private:
 	E_MOVETARGET_FALG			meMoveTargetFlag = MOVETARGETFALG_CREATE_FALL;
 public:
 	static	CAction_MOVE_TARGET*				Create(const char* str, CGameObject_3D_Dynamic* obj);
-	virtual CAction_MOVE_TARGET*				Clone(void* pArg = nullptr) override;
+	virtual CAction_MOVE_TARGET*				Clone() override;
 	virtual void Free()override;
 
 };
@@ -250,7 +249,7 @@ protected:
 
 
 public:
-	virtual HRESULT NativeConstruct();
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
 	
 	void Set_Funcion(E_FUNCION e) { meFuncion = e; }
@@ -261,7 +260,7 @@ private:
 
 public:
 	static	CAction_Function*				Create(const char* str, CGameObject_3D_Dynamic* obj);
-	virtual CAction_Function*				Clone(void* pArg = nullptr) override;
+	virtual CAction_Function*				Clone() override;
 	virtual void Free()override;
 
 };

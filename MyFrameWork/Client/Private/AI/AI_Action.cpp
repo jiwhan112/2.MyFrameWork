@@ -15,7 +15,7 @@ CAction_DynamicBase::CAction_DynamicBase(const CAction_DynamicBase & rhs)
 	mDynamicObject = rhs.mDynamicObject;
 }
 
-HRESULT CAction_DynamicBase::NativeConstruct()
+HRESULT CAction_DynamicBase::ReStart(void* pArg)
 {
 	Init_Parent();
 	return S_OK;
@@ -26,17 +26,17 @@ void CAction_DynamicBase::Free()
 	mDynamicObject = nullptr;
 }
 
-CDecorator_DynamicBase::CDecorator_DynamicBase(const char * str, CGameObject_3D_Dynamic * obj)
-	:CNode_Decorator(str), mDynamicObject(obj)
-
-{
-
-}
-
-void CDecorator_DynamicBase::Free()
-{
-	mDynamicObject = nullptr;
-}
+//CDecorator_DynamicBase::CDecorator_DynamicBase(const char * str, CGameObject_3D_Dynamic * obj)
+//	:CNode_Decorator(str), mDynamicObject(obj)
+//
+//{
+//
+//}
+//
+//void CDecorator_DynamicBase::Free()
+//{
+//	mDynamicObject = nullptr;
+//}
 
 
 
@@ -53,12 +53,12 @@ CAction_DEALY::CAction_DEALY(const CAction_DEALY & rhs)
 
 }
 
-HRESULT CAction_DEALY::NativeConstruct()
+HRESULT CAction_DEALY::ReStart(void* pArg)
 {
 	if (mDynamicObject == nullptr)
 		return S_FALSE;
 
-	__super::NativeConstruct();
+	__super::ReStart(pArg);
 	mCurrentTimer = 0;
 
 	if (meDealyType == CAction_DEALY::DEALY_ANI)
@@ -108,21 +108,23 @@ CAction_DEALY * CAction_DEALY::Create(const char * str, CGameObject_3D_Dynamic* 
 {
 	CAction_DEALY* pInstance = NEW CAction_DEALY(str, obj);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_DEALY");
+		MSGBOX("Failed to Created CAction_MOVE");
+		DEBUGBREAK;
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CAction_DEALY * CAction_DEALY::Clone(void * pArg)
+CAction_DEALY * CAction_DEALY::Clone()
 {
 	CAction_DEALY* pInstance = NEW CAction_DEALY(*this);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_DEALY");
+		MSGBOX("Failed to Created CAction_MOVE");
+		DEBUGBREAK;
 		Safe_Release(pInstance);
 	}
 	return pInstance;
@@ -149,12 +151,12 @@ CAction_MOVE::CAction_MOVE(const CAction_MOVE & rhs)
 
 }
 
-HRESULT CAction_MOVE::NativeConstruct()
+HRESULT CAction_MOVE::ReStart(void* pArg)
 {
 	if (mDynamicObject == nullptr)
 		return S_FALSE;
 
-	__super::NativeConstruct();
+	__super::ReStart(pArg);
 
 
 	// 목표위치 설정
@@ -247,7 +249,7 @@ CAction_MOVE * CAction_MOVE::Create(const char * str, CGameObject_3D_Dynamic * o
 {
 	CAction_MOVE* pInstance = NEW CAction_MOVE(str, obj);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
 		MSGBOX("Failed to Created CAction_MOVE");
 		DEBUGBREAK;
@@ -256,11 +258,11 @@ CAction_MOVE * CAction_MOVE::Create(const char * str, CGameObject_3D_Dynamic * o
 	return pInstance;
 }
 
-CAction_MOVE * CAction_MOVE::Clone(void * pArg)
+CAction_MOVE * CAction_MOVE::Clone()
 {
 	CAction_MOVE* pInstance = NEW CAction_MOVE(*this);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
 		MSGBOX("Failed to Created CAction_MOVE");
 		DEBUGBREAK;
@@ -287,12 +289,12 @@ CAction_Function::CAction_Function(const CAction_Function & rhs)
 {
 }
 
-HRESULT CAction_Function::NativeConstruct()
+HRESULT CAction_Function::ReStart(void* pArg)
 {
 	if (mDynamicObject == nullptr)
 		return S_FALSE;
 
-	__super::NativeConstruct();
+	__super::ReStart(pArg);
 	
 	return S_OK;
 }
@@ -319,22 +321,25 @@ CAction_Function * CAction_Function::Create(const char * str, CGameObject_3D_Dyn
 {
 	CAction_Function* pInstance = NEW CAction_Function(str, obj);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_Function");
+		MSGBOX("Failed to Created CAction_MOVE");
+		DEBUGBREAK;
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CAction_Function * CAction_Function::Clone(void * pArg)
+CAction_Function * CAction_Function::Clone()
 {
 	CAction_Function* pInstance = NEW CAction_Function(*this);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_Function");
+		MSGBOX("Failed to Created CAction_MOVE");
+		DEBUGBREAK;
 		Safe_Release(pInstance);
+
 	}
 	return pInstance;
 }
@@ -362,12 +367,12 @@ CAction_MOVE_TARGET::CAction_MOVE_TARGET(const CAction_MOVE_TARGET & rhs)
 	meMoveTargetFlag = rhs.meMoveTargetFlag;
 }
 
-HRESULT CAction_MOVE_TARGET::NativeConstruct()
+HRESULT CAction_MOVE_TARGET::ReStart(void* pArg)
 {
 	if (mDynamicObject == nullptr)
 		return S_FALSE;
 
-	__super::NativeConstruct();
+	__super::ReStart(pArg);
 	
 	mCurrentTimer = 0;
 	// 타일을 설정하면 위에서 이동
@@ -428,23 +433,26 @@ CAction_MOVE_TARGET * CAction_MOVE_TARGET::Create(const char * str, CGameObject_
 {
 	CAction_MOVE_TARGET* pInstance = NEW CAction_MOVE_TARGET(str,obj);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_MOVE_TARGET");
+		MSGBOX("Failed to Created CAction_MOVE");
+		DEBUGBREAK;
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CAction_MOVE_TARGET * CAction_MOVE_TARGET::Clone(void * pArg)
+CAction_MOVE_TARGET * CAction_MOVE_TARGET::Clone()
 {
 	CAction_MOVE_TARGET* pInstance = NEW CAction_MOVE_TARGET(*this);
 
-	if (FAILED(pInstance->NativeConstruct()))
+	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_MOVE_TARGET");
+		MSGBOX("Failed to Created CAction_MOVE");
+		DEBUGBREAK;
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

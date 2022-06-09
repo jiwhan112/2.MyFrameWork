@@ -183,9 +183,8 @@ public:
 
 public:
 	// 중복사용으로 초기화 필요
-	virtual HRESULT NativeConstruct() = 0;
-	// 중복사용 클론
-	virtual CNode_LeafTree* Clone(void* pArg =nullptr) = 0;
+	virtual HRESULT ReStart(void* pArg = nullptr) = 0;
+	virtual CNode_LeafTree* Clone() = 0;
 
 protected:
 	string			mStrNodeName;
