@@ -15,7 +15,18 @@ public:
 	{
 		TASK_TILE,
 		TASK_GOLD,
-		TASK_MOVE_WORLD,
+
+		// 월드 명령
+		TASK_MOVE_WORLD, 
+		TASK_ATTACK_WORLD, 
+
+		// 마법 명령
+		TASK_MAGIC_AA,
+		TASK_MAGIC_BB,
+
+		// 카메라 나중에 구현
+		TASK_CAMERA_BOSS,
+		TASK_CAMERA_INTRO,
 		TASK_END
 	};
 protected:

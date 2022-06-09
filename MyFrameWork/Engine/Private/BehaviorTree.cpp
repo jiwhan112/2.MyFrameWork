@@ -92,6 +92,14 @@ HRESULT CBehaviorTree::Select_Sequnce(string seqTag, void* SeqData)
 	return S_OK;
 }
 
+HRESULT CBehaviorTree::Clear_Sequnce()
+{
+	if (mCurrentSequnence)
+		mCurrentSequnence->End_Sequnce();
+	mCurrentSequnence = nullptr;
+	return S_OK;
+}
+
 HRESULT CBehaviorTree::Set_SequnceData(string seqTag, void * SeqData)
 {
 	CNode_Seqeunce* seq = Find_Seqeunce(seqTag);
@@ -132,11 +140,23 @@ CNode_LeafTree * CBehaviorTree::Clone_Leaf(string strtag)
 
 HRESULT CBehaviorTree::Round_Sequnce()
 {
+	// WORLD ¿¹¿Ü
+	if (mCurrentSequnence == nullptr)
+		return S_FALSE;
+
+	CNode_Seqeunce::E_SEQTYPE E_RoundIdleType = CNode_Seqeunce::SEQTYPE_IDLE0;
+
+	if (mSeqMode == 1)
+	{
+		E_RoundIdleType = CNode_Seqeunce::SEQTYPE_IDLE1;
+	}
+
 	// INIT
 	if (mCurrentKey == "")
 	{
 		auto iter = mMapSequence.begin();
-		while (!(iter->second->Get_SeqType() == CNode_Seqeunce::SEQTYPE_IDLE))
+		
+		while (!(iter->second->Get_SeqType() == E_RoundIdleType))
 		{
 			iter++;
 			if (iter == mMapSequence.end())
@@ -161,7 +181,7 @@ HRESULT CBehaviorTree::Round_Sequnce()
 		if (iter == mMapSequence.end())
 			iter = mMapSequence.begin();
 
-		while (!(iter->second->Get_SeqType() == CNode_Seqeunce::SEQTYPE_IDLE))
+		while (!(iter->second->Get_SeqType() == E_RoundIdleType))
 		{
 			iter++;
 			if (iter == mMapSequence.end())

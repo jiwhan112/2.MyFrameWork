@@ -11,6 +11,8 @@ class CGameObject_3D_Dynamic;
 
 #pragma region SEQ_BASE
 
+static void Set_Static_Animation(CGameObject_3D_Dynamic* obj, CAnimatior::E_COMMON_ANINAME e, int index);
+
 class CSequnce_Base :
 	public CNode_Seqeunce
 {
@@ -160,13 +162,63 @@ public:
 	virtual void Free()override;
 };
 
+// Seq_WorldIdle
+class CSequnce_WorldIdle :
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqWorldIdle
+	{
+
+	}SEQWORLDIDLE;
+
+protected:
+	explicit CSequnce_WorldIdle() = default;
+	virtual ~CSequnce_WorldIdle() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQWORLDIDLE					mSeqData;
+
+public:
+	static CSequnce_WorldIdle* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
+
+// Seq_WorldMove
+// 월드에서 움직임
+class CSequnce_WorldMove:
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqWorldMove
+	{
+
+	}SEQWORLDMOVE;
+
+protected:
+	explicit CSequnce_WorldMove() = default;
+	virtual ~CSequnce_WorldMove() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQWORLDMOVE					mSeqData;
+
+public:
+	static CSequnce_WorldMove* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
 #pragma endregion SEQ_BASE
-
-
-
-
-
-
 
 
 END

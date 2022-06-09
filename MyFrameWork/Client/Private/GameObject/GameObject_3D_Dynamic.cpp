@@ -83,6 +83,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			}
 		}
 	}
+
 	else
 	{
 		if (mComListCollider != nullptr)
@@ -97,13 +98,13 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 		mComBehavior->Tick(TimeDelta);
 		Tick_LookUpdate(TimeDelta);
 
-
 		if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
 		{
 			if (mIsTerrainHeight)
 				Set_Terrain_HeightY(mCurrentMap);
 
 		}
+
 		else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
 		{
 			_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
@@ -118,7 +119,11 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 		}
 	}
+
 	Tick_Socket(TimeDelta);
+
+	Tick_DEBUG(TimeDelta);
+
 
 	return UPDATENONE;
 }
@@ -213,7 +218,7 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_Dynamic()
 {
 	// 다이나믹 객체 공통 정의 AI
 
-	// 내려오기 PICK OpenDoor
+	// 내려오기 / PICK / OpenDoor /
 
 	CSequnce_MOVETARGET* Seq_CreateFall = CSequnce_MOVETARGET::Create(this);
 	CSequnce_MOVETARGET::SEQMOVETARGET DefaultCreateFallDesc;
@@ -245,6 +250,19 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_Dynamic()
 	mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
 	
 	mComBehavior->Select_Sequnce("CREATE_FALL");
+
+
+	// WorldIdle / WorldMove
+	//CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
+	//CSequnce_MOVETARGET::SEQMOVETARGET DefaultFallDesc;
+	//Seq_Fall->Restart(&DefaultFallDesc);
+	//mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
+
+	//CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
+	//CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
+	//Seq_Door->Restart(&DefaultDoorDesc);
+	//mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
+
 
 	//CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
 	//CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
@@ -634,6 +652,17 @@ HRESULT CGameObject_3D_Dynamic::Select_Fall()
 	return S_OK;
 }
 
+HRESULT CGameObject_3D_Dynamic::Select_WorldGo(_float3 pos)
+{
+	FAILED_CHECK(FindPathForCurrentNavi(pos));
+
+
+//	mComBehavior->Select_Sequnce("WORLDMOVE", &Desc);
+
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Dynamic::Add_Socket(string modelName,string boneName)
 {
 	auto Create_Manager =  GetSingle(CGameManager)->Get_CreaterManager();
@@ -672,6 +701,16 @@ HRESULT CGameObject_3D_Dynamic::Render_Socket()
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Tick_DEBUG(_double timer)
+{
+	if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_G)& DIS_Down)
+	{
+		mComBehavior->Clear_Sequnce();
+
+	}
 	return S_OK;
 }
 

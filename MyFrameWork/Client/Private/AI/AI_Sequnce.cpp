@@ -3,6 +3,12 @@
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_Mine.h"
 
+void Set_Static_Animation(CGameObject_3D_Dynamic * obj, CAnimatior::E_COMMON_ANINAME e, int index)
+{
+	// 애니메이션 세팅용 전역 함수
+	obj->Set_AniEnum(e, index);
+}
+
 
 HRESULT CSequnce_Base::NativeConstruct(CGameObject_3D_Dynamic * obj)
 {
@@ -83,7 +89,7 @@ HRESULT CSequnce_IDLE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 {
 	__super::NativeConstruct(obj);
 	
-	Set_SeqType(CNode_Seqeunce::E_SEQTYPE::SEQTYPE_IDLE);
+	Set_SeqType(CNode_Seqeunce::E_SEQTYPE::SEQTYPE_IDLE0);
 
 	// 생성은 각 객체가 복사될 떄 한다.
 
@@ -380,3 +386,110 @@ void CSequnce_PICK::Free()
 	
 }
 
+HRESULT CSequnce_WorldIdle::NativeConstruct(CGameObject_3D_Dynamic * obj)
+{
+
+	__super::NativeConstruct(obj);
+
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
+
+	// IDLE에서 사용할 상태 정의
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
+
+	CAction_DEALY* dealyAnimation = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+
+	// Set_Pick
+	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG);
+	PushBack_LeafNode(dealyAnimation->Clone());
+
+	Safe_Release(dealyAnimation);
+
+	// 객체 연결
+	Setup_TargetNode(obj);
+	return S_OK;
+}
+
+void CSequnce_WorldIdle::Restart(void * SeqData)
+{
+
+
+
+}
+
+CSequnce_WorldIdle * CSequnce_WorldIdle::Create(CGameObject_3D_Dynamic * targetobj)
+{
+	CSequnce_WorldIdle* pInstance = NEW CSequnce_WorldIdle();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_WorldIdle");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CSequnce_WorldIdle::Free()
+{
+	__super::Free();
+
+}
+
+HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
+{
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_IDLE0);
+
+	// 타일 움직임 -> 애니메이션 -> 함수 실행;
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
+
+
+	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
+	movepath->Set_TimeMax(0.6f);
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TILE);
+
+
+
+	funcion->Set_Funcion(CAction_Function::FUNCION_LOOK);
+
+	// SetSeq
+	// Tile: 타일을 채굴
+	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(funcion->Clone());
+	PushBack_LeafNode(ani->Clone());
+	funcion->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
+	PushBack_LeafNode(funcion->Clone());
+
+
+	Safe_Release(ani);
+	Safe_Release(movepath);
+	Safe_Release(funcion);
+
+
+	// 객체 연결
+	Setup_TargetNode(obj);
+
+	return S_OK;
+}
+
+void CSequnce_WorldMove::Restart(void * SeqData)
+{
+}
+
+CSequnce_WorldMove * CSequnce_WorldMove::Create(CGameObject_3D_Dynamic * targetobj)
+{
+	return nullptr;
+}
+
+void CSequnce_WorldMove::Free()
+{
+}

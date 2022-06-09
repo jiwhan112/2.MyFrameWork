@@ -5,6 +5,8 @@
 #include "GameObject/Client_Object.h"
 #include "Camera_Client.h"
 
+
+
 CDungeon_Manager::CDungeon_Manager()
 {
 	mDungeon_Objects = nullptr;
@@ -264,9 +266,8 @@ _bool CDungeon_Manager::Task_WorldUnit(TASKBASE * task)
 	// 2. 유닛에게 정보 전달 
 	for (auto& unit : *unitlist)
 	{
-		//unit->Set_WorldGoalIndex(GoalTileIndex);
-
-		//unit->Set_State();>
+	//	unit->Set_WorldGoalIndex(GoalTileIndex);
+	//	unit->Select_WorldGo();
 	}
 
 	Safe_Delete(task);

@@ -103,19 +103,18 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 	//	return S_OK;
 	//}
 
-
-	if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+	if (GetSingle(CGameManager)->Get_DaungonManager()->Get_CurrentGameMode() == CDungeon_Manager::GAMEMODE_DUNGEON)
 	{
-		Add_TileTask_this();
-		return S_OK;
+
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+		{
+			Add_TileTask_this();
+			return S_OK;
+		}
+
+		meTileTickState = CGameObject_3D_Tile::E_TICKE_PICK;
+
 	}
-
-	meTileTickState = CGameObject_3D_Tile::E_TICKE_PICK;
-	return S_OK;
-
-	
-
-
 	return S_OK;
 }
 

@@ -30,11 +30,15 @@ public:
 	HRESULT				Add_Seqeunce(string strtag, CNode_Seqeunce * seq);
 	CNode_Seqeunce*		Find_Seqeunce(string strtag);
 	HRESULT				Select_Sequnce(string seqTag, void* SeqData = nullptr);
+	HRESULT				Clear_Sequnce();
 	HRESULT				Set_SequnceData(string seqTag, void* SeqData = nullptr);
 	string				Get_CurrentSeqKey() const
 	{
 		return mCurrentKey;
 	}
+
+	void Set_Mode(_uint modeindex) { mSeqMode = modeindex; };
+	_uint Get_Mode() const { return mSeqMode; };
 
 public: // Leaf
 	HRESULT				Add_Leaf_Proto(string strtag, CNode_LeafTree * seq);
@@ -54,6 +58,9 @@ private:
 	// 각 액션의 클론 생성을 위해 원본을 저장해두자.
 	map<string, CNode_LeafTree*>		mMapLeafNode;
 
+	_uint		mSeqMode = 0;
+
+
 public:
 	static CBehaviorTree* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CBehaviorTree* Clone(void* pArg) override;
@@ -70,7 +77,8 @@ class ENGINE_DLL CNode_Seqeunce
 public:
 	enum E_SEQTYPE
 	{
-		SEQTYPE_IDLE, // 기본 순회 가능
+		SEQTYPE_IDLE0, // 기본 순회 가능
+		SEQTYPE_IDLE1,
 		SEQTYPE_LOOP, // 연속 상태
 		SEQTYPE_ONETIME, // 한번만
 		SEQTYPE_END,
@@ -104,11 +112,11 @@ public:
 	_bool Get_SeqEnd() const { return mbEnd_Sequnce; };
 	CNode_LeafTree* Get_CurrentLeafNode() const { return mCurrentLeafTree; }
 
-	void Set_SeqType(E_SEQTYPE e)  { meSeqType = e; };
-	void Set_SeqLevel(_uint level) { mSeqLevel = level;};
+	void Set_SeqType(E_SEQTYPE e) { meSeqType = e; };
 	E_SEQTYPE Get_SeqType() const { return meSeqType; };
-	_uint Get_SeqLevel() const { return mSeqLevel; };
 
+	void Set_SeqLevel(_uint level) { mSeqLevel = level; };
+	_uint Get_SeqLevel() const { return mSeqLevel; };
 
 protected:
 	list<CNode_LeafTree*>::iterator Find_LeafTree_Iter(CNode_LeafTree* currentTree);
@@ -116,13 +124,13 @@ protected:
 protected:
 	CNode_LeafTree* mCurrentLeafTree;
 	CNode_LeafTree* mPreLeafTree;
-	
-	// 시퀀스에서는 해당하는 Leaf 노드 라스트로 가지고 있는다.
-	list< CNode_LeafTree*> mListLeafNodes;	
-	_bool		mbEnd_Sequnce = false;
-	E_SEQTYPE	meSeqType = SEQTYPE_IDLE;
-	_uint		mSeqLevel = 0;
 
+	// 시퀀스에서는 해당하는 Leaf 노드 라스트로 가지고 있는다.
+	list< CNode_LeafTree*> mListLeafNodes;
+	_bool		mbEnd_Sequnce = false;
+	E_SEQTYPE	meSeqType = SEQTYPE_IDLE0;
+
+	_uint		mSeqLevel = 0;
 
 public:
 
@@ -139,7 +147,7 @@ class ENGINE_DLL CNode_LeafTree
 public:
 	enum E_LEAFTREE_ID
 	{
-		LEAFTREE_ID_ACTION, 
+		LEAFTREE_ID_ACTION,
 		LEAFTREE_ID_DECORATOR,
 		LEAFTREE_ID_SELECTER,
 		LEAFTREE_ID_END,
@@ -157,10 +165,11 @@ protected:
 public:
 	// 중복사용으로 초기화 필요
 	E_LEAFTREE_ID Get_TREEID() { return meTreeID; }
-	void Set_TREEID(E_LEAFTREE_ID e) { meTreeID = e;}
+	void Set_TREEID(E_LEAFTREE_ID e) { meTreeID = e; }
 	_bool Get_IsEnd() { return mIsEnd; }
 	_bool Get_IsSucceed() { return mIsSucceed; }
-	const char* Get_NodeName() { 
+	const char* Get_NodeName()
+	{
 		return mStrNodeName.c_str();
 	}
 

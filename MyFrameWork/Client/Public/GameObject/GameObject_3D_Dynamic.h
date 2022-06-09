@@ -118,12 +118,15 @@ protected:
 	HRESULT Set_Sequnce(const char* statename, void* desc);
 	HRESULT Select_Door();
 	HRESULT Select_Fall();
+	HRESULT Select_WorldGo(_float3 pos);
 
 
 protected:
 	HRESULT Add_Socket(string modelName,string boneName);
 	HRESULT Tick_Socket(_double timer);
 	HRESULT Render_Socket();
+
+	HRESULT Tick_DEBUG(_double timer);
 
 
 protected: // 3D모델 Com / DESC 추가
@@ -148,8 +151,6 @@ protected: // 3D모델 Com / DESC 추가
 	list<CCell*>					mCurrentPathList;
 	_float3							mGoalPosition; // 목표위치
 	_float3							mLookPostiton;
-
-
 
 	// 지형
 	E_MAPTYPE						meCurrentMap = MAPTYPE_END;
