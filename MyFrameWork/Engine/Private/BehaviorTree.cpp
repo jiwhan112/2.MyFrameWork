@@ -78,7 +78,7 @@ CNode_Seqeunce* CBehaviorTree::Find_Seqeunce(string strtag)
 	return iter->second;
 }
 
-HRESULT CBehaviorTree::Select_Sequnce(string seqTag)
+HRESULT CBehaviorTree::Select_Sequnce(string seqTag, void* SeqData)
 {
 	CNode_Seqeunce* seq = Find_Seqeunce(seqTag);
 	if (seq == nullptr)
@@ -87,7 +87,7 @@ HRESULT CBehaviorTree::Select_Sequnce(string seqTag)
 		mCurrentSequnence->End_Sequnce();
 	mCurrentSequnence = seq;
 	mCurrentKey = seqTag;
-	mCurrentSequnence->Restart();
+	mCurrentSequnence->Restart(SeqData);
 	return S_OK;
 }
 
@@ -167,10 +167,6 @@ HRESULT CBehaviorTree::Round_Sequnce()
 	return S_OK;
 }
 
-HRESULT CBehaviorTree::Set_LOOP_Seq()
-{
-	return S_OK;
-}
 
 CBehaviorTree * CBehaviorTree::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -293,6 +289,13 @@ HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 	}
 
 	return S_OK;
+}
+
+void CNode_Seqeunce::Restart(void * SeqData)
+{
+	mbEnd_Sequnce = false;
+	mCurrentLeafTree = nullptr;
+	mPreLeafTree = nullptr;
 }
 
 HRESULT CNode_Seqeunce::Iter_Sequnce(bool next)
