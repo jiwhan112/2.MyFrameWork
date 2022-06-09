@@ -83,6 +83,7 @@ public:
 		CAnimatior::E_COMMON_ANINAME AniType;
 		_float3 StartPosition;
 		_float3 EndPosition;
+		CAction_Function::E_FUNCION eExitFunc = CAction_Function::E_FUNCION::FUNCION_LOOKTILE;
 
 	}SEQMOVETARGET;
 
@@ -169,6 +170,7 @@ class CSequnce_WorldIdle :
 public:
 	typedef struct tag_SeqWorldIdle
 	{
+		CAnimatior::E_COMMON_ANINAME AniType;
 
 	}SEQWORLDIDLE;
 

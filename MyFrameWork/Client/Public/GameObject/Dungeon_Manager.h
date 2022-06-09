@@ -75,6 +75,8 @@ public:	// For. Task
 	// 인터페이스 함수
 	HRESULT Add_Task_Tile(_uint index);
 	HRESULT Add_Task_Gold(_uint index);
+	HRESULT Add_Task_WorldMove(_float3 WorldPos);
+
 	HRESULT Check_Task();
 
 private:

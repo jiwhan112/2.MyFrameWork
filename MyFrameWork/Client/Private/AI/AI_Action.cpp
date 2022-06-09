@@ -292,11 +292,17 @@ HRESULT CAction_Function::Action(_double timer)
 {
 	switch (meFuncion)
 	{
+	case CAction_Function::FUNCION_NONE:
+		break;
 	case CAction_Function::FUNCION_REMOVE_TILE:
 		((CGameObject_Mine*)mDynamicObject)->RemoveTile();
 		break;
-	case CAction_Function::FUNCION_LOOK:
+	case CAction_Function::FUNCION_LOOKTILE:
 		((CGameObject_Mine*)mDynamicObject)->LookTile();
+		break;
+	case CAction_Function::FUNCION_SETGAMEMODE:
+		((CGameObject_3D_Dynamic*)mDynamicObject)->Set_BehaviorMode();
+		break;
 	default:
 		break;
 	}

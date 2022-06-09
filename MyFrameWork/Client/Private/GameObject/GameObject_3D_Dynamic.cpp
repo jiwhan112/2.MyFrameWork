@@ -122,7 +122,7 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 	Tick_Socket(TimeDelta);
 
-	Tick_DEBUG(TimeDelta);
+//	Tick_DEBUG(TimeDelta);
 
 
 	return UPDATENONE;
@@ -253,10 +253,10 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_Dynamic()
 
 
 	// WorldIdle / WorldMove
-	//CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
-	//CSequnce_MOVETARGET::SEQMOVETARGET DefaultFallDesc;
-	//Seq_Fall->Restart(&DefaultFallDesc);
-	//mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
+	CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
+	// CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
+	// Seq_Fall->Restart(&worldIdle);
+	mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
 
 	//CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
 	//CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
@@ -625,7 +625,7 @@ HRESULT CGameObject_3D_Dynamic::Select_Door()
 	default:
 		return E_FAIL;
 	}
-
+	Desc.eExitFunc = CAction_Function::E_FUNCION::FUNCION_SETGAMEMODE;
 	Set_Position(Desc.StartPosition);
 	mComTransform->LookAt(Desc.EndPosition);
 	mComBehavior->Select_Sequnce("DOOR",&Desc);
@@ -660,6 +660,21 @@ HRESULT CGameObject_3D_Dynamic::Select_WorldGo(_float3 pos)
 //	mComBehavior->Select_Sequnce("WORLDMOVE", &Desc);
 
 
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Set_BehaviorMode()
+{
+	int modeindex = mComBehavior->Get_Mode();
+	switch (modeindex)
+	{
+	case 0:
+		mComBehavior->Set_Mode(1);
+		break;
+	case 1:
+		mComBehavior->Set_Mode(0);
+		break;
+	}
 	return S_OK;
 }
 

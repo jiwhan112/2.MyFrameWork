@@ -61,7 +61,11 @@ _int CDungeon_Manager::Tick_Game(_double timeDelta)
 	}
 	else
 	{
-
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+		{
+			_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
+			FAILED_CHECK_NONERETURN(Add_Task_WorldMove(worldPos));
+		}
 
 	}
 
@@ -178,6 +182,11 @@ HRESULT CDungeon_Manager::Add_Task_Tile(_uint index)
 HRESULT CDungeon_Manager::Add_Task_Gold(_uint index)
 {
 	return 	mDungeon_TaskMgr->Add_Task_Tile_Gold(index);
+}
+
+HRESULT CDungeon_Manager::Add_Task_WorldMove(_float3 WorldPos)
+{
+	return 	mDungeon_TaskMgr->Add_Task_Tile_MoveWorld(WorldPos);
 }
 
 HRESULT CDungeon_Manager::Check_Task()

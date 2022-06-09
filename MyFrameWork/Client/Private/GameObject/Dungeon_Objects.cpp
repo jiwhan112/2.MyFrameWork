@@ -68,6 +68,18 @@ HRESULT CDungeon_Objects::Release_Objects()
 		Safe_Release(obj);
 	}
 
+	if (mListUnitDanumgeonMap)
+	{
+		mListUnitDanumgeonMap->clear();
+		Safe_Delete(mListUnitDanumgeonMap);
+	}
+	if (mListUnitWorldMap)
+	{
+		mListUnitWorldMap->clear();
+		Safe_Delete(mListUnitWorldMap);
+	}
+	
+
 
 	return S_OK;
 }

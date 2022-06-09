@@ -180,6 +180,7 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	CAction_DEALY*			dealyTime = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_MOVE_TARGET*	moveTarget = (CAction_MOVE_TARGET*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
 	CAction_DEALY*			dealyAnimation = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_Function*		func	= (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
 	// Create Fall
 	dealyTime->Set_TimeMax(0.2f);
@@ -189,6 +190,7 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	PushBack_LeafNode(moveTarget->Clone());
 	PushBack_LeafNode(dealyAnimation->Clone());
 	PushBack_LeafNode(dealyAnimation->Clone());
+	PushBack_LeafNode(func->Clone());
 
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAnimation);
@@ -228,6 +230,11 @@ void CSequnce_MOVETARGET::Restart(void * SeqData)
 	auto ani2 = Find_Action(CAction_DynamicBase::E_ACION_DEALY, 2);
 	NULL_CHECK_BREAK(ani2);
 	((CAction_DEALY*)ani2)->Set_Animation((CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE));
+
+	auto func = Find_Action(CAction_DynamicBase::E_ACION_FUNCTION);
+	NULL_CHECK_BREAK(func);
+	((CAction_Function*)func)->Set_Funcion(mSeqData.eExitFunc);
+
 }
 
 CSequnce_MOVETARGET * CSequnce_MOVETARGET::Create(CGameObject_3D_Dynamic * targetobj)
@@ -272,7 +279,7 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 
 
-	funcion->Set_Funcion(CAction_Function::FUNCION_LOOK);
+	funcion->Set_Funcion(CAction_Function::FUNCION_LOOKTILE);
 
 	// SetSeq
 	// Tile: 타일을 채굴
@@ -391,20 +398,23 @@ HRESULT CSequnce_WorldIdle::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	__super::NativeConstruct(obj);
 
-	Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_IDLE1);
 
-	// IDLE에서 사용할 상태 정의
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
 	if (ComBehavior == nullptr)
 		return E_FAIL;
 
-	CAction_DEALY* dealyAnimation = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	// 월드의 IDLE 상태 
+	// 애니메이션 -> 주변탐색 -> 적 발견하면 공격으로 변경
+
+	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 
 	// Set_Pick
-	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG);
-	PushBack_LeafNode(dealyAnimation->Clone());
+	mSeqData.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE;
+	ani->Set_Animation(mSeqData.AniType);
+	PushBack_LeafNode(ani->Clone());
 
-	Safe_Release(dealyAnimation);
+	Safe_Release(ani);
 
 	// 객체 연결
 	Setup_TargetNode(obj);
@@ -413,9 +423,15 @@ HRESULT CSequnce_WorldIdle::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 void CSequnce_WorldIdle::Restart(void * SeqData)
 {
+	__super::Restart(SeqData);
+	if (SeqData)
+	{
+		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDIDLE));
+	}
 
-
-
+	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	NULL_CHECK_BREAK(ani);
+	((CAction_DEALY*)ani)->Set_Animation(mSeqData.AniType);
 }
 
 CSequnce_WorldIdle * CSequnce_WorldIdle::Create(CGameObject_3D_Dynamic * targetobj)
@@ -440,7 +456,7 @@ void CSequnce_WorldIdle::Free()
 
 HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
 {
-	Set_SeqType(CNode_Seqeunce::SEQTYPE_IDLE0);
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 
 	// 타일 움직임 -> 애니메이션 -> 함수 실행;
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
@@ -459,7 +475,7 @@ HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 
 
-	funcion->Set_Funcion(CAction_Function::FUNCION_LOOK);
+	funcion->Set_Funcion(CAction_Function::FUNCION_LOOKTILE);
 
 	// SetSeq
 	// Tile: 타일을 채굴

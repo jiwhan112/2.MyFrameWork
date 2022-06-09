@@ -87,10 +87,12 @@ public: // GetSet
 	}
 	_float Get_TimeForSpeed() const { return mTimeForSpeed; }
 
-public: // Collision
+	// Collision
+public: 
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
 
-public: // Move AI
+	// Move AI
+public: 
 	HRESULT FindPathForCurrentNavi(_float3 GoalPosition);
 	_bool	Get_PathList_Frontpop(_float3* NextPosition);
 	// 갈 수 있는 위치 뽑기
@@ -103,15 +105,16 @@ public: // Move AI
 	_float3	Get_TerrainHeightPostition() ;
 	void	Tick_LookUpdate(_double time);
 
-public: // Animation
-// 애니메이션 이름으로 설정
+
+	// Animation
+public: 
 	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name, _int index=-1);
 	HRESULT Set_AniIndex(_uint AniIndex);
 	HRESULT Set_AniString(string str);
 
 
+	// AI
 protected:
-	// AI 루팅 설정
 	virtual HRESULT Set_Component() override;
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
@@ -119,7 +122,8 @@ protected:
 	HRESULT Select_Door();
 	HRESULT Select_Fall();
 	HRESULT Select_WorldGo(_float3 pos);
-
+public:
+		HRESULT Set_BehaviorMode();
 
 protected:
 	HRESULT Add_Socket(string modelName,string boneName);
