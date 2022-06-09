@@ -20,7 +20,7 @@ CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs
 	, meTickType(rhs.meTickType)
 
 {
-	// TOOLTEST
+	// Dynamic TOOLTEST
 	// meTickType = CGameObject_3D_Dynamic::TICK_TOOL;
 
 }
@@ -280,9 +280,6 @@ HRESULT  CGameObject_3D_Dynamic::Set_MapSetting(E_MAPTYPE type)
 	meCurrentMap = type;
 	mCurrentMap = mTerrain_Maps[type];
 	mCurrentNavi = mComNavi[type];
-
-
-
 
 	return S_OK;
 }

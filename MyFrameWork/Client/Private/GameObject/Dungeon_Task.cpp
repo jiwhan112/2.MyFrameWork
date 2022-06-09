@@ -12,34 +12,68 @@ HRESULT CDungeon_Task::NativeConstruct_Prototype()
 	return S_OK;
 }
 
-HRESULT CDungeon_Task::Add_Task_Tile(CDungeon_Task::E_TASK_TYPE id, _uint index)
+HRESULT CDungeon_Task::Add_Task(TASKBASE * task)
 {
-	MyTask* Task = MyTask::Create(id, index);
-	if (Task == nullptr)
-		return E_FAIL;
-	mListTask.push_front(Task);
+	if (task != nullptr)
+	{
+		mListTask.push_front(task);
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,_uint index)
+{
+	TASKBASE* base = nullptr;
+	switch (id)
+	{
+	case Client::CDungeon_Task::TASK_TILE:
+		base = NEW TASKTILE(index);
+		base->mTaskID = id;
+		break;
+	case Client::CDungeon_Task::TASK_GOLD:
+		base = NEW TASKTILE(index);
+		base->mTaskID = id;	
+		break;
+	case Client::CDungeon_Task::TASK_MOVE_WORLD:
+		base = NEW TASKMAP(index);
+		base->mTaskID = id; 
+		break;
+	case Client::CDungeon_Task::TASK_END:
+		break;
+	default:
+		break;
+	}
+	FAILED_CHECK(Add_Task(base));
 	return S_OK;
 }
 
 HRESULT CDungeon_Task::Add_Task_Tile_Rock(_uint index)
 {
-	return Add_Task_Tile(CDungeon_Task::E_TASK_TYPE::TASK_TILE, index);
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_TILE, index);
 }
 
 HRESULT CDungeon_Task::Add_Task_Tile_Gold(_uint index)
 {
-	return Add_Task_Tile(CDungeon_Task::E_TASK_TYPE::TASK_GOLD, index);
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_GOLD, index);
 }
 
-MyTask * CDungeon_Task::Get_BackTask()
+HRESULT CDungeon_Task::Add_Task_Tile_MoveWorld(_uint index)
+{
+
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_MOVE_WORLD, index);
+}
+
+
+TASKBASE * CDungeon_Task::Get_BackTask()
 {
 	if (mListTask.empty())
 		return nullptr;
 
-	MyTask* task =  mListTask.back();
+	TASKBASE* baseTask = mListTask.back();
 	mListTask.pop_back();
 
-	return task;
+	return baseTask;
 }
 
 CDungeon_Task * CDungeon_Task::Create()
@@ -59,22 +93,7 @@ void CDungeon_Task::Free()
 {
 	for (auto& task: mListTask)
 	{
-		Safe_Release(task);
+		Safe_Delete(task);
 	}
-}
-
-MyTask * MyTask::Create(CDungeon_Task::E_TASK_TYPE id, _uint index)
-{
-	MyTask*	pInstance = NEW MyTask();
-
-	if (FAILED(pInstance->NativeConstruct(id, index)))
-	{
-		MSGBOX("Failed to Creating CRenderer");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-void MyTask::Free()
-{
+	mListTask.clear();
 }

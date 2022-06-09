@@ -4,11 +4,9 @@
 
 BEGIN(Client)
 
+// 게임 전역 이벤트 관리
+struct TASKBASE;
 
-// 게임 오브젝트 생성 저장
-// 초기화 타일 생성등 다 여기로 옮김
-
-class MyTask;
 class CDungeon_Task final :
 	public CBase
 {
@@ -17,6 +15,7 @@ public:
 	{
 		TASK_TILE,
 		TASK_GOLD,
+		TASK_MOVE_WORLD,
 		TASK_END
 	};
 protected:
@@ -26,16 +25,21 @@ protected:
 public:
 	HRESULT NativeConstruct_Prototype();
 
+
 private:
-	list<MyTask*> mListTask;
+	HRESULT Add_Task(TASKBASE* task);
+	HRESULT Add_Task(CDungeon_Task::E_TASK_TYPE id, _uint index);
 
 public:
 	// 글로벌 작업 저장
-	HRESULT Add_Task_Tile(CDungeon_Task::E_TASK_TYPE id, _uint index);
 	HRESULT Add_Task_Tile_Rock(_uint index);
 	HRESULT Add_Task_Tile_Gold(_uint index);
-	MyTask* Get_BackTask();
+	HRESULT Add_Task_Tile_MoveWorld(_uint index);
 
+	TASKBASE* Get_BackTask();
+
+private:
+	list<TASKBASE*> mListTask;
 
 public:
 	static CDungeon_Task* Create();
@@ -43,28 +47,72 @@ public:
 };
 
 // Task 부모
-class MyTask
-	: public CBase
+
+struct TASKBASE
 {
-private:
-	MyTask() = default;
-	virtual~MyTask() = default;
-
-public:
-	HRESULT NativeConstruct(CDungeon_Task::E_TASK_TYPE id, _uint index)
-	{
-		mTaskID = id;
-		mTileIndex = index;
-		return S_OK;
-	}
-
-	static MyTask* Create(CDungeon_Task::E_TASK_TYPE id, _uint index);
-	// CBase을(를) 통해 상속됨
-	virtual void Free() override;
-	
 public:
 	CDungeon_Task::E_TASK_TYPE mTaskID = CDungeon_Task::TASK_END;
-	_uint						mTileIndex = 0;
+
 };
+
+struct TASKTILE
+	:public TASKBASE
+{
+public:
+	TASKTILE(_uint index) { mTileIndex = index; }
+
+public:
+	_uint						mTileIndex = 0;
+
+};
+
+struct TASKMAP
+	:public TASKBASE
+{
+public:
+	TASKMAP(_uint index) { mMapIndex = index; }
+
+public:
+	_uint						mMapIndex = 0;
+
+};
+
+//class CMyTask
+//	: public CBase
+//{
+//private:
+//	CMyTask() = default;
+//	virtual ~CMyTask() = default;
+//
+//public:
+//
+//	// CBase을(를) 통해 상속됨
+//	virtual void Free() override;
+//	
+//public:
+//	CDungeon_Task::E_TASK_TYPE mTaskID = CDungeon_Task::TASK_END;
+//};
+//
+//class CMyTask_Tile
+//	:public CMyTask
+//{
+//	// 타일 인덱스 저장
+//private:
+//	CMyTask_Tile() = default;
+//	virtual ~CMyTask_Tile() = default;
+//public:
+//	HRESULT NativeConstruct(CDungeon_Task::E_TASK_TYPE id)
+//	{
+//		mTaskID = id;
+//		return S_OK;
+//	}
+//	virtual void Free() override;
+//	_uint						mTileIndex = 0;
+//
+//
+//};
+
+
+
 
 END

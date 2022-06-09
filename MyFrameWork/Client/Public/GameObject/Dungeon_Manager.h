@@ -12,6 +12,8 @@ class CGameObject_3D_Tile;
 // 플레이어 처리(마우스)
 // 게임내에 모든 객체 관리등 
 
+struct TASKBASE;
+
 class CDungeon_Manager final :
 	public CBase
 {
@@ -77,8 +79,9 @@ public:	// For. Task
 
 private:
 	// 테스크에 따른 유닛 할당
-	_bool Task_Trigger(class MyTask* task);
-	_bool Task_Mine(class MyTask* task);
+	_bool Task_Trigger(TASKBASE* task);
+	_bool Task_Mine(TASKBASE* task);
+	_bool Task_WorldUnit(TASKBASE* task);
 
 
 

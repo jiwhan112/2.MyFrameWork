@@ -134,8 +134,6 @@ void CGameObject_3D_Tile::Add_TileTask_this()
 	}
 }
 
-
-
 HRESULT CGameObject_3D_Tile::Set_LoadNewFBX(E_TILETYPE type)
 {
 	MODEL_STATIC_DESC desc;

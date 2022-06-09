@@ -180,15 +180,15 @@ HRESULT CDungeon_Manager::Add_Task_Gold(_uint index)
 
 HRESULT CDungeon_Manager::Check_Task()
 {
-	MyTask* GetTask = nullptr;
+	TASKBASE* getTask = nullptr;
 	if (mDungeon_TaskMgr)
-		GetTask = mDungeon_TaskMgr->Get_BackTask();
-	if(GetTask)
-	Task_Trigger(GetTask);
+		getTask = mDungeon_TaskMgr->Get_BackTask();
+	if (getTask)
+		Task_Trigger(getTask);
 	return S_OK;
 }
 
-_bool CDungeon_Manager::Task_Trigger(MyTask* task)
+_bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 {
 	// 테스크를 유닛에게 전달한다.
 
@@ -200,6 +200,9 @@ _bool CDungeon_Manager::Task_Trigger(MyTask* task)
 	case CDungeon_Task::TASK_GOLD:
 		Task_Mine(task);
 		break;
+	case CDungeon_Task::TASK_MOVE_WORLD:
+		Task_WorldUnit(task);
+		break;
 	case CDungeon_Task::TASK_END:
 		break;
 	default:
@@ -208,13 +211,14 @@ _bool CDungeon_Manager::Task_Trigger(MyTask* task)
 	return true;
 }
 
-_bool CDungeon_Manager::Task_Mine(MyTask* task)
+_bool CDungeon_Manager::Task_Mine(TASKBASE* task)
 {
 	// 테스크를 유닛에게 전달한다.
 	
 	// 1. 유닛과 타일을 찾음
 	auto unitlist = mDungeon_Objects->Get_ListObjecID(OBJECT_TYPE_3D_DYNAMIC_MINE);
-	CGameObject_3D_Tile* tile = mDungeon_Objects->FInd_TIleForIndex(task->mTileIndex);
+	_uint tileindex =  static_cast<TASKTILE*>(task)->mTileIndex;
+	CGameObject_3D_Tile* tile = mDungeon_Objects->FInd_TIleForIndex(tileindex);
 
 	_float maxdis = INT8_MAX;
 	CGameObject_Mine *SearchMine = nullptr;
@@ -243,7 +247,47 @@ _bool CDungeon_Manager::Task_Mine(MyTask* task)
 		SearchMine->Set_Dig_Gold(tile);
 
 
-	Safe_Release(task);
+	Safe_Delete(task);
+	return true;
+}
+
+_bool CDungeon_Manager::Task_WorldUnit(TASKBASE * task)
+{
+	// 테스크를 유닛에게 전달한다.
+
+	// 1. 월드 유닛 / 월드 타일 인덱스 검색
+	auto unitlist = mDungeon_Objects->Get_UnitList_World(); 
+	_uint worldIndex = static_cast<TASKMAP*>(task)->mMapIndex;
+	//_float3 Postiton = mDungeon_Objects->FInd_TIleForIndex(worldIndex);
+
+
+	//// 2. 정보전달 
+	//for (auto& unit : unitlist)
+	//{
+	//	// 타일과 가까운 유닛 찾기
+	//	_float distance = _float3::Distance(unit->Get_WorldPostition(), tile->Get_WorldPostition());
+	//	if (distance < maxdis)
+	//	{
+	//		maxdis = distance;
+	//		SearchMine = (CGameObject_Mine*)unit;
+	//	}
+	//}
+
+	//if (SearchMine == nullptr)
+	//	return false;
+
+
+	//// 3. 유닛에게 정보전달
+	//if (task->mTaskID == CDungeon_Task::TASK_TILE)
+	//	SearchMine->Set_Dig_Tile(tile);
+
+	//else if (task->mTaskID == CDungeon_Task::TASK_GOLD)
+	//	SearchMine->Set_Dig_Gold(tile);
+
+
+	//Safe_Release(task);
+
+
 	return true;
 }
 
