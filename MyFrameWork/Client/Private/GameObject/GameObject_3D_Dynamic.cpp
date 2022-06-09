@@ -56,6 +56,10 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	
 	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
 
+	_float3 SpawnPos = mSpawnPostitionDAUNGEON;
+	SpawnPos.y += 10;
+	Set_Position(SpawnPos);
+
 	Init_Unit();
 	Init_AI();
 	
@@ -212,20 +216,36 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_Dynamic()
 	// 내려오기 PICK OpenDoor
 
 	CSequnce_MOVETARGET* Seq_CreateFall = CSequnce_MOVETARGET::Create(this);
+	CSequnce_MOVETARGET::SEQMOVETARGET DefaultCreateFallDesc;
+	DefaultCreateFallDesc.Dealytime = 0.1f;
+	DefaultCreateFallDesc.TimeMax = 2.0f;
+	DefaultCreateFallDesc.StartPosition = Get_WorldPostition();
+	DefaultCreateFallDesc.EndPosition = Get_TerrainHeightPostition();
+	DefaultCreateFallDesc.EasingID = TYPE_SinIn;
+	DefaultCreateFallDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP;
+
+	Seq_CreateFall->Restart(&DefaultCreateFallDesc);
 	mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_CreateFall);
 
-	CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
-	mComBehavior->Add_Seqeunce("FALL", Seq_CreateFall);
-
-	CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
-	mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
-
 	CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
+	CSequnce_PICK::SEQPICK DefaultPickDesc;
+	DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
+	Seq_Pick->Restart(&DefaultPickDesc);
 	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 
+	// 상태전환시 데이터 추가
+	CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
+	CSequnce_MOVETARGET::SEQMOVETARGET DefaultFallDesc;	
+	Seq_Fall->Restart(&DefaultFallDesc);
+	mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
+
+	CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
+	CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
+	Seq_Door->Restart(&DefaultDoorDesc);
+	mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
+	
 	mComBehavior->Select_Sequnce("CREATE_FALL");
 
-	
 	//CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
 	//CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
 	//CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
@@ -334,30 +354,10 @@ HRESULT CGameObject_3D_Dynamic::Switch_MapType()
 
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 
-	// 초기위치 // 
-	// 초기상태 // 문 나오는 연출
-	_float3 GoalPos = _float3();										
-
-	switch (meCurrentMap)
-	{
-	case CGameObject_3D_Dynamic::MAPTYPE_DUNGEON:
-		// 던전으로 전환
-		GoalPos = mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mDungeonDoorStartPos;
-		mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mDungeonDoorGoalPos;
-		break;
-	case CGameObject_3D_Dynamic::MAPTYPE_WORLD:
-		// 월드로 전환
-		GoalPos = mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mWorldDoorStartPos;
-		mCustomMovePostition = GetSingle(CGameManager)->Get_DaungonManager()->mWorldDoorGoalPos;
-		break;
-	default:
-		return E_FAIL;
-	}
-	Set_Position(GoalPos);
 	mIsTerrainHeight = false;
 	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN, 0);
 
-	FAILED_CHECK(mComBehavior->Select_Sequnce("DOOR"));
+	Select_Door();
 
 	return S_OK;
 }
@@ -383,8 +383,8 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 		{
 			if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON && meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
 			{
-				mComBehavior->Select_Sequnce("FALL");
 				meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
+				Select_Fall();
 			}
 		}
 		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_WHEEL)& DIS_Down)
@@ -580,8 +580,57 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 HRESULT CGameObject_3D_Dynamic::Set_Sequnce(const char * statename, void * desc)
 {
 	// 각 상태마다 void 포인터로 넘겨서 정보전달..
-	FAILED_CHECK(mComBehavior->Select_Sequnce(statename));
-	return E_NOTIMPL;
+	FAILED_CHECK(mComBehavior->Select_Sequnce(statename, desc));
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Select_Door()
+{
+	CSequnce_MOVETARGET::SEQMOVETARGET Desc;
+	Desc.Dealytime = 5;
+	Desc.TimeMax = 2;
+	Desc.EasingID = TYPE_Linear;
+	Desc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_RUN;
+
+	switch (meCurrentMap)
+	{
+	case CGameObject_3D_Dynamic::MAPTYPE_DUNGEON:
+		// 던전으로 전환
+		Desc.StartPosition = GetSingle(CGameManager)->Get_DaungonManager()->mDungeonDoorStartPos;;
+		Desc.EndPosition =GetSingle(CGameManager)->Get_DaungonManager()->mDungeonDoorGoalPos;;
+		break;
+	case CGameObject_3D_Dynamic::MAPTYPE_WORLD:
+		// 월드로 전환
+		Desc.StartPosition = GetSingle(CGameManager)->Get_DaungonManager()->mWorldDoorStartPos;;
+		Desc.EndPosition = GetSingle(CGameManager)->Get_DaungonManager()->mWorldDoorGoalPos;;
+		break;
+	default:
+		return E_FAIL;
+	}
+
+
+	mComBehavior->Select_Sequnce("DOOR",&Desc);
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Select_Fall()
+{
+	// 상태전환시 데이터 추가
+	CSequnce_MOVETARGET::SEQMOVETARGET Desc;
+	Desc.Dealytime = 5;
+	Desc.TimeMax = 2;
+	Desc.EasingID = TYPE_Linear;
+	Desc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_RUN;
+
+	_float3 mousePos = GetSingle(CGameManager)->Get_PickPos();
+	mousePos.y += 5;
+	Desc.StartPosition = mousePos;
+	Set_Position(Desc.StartPosition);
+
+	Desc.EndPosition = Get_TerrainHeightPostition();
+
+	mComBehavior->Select_Sequnce("FALL", &Desc);
+	return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::Add_Socket(string modelName,string boneName)

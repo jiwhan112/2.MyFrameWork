@@ -93,58 +93,27 @@ HRESULT CSequnce_IDLE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 		return E_FAIL;
 
 	// IDLE에서 사용할 상태 정의
+	// 딜레이 -> 애니메이션 -> PathMove
 	CAction_DEALY*	dealyTime = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	CAction_DEALY*	dealyAniIdle = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	CAction_DEALY*	dealyAniDance = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	CAction_MOVE*	moveWalk = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
-	CAction_MOVE*	moveRun = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+	CAction_DEALY*	dealyAni = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_MOVE*	pathMove = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
 
-	// Set Action
-	_float WalkTimeMax = obj->Get_TimeForSpeed();
-	_float RunTimeMax = WalkTimeMax * 0.5f;
+	_float defaultSpeed = obj->Get_TimeForSpeed();
 
-	dealyTime->Set_TimeMax(2.0f);
-	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-	dealyAniDance->Set_Animation(CAnimatior::E_COMMON_ANINAME_DANCE);
+	dealyTime->Set_TimeMax(1.0f);
+	dealyAni->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 
-	moveWalk->Set_AniType(CAction_MOVE::MOVE_ANI_WALK);
-	moveWalk->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-	moveWalk->Set_TimeMax(WalkTimeMax);
+	pathMove->Set_AniType(CAction_MOVE::MOVE_ANI_WALK);
+	pathMove->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
+	pathMove->Set_TimeMax(defaultSpeed);
 
 	PushBack_LeafNode(dealyTime->Clone());
-	PushBack_LeafNode(dealyAniDance->Clone());
-	PushBack_LeafNode(dealyAniIdle->Clone());
-	PushBack_LeafNode(moveWalk->Clone());
-
-
-	//moveRun->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	//moveRun->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-	//moveRun->Set_TimeMax(RunTimeMax);
-
-	//// SetSeq
-	//// IDLE 상태 설정
-
-	//Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-	//Seq_IDLE1->PushBack_LeafNode(dealyAniDance->Clone());
-	//Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-	//Seq_IDLE1->PushBack_LeafNode(moveWalk->Clone());
-
-	//Seq_IDLE2->PushBack_LeafNode(dealyAniIdle->Clone());
-	//Seq_IDLE2->PushBack_LeafNode(dealyAniDance->Clone());
-	//Seq_IDLE2->PushBack_LeafNode(moveRun->Clone());
-
-	//Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-	//Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-	//Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-	//Seq_IDLE3->PushBack_LeafNode(moveWalk->Clone());
-
-
+	PushBack_LeafNode(dealyAni->Clone());
+	PushBack_LeafNode(pathMove->Clone());
 
 	Safe_Release(dealyTime);
-	Safe_Release(dealyAniIdle);
-	Safe_Release(dealyAniDance);
-	Safe_Release(moveWalk);
-	Safe_Release(moveRun);
+	Safe_Release(dealyAni);
+	Safe_Release(pathMove);
 
 	// 객체 연결
 	Setup_TargetNode(obj);
@@ -158,6 +127,23 @@ void CSequnce_IDLE::Restart(void * SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQIDLE));
 	}
+
+	auto delay = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	NULL_CHECK_BREAK(delay);
+	int randTime = CHelperClass::RandomInt(mSeqData.MinTime, mSeqData.MaxTime);
+	((CAction_DEALY*)delay)->Set_TimeMax(randTime);
+
+	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY, 1);
+	NULL_CHECK_BREAK(ani);
+	((CAction_DEALY*)ani)->Set_Animation(mSeqData.AniType);
+
+
+	auto pathMove = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+	NULL_CHECK_BREAK(pathMove);
+	((CAction_MOVE*)pathMove)->Set_Easing((EasingTypeID)mSeqData.mMoveEasingId);
+	((CAction_MOVE*)pathMove)->Set_AniType(CAction_MOVE::MOVE_ANI_WALK);
+	((CAction_MOVE*)pathMove)->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
+
 }
 
 CSequnce_IDLE * CSequnce_IDLE::Create(CGameObject_3D_Dynamic* targetobj)
@@ -222,14 +208,18 @@ void CSequnce_MOVETARGET::Restart(void * SeqData)
 
 	// 대기 -> 움직임 -> 애니메이션;
 	auto delay = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	NULL_CHECK_BREAK(delay);
 	((CAction_DEALY*)delay)->Set_TimeMax(mSeqData.Dealytime);
 
 
 	auto targetMove = Find_Action(CAction_DynamicBase::E_ACION_MOVETARGET);
-	((CAction_MOVE_TARGET*)targetMove)->Set_EasingFlag((EasingTypeID)mSeqData.eEasingID);
+	NULL_CHECK_BREAK(targetMove);
+	((CAction_MOVE_TARGET*)targetMove)->Set_EasingFlag(mSeqData.EasingID);
 	((CAction_MOVE_TARGET*)targetMove)->Set_Postition(mSeqData.StartPosition, mSeqData.EndPosition);
+	((CAction_MOVE_TARGET*)targetMove)->Set_MoveTimeMax(mSeqData.TimeMax);
 
 	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY, 1);
+	NULL_CHECK_BREAK(ani);
 	((CAction_DEALY*)ani)->Set_Animation((CAnimatior::E_COMMON_ANINAME)mSeqData.AniType);
 
 }
@@ -259,41 +249,38 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	__super::NativeConstruct(obj);
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 
-	// IDLE에서 사용할 상태 정의
+	// 타일 움직임 -> 애니메이션 -> 함수 실행;
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
 	if (ComBehavior == nullptr)
 		return E_FAIL;
 
 
-	CAction_DEALY* dealyAniDig = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	CAction_MOVE* moveRun = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
-	CAction_Function* function1 = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
-	CAction_Function* function2 = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+	CAction_Function* funcion= (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
-	_float WalkTimeMax = obj->Get_TimeForSpeed();
-	_float RunTimeMax = WalkTimeMax * 0.5f;
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
+	movepath->Set_TimeMax(0.6f);
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TILE);
 
 
-	dealyAniDig->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
-	moveRun->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	moveRun->Set_TimeMax(RunTimeMax);
-	moveRun->Set_Postition(CAction_MOVE::MOVE_POS_TILE);
 
-	function1->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
-	function2->Set_Funcion(CAction_Function::FUNCION_LOOK);
+	funcion->Set_Funcion(CAction_Function::FUNCION_LOOK);
 
 	// SetSeq
 	// Tile: 타일을 채굴
-	PushBack_LeafNode(moveRun->Clone());
-	PushBack_LeafNode(function2->Clone());
-	PushBack_LeafNode(dealyAniDig->Clone());
-	PushBack_LeafNode(function1->Clone());
+	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(funcion->Clone());
+	PushBack_LeafNode(ani->Clone());
+	funcion->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
+	PushBack_LeafNode(funcion->Clone());
 
 
-	Safe_Release(dealyAniDig);
-	Safe_Release(moveRun);
-	Safe_Release(function1);
-	Safe_Release(function2);
+	Safe_Release(ani);
+	Safe_Release(movepath);
+	Safe_Release(funcion);
+
 
 	// 객체 연결
 	Setup_TargetNode(obj);
@@ -303,10 +290,16 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 void CSequnce_TILE::Restart(void * SeqData)
 {
 	__super::Restart(SeqData);
+	// 대기 -> 움직임 -> 애니메이션;
+
 	if (SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQTILE));
 	}
+
+	auto pathmove = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+	NULL_CHECK_BREAK(pathmove);
+	((CAction_MOVE*)pathmove)->Set_TimeMax(mSeqData.Runtime);
 
 }
 
@@ -361,6 +354,10 @@ void CSequnce_PICK::Restart(void * SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQPICK));
 	}
+
+	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	NULL_CHECK_BREAK(ani);
+	((CAction_DEALY*)ani)->Set_Animation(mSeqData.AniType);
 }
 
 CSequnce_PICK * CSequnce_PICK::Create(CGameObject_3D_Dynamic * targetobj)

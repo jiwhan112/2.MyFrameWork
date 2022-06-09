@@ -52,7 +52,6 @@ HRESULT CAction_DEALY::ReStart(void* pArg)
 	{
 		mDynamicObject->Set_AniEnum(meAnimation);
 	}
-
 	return S_OK;
 }
 
@@ -198,7 +197,7 @@ HRESULT CAction_MOVE::Action(_double TimeDelta)
 			mDynamicObject->Set_LookPos(mNextGoalPosition);
 
 			mCurrentTimer += TimeDelta;
-			_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(TYPE_Linear, mStartPosition, mNextGoalPosition, mCurrentTimer, mTimeMax);
+			_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(meEasingID, mStartPosition, mNextGoalPosition, mCurrentTimer, mTimeMax);
 
 			if (mCurrentTimer > mTimeMax)
 			{
@@ -277,7 +276,6 @@ CAction_Function::CAction_Function(const CAction_Function & rhs)
 
 {
 	meAcionID = CAction_DynamicBase::E_ACION_FUNCTION;
-
 }
 
 HRESULT CAction_Function::ReStart(void* pArg)
@@ -351,10 +349,9 @@ CAction_MOVE_TARGET::CAction_MOVE_TARGET(const CAction_MOVE_TARGET & rhs)
 	: CAction_DynamicBase(rhs)
 {
 	mCurrentTimer = 0;
-	mTimeMax = 2;
+	mTimeMax = rhs.mTimeMax;
 	meEasingID = rhs.meEasingID;
 	meAcionID = CAction_DynamicBase::E_ACION_MOVETARGET;
-
 }
 
 HRESULT CAction_MOVE_TARGET::ReStart(void* pArg)

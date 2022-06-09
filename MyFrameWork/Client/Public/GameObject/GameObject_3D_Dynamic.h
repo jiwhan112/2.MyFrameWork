@@ -81,7 +81,6 @@ public: // GetSet
 
 	HRESULT Switch_MapType();
 
-	_float3 Get_CustomMovePosition()const { return mCustomMovePostition; }
 	E_MAPTYPE Get_CurrentMap() const
 	{
 		return meCurrentMap;
@@ -117,6 +116,8 @@ protected:
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 	HRESULT Set_Sequnce(const char* statename, void* desc);
+	HRESULT Select_Door();
+	HRESULT Select_Fall();
 
 
 protected:
@@ -148,7 +149,6 @@ protected: // 3D모델 Com / DESC 추가
 	_float3							mGoalPosition; // 목표위치
 	_float3							mLookPostiton;
 
-	_float3							mCustomMovePostition = _float3();
 
 
 	// 지형
@@ -174,6 +174,9 @@ protected: // 3D모델 Com / DESC 추가
 
 
 	const _float mMouseOffset = 4;
+
+public:
+	const _float3 mSpawnPostitionDAUNGEON = _float3(20.f, 0.f, 14.5f);
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

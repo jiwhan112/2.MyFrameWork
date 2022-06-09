@@ -17,6 +17,7 @@ CBehaviorTree::CBehaviorTree(const CBehaviorTree & rhs)
 	mCurrentSequnence = nullptr;
 
 	mMapLeafNode = rhs.mMapLeafNode;
+
 }
 
 HRESULT CBehaviorTree::NativeConstruct_Prototype()
@@ -88,6 +89,16 @@ HRESULT CBehaviorTree::Select_Sequnce(string seqTag, void* SeqData)
 	mCurrentSequnence = seq;
 	mCurrentKey = seqTag;
 	mCurrentSequnence->Restart(SeqData);
+	return S_OK;
+}
+
+HRESULT CBehaviorTree::Set_SequnceData(string seqTag, void * SeqData)
+{
+	CNode_Seqeunce* seq = Find_Seqeunce(seqTag);
+	if (seq == nullptr)
+		return E_FAIL;
+	seq->Restart(SeqData);
+
 	return S_OK;
 }
 

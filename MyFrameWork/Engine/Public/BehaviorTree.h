@@ -29,7 +29,8 @@ public:
 
 	HRESULT				Add_Seqeunce(string strtag, CNode_Seqeunce * seq);
 	CNode_Seqeunce*		Find_Seqeunce(string strtag);
-	HRESULT				Select_Sequnce(string seqTag,void* SeqData = nullptr);
+	HRESULT				Select_Sequnce(string seqTag, void* SeqData = nullptr);
+	HRESULT				Set_SequnceData(string seqTag, void* SeqData = nullptr);
 	string				Get_CurrentSeqKey() const
 	{
 		return mCurrentKey;

@@ -74,8 +74,8 @@ public:
 	void Set_TimeMax(_double timeMax);
 
 private:
-	_double	mTimeMax;
-	_double	mCurrentTimer;
+	_double	mTimeMax=1;
+	_double	mCurrentTimer=0;
 
 	E_DEALY_FALG					meDealyType = DEALY_NONE;
 	CAnimatior::E_COMMON_ANINAME	meAnimation = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE;
@@ -85,7 +85,6 @@ public:
 	virtual CAction_DEALY*				Clone()override;
 	virtual void Free()override;
 };
-
 
 // 이동 위치만 받으면 해당 네비메시를 탐색해서 이동해준다.
 // Run
@@ -132,10 +131,14 @@ public:
 		meMoveType = eMoveType;
 	}
 
+	void Set_Easing(EasingTypeID e)
+	{
+		meEasingID = e;
+	}
 
 private:
-	_double						mTimeMax;
-	_double						mCurrentTimer;
+	_double						mTimeMax=1;
+	_double						mCurrentTimer=0;
 
 	_float3						mGoalPosition;
 	_float3						mNextGoalPosition;
@@ -145,8 +148,10 @@ private:
 	bool						mIsMoveNaviPath = false;
 	bool						mIsMoveCell = false;
 
+
 	E_MOVE_ANI_FLAG				meMoveAni = MOVE_ANI_WALK;
 	E_MOVEPOSFLAG				meMoveType = MOVE_POS_NEAR;
+	EasingTypeID				meEasingID = TYPE_Linear;
 
 public:
 	static	CAction_MOVE*				Create(const char* str, CGameObject_3D_Dynamic* obj);
@@ -177,9 +182,10 @@ public:
 		mGoalPosition = g;
 	};
 
+	void Set_MoveTimeMax(_float timeMax) { mTimeMax = timeMax; };
 private:
-	_double						mTimeMax;
-	_double						mCurrentTimer;
+	_double						mTimeMax=1;
+	_double						mCurrentTimer=0;
 
 	_float3						mGoalPosition;
 	_float3						mStartPosition;

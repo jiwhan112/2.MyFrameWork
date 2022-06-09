@@ -46,8 +46,10 @@ class CSequnce_IDLE :
 public:
 	typedef struct tag_SeqIdle
 	{
-		int data;
-
+		_int MinTime = 1;
+		_int MaxTime = 5;
+		CAnimatior::E_COMMON_ANINAME	AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
+		EasingTypeID					mMoveEasingId= TYPE_Linear;
 	}SEQIDLE;
 
 protected:
@@ -58,7 +60,6 @@ public:
 	// 초기화와 다시시작시 정보 전달과 다름
 	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
 	virtual void Restart(void* SeqData = nullptr)override;
-
 
 protected:
 	SEQIDLE					mSeqData;
@@ -76,10 +77,10 @@ public:
 	typedef struct tag_SeqMoveTarget
 	{
 		// 대기 -> 움직임 -> 애니메이션;
-		_int Dealytime=1;
-		_uint eEasingID = 0;
-		_uint AniType = 0;
-
+		_float Dealytime = 1;
+		_float TimeMax = 1.0f;
+		EasingTypeID EasingID = TYPE_Linear;
+		CAnimatior::E_COMMON_ANINAME AniType;
 		_float3 StartPosition;
 		_float3 EndPosition;
 
@@ -110,7 +111,7 @@ class CSequnce_TILE:
 public:
 	typedef struct tag_SeqTILE
 	{
-		int data;
+		_float Runtime = 0.3f;
 
 	}SEQTILE;
 
@@ -140,7 +141,7 @@ class CSequnce_PICK:
 public:
 	typedef struct tag_SeqTILE
 	{
-		int data;
+		CAnimatior::E_COMMON_ANINAME AniType;
 
 	}SEQPICK;
 

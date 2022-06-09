@@ -67,14 +67,23 @@ HRESULT CGameObject_Mine::Init_AI()
 
 HRESULT CGameObject_Mine::Init_AI_MINE()
 {
-	// AI 技何 备泅
-
-	// IDLE 矫啮胶 犁积己
+	// IDLE TILE 沥焊 积己
 	CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
+	CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
+	DefaultIdleDesc.MinTime = 1;
+	DefaultIdleDesc.MaxTime = 3;
+	DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
+	DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
+
+	Seq_IDLE->Restart(&DefaultIdleDesc);
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
 	CSequnce_TILE* Seq_TILE= CSequnce_TILE::Create(this);
-	mComBehavior->Add_Seqeunce("DIG", Seq_IDLE);
+	CSequnce_TILE::tag_SeqTILE DefaultTileDesc;
+	DefaultTileDesc.Runtime = mTimeForSpeed * 0.5f;
+
+	Seq_TILE->Restart(&DefaultTileDesc);
+	mComBehavior->Add_Seqeunce("DIG", Seq_TILE);
 
 //
 //
