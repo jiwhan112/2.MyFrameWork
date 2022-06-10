@@ -200,6 +200,7 @@ class CSequnce_WorldMove:
 public:
 	typedef struct tag_SeqWorldMove
 	{
+		_float3 GoalPosition = _float3();
 
 	}SEQWORLDMOVE;
 

@@ -275,9 +275,9 @@ _bool CDungeon_Manager::Task_WorldUnit(TASKBASE * task)
 	// 2. 유닛에게 정보 전달 
 	for (auto& unit : *unitlist)
 	{
-	//	unit->Set_WorldGoalIndex(GoalTileIndex);
-	//	unit->Select_WorldGo();
+		FAILED_CHECK_NONERETURN(unit->Select_WorldGo(worldPos));
 	}
+
 
 	Safe_Delete(task);
 	return true;

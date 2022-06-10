@@ -60,7 +60,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 HRESULT CGameObject_Mine::Init_AI()
 {
 	FAILED_CHECK(__super::Init_AI());
-	
+
 	FAILED_CHECK(Init_AI_MINE());
 	return S_OK;
 }

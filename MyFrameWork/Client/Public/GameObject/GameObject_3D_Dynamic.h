@@ -52,10 +52,17 @@ public: // Base
 	virtual _int Tick(_double TimeDelta);
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
+
+	virtual _int Tick_Dungeon(_double TimeDelta);
+	virtual _int LateTick_Dungeon(_double TimeDelta);
+
+	virtual _int Tick_World(_double TimeDelta);
+	virtual _int LateTick_World(_double TimeDelta);
+
 	
 	virtual HRESULT Init_Unit();
 	virtual HRESULT Init_AI();
-	virtual HRESULT Init_AI_Dynamic();
+	HRESULT Init_AI_CommonDynamic();
 
 
 public: // GetSet
@@ -119,11 +126,12 @@ protected:
 	HRESULT Update_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 	HRESULT Set_Sequnce(const char* statename, void* desc);
+
+public:
 	HRESULT Select_Door();
 	HRESULT Select_Fall();
 	HRESULT Select_WorldGo(_float3 pos);
-public:
-		HRESULT Set_BehaviorMode();
+	HRESULT Set_BehaviorMode();
 
 protected:
 	HRESULT Add_Socket(string modelName,string boneName);

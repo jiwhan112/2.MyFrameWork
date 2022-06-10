@@ -14,6 +14,14 @@ class CGameObject_Enemy final :
 {
 public:
 
+	enum E_ENEMYTYPE
+	{
+		ENEMY_AA,
+		ENEMY_BB,
+		ENEMY_CC,
+		ENEMY_END,
+	};
+
 protected:
 	explicit CGameObject_Enemy(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_Enemy(const CGameObject_Enemy& rhs);
@@ -27,14 +35,19 @@ public:
 	//virtual _int LateTick(_double TimeDelta);
 	//virtual HRESULT Render();
 
-	virtual HRESULT Init_Unit();
-	virtual HRESULT Init_AI();
+	virtual _int Tick_Dungeon(_double TimeDelta);
+	virtual _int LateTick_Dungeon(_double TimeDelta);
 
-	HRESULT Init_AI_Default();
+	virtual _int Tick_World(_double TimeDelta);
+	virtual _int LateTick_World(_double TimeDelta);
+
+
+	virtual HRESULT Init_Unit();
+	virtual HRESULT Init_AI()override;
+	virtual HRESULT Init_AI_Enemy();
+
 
 	// ¸ðµ¨ ±¸Çö 
-
-
 
 protected:
 

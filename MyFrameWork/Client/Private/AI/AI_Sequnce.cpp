@@ -471,11 +471,8 @@ HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
 	movepath->Set_TimeMax(0.6f);
-	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TILE);
-
-
-
-	funcion->Set_Funcion(CAction_Function::FUNCION_LOOKTILE);
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_PICK);
+	funcion->Set_Funcion(CAction_Function::E_FUNCION::FUNCION_NONE);
 
 	// SetSeq
 	// Tile: Å¸ÀÏÀ» Ã¤±¼
@@ -485,11 +482,9 @@ HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	funcion->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
 	PushBack_LeafNode(funcion->Clone());
 
-
 	Safe_Release(ani);
 	Safe_Release(movepath);
 	Safe_Release(funcion);
-
 
 	// °´Ã¼ ¿¬°á
 	Setup_TargetNode(obj);
@@ -499,13 +494,26 @@ HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 void CSequnce_WorldMove::Restart(void * SeqData)
 {
+	__super::Restart(SeqData);
+	
 }
 
 CSequnce_WorldMove * CSequnce_WorldMove::Create(CGameObject_3D_Dynamic * targetobj)
 {
-	return nullptr;
+	CSequnce_WorldMove* pInstance = NEW CSequnce_WorldMove();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_WorldMoveS");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CSequnce_WorldMove::Free()
 {
+	__super::Free();
+	
 }

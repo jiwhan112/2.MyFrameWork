@@ -86,40 +86,20 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 	else
 	{
-		if (mComListCollider != nullptr)
+		if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
 		{
-			for (auto& col : *mComListCollider)
-			{
-				col->Update_Transform(mComTransform->GetWorldFloat4x4());
-				GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
-			}
-		}
-
-		mComBehavior->Tick(TimeDelta);
-		Tick_LookUpdate(TimeDelta);
-
-		if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
-		{
-			if (mIsTerrainHeight)
-				Set_Terrain_HeightY(mCurrentMap);
+			Tick_Dungeon(TimeDelta);
 
 		}
-
-		else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
+		else if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
 		{
-			_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
-			_float3	newPos = ray.position;
-			newPos += ray.direction * mMouseOffset;
-			CTransform* CamTrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA))->Get_ComTransform();
-			_float3 CamDir = CamTrans->GetWorldFloat4x4().Backward();
-			CamDir.y = 0;
-			CamDir.Normalize();
-			mComTransform->LookAtDir(CamDir);
-			Set_Position(newPos);
-
+			Tick_World(TimeDelta);
 		}
 	}
 
+	mComBehavior->Tick(TimeDelta);
+	// 버그 코드
+	// Tick_LookUpdate(TimeDelta);
 	Tick_Socket(TimeDelta);
 
 //	Tick_DEBUG(TimeDelta);
@@ -145,16 +125,78 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 		if (mCurrentMap == nullptr)
 			return UPDATEERROR;
 
-		mComBehavior->LateTick(TimeDelta);
-		mComModel->Update_CombinedTransformationMatrices(TimeDelta);
-
-		mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
-
-		if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
-			mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+		if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
+		{
+			LateTick_Dungeon(TimeDelta);
+		}
+		else
+		{
+			LateTick_World(TimeDelta);
+		}
+		
 	}
 
+	// 공통 업데이트
+	if (mComBehavior)
+		mComBehavior->LateTick(TimeDelta);
+	if (mComModel)
+		mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+	if (mCurrentNavi)
+		mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 
+	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
+		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+
+	return UPDATENONE;
+}
+
+_int CGameObject_3D_Dynamic::Tick_Dungeon(_double TimeDelta)
+{
+	FAILED_UPDATE(__super::Tick(TimeDelta));
+
+
+	if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
+	{
+		if (mIsTerrainHeight)
+			Set_Terrain_HeightY(mCurrentMap);
+	}
+
+	else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
+	{
+		_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
+		_float3	newPos = ray.position;
+		newPos += ray.direction * mMouseOffset;
+		CTransform* CamTrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA))->Get_ComTransform();
+		_float3 CamDir = CamTrans->GetWorldFloat4x4().Backward();
+		CamDir.y = 0;
+		CamDir.Normalize();
+		mComTransform->LookAtDir(CamDir);
+		Set_Position(newPos);
+
+	}
+
+	return UPDATENONE;
+}
+
+_int CGameObject_3D_Dynamic::LateTick_Dungeon(_double TimeDelta)
+{
+
+	return UPDATENONE;
+}
+
+_int CGameObject_3D_Dynamic::Tick_World(_double TimeDelta)
+{
+	if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
+	{
+		if (mIsTerrainHeight)
+			Set_Terrain_HeightY(mCurrentMap);
+	}
+
+	return UPDATENONE;
+}
+
+_int CGameObject_3D_Dynamic::LateTick_World(_double TimeDelta)
+{
 	return UPDATENONE;
 }
 
@@ -199,6 +241,8 @@ HRESULT CGameObject_3D_Dynamic::Render()
 	return S_OK;
 }
 
+
+
 HRESULT CGameObject_3D_Dynamic::Init_Unit()
 {
 	// 유닛마다 상속해서 초기화
@@ -210,11 +254,11 @@ HRESULT CGameObject_3D_Dynamic::Init_Unit()
 HRESULT CGameObject_3D_Dynamic::Init_AI()
 {
 	// 유닛마다 상속해서 초기화
-	FAILED_CHECK(Init_AI_Dynamic());
+	FAILED_CHECK(Init_AI_CommonDynamic());
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Init_AI_Dynamic()
+HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 {
 	// 다이나믹 객체 공통 정의 AI
 
@@ -258,10 +302,10 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_Dynamic()
 	// Seq_Fall->Restart(&worldIdle);
 	mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
 
-	//CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
-	//CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
-	//Seq_Door->Restart(&DefaultDoorDesc);
-	//mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
+	CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
+	//	CSequnce_WorldMove::tag_SeqWorldMove DefaultDoorDesc;
+	//	Seq_Door->Restart(&DefaultDoorDesc);
+	mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
 
 
 	//CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
@@ -655,9 +699,9 @@ HRESULT CGameObject_3D_Dynamic::Select_Fall()
 HRESULT CGameObject_3D_Dynamic::Select_WorldGo(_float3 pos)
 {
 	FAILED_CHECK(FindPathForCurrentNavi(pos));
-
-
-//	mComBehavior->Select_Sequnce("WORLDMOVE", &Desc);
+	// CSequnce_WorldMove::SEQWORLDMOVE seq;
+	// seq.GoalPosition = pos;
+	FAILED_CHECK(mComBehavior->Select_Sequnce("WORLDMOVE"));
 
 
 	return S_OK;
@@ -696,13 +740,12 @@ HRESULT CGameObject_3D_Dynamic::Add_Socket(string modelName,string boneName)
 
 HRESULT CGameObject_3D_Dynamic::Tick_Socket(_double timer)
 {
-	if (mListSocket.empty() == false)
+
+	for (auto& sock : mListSocket)
 	{
-		for (auto& sock : mListSocket)
-		{
-			sock->Tick(timer);
-		}
+		sock->Tick(timer);
 	}
+
 	return S_OK;
 }
 

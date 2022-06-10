@@ -31,17 +31,59 @@ HRESULT CGameObject_Enemy::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
+_int CGameObject_Enemy::Tick_Dungeon(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::Tick_Dungeon(TimeDelta))
+		return UPDATEERROR;
+	
+	return UPDATENONE;
+}
+
+_int CGameObject_Enemy::LateTick_Dungeon(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::LateTick_Dungeon(TimeDelta))
+		return UPDATEERROR;
+
+	return UPDATENONE;
+}
+
+_int CGameObject_Enemy::Tick_World(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::Tick_World(TimeDelta))
+		return UPDATEERROR;
+
+	return UPDATENONE;
+}
+
+_int CGameObject_Enemy::LateTick_World(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
+		return UPDATEERROR;
+
+	return UPDATENONE;
+}
+
 
 HRESULT CGameObject_Enemy::Init_Unit()
 {
 	__super::Init_Unit();
+
+	// Àû °áÁ¤ 
 
 	return S_OK;
 }
 
 HRESULT CGameObject_Enemy::Init_AI()
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(__super::Init_AI());
+	FAILED_CHECK(Init_AI_Enemy());
+
+	return S_OK;
+}
+
+HRESULT CGameObject_Enemy::Init_AI_Enemy()
+{
+	return S_OK;
 }
 
 

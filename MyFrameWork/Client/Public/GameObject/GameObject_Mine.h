@@ -28,8 +28,11 @@ public:
 	//virtual HRESULT Render();
 
 	virtual HRESULT Init_Unit();
-	virtual HRESULT Init_AI();
+
+
+	virtual HRESULT Init_AI()override;
 	virtual HRESULT Init_AI_MINE();
+
 
 	// ¸ðµ¨ ±¸Çö 
 	void Set_Dig_Tile(class CGameObject_3D_Tile* tile);
