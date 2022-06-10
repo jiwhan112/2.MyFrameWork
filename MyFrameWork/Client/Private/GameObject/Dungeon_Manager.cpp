@@ -211,8 +211,8 @@ _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 	case CDungeon_Task::TASK_GOLD:
 		Task_Mine(task);
 		break;
-	case CDungeon_Task::TASK_MOVE_WORLD:
-		Task_WorldUnit(task);
+	case CDungeon_Task::TASK_PLAYER_MOVE_WORLD:
+		Task_Player_Move_World(task);
 		break;
 	case CDungeon_Task::TASK_END:
 		break;
@@ -262,7 +262,7 @@ _bool CDungeon_Manager::Task_Mine(TASKBASE* task)
 	return true;
 }
 
-_bool CDungeon_Manager::Task_WorldUnit(TASKBASE * task)
+_bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 {
 	// 테스크를 유닛에게 전달한다.
 
@@ -271,13 +271,12 @@ _bool CDungeon_Manager::Task_WorldUnit(TASKBASE * task)
 	_float3 worldPos = static_cast<TASKMAP*>(task)->mWorldMapPickPos;
 	_uint  GoalTileIndex = mDungeon_Objects->Get_WorldMap()->Get_TileIndex(worldPos);
 
-
 	// 2. 유닛에게 정보 전달 
 	for (auto& unit : *unitlist)
 	{
-		FAILED_CHECK_NONERETURN(unit->Select_WorldGo(worldPos));
+		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
+			FAILED_CHECK_NONERETURN(unit->Select_WorldGo(worldPos));
 	}
-
 
 	Safe_Delete(task);
 	return true;

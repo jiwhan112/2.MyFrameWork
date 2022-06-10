@@ -88,6 +88,8 @@ public: // GetSet
 		mLookPostiton = lookpos;
 	}
 
+	void		Set_LookDir(_float3 dir);
+
 	HRESULT Switch_MapType();
 
 	E_MAPTYPE Get_CurrentMap() const
@@ -95,6 +97,15 @@ public: // GetSet
 		return meCurrentMap;
 	}
 	_float Get_TimeForSpeed() const { return mTimeForSpeed; }
+
+	E_UNITTYPE Get_UnitType()const
+	{
+		return meUnitType;
+	}
+
+	void Set_LookAt_RotateXZ(_float4x4 mat);
+	void Set_RotateXZ(_float4x4 mat);
+
 
 	// Collision
 public: 

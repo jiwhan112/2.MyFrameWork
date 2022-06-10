@@ -80,10 +80,16 @@ HRESULT CGameObject_Mine::Init_Unit()
 	strcpy_s(mModelDesc.mModelName, str.c_str());
 	Set_LoadModelDynamicDESC(mModelDesc);
 
-	// 위치
+	// Transform
 	_float3 SpawnPos = mSpawnPostitionDAUNGEON;
 	SpawnPos.y += 10;
 	Set_Position(SpawnPos);
+
+	Set_LookDir(_float3(-1, 0, -1));
+
+
+	_float size = 0.6f;
+	mComTransform->Scaled(_float3(size, size, size));
 
 	// 유닛 타입
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
@@ -93,10 +99,6 @@ HRESULT CGameObject_Mine::Init_Unit()
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
 	mRotSpeed = 10.0f;
-
-	// 유닛 크기
-	_float size = 0.6f;
-	mComTransform->Scaled(_float3(size, size, size));
 
 	// 충돌 정보
 	COLLIDER_DESC desc;

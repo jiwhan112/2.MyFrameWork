@@ -275,36 +275,32 @@ HRESULT CGameObject_3D_Dynamic::Init_AI()
 
 HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 {
+	// #AI 공통 AI 세팅 
 	// 다이나믹 객체 공통 정의 AI
 
-	// 내려오기 / PICK / OpenDoor /
+	// 생성 / 내려오기 / PICK / OpenDoor /
 
-	CSequnce_MOVETARGET* Seq_CreateFall = CSequnce_MOVETARGET::Create(this);
-	CSequnce_MOVETARGET::SEQMOVETARGET DefaultCreateFallDesc;
-	DefaultCreateFallDesc.Dealytime = 0.1f;
-	DefaultCreateFallDesc.TimeMax = 2.0f;
-	DefaultCreateFallDesc.StartPosition = Get_WorldPostition();
-	DefaultCreateFallDesc.EndPosition = Get_TerrainHeightPostition();
-	DefaultCreateFallDesc.EasingID = TYPE_SinIn;
-	DefaultCreateFallDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP;
-	DefaultCreateFallDesc.eExitFunc = CAction_Function::E_FUNCION::FUNCION_NONE;
-
-	Seq_CreateFall->Restart(&DefaultCreateFallDesc);
-	mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_CreateFall);
-
-	CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
-	CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
-	Seq_Door->Restart(&DefaultDoorDesc);
-	mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
-	
-
-	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
+	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER || 
+		meUnitType == CGameObject_3D_Dynamic::UNIT_ENEMY)
 	{
-		CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
-		CSequnce_PICK::SEQPICK DefaultPickDesc;
-		DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
-		Seq_Pick->Restart(&DefaultPickDesc);
-		mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
+		// 인간형
+		CSequnce_MOVETARGET* Seq_CreateFall = CSequnce_MOVETARGET::Create(this);
+		CSequnce_MOVETARGET::SEQMOVETARGET DefaultCreateFallDesc;
+		DefaultCreateFallDesc.Dealytime = 0.1f;
+		DefaultCreateFallDesc.TimeMax = 2.0f;
+		DefaultCreateFallDesc.StartPosition = Get_WorldPostition();
+		DefaultCreateFallDesc.EndPosition = Get_TerrainHeightPostition();
+		DefaultCreateFallDesc.EasingID = TYPE_SinIn;
+		DefaultCreateFallDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP;
+		DefaultCreateFallDesc.eExitFunc = CAction_Function::E_FUNCION::FUNCION_NONE;
+
+		Seq_CreateFall->Restart(&DefaultCreateFallDesc);
+		mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_CreateFall);
+
+		CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
+		CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
+		Seq_Door->Restart(&DefaultDoorDesc);
+		mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
 
 		// 상태전환시 데이터 추가
 		CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
@@ -312,7 +308,31 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		Seq_Fall->Restart(&DefaultFallDesc);
 		mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
 
+		// World
+		// WorldIdle / WorldMove
+		CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
+		// CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
+		// Seq_Fall->Restart(&worldIdle);
+		mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
 
+		CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
+		//	CSequnce_WorldMove::tag_SeqWorldMove DefaultDoorDesc;
+		//	Seq_Door->Restart(&DefaultDoorDesc);
+		mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
+
+		mComBehavior->Select_Sequnce("CREATE_FALL");
+	}
+
+	
+
+	// 각각 타입에 따른 공통 AI
+	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
+	{
+		CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
+		CSequnce_PICK::SEQPICK DefaultPickDesc;
+		DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
+		Seq_Pick->Restart(&DefaultPickDesc);
+		mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 	}
 
 	else if (meUnitType == CGameObject_3D_Dynamic::UNIT_ENEMY)
@@ -322,21 +342,11 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 
 	else if (meUnitType == CGameObject_3D_Dynamic::UNIT_BOSS)
 	{
-
+		
 	}
 
-	// WorldIdle / WorldMove
-	CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
-	// CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
-	// Seq_Fall->Restart(&worldIdle);
-	mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
+	
 
-	CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
-	//	CSequnce_WorldMove::tag_SeqWorldMove DefaultDoorDesc;
-	//	Seq_Door->Restart(&DefaultDoorDesc);
-	mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
-
-	mComBehavior->Select_Sequnce("CREATE_FALL");
 
 
 	return S_OK;
@@ -389,6 +399,11 @@ HRESULT CGameObject_3D_Dynamic::Add_ColliderDesc(COLLIDER_DESC * desc, int size)
 }
 
 
+void CGameObject_3D_Dynamic::Set_LookDir(_float3 dir)
+{
+	mComTransform->LookAtDir(dir);
+}
+
 HRESULT CGameObject_3D_Dynamic::Switch_MapType()
 {
 
@@ -408,6 +423,41 @@ HRESULT CGameObject_3D_Dynamic::Switch_MapType()
 
 	return S_OK;
 }
+
+void CGameObject_3D_Dynamic::Set_LookAt_RotateXZ(_float4x4 mat)
+{
+	_float3 scale = mComTransform->Get_Scale();
+	_float3 right = mat.Right();
+	_float3 look = mat.Backward();
+
+	right.Normalize();
+	look.Normalize();
+
+	right *= scale.x;
+	look *= scale.z;
+
+	mComTransform->Set_State(CTransform::STATE_RIGHT, -right);
+	mComTransform->Set_State(CTransform::STATE_LOOK, -look);
+
+}
+
+void CGameObject_3D_Dynamic::Set_RotateXZ(_float4x4 mat)
+{
+	_float3 scale = mComTransform->Get_Scale();
+	_float3 right = mat.Right();
+	_float3 look = mat.Backward();
+
+	right.Normalize();
+	look.Normalize();
+
+	right *= scale.x;
+	look *= scale.z;
+
+	mComTransform->Set_State(CTransform::STATE_RIGHT, right);
+	mComTransform->Set_State(CTransform::STATE_LOOK, look);
+
+}
+
 
 HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex)
 {

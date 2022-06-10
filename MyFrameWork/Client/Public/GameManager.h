@@ -62,6 +62,9 @@ public:
 	CGameObject_MyTerrain*		Get_LevelObject_DUNGEONMAP();
 	CGameObject_MyTerrain*		Get_LevelObject_WORLDMAP();
 
+	_float4x4					Get_LevelObject_CameraMat();
+
+
 	const list<CGameObject*>* Get_LevelObject_List(const wchar_t* layerTag);
 	// list<CGameObject_Base*> Get_ListObjecID(E_OBJECT_TYPE id);
 

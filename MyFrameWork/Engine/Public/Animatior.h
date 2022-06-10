@@ -11,25 +11,81 @@ class CMeshContainer;
 class CHierarchyNode;
 
 // 블랜드 / 애니메이션 상황에 따라 태그화
-class ENGINE_DLL CAnimatior final 
+class ENGINE_DLL CAnimatior final
 	: public CBase
 {
+	/*
+// boss
+skill
+sleeping
+att
+spawnpose
+
+// enemy
+angry
+carried
+drink
+eat
+up
+talk
+
+// mine
+miniJob // 미니일
+brew_beer
+build // 건설
+carried
+dance
+transport
+spawnpose
+spawnDrop
+workshop // 바닥
+
+
+// orc
+resing_in
+resing_loop
+angry
+
+
+*/
+
 public:
 	static enum E_COMMON_ANINAME
 	{
-		// 걷기 달리기 공격같은 공통 이름 정의
+		// AI 이름 잘라서 쓰는 것 정의
+
+		// 공통 AI
 		E_COMMON_ANINAME_SKINPOSE,
 		E_COMMON_ANINAME_WALK,
 		E_COMMON_ANINAME_IDLE,
 		E_COMMON_ANINAME_RUN,
-		E_COMMON_ANINAME_DIG,
-		E_COMMON_ANINAME_DANCE,
+		E_COMMON_ANINAME_SPAWNPOS,
 		E_COMMON_ANINAME_SLEEPING,
-		E_COMMON_ANINAME_DRAG,
 		E_COMMON_ANINAME_MELEE,
+		E_COMMON_ANINAME_ANGRY,	// 화
 		E_COMMON_ANINAME_UP,
+		E_COMMON_ANINAME_CARRIED, // 마우스
+
+		// MINE 캐릭터
+		E_COMMON_ANINAME_DIG, // 채광
+		E_COMMON_ANINAME_DANCE,
+		E_COMMON_ANINAME_DROPSPAWN,
+		E_COMMON_ANINAME_DRAG,
+		E_COMMON_ANINAME_MINI, // 소일거리
+		E_COMMON_ANINAME_BUILD, // 건설
+		E_COMMON_ANINAME_WORKSHOP, // 땅파기
+		E_COMMON_ANINAME_TRANSPORT, // 땅파기
+
+		// PLAYER
+		E_COMMON_ANINAME_RESTING,
+
+		// BOSS 캐릭터
+		E_COMMON_ANINAME_SKILL,
+		E_COMMON_ANINAME_ATT,
+
 		E_COMMON_ANINAME_END,
 	};
+
 
 	const char* STR_CommonAniName(E_COMMON_ANINAME e)
 	{
@@ -55,8 +111,44 @@ public:
 			return "melee";
 		case E_COMMON_ANINAME_UP:
 			return "up";
+		case E_COMMON_ANINAME_SPAWNPOS:
+			return "spawnpose";
+			break;
+		case E_COMMON_ANINAME_ANGRY:
+			return "angry";
+			break;
+		case E_COMMON_ANINAME_CARRIED:
+			return "carried";
+			break;
+		case E_COMMON_ANINAME_DROPSPAWN:
+			return "spawnDrop";
+			break;
+
+		case E_COMMON_ANINAME_MINI:
+			return "miniJob";
+			break;
+		case E_COMMON_ANINAME_BUILD:
+			return "build";
+			break;
+		case E_COMMON_ANINAME_WORKSHOP:
+			return "workshop";
+			break;
+		case E_COMMON_ANINAME_TRANSPORT:
+			return "transport";
+			break;
+		case E_COMMON_ANINAME_RESTING:
+			return "resing";
+			break;
+		case E_COMMON_ANINAME_SKILL:
+			return "skill";
+			break;
+		case E_COMMON_ANINAME_ATT:
+			return "att";
+			break;
+
 		default:
 			return "";
+
 		}
 	}
 
@@ -88,7 +180,7 @@ public: // Get Set
 	HRESULT SetUp_AnimIndex(_uint index);
 	HRESULT Set_AniString(string AniName);
 	HRESULT Set_AniEnum(E_COMMON_ANINAME AniName, _int index = -1); // enum 중 랜덤 혹은 index
-	_int	Get_AniEnum2Index(E_COMMON_ANINAME AniName,_int index=-1);
+	_int	Get_AniEnum2Index(E_COMMON_ANINAME AniName,_int index = -1);
 
 	_double	Get_AniIndex2AniMaxTime(_int index);
 
@@ -121,7 +213,7 @@ public: // Get Set
 		return mIsCurrentAniEnd;
 	}
 
-public: 
+public:
 	HRESULT NativeConstruct(const vector<CMeshContainer*>* meshcon);
 
 public:
@@ -154,7 +246,7 @@ private: // 애니메이션 클립
 	_uint									m_iCurrentAniIndex = 0;
 	_uint									m_iNewAniIndex = 0;
 	_uint									m_iNumAnimations;
-	
+
 	vector<CAnimationClip*>					mVecAnimations;
 
 	// 멀티 애니메이션으로 하드코딩

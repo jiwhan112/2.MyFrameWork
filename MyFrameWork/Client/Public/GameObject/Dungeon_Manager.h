@@ -83,7 +83,7 @@ private:
 	// 테스크에 따른 유닛 할당
 	_bool Task_Trigger(TASKBASE* task);
 	_bool Task_Mine(TASKBASE* task);
-	_bool Task_WorldUnit(TASKBASE* task);
+	_bool Task_Player_Move_World(TASKBASE* task);
 
 
 

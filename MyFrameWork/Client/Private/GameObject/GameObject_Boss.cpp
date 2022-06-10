@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_BOSS.h"
+#include "AI/AI_Sequnce.h"
 
 CGameObject_BOSS::CGameObject_BOSS(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_3D_Dynamic(pDevice, pDeviceContext)
@@ -44,6 +45,8 @@ HRESULT CGameObject_BOSS::LateTick_World(_double TimeDelta)
 	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
 		return UPDATEERROR;
 
+
+
 	return UPDATENONE;
 }
 
@@ -54,9 +57,15 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	strcpy_s(mModelDesc.mModelName, str.c_str());
 	Set_LoadModelDynamicDESC(mModelDesc);
 
-	// 위치
+	// Transform
 	_float3 SpawnPos = mSpawnPostitionBOSS;
 	Set_Position(SpawnPos);
+
+	Set_LookDir(_float3(-1, 0, -1));
+
+	_float size = 1.0f;
+	mComTransform->Scaled(_float3(size, size, size));
+
 
 	// 유닛 타입
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
@@ -68,9 +77,8 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	mTimeForSpeed = 0.5f;
 	mRotSpeed = 10.0f;
 
-	// 유닛 크기
-	_float size = 1.0f;
-	mComTransform->Scaled(_float3(size, size, size));
+	
+
 
 	// 충돌 정보
 	COLLIDER_DESC desc;
@@ -85,7 +93,7 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	// 소켓
 	// 보스 뼈 이름
 	// LDigit11 / LDigit12 // 손목 / 손가락
-	// LDigit21 / LDigit22 // 숫자가 크면 더 안쪽 뼈 
+	// LDigit21 / LDigit22 // 숫자가 크면 더 안쪽 뼈
 	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit21");
 	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_2), "LDigit22");
 	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_3), "RDigit21");
@@ -103,6 +111,25 @@ HRESULT CGameObject_BOSS::Init_AI()
 HRESULT CGameObject_BOSS::Init_AI_Boss()
 {
 	// 보스 패턴
+
+	// 대기
+	CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
+	CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
+	worldIdle.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SLEEPING;
+
+	Seq_WorldIdle->Restart(&worldIdle);
+	mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
+	mComBehavior->Select_Sequnce("WORLDIDLE");
+
+	// 움직임
+	CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
+	//	CSequnce_WorldMove::tag_SeqWorldMove DefaultDoorDesc;
+	//	Seq_Door->Restart(&DefaultDoorDesc);
+	mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
+
+
+	// 패턴 1,2,3
+
 
 
 

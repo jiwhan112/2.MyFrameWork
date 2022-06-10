@@ -193,6 +193,12 @@ CGameObject_MyTerrain * CGameManager::Get_LevelObject_WORLDMAP()
 	return (CGameObject_MyTerrain*)Get_LevelObject_LayerTag(TAGLAY(LAY_TERRAIN_WORLD));
 }
 
+_float4x4 CGameManager::Get_LevelObject_CameraMat()
+{
+	_float4x4 CamMatrix = Get_LevelObject_Camera()->Get_ComTransform()->GetWorldFloat4x4();
+	return CamMatrix;
+}
+
 const list<CGameObject*>* CGameManager::Get_LevelObject_List(const wchar_t * layerTag)
 {
 	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();

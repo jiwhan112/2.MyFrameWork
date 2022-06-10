@@ -17,8 +17,8 @@ public:
 		TASK_GOLD,
 
 		// 월드 명령
-		TASK_MOVE_WORLD, 
-		TASK_ATTACK_WORLD, 
+		TASK_PLAYER_MOVE_WORLD, 
+		TASK_PLAYER_ATTACK_WORLD, 
 
 		// 마법 명령
 		TASK_MAGIC_AA,

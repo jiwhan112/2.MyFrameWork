@@ -35,7 +35,7 @@ HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,void* desc)
 		base = NEW TASKTILE(*(_uint*)desc);
 		base->mTaskID = id;	
 		break;
-	case Client::CDungeon_Task::TASK_MOVE_WORLD:
+	case Client::CDungeon_Task::TASK_PLAYER_MOVE_WORLD:
 		base = NEW TASKMAP(*(_float3*)desc);
 		base->mTaskID = id; 
 		break;
@@ -61,7 +61,7 @@ HRESULT CDungeon_Task::Add_Task_Tile_Gold(_uint index)
 HRESULT CDungeon_Task::Add_Task_Tile_MoveWorld(_float3 Worldpos)
 {
 
-	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_MOVE_WORLD, (void*)&Worldpos);
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_PLAYER_MOVE_WORLD, (void*)&Worldpos);
 }
 
 
