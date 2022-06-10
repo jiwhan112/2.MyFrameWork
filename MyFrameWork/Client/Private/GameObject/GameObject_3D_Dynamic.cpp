@@ -714,40 +714,99 @@ HRESULT CGameObject_3D_Dynamic::Set_BehaviorMode(int index)
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Add_Socket(string modelName,string boneName)
+HRESULT CGameObject_3D_Dynamic::Add_Socket_Model(string tag, string modelName, string boneName)
 {
-	auto Create_Manager =  GetSingle(CGameManager)->Get_CreaterManager();
+	auto find = Find_Socket(tag);
+	if (find)
+		return E_FAIL;
 
+	auto Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
 	CGameObject_3D_Socket::SOCKETDESC socketDesc;
 	socketDesc.mTargetModel = Get_ComModel();
 	socketDesc.mTransform = Get_ComTransform();
 	socketDesc.mSocketName = boneName.c_str();
-	
-	// "crea_SnotPickaxe.fbx"
+
 	CGameObject_3D_Socket* Socket = (CGameObject_3D_Socket*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_SOCKET);
+	NULL_CHECK_BREAK(Socket);
+
 	Socket->Set_LoadSocketDESC(modelName.c_str(), socketDesc);
-	mListSocket.push_front(Socket);
+	mMapListSocket.emplace(tag, Socket);
 	return S_OK;
+}
+HRESULT CGameObject_3D_Dynamic::Add_Socket_NULL(string tag, string boneName)
+{
+	auto find = Find_Socket(tag);
+	if (find)
+		return E_FAIL;
+
+	auto Create_Manager = GetSingle(CGameManager)->Get_CreaterManager();
+	CGameObject_3D_Socket::SOCKETDESC socketDesc;
+	socketDesc.mTargetModel = Get_ComModel();
+	socketDesc.mTransform = Get_ComTransform();
+	socketDesc.mSocketName = boneName.c_str();
+
+	CGameObject_3D_Socket* Socket = (CGameObject_3D_Socket*)Create_Manager->CreateEmptyObject(GAMEOBJECT_3D_SOCKET);
+	NULL_CHECK_BREAK(Socket);
+
+	Socket->Set_LoadSocketDESC(nullptr, socketDesc);
+	mMapListSocket.emplace(tag, Socket);
+	return S_OK;
+}
+
+CGameObject_3D_Socket * CGameObject_3D_Dynamic::Find_Socket(string tag)
+{
+	// 소켓 찾기
+	auto iter = mMapListSocket.find(tag);
+	if (iter == mMapListSocket.end())
+		return nullptr;
+	return iter->second;
+}
+
+HRESULT CGameObject_3D_Dynamic::Set_SocketVisible(string tag, _bool vis)
+{
+	auto findobj = Get_SocketObj(tag);
+	if (findobj == nullptr)
+		return E_FAIL;
+
+	findobj->Set_isVisible(vis);
+
+	return S_OK;
+}
+
+CGameObject_3D_Socket * CGameObject_3D_Dynamic::Get_SocketObj(string tag)
+{
+	auto iter = mMapListSocket.find(tag);
+	if (iter == mMapListSocket.end())
+		return nullptr;
+	return iter->second;
+}
+
+CTransform * CGameObject_3D_Dynamic::Get_Socket_Trans(string tag)
+{
+	auto iter = mMapListSocket.find(tag);
+	if (iter == mMapListSocket.end())
+		return nullptr;
+	return iter->second->Get_ComTransform();
 }
 
 HRESULT CGameObject_3D_Dynamic::Tick_Socket(_double timer)
 {
-
-	for (auto& sock : mListSocket)
+	for (auto& sock : mMapListSocket)
 	{
-		sock->Tick(timer);
+		if (sock.second->Get_IsRenderer())
+			sock.second->Tick(timer);
 	}
-
 	return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::Render_Socket()
 {
-	if (mListSocket.empty() == false)
+	if (mMapListSocket.empty() == false)
 	{
-		for (auto& sock : mListSocket)
+		for (auto& sock : mMapListSocket)
 		{
-			sock->Render();
+			if (sock.second->Get_IsRenderer())
+				sock.second->Render();
 		}
 	}
 
@@ -836,10 +895,10 @@ void CGameObject_3D_Dynamic::Free()
 	mCurrentMap = nullptr;
 	mCurrentNavi = nullptr;
 
-	for (auto& socket: mListSocket)
+	for (auto& socket: mMapListSocket)
 	{
-		Safe_Release(socket);
+		Safe_Release(socket.second);
 	}
-	mListSocket.clear();
+	mMapListSocket.clear();
 
 }

@@ -30,6 +30,49 @@ HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
+HRESULT CGameObject_Mine::Tick_Dungeon(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::Tick_Dungeon(TimeDelta))
+		return UPDATEERROR;
+
+	// 던전
+
+	// Weapon 테스트
+	if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_3)& DIS_Down)
+	{
+		_bool isSocketVisible = Get_SocketObj(TAGSOCKET(SOCKET_WEAPON_1))->Get_IsRenderer();
+		Set_SocketVisible(TAGSOCKET(SOCKET_WEAPON_1), !isSocketVisible);
+	}
+
+	return UPDATENONE;
+}
+
+HRESULT CGameObject_Mine::LateTick_Dungeon(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::LateTick_Dungeon(TimeDelta))
+		return UPDATEERROR;
+
+	return UPDATENONE;
+}
+
+HRESULT CGameObject_Mine::Tick_World(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::Tick_World(TimeDelta))
+		return UPDATEERROR;
+
+	return UPDATENONE;
+}
+
+HRESULT CGameObject_Mine::LateTick_World(_double TimeDelta)
+{
+	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
+		return UPDATEERROR;
+
+	return UPDATENONE;
+}
+
+
+
 
 HRESULT CGameObject_Mine::Init_Unit()
 {
@@ -67,7 +110,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
 
 	// 소켓
-	Add_Socket("crea_SnotPickaxe.fbx","RArmDigit31");
+	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1),"crea_SnotPickaxe.fbx","RArmDigit31");
 
 	return S_OK;
 }
@@ -202,20 +245,7 @@ void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
 
 void CGameObject_Mine::Set_Dig_Gold(CGameObject_3D_Tile * tile)
 {
-	//if (tile->Get_IsBlocked())
-	//{
-	//	tile->Add_TileTask_this();
-	//	return;
-	//}
 
-	//if (FindPathRandAblePostition)
-	//{
-
-	//}
-
-	//// 골드 채굴
-	//mSearchTile = tile;
-	//mComBehavior->Select_Sequnce("GOLD");
 
 }
 

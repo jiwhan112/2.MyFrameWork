@@ -68,10 +68,11 @@ HRESULT CGameObject_3D_Socket::Render()
 
 HRESULT CGameObject_3D_Socket::Set_LoadSocketDESC(const char* MyFbxname, const SOCKETDESC & desc)
 {
-
-	strcpy_s(mModelStatic_Desc.mModelName, MyFbxname);
-
-	FAILED_CHECK(Set_LoadModelDESC(mModelStatic_Desc));
+	if (MyFbxname)
+	{
+		strcpy_s(mModelStatic_Desc.mModelName, MyFbxname);
+		FAILED_CHECK(Set_LoadModelDESC(mModelStatic_Desc));
+	}
 
 	memcpy(&mSocketDESC, &desc, sizeof(SOCKETDESC));
 

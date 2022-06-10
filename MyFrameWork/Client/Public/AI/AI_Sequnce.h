@@ -221,6 +221,87 @@ public:
 	virtual void Free()override;
 };
 
+
+// Seq_BossPattern
+class CSequnce_BossPattern1 :
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqBossPattern1
+	{
+
+	}SEQBOSS1;
+
+protected:
+	explicit CSequnce_BossPattern1() = default;
+	virtual ~CSequnce_BossPattern1() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQBOSS1					mSeqData;
+
+public:
+	static CSequnce_BossPattern1* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+class CSequnce_BossPattern2 :
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqBossPattern2
+	{
+
+	}SEQBOSS2;
+
+protected:
+	explicit CSequnce_BossPattern2() = default;
+	virtual ~CSequnce_BossPattern2() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQBOSS2					mSeqData;
+
+public:
+	static CSequnce_BossPattern2* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
+class CSequnce_BossPattern3 :
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqBossPattern1
+	{
+
+	}SEQBOSS3;
+
+protected:
+	explicit CSequnce_BossPattern3() = default;
+	virtual ~CSequnce_BossPattern3() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQBOSS3					mSeqData;
+
+public:
+	static CSequnce_BossPattern3* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
+
+
 #pragma endregion SEQ_BASE
 
 

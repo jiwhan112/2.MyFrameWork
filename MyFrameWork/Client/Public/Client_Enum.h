@@ -459,6 +459,130 @@ static const char* STR_TAYAI(E_AI_TYPE str)
 
 }
 
+// ¼ÒÄÏ Å¸ÀÔ
+enum E_SOKET_TYPE
+{
+	SOCKET_NONE = 0,
+
+	// ¹«±â »À 
+	SOCKET_WEAPON_1,
+	SOCKET_WEAPON_2,
+	SOCKET_WEAPON_3,
+	SOCKET_WEAPON_4,
+	SOCKET_WEAPON_5,
+	SOCKET_WEAPON_6,
+	SOCKET_WEAPON_7,
+	SOCKET_WEAPON_8,
+
+	// ÆÄÆ¼Å¬ »À
+	SOCKET_PARTILCE_1,
+	SOCKET_PARTILCE_2,
+	SOCKET_PARTILCE_3,
+	SOCKET_PARTILCE_4,
+	SOCKET_PARTILCE_5,
+	SOCKET_PARTILCE_6,
+	SOCKET_PARTILCE_7,
+	SOCKET_PARTILCE_8,
+	SOCKET_PARTILCE_9,
+	SOCKET_PARTILCE_10,
+
+	// Ãæµ¹¿ë »À
+	SOCKET_ANY_1,
+	SOCKET_ANY_2,
+	SOCKET_ANY_3,
+	SOCKET_ANY_4,
+	SOCKET_ANY_5,
+
+	SOCKET_END,
+
+};
+
+static const char* STR_TAYSOCKET(E_SOKET_TYPE str)
+{
+	switch (str)
+	{
+	case SOCKET_NONE:
+		return "SOCKET_NONE";
+
+	case SOCKET_WEAPON_1:
+		return "SOCKET_WEAPON_1";
+		break;
+	case SOCKET_WEAPON_2:
+		return "SOCKET_WEAPON_2";
+		break;
+	case SOCKET_WEAPON_3:
+		return "SOCKET_WEAPON_3";
+		break;
+	case SOCKET_WEAPON_4:
+		return "SOCKET_WEAPON_4";
+		break;
+	case SOCKET_WEAPON_5:
+		return "SOCKET_WEAPON_5";
+		break;
+	case SOCKET_WEAPON_6:
+		return "SOCKET_WEAPON_6";
+		break;
+	case SOCKET_WEAPON_7:
+		return "SOCKET_WEAPON_7";
+		break;
+	case SOCKET_WEAPON_8:
+		return "SOCKET_WEAPON_8";
+		break;
+	case SOCKET_PARTILCE_1:
+		return "SOCKET_PARTILCE_1";
+		break;
+	case SOCKET_PARTILCE_2:
+		return "SOCKET_PARTILCE_2";
+		break;
+	case SOCKET_PARTILCE_3:
+		return "SOCKET_PARTILCE_3";
+		break;
+	case SOCKET_PARTILCE_4:
+		return "SOCKET_PARTILCE_4";
+		break;
+	case SOCKET_PARTILCE_5:
+		return "SOCKET_PARTILCE_5";
+		break;
+	case SOCKET_PARTILCE_6:
+		return "SOCKET_PARTILCE_6";
+		break;
+	case SOCKET_PARTILCE_7:
+		return "SOCKET_PARTILCE_7";
+		break;
+	case SOCKET_PARTILCE_8:
+		return "SOCKET_PARTILCE_8";
+		break;
+	case SOCKET_PARTILCE_9:
+		return "SOCKET_PARTILCE_9";
+		break;
+	case SOCKET_PARTILCE_10:
+		return "SOCKET_PARTILCE_10";
+		break;
+	case SOCKET_ANY_1:
+		return "SOCKET_ANY_1";
+		break;
+	case SOCKET_ANY_2:
+		return "SOCKET_ANY_2";
+		break;
+	case SOCKET_ANY_3:
+		return "SOCKET_ANY_3";
+		break;
+	case SOCKET_ANY_4:
+		return "SOCKET_ANY_4";
+		break;
+	case SOCKET_ANY_5:
+		return "SOCKET_ANY_5";
+		break;
+	case SOCKET_END:
+		return "SOCKET_END";
+		break;
+	default:
+		return "";
+		break;
+	
+
+	}
+}
 
 #define  TAGLAY			STR_TAYLAY
 #define  TAGCOM			STR_TAYCOM
@@ -466,3 +590,4 @@ static const char* STR_TAYAI(E_AI_TYPE str)
 #define  TAGOBJTYPE		STR_TAGOBJ_TYPE
 #define  TAGFONT		STR_TAYFONT
 #define  TAGAI			STR_TAYAI
+#define  TAGSOCKET		STR_TAYSOCKET

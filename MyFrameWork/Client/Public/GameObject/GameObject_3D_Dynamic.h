@@ -2,6 +2,7 @@
 
 #include "GameObject_Base.h"
 #include "Animatior.h"
+#include "GameObject_Socket.h"
 
 BEGIN(Engine)
 class CModel;
@@ -38,6 +39,8 @@ public:
 		TICK_TOOL,
 		TICK_TYPE_END,
 	};
+
+	
 
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -132,13 +135,22 @@ public:
 	HRESULT Select_WorldGo(_float3 pos);
 	HRESULT Set_BehaviorMode(int index = -1);
 
+	// SOCKET
 protected:
-	HRESULT Add_Socket(string modelName,string boneName);
 	HRESULT Tick_Socket(_double timer);
 	HRESULT Render_Socket();
 
-	HRESULT Tick_DEBUG(_double timer);
+	HRESULT						Add_Socket_Model(string tag, string modelName, string boneName);
+	HRESULT						Add_Socket_NULL(string tag, string boneName);
+	CGameObject_3D_Socket*		Find_Socket(string tag);
+	
+public:
+	HRESULT						Set_SocketVisible(string tag, _bool vis);
+	CGameObject_3D_Socket*		Get_SocketObj(string tag);
+	CTransform*					Get_Socket_Trans(string tag);
 
+	// DEBUG
+	HRESULT Tick_DEBUG(_double timer);
 
 protected: // 3D모델 Com / DESC 추가
 	CModel*							mComModel = nullptr;
@@ -149,8 +161,8 @@ protected: // 3D모델 Com / DESC 추가
 	// 뼈애 달리게 수정
 	list<CCollider*>*				mComListCollider = nullptr;
 
-	// 달기
-	list<CGameObject_3D_Socket*>	mListSocket;
+	// 소켓
+	map<string, CGameObject_3D_Socket*> mMapListSocket;
 
 	MODEL_DYNAMIC_DESC				mModelDesc;
 	list<COLLIDER_DESC>				mListColliderDesc;

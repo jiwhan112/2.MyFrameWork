@@ -96,6 +96,9 @@ HRESULT CGameObject_BOSS::Init_AI()
 
 HRESULT CGameObject_BOSS::Init_AI_Boss()
 {
+	// 보스 패턴
+
+
 
 	return S_OK;
 }
