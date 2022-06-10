@@ -42,6 +42,8 @@ public:
 public:
 	HRESULT NativeConstruct(const char* pName, _double Duration, _double TickPerSecond);
 	HRESULT Update_TransformMatrices(_double TimeDelta);
+	HRESULT Update_TransformMatrices_OnlyTime(_double TimeDelta);
+	
 
 	void Add_Channel(class CChannel* pChannel)
 	{

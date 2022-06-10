@@ -130,7 +130,7 @@ public:
 	HRESULT Select_Door();
 	HRESULT Select_Fall();
 	HRESULT Select_WorldGo(_float3 pos);
-	HRESULT Set_BehaviorMode();
+	HRESULT Set_BehaviorMode(int index = -1);
 
 protected:
 	HRESULT Add_Socket(string modelName,string boneName);
@@ -154,6 +154,7 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 
 	MODEL_DYNAMIC_DESC				mModelDesc;
 	list<COLLIDER_DESC>				mListColliderDesc;
+
 	
 
 	E_UNITTYPE						meUnitType = UNIT_END;

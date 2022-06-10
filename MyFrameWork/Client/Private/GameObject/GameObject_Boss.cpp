@@ -61,6 +61,7 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	// À¯´Ö Å¸ÀÔ
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+	Set_BehaviorMode(1);
 
 	meUnitType = CGameObject_3D_Dynamic::UNIT_BOSS;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;

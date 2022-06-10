@@ -249,6 +249,15 @@ HRESULT CModel::Update_CombinedTransformationMatrices(_double TimeDelta)
 
 	return S_OK;
 }
+HRESULT CModel::Update_CombinedTransformationMatrices_OnlyTime(_double TimeDelta)
+{
+	// 애니메이션 블랜딩 
+	mAnimator->Update_CombinedTransformationMatrices_OnlyTime(TimeDelta);
+
+	return S_OK;
+}
+
+
 
 HRESULT CModel::Bind_OnShader(CShader * pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char * pValueName)
 {

@@ -7,6 +7,9 @@
 
 #include "AI/AI_Sequnce.h"
 
+#include "DebugDraw.h"
+
+
 CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
@@ -51,7 +54,7 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	// 생성시 유닛별 초기화 함수 따로 만들기..
 	Init_Unit();
 	Init_AI();
-	
+
 	return S_OK;
 }
 
@@ -114,43 +117,51 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
-	
-	FAILED_UPDATE(__super::LateTick(TimeDelta));
-	if (meTickType == TICK_TOOL)
-	{
-		mComModel->Update_CombinedTransformationMatrices(TimeDelta);
-		if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
-			mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
-	}
 
+	FAILED_UPDATE(__super::LateTick(TimeDelta));
+	//if (meTickType == TICK_TOOL)
+	//{
+	//	mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+	//	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
+	//		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+	//}
+
+
+	if (mCurrentMap == nullptr)
+		return UPDATEERROR;
+
+	if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
+	{
+		FAILED_CHECK_NONERETURN(LateTick_Dungeon(TimeDelta));
+
+	}
 	else
 	{
-		if (mCurrentMap == nullptr)
-			return UPDATEERROR;
+		FAILED_CHECK_NONERETURN(LateTick_World(TimeDelta));
 
-		if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
-		{
-			FAILED_CHECK_NONERETURN(LateTick_Dungeon(TimeDelta));
-
-		}
-		else
-		{
-			FAILED_CHECK_NONERETURN(LateTick_World(TimeDelta));
-
-		}
-		
 	}
+
+
 
 	// 공통 업데이트
 	if (mComBehavior)
 		mComBehavior->LateTick(TimeDelta);
-	if (mComModel)
-		mComModel->Update_CombinedTransformationMatrices(TimeDelta);
 	if (mCurrentNavi)
 		mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+	
 
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
+	{
 		mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+		if (mComModel)
+			mComModel->Update_CombinedTransformationMatrices(TimeDelta);
+	}
+	else
+	{
+		if (mComModel)		
+			mComModel->Update_CombinedTransformationMatrices_OnlyTime(TimeDelta);
+		
+	}
 
 	return UPDATENONE;
 }
@@ -236,7 +247,6 @@ HRESULT CGameObject_3D_Dynamic::Render()
 		CTransform* terraintrans = mCurrentMap->Get_ComTransform();
 		mCurrentNavi->Render(terraintrans);
 	}
-	
 #endif // _DEBUG
 
 	Render_Socket();
@@ -280,29 +290,41 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 	DefaultCreateFallDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP;
 	DefaultCreateFallDesc.eExitFunc = CAction_Function::E_FUNCION::FUNCION_NONE;
 
-
 	Seq_CreateFall->Restart(&DefaultCreateFallDesc);
 	mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_CreateFall);
-
-	CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
-	CSequnce_PICK::SEQPICK DefaultPickDesc;
-	DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
-	Seq_Pick->Restart(&DefaultPickDesc);
-	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
-
-	// 상태전환시 데이터 추가
-	CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
-	CSequnce_MOVETARGET::SEQMOVETARGET DefaultFallDesc;	
-	Seq_Fall->Restart(&DefaultFallDesc);
-	mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
 
 	CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
 	CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
 	Seq_Door->Restart(&DefaultDoorDesc);
 	mComBehavior->Add_Seqeunce("DOOR", Seq_Door);
 	
-	mComBehavior->Select_Sequnce("CREATE_FALL");
 
+	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
+	{
+		CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
+		CSequnce_PICK::SEQPICK DefaultPickDesc;
+		DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
+		Seq_Pick->Restart(&DefaultPickDesc);
+		mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
+
+		// 상태전환시 데이터 추가
+		CSequnce_MOVETARGET* Seq_Fall = CSequnce_MOVETARGET::Create(this);
+		CSequnce_MOVETARGET::SEQMOVETARGET DefaultFallDesc;
+		Seq_Fall->Restart(&DefaultFallDesc);
+		mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
+
+
+	}
+
+	else if (meUnitType == CGameObject_3D_Dynamic::UNIT_ENEMY)
+	{
+
+	}
+
+	else if (meUnitType == CGameObject_3D_Dynamic::UNIT_BOSS)
+	{
+
+	}
 
 	// WorldIdle / WorldMove
 	CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
@@ -315,53 +337,9 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 	//	Seq_Door->Restart(&DefaultDoorDesc);
 	mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
 
+	mComBehavior->Select_Sequnce("CREATE_FALL");
 
-	//CNode_Seqeunce* Seq_Create_Fall = CNode_Seqeunce::Create();
-	//CNode_Seqeunce* Seq_Fall = CNode_Seqeunce::Create();
-	//CNode_Seqeunce* Seq_Pick = CNode_Seqeunce::Create();
-	//CNode_Seqeunce* Seq_OpenDoor = CNode_Seqeunce::Create();
-	//// CloneAction
-	//CAction_DEALY* dealyTime = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	//dealyTime->SetUp_Target(this);
-	//CAction_DEALY* dealyAnimation = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	//dealyAnimation->SetUp_Target(this);
-	//CAction_DEALY* dealyAniIdle = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	//dealyAniIdle->SetUp_Target(this);
-	//CAction_MOVE_TARGET* fallMove = (CAction_MOVE_TARGET*)mComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
-	//fallMove->SetUp_Target(this);
-	//// Set_Fall
-	//dealyTime->Set_TimeMax(0.2f);
-	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_CREATE_FALL);
-	//dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
-	//dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-	//Seq_Create_Fall->PushBack_LeafNode(fallMove->Clone());
-	//Seq_Create_Fall->PushBack_LeafNode(dealyAnimation->Clone());
-	//Seq_Create_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
-	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_MOUSEPOS_FALL);
-	//Seq_Fall->PushBack_LeafNode(fallMove->Clone());
-	//Seq_Fall->PushBack_LeafNode(dealyAnimation->Clone());
-	//Seq_Fall->PushBack_LeafNode(dealyAniIdle->Clone());
-	//Seq_Create_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
-	//mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_Create_Fall);
-	//Seq_Fall->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
-	//mComBehavior->Add_Seqeunce("FALL", Seq_Fall);
-	//// Set_Pick
-	//dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG);
-	//Seq_Pick->PushBack_LeafNode(dealyAnimation->Clone());
-	//// LOOP 타입은 시퀀스를 반복한다.
-	//Seq_Pick->Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
-	//mComBehavior->Add_Seqeunce("DRAG", Seq_Pick);
-	//// Set_Door
-	//dealyTime->Set_TimeMax(5.0f);
-	//Seq_OpenDoor->PushBack_LeafNode(dealyTime->Clone());
-	//fallMove->Set_MoveTargetFlag(CAction_MOVE_TARGET::MOVETARGETFALG_OBJECTTARGET);
-	//Seq_OpenDoor->PushBack_LeafNode(fallMove->Clone());
-	//Seq_OpenDoor->Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
-	//mComBehavior->Add_Seqeunce("DOOR", Seq_OpenDoor);
-	//Safe_Release(dealyTime);
-	//Safe_Release(dealyAnimation);
-	//Safe_Release(fallMove);
-	//Safe_Release(dealyAniIdle);
+
 	return S_OK;
 }
 
@@ -715,8 +693,14 @@ HRESULT CGameObject_3D_Dynamic::Select_WorldGo(_float3 pos)
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Set_BehaviorMode()
+HRESULT CGameObject_3D_Dynamic::Set_BehaviorMode(int index)
 {
+	if (index != -1)
+	{
+		mComBehavior->Set_Mode(index);
+		return S_OK;
+	}
+
 	int modeindex = mComBehavior->Get_Mode();
 	switch (modeindex)
 	{
@@ -857,6 +841,5 @@ void CGameObject_3D_Dynamic::Free()
 		Safe_Release(socket);
 	}
 	mListSocket.clear();
-
 
 }

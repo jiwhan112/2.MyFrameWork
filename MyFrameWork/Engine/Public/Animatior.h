@@ -126,6 +126,7 @@ public:
 
 public:
 	HRESULT Update_CombinedTransformationMatrices(_double timer);
+	HRESULT Update_CombinedTransformationMatrices_OnlyTime(_double TimeDelta);
 
 	// 애니메이션 뼈 찾기
 	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr) const;

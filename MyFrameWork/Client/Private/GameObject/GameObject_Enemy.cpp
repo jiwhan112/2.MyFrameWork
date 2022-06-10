@@ -77,6 +77,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	// À¯´Ö Å¸ÀÔ
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+	Set_BehaviorMode(1);
 
 	meUnitType = CGameObject_3D_Dynamic::UNIT_ENEMY;
 	meEnemyType = CGameObject_Enemy::ENEMY_WARRIOR;

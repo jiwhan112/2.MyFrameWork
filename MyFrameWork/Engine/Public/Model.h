@@ -46,6 +46,7 @@ public: // ani
 
 public:
 	HRESULT Update_CombinedTransformationMatrices(_double TimeDelta);
+	HRESULT Update_CombinedTransformationMatrices_OnlyTime(_double TimeDelta);
 	HRESULT Bind_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pValueName);
 	HRESULT Render(class CShader* pShader, _uint iPassIndex, _uint iMaterialIndex, const char* pBoneValueName = nullptr);
 

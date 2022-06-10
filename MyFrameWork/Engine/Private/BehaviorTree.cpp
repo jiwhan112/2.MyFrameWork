@@ -181,6 +181,7 @@ HRESULT CBehaviorTree::Round_Sequnce()
 		if (iter == mMapSequence.end())
 			iter = mMapSequence.begin();
 
+		int cnt = 0;
 		while (!(iter->second->Get_SeqType() == E_RoundIdleType))
 		{
 			iter++;
@@ -188,6 +189,10 @@ HRESULT CBehaviorTree::Round_Sequnce()
 			{
 				iter = mMapSequence.begin();				
 			}
+
+			cnt++;
+			if (cnt > 100)
+				return E_FAIL;
 		}
 
 		mCurrentKey = iter->first;

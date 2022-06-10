@@ -68,6 +68,26 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices(_double timer)
 	return S_OK;
 }
 
+HRESULT CAnimatior::Update_CombinedTransformationMatrices_OnlyTime(_double timer)
+{
+	if (misBlend)
+	{
+		AniMationBlend(m_iCurrentAniIndex, m_iNewAniIndex, timer);
+		mIsCurrentAniEnd = false;
+	}
+
+	else
+	{
+		// 현재 애니메이션을 시간에 맞게 업데이트를 시켜준다.
+		// 애니메이션 채널의 해당 시간에 따른 뼈 위치 갱신
+		mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(timer);
+		if (mVecAnimations[m_iCurrentAniIndex]->Get_Finished())
+			mIsCurrentAniEnd = true;
+	}
+	return S_OK;
+
+}
+
 
 HRESULT CAnimatior::Ready_HierarchyNodes(aiNode* pNode, CHierarchyNode* pParent, _uint iDepth)
 {

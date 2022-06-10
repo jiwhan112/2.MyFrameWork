@@ -52,6 +52,7 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 		m_IsFinished = false;
 	}
 
+
 	_vector			vScale, vRotation, vPosition;
 
 	/* 현재 내 애니메이션 상태에서 재생된 시간에 따른 모든 뼈의 상태를 갱신한다.  */
@@ -111,6 +112,32 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 		_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
 		m_Channels[i]->Set_TransformationMatrix(TransformationMatrix);
+	}
+
+	m_IsFrame = false;
+	return S_OK;
+}
+
+
+
+
+HRESULT CAnimationClip::Update_TransformMatrices_OnlyTime(_double TimeDelta)
+{
+	/* 현재 내 애니메이션의 재생 위치. */
+	m_PlayTimeAcc += m_TickPerSecond * TimeDelta;
+	if (m_IsFinished)
+	{
+		m_PlayTimeAcc = 0;
+		m_IsFrame = true;
+	}
+
+	if (m_PlayTimeAcc >= m_Duration)
+	{
+		m_IsFinished = true;
+	}
+	else
+	{
+		m_IsFinished = false;
 	}
 
 	m_IsFrame = false;

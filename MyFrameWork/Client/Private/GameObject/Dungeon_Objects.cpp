@@ -19,9 +19,9 @@ HRESULT CDungeon_Objects::NativeConstruct_Prototype(ID3D11Device* device, ID3D11
 	
 	if (mCurrentLevel == LEVEL_MYGAMEPLAY)
 	{
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		FAILED_CHECK(Ready_IMGUI());
-#endif
+//#endif
 
 		FAILED_CHECK(Ready_Light());
 		FAILED_CHECK(Ready_Camera());
