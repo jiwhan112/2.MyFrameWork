@@ -83,7 +83,7 @@ public:
 		CAnimatior::E_COMMON_ANINAME AniType;
 		_float3 StartPosition;
 		_float3 EndPosition;
-		CAction_Function::E_FUNCION eExitFunc = CAction_Function::E_FUNCION::FUNCION_LOOKTILE;
+		CAction_Function::E_FUNCION eExitFunc = CAction_Function::E_FUNCION::FUNCION_NONE;
 
 	}SEQMOVETARGET;
 

@@ -195,6 +195,7 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAnimation);
 	Safe_Release(moveTarget);
+	Safe_Release(func);
 
 	// °´Ã¼ ¿¬°á
 	Setup_TargetNode(obj);
@@ -466,25 +467,22 @@ HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
-	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+//	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
-	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	movepath->Set_TimeMax(0.6f);
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_PICK);
-	funcion->Set_Funcion(CAction_Function::E_FUNCION::FUNCION_NONE);
 
 	// SetSeq
 	// Tile: Å¸ÀÏÀ» Ã¤±¼
 	PushBack_LeafNode(movepath->Clone());
-	PushBack_LeafNode(funcion->Clone());
 	PushBack_LeafNode(ani->Clone());
-	funcion->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
-	PushBack_LeafNode(funcion->Clone());
+	
 
 	Safe_Release(ani);
 	Safe_Release(movepath);
-	Safe_Release(funcion);
+//	Safe_Release(funcion);
 
 	// °´Ã¼ ¿¬°á
 	Setup_TargetNode(obj);

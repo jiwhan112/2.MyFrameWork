@@ -49,17 +49,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 		return UPDATENONE;
 
 	// 생성시 유닛별 초기화 함수 따로 만들기..
-
-	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
-//	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
-	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
-	
-	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE);
-
-	_float3 SpawnPos = mSpawnPostitionDAUNGEON;
-	SpawnPos.y += 10;
-	Set_Position(SpawnPos);
-
 	Init_Unit();
 	Init_AI();
 	
@@ -86,18 +75,32 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 
 	else
 	{
+		if (mComBehavior)
+			mComBehavior->Tick(TimeDelta);
+
 		if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
 		{
-			Tick_Dungeon(TimeDelta);
+			FAILED_CHECK_NONERETURN(Tick_Dungeon(TimeDelta));
 
 		}
 		else if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
 		{
-			Tick_World(TimeDelta);
+			FAILED_CHECK_NONERETURN(Tick_World(TimeDelta));
+
+		}
+
+
+		if (mComListCollider)
+		{
+			for (auto& col : *mComListCollider)
+			{
+				col->Update_Transform(mComTransform->GetWorldFloat4x4());
+				GetSingle(CGameManager)->Add_ColliderObject(CColliderManager::E_COLLIDEROBJ_TYPE::COLLIDEROBJ_DYNAMIC, this);
+			}
 		}
 	}
 
-	mComBehavior->Tick(TimeDelta);
+	
 	// 버그 코드
 	// Tick_LookUpdate(TimeDelta);
 	Tick_Socket(TimeDelta);
@@ -127,11 +130,13 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 		if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_DUNGEON)
 		{
-			LateTick_Dungeon(TimeDelta);
+			FAILED_CHECK_NONERETURN(LateTick_Dungeon(TimeDelta));
+
 		}
 		else
 		{
-			LateTick_World(TimeDelta);
+			FAILED_CHECK_NONERETURN(LateTick_World(TimeDelta));
+
 		}
 		
 	}
@@ -150,11 +155,8 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	return UPDATENONE;
 }
 
-_int CGameObject_3D_Dynamic::Tick_Dungeon(_double TimeDelta)
+HRESULT CGameObject_3D_Dynamic::Tick_Dungeon(_double TimeDelta)
 {
-	FAILED_UPDATE(__super::Tick(TimeDelta));
-
-
 	if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
 	{
 		if (mIsTerrainHeight)
@@ -178,13 +180,13 @@ _int CGameObject_3D_Dynamic::Tick_Dungeon(_double TimeDelta)
 	return UPDATENONE;
 }
 
-_int CGameObject_3D_Dynamic::LateTick_Dungeon(_double TimeDelta)
+HRESULT CGameObject_3D_Dynamic::LateTick_Dungeon(_double TimeDelta)
 {
 
 	return UPDATENONE;
 }
 
-_int CGameObject_3D_Dynamic::Tick_World(_double TimeDelta)
+HRESULT CGameObject_3D_Dynamic::Tick_World(_double TimeDelta)
 {
 	if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_NONE)
 	{
@@ -195,7 +197,7 @@ _int CGameObject_3D_Dynamic::Tick_World(_double TimeDelta)
 	return UPDATENONE;
 }
 
-_int CGameObject_3D_Dynamic::LateTick_World(_double TimeDelta)
+HRESULT CGameObject_3D_Dynamic::LateTick_World(_double TimeDelta)
 {
 	return UPDATENONE;
 }
@@ -245,8 +247,12 @@ HRESULT CGameObject_3D_Dynamic::Render()
 
 HRESULT CGameObject_3D_Dynamic::Init_Unit()
 {
-	// 유닛마다 상속해서 초기화
-
+	// 기본 모델
+	string str("crea_Snot_a.fbx");
+	strcpy_s(mModelDesc.mModelName, str.c_str());
+	Set_LoadModelDynamicDESC(mModelDesc);
+	
+	// 상속으로 초기화
 
 	return S_OK;
 }
@@ -272,6 +278,8 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 	DefaultCreateFallDesc.EndPosition = Get_TerrainHeightPostition();
 	DefaultCreateFallDesc.EasingID = TYPE_SinIn;
 	DefaultCreateFallDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP;
+	DefaultCreateFallDesc.eExitFunc = CAction_Function::E_FUNCION::FUNCION_NONE;
+
 
 	Seq_CreateFall->Restart(&DefaultCreateFallDesc);
 	mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_CreateFall);
@@ -547,19 +555,19 @@ void CGameObject_3D_Dynamic::Tick_LookUpdate(_double time)
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()
 {
+	// Set_Component
 	if (mComRenderer == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
 	if (mComShader == nullptr)
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL), TEXT("Com_Shader"), (CComponent**)&mComShader));
 
-	// 모델 타입에 따라 정적모델 동적모델 처리
+	// 각 INIT 함수에서 재정의
 	if (mComModel == nullptr)
 	{
-		// 동적 모델은 자동으로 동적으로 컴포넌트가 적용된다.
-		string strModel = mModelDesc.mModelName;
-		wstring ModelName = CHelperClass::Convert_str2wstr(strModel);		
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+		// string strModel = mModelDesc.mModelName;
+		// wstring ModelName = CHelperClass::Convert_str2wstr(strModel);		
+		// FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
 	}
 	if (mComBehavior == nullptr)
 	{

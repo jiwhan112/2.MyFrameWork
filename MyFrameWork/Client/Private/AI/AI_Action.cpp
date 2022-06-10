@@ -318,7 +318,7 @@ CAction_Function * CAction_Function::Create(const char * str, CGameObject_3D_Dyn
 
 	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_MOVE");
+		MSGBOX("Failed to Created CAction_Function");
 		DEBUGBREAK;
 		Safe_Release(pInstance);
 	}
@@ -331,7 +331,7 @@ CAction_Function * CAction_Function::Clone()
 
 	if (FAILED(pInstance->ReStart()))
 	{
-		MSGBOX("Failed to Created CAction_MOVE");
+		MSGBOX("Failed to Created CAction_Function");
 		DEBUGBREAK;
 		Safe_Release(pInstance);
 

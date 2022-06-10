@@ -98,8 +98,8 @@ HRESULT CImgui_InGame::Edit_InGame()
 	{
 		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
 			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_MINE,SpawnPos);
-
 	}
+
 	ImGui::SameLine();
 	if (ImGui::Button("Create_Dungeon_Orc"))
 	{
@@ -113,6 +113,23 @@ HRESULT CImgui_InGame::Edit_InGame()
 		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
 			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_GOBLIN, SpawnPos);
 	}
+
+	if (ImGui::Button("Create_Dungeon_Enemy"))
+	{
+		_float3 SpawnPos = mSpawnPostitionENEMY;
+
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ENEMY, SpawnPos);
+	}
+
+	if (ImGui::Button("Create_Dungeon_BOSS"))
+	{
+		_float3 SpawnPos = mSpawnPostitionBOSS;
+
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_BOSS, SpawnPos);
+	}
+
 
 	//if (ImGui::Button("Create_WorldObject"))
 	//{

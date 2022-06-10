@@ -29,6 +29,8 @@
 #include "GameObject/GameObject_Mine.h"
 #include "GameObject/GameObject_Goblin.h"
 #include "GameObject/GameObject_Orc.h"
+#include "GameObject/GameObject_Boss.h"
+#include "GameObject/GameObject_Enemy.h"
 
 
 // ±×¿Ü

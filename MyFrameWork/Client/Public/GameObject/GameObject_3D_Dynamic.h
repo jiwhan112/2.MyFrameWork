@@ -35,7 +35,6 @@ public:
 	{
 		TICK_TYPE_NONE,
 		TICK_TYPE_DUNGION_PICK, // 객체를 클릭하면 Pick으로 전환
-		TICK_TYPE_WORLD_PICK, 
 		TICK_TOOL,
 		TICK_TYPE_END,
 	};
@@ -53,11 +52,11 @@ public: // Base
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
-	virtual _int Tick_Dungeon(_double TimeDelta);
-	virtual _int LateTick_Dungeon(_double TimeDelta);
+	virtual HRESULT Tick_Dungeon(_double TimeDelta);
+	virtual HRESULT LateTick_Dungeon(_double TimeDelta);
 
-	virtual _int Tick_World(_double TimeDelta);
-	virtual _int LateTick_World(_double TimeDelta);
+	virtual HRESULT Tick_World(_double TimeDelta);
+	virtual HRESULT LateTick_World(_double TimeDelta);
 
 	
 	virtual HRESULT Init_Unit();
@@ -190,6 +189,8 @@ protected: // 3D모델 Com / DESC 추가
 
 public:
 	const _float3 mSpawnPostitionDAUNGEON = _float3(20.f, 0.f, 14.5f);
+	const _float3 mSpawnPostitionENEMY = _float3(8.f, 8.f, 48.f);
+	const _float3 mSpawnPostitionBOSS = _float3(52.f, 8.f, 51.f);
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

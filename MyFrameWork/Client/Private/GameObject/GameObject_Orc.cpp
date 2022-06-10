@@ -27,9 +27,7 @@ HRESULT CGameObject_Orc::NativeConstruct(void* pArg)
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 //	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
 
-	string str("crea_Orc.fbx");
-	strcpy_s(mModelDesc.mModelName, str.c_str());
-	Set_LoadModelDynamicDESC(mModelDesc);
+	
 
 	return S_OK;
 }
@@ -37,6 +35,10 @@ HRESULT CGameObject_Orc::NativeConstruct(void* pArg)
 
 HRESULT CGameObject_Orc::Init_Unit()
 {
+	/*string str("crea_Orc.fbx");
+	strcpy_s(mModelDesc.mModelName, str.c_str());
+	Set_LoadModelDynamicDESC(mModelDesc);
+
 	_float size = 0.8f;
 
 	mComTransform->Scaled(_float3(size, size, size));
@@ -47,7 +49,7 @@ HRESULT CGameObject_Orc::Init_Unit()
 	Add_ColliderDesc(&desc, 1);
 	Update_Collider();
 
-	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE));
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE));*/
 	return S_OK;
 }
 

@@ -16,9 +16,9 @@ public:
 
 	enum E_ENEMYTYPE
 	{
-		ENEMY_AA,
-		ENEMY_BB,
-		ENEMY_CC,
+		ENEMY_WARRIOR,
+		//ENEMY_BB,
+		//ENEMY_CC,
 		ENEMY_END,
 	};
 
@@ -35,11 +35,11 @@ public:
 	//virtual _int LateTick(_double TimeDelta);
 	//virtual HRESULT Render();
 
-	virtual _int Tick_Dungeon(_double TimeDelta);
-	virtual _int LateTick_Dungeon(_double TimeDelta);
+	virtual HRESULT Tick_Dungeon(_double TimeDelta);
+	virtual HRESULT LateTick_Dungeon(_double TimeDelta);
 
-	virtual _int Tick_World(_double TimeDelta);
-	virtual _int LateTick_World(_double TimeDelta);
+	virtual HRESULT Tick_World(_double TimeDelta);
+	virtual HRESULT LateTick_World(_double TimeDelta);
 
 
 	virtual HRESULT Init_Unit();
@@ -48,7 +48,7 @@ public:
 
 
 	// ¸ðµ¨ ±¸Çö 
-
+	E_ENEMYTYPE			meEnemyType = ENEMY_WARRIOR;
 protected:
 
 public:

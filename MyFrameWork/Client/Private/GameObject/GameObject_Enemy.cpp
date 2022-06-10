@@ -4,7 +4,7 @@
 CGameObject_Enemy::CGameObject_Enemy(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_3D_Dynamic(pDevice, pDeviceContext)
 {
-	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_DYNAMIC_ORC;
+	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_3D_DYNAMIC_ENEMY;
 }
 
 CGameObject_Enemy::CGameObject_Enemy(const CGameObject_Enemy& rhs)
@@ -25,13 +25,11 @@ HRESULT CGameObject_Enemy::NativeConstruct_Prototype()
 HRESULT CGameObject_Enemy::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-	mComModel->SetUp_AnimIndex(0);
-
 
 	return S_OK;
 }
 
-_int CGameObject_Enemy::Tick_Dungeon(_double TimeDelta)
+HRESULT CGameObject_Enemy::Tick_Dungeon(_double TimeDelta)
 {
 	if (UPDATEERROR == __super::Tick_Dungeon(TimeDelta))
 		return UPDATEERROR;
@@ -39,7 +37,7 @@ _int CGameObject_Enemy::Tick_Dungeon(_double TimeDelta)
 	return UPDATENONE;
 }
 
-_int CGameObject_Enemy::LateTick_Dungeon(_double TimeDelta)
+HRESULT CGameObject_Enemy::LateTick_Dungeon(_double TimeDelta)
 {
 	if (UPDATEERROR == __super::LateTick_Dungeon(TimeDelta))
 		return UPDATEERROR;
@@ -47,7 +45,7 @@ _int CGameObject_Enemy::LateTick_Dungeon(_double TimeDelta)
 	return UPDATENONE;
 }
 
-_int CGameObject_Enemy::Tick_World(_double TimeDelta)
+HRESULT CGameObject_Enemy::Tick_World(_double TimeDelta)
 {
 	if (UPDATEERROR == __super::Tick_World(TimeDelta))
 		return UPDATEERROR;
@@ -55,7 +53,7 @@ _int CGameObject_Enemy::Tick_World(_double TimeDelta)
 	return UPDATENONE;
 }
 
-_int CGameObject_Enemy::LateTick_World(_double TimeDelta)
+HRESULT CGameObject_Enemy::LateTick_World(_double TimeDelta)
 {
 	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
 		return UPDATEERROR;
@@ -66,9 +64,42 @@ _int CGameObject_Enemy::LateTick_World(_double TimeDelta)
 
 HRESULT CGameObject_Enemy::Init_Unit()
 {
-	__super::Init_Unit();
+	// 모델 결정
+	string str("hero_Warrior_T1.fbx");
+	strcpy_s(mModelDesc.mModelName, str.c_str());
+	Set_LoadModelDynamicDESC(mModelDesc);
 
-	// 적 결정 
+	// 위치
+	_float3 SpawnPos = mSpawnPostitionENEMY;
+	SpawnPos.y += 10;
+	Set_Position(SpawnPos);
+
+	// 유닛 타입
+	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
+	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+
+	meUnitType = CGameObject_3D_Dynamic::UNIT_ENEMY;
+	meEnemyType = CGameObject_Enemy::ENEMY_WARRIOR;
+	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
+	mTimeForSpeed = 0.5f;
+	mRotSpeed = 10.0f;
+
+	// 유닛 크기
+	_float size = 0.8f;
+	mComTransform->Scaled(_float3(size, size, size));
+
+	// 충돌 정보
+	COLLIDER_DESC desc;
+	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc.mSize = _float3(size, size, size);
+	Add_ColliderDesc(&desc, 1);
+	Update_Collider();
+
+	// 애니메이션
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
+
+	// 소켓
+	// Add_Socket("crea_SnotPickaxe.fbx", "RArmDigit31");
 
 	return S_OK;
 }
@@ -83,6 +114,34 @@ HRESULT CGameObject_Enemy::Init_AI()
 
 HRESULT CGameObject_Enemy::Init_AI_Enemy()
 {
+	// 던전에 들어왔을떄
+
+	// 월드 생성시 
+
+	// 월드에서 던전으로 옴
+
+	// 전투 시퀀스 
+
+
+
+	// IDLE TILE 정보 생성 예제
+	// CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
+	// CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
+	// 
+	// DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
+	// DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
+	// 
+	// Seq_IDLE->Restart(&DefaultIdleDesc);
+	// mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
+	// 
+	// CSequnce_TILE* Seq_TILE = CSequnce_TILE::Create(this);
+	// CSequnce_TILE::tag_SeqTILE DefaultTileDesc;
+	// DefaultTileDesc.Runtime = mTimeForSpeed * 0.5f;
+	// 
+	// Seq_TILE->Restart(&DefaultTileDesc);
+	// mComBehavior->Add_Seqeunce("DIG", Seq_TILE);
+	// 
+
 	return S_OK;
 }
 

@@ -26,10 +26,6 @@ HRESULT CGameObject_Mine::NativeConstruct_Prototype()
 
 HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 {
-	string str("crea_Snot_a.fbx");
-	strcpy_s(mModelDesc.mModelName, str.c_str());
-	Set_LoadModelDynamicDESC(mModelDesc);
-
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	return S_OK;
 }
@@ -37,21 +33,40 @@ HRESULT CGameObject_Mine::NativeConstruct(void* pArg)
 
 HRESULT CGameObject_Mine::Init_Unit()
 {
+	// 모델 결정
+	string str("crea_Snot_a.fbx");
+	strcpy_s(mModelDesc.mModelName, str.c_str());
+	Set_LoadModelDynamicDESC(mModelDesc);
+
+	// 위치
+	_float3 SpawnPos = mSpawnPostitionDAUNGEON;
+	SpawnPos.y += 10;
+	Set_Position(SpawnPos);
+
+	// 유닛 타입
+	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
+	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+
 	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
 	mRotSpeed = 10.0f;
 
+	// 유닛 크기
 	_float size = 0.6f;
 	mComTransform->Scaled(_float3(size, size, size));
 
+	// 충돌 정보
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Update_Collider();
 
+	// 애니메이션
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
+
+	// 소켓
 	Add_Socket("crea_SnotPickaxe.fbx","RArmDigit31");
 
 	return S_OK;
@@ -219,8 +234,11 @@ HRESULT CGameObject_Mine::RemoveTile()
 
 HRESULT CGameObject_Mine::LookTile()
 {
-	_float3 dirPos = mSearchTile->Get_WorldPostition();
-	mComTransform->LookAt(dirPos);
+	if (mSearchTile)
+	{
+		_float3 dirPos = mSearchTile->Get_WorldPostition();
+		mComTransform->LookAt(dirPos);
+	}
 	return S_OK;
 }
 

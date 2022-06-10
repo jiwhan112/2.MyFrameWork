@@ -347,6 +347,10 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 		CGameObject_Goblin::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC_ORC),
 		CGameObject_Orc::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC_ENEMY),
+		CGameObject_Enemy::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC_BOSS),
+		CGameObject_BOSS::Create(m_pDevice, m_pDeviceContext)));
 
 	// ÁöÇü ±øÅë
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),

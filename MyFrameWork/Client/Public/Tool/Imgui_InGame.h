@@ -45,6 +45,8 @@ private:
 	CDungeon_Manager::E_GAMEMODE	mGameMode;
 
 	const _float3 mSpawnPostitionDAUNGEON = _float3(20.f, 0.f, 14.5f);
+	const _float3 mSpawnPostitionENEMY = _float3(8.f, 8.f, 48.f);
+	const _float3 mSpawnPostitionBOSS = _float3(52.f, 8.f, 51.f);
 	const int mSpawnIndexDAUNGEON = 481;
 	const int mSpawnIndexWORLD_UNIT = 480;
 	const int mSpawnIndexWORLD_ENEMY= 1624;
