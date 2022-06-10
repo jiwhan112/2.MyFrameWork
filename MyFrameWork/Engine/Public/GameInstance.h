@@ -102,11 +102,13 @@ public: // FOR.EASING
 
 public: // FOR.DEBUG
 	bool Get_IsColliderRender() const { return mIsRender_Collider; }
+	bool Get_IsColliderRender_Navi() const { return mIsRender_Collider_Navi; }
 
 private: // FOR.DEBUG
 	void	Update_Debug();
-	bool	mIsRender_Collider = true;
 
+	bool	mIsRender_Collider = true;
+	bool	mIsRender_Collider_Navi = true;
 
 
 private:

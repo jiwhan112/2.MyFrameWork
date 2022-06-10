@@ -719,7 +719,7 @@ HRESULT CNavigation::Render(CTransform* pTransform)
 {
 	if (mVecCells.empty())
 		return S_FALSE;
-	if (GetSingle(CGameInstance)->Get_IsColliderRender() == false)
+	if (GetSingle(CGameInstance)->Get_IsColliderRender_Navi() == false)
 		return S_OK;
 	// 랜더링시 처리
 	m_pDeviceContext->IASetInputLayout(mInputLayout);

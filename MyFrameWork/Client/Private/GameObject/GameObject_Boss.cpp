@@ -83,7 +83,13 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
 
 	// 소켓
-	// Add_Socket("crea_SnotPickaxe.fbx", "RArmDigit31");
+	// 보스 뼈 이름
+	// LDigit11 / LDigit12 // 손목 / 손가락
+	// LDigit21 / LDigit22 // 숫자가 크면 더 안쪽 뼈 
+	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit21");
+	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_2), "LDigit22");
+	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_3), "RDigit21");
+	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_4), "RDigit22");
 
 	return S_OK;
 }

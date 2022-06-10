@@ -11,6 +11,13 @@ BEGIN(Client)
 class CGameObject_3D_Socket  final
 	:public CGameObject_3D_Static
 {
+public:
+	enum E_SOCKETTYPE
+	{
+		SOCKETTYPE_MODEL,
+		SOCKETTYPE_NOMODEL,
+		SOCKETTYPE_END,
+	};
 
 public:
 	typedef struct tagSocketDesc
@@ -30,22 +37,25 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);
 
 	virtual _int Tick(_double TimeDelta)override;
-
 	virtual HRESULT Render() override;
 
 	//virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist) override;
 
 public:
-	HRESULT		Set_LoadSocketDESC(const char* MyFbxname, const SOCKETDESC& desc);
+	HRESULT				Set_LoadSocketDESC(const char* MyFbxname, const SOCKETDESC& desc);
 	const SOCKETDESC&	Get_SocketDesc() const { return mSocketDESC; }
-	virtual HRESULT Set_Component()override;
+	virtual HRESULT		Set_Component()override;
+
+	HRESULT				Set_SocketType(E_SOCKETTYPE e);
+
 
 protected: // 소켓의 정보 / 타겟의 뼈 행렬 정보 
 	SOCKETDESC				mSocketDESC;
 	CModel::BONEMATRIX_PTR	mBoneMatrixPtr;
 	_float4x4				mSocketTransformMatrix;
-
 	_float4x4				mMatSocket;
+
+	E_SOCKETTYPE			meSocketType = SOCKETTYPE_MODEL;
 
 public:
 	static CGameObject_3D_Socket* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

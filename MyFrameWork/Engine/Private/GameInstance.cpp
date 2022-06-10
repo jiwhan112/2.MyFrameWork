@@ -32,6 +32,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pEasingMgr);
 
 	mIsRender_Collider = true;
+	mIsRender_Collider_Navi = true;
 	
 }
 
@@ -396,6 +397,10 @@ void CGameInstance::Update_Debug()
 	if (m_pInput_Device->Get_DIKeyState(DIK_1)& DIS_Down)
 	{
 		mIsRender_Collider = !mIsRender_Collider;
+	}
+	if (m_pInput_Device->Get_DIKeyState(DIK_2)& DIS_Down)
+	{
+		mIsRender_Collider_Navi = !mIsRender_Collider_Navi;
 	}
 }
 

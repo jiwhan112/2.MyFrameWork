@@ -17,9 +17,8 @@ CGameObject_3D_Socket::CGameObject_3D_Socket(const CGameObject_3D_Socket& rhs)
 HRESULT CGameObject_3D_Socket::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-
-
 	mCurrentShaderPass = 0;
+
 	return S_OK;
 }
 
@@ -27,7 +26,6 @@ HRESULT CGameObject_3D_Socket::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 	FAILED_CHECK(Set_Component());
-
 	mCurrentShaderPass = 2;
 	
 	return S_OK;
@@ -42,27 +40,36 @@ _int CGameObject_3D_Socket::Tick(_double TimeDelta)
 
 HRESULT CGameObject_3D_Socket::Render()
 {
-	if (mComModel == nullptr)
-		return E_FAIL;
-	if (mComShader == nullptr)
-		return E_FAIL;
+	if (meSocketType  == SOCKETTYPE_MODEL)
+	{
+		if (mComModel == nullptr)
+			return E_FAIL;
+		if (mComShader == nullptr)
+			return E_FAIL;
+		mComShader->Set_RawValue("g_SocketMatrix", &XMMatrixTranspose(mMatSocket), sizeof(_float4x4));
+		__super::Render();
+		return S_OK;
+	}
 
-	
+	else if (meSocketType == SOCKETTYPE_NOMODEL)
+	{
+		if (mComShader == nullptr)
+			return E_FAIL;
+
+#ifdef _DEBUG
+		mComCollider->Render();
+#endif // _DEBUG
+		return S_OK;
+	}
 
 	//_matrix TransformMatrix = XMLoadFloat4x4(mBoneMatrixPtr.pOffsetMatrix)
 	//	* XMLoadFloat4x4(mBoneMatrixPtr.pCombinedMatrix) * XMLoadFloat4x4(&mSocketTransformMatrix) 
 	//	* mSocketDESC.mTransform->GetWorldMatrix();
-
-	
 	//mMatSocket.Right().Normalize();
 	//mMatSocket.Up().Normalize();
 	//mMatSocket.Backward().Normalize();
-	
 	//mMatSocket = mComTransform->GetWorldMatrix() * XMLoadFloat4x4(&mMatSocket) *  mSocketDESC.mTransform->GetWorldMatrix();
-	
-	mComShader->Set_RawValue("g_SocketMatrix", &XMMatrixTranspose(mMatSocket), sizeof(_float4x4));
 
-	__super::Render();
 	return S_OK;
 }
 
@@ -108,6 +115,12 @@ HRESULT CGameObject_3D_Socket::Set_Component()
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
 	}*/
 
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Socket::Set_SocketType(E_SOCKETTYPE e)
+{
+	meSocketType = e;
 	return S_OK;
 }
 

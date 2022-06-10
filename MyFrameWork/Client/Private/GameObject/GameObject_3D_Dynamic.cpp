@@ -62,7 +62,6 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 {
 
 	FAILED_UPDATE(__super::Tick(TimeDelta));
-
 	// Ãæµ¹
 	if (meTickType == TICK_TOOL)
 	{
@@ -730,6 +729,8 @@ HRESULT CGameObject_3D_Dynamic::Add_Socket_Model(string tag, string modelName, s
 	NULL_CHECK_BREAK(Socket);
 
 	Socket->Set_LoadSocketDESC(modelName.c_str(), socketDesc);
+	Socket->Set_SocketType(CGameObject_3D_Socket::SOCKETTYPE_MODEL);
+
 	mMapListSocket.emplace(tag, Socket);
 	return S_OK;
 }
@@ -749,6 +750,8 @@ HRESULT CGameObject_3D_Dynamic::Add_Socket_NULL(string tag, string boneName)
 	NULL_CHECK_BREAK(Socket);
 
 	Socket->Set_LoadSocketDESC(nullptr, socketDesc);
+	Socket->Set_SocketType(CGameObject_3D_Socket::SOCKETTYPE_NOMODEL);
+
 	mMapListSocket.emplace(tag, Socket);
 	return S_OK;
 }
