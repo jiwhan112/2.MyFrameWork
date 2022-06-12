@@ -186,7 +186,7 @@ HRESULT CDungeon_Manager::Add_Task_Gold(_uint index)
 
 HRESULT CDungeon_Manager::Add_Task_WorldMove(_float3 WorldPos)
 {
-	return 	mDungeon_TaskMgr->Add_Task_Tile_MoveWorld(WorldPos);
+	return 	mDungeon_TaskMgr->Add_Task_PlayerMoveWorld(WorldPos);
 }
 
 HRESULT CDungeon_Manager::Check_Task()
@@ -212,6 +212,10 @@ _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 		Task_Mine(task);
 		break;
 	case CDungeon_Task::TASK_PLAYER_MOVE_WORLD:
+		Task_Player_Move_World(task);
+		break;
+
+	case CDungeon_Task::TASK_ENEMY_MOVE_WORLD_DEALY:
 		Task_Player_Move_World(task);
 		break;
 	case CDungeon_Task::TASK_END:
@@ -275,12 +279,14 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 	for (auto& unit : *unitlist)
 	{
 		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
-			FAILED_CHECK_NONERETURN(unit->Select_WorldGo(worldPos));
+			FAILED_CHECK_NONERETURN(unit->Select_WorldPostition(worldPos));
 	}
 
 	Safe_Delete(task);
 	return true;
 }
+
+
 
 CDungeon_Manager * CDungeon_Manager::Create(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {

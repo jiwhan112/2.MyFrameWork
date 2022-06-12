@@ -6,6 +6,7 @@ BEGIN(Client)
 
 // 게임 전역 이벤트 관리
 struct TASKBASE;
+struct TASKMAP_TIMER;
 
 class CDungeon_Task final :
 	public CBase
@@ -19,6 +20,11 @@ public:
 		// 월드 명령
 		TASK_PLAYER_MOVE_WORLD, 
 		TASK_PLAYER_ATTACK_WORLD, 
+
+		TASK_ENEMY_MOVE_WORLD,
+		TASK_ENEMY_MOVE_WORLD_DEALY,
+		TASK_ENEMY_ATTACK_WORLD,
+
 
 		// 마법 명령
 		TASK_MAGIC_AA,
@@ -45,7 +51,11 @@ public:
 	// 글로벌 작업 저장
 	HRESULT Add_Task_Tile_Rock(_uint index);
 	HRESULT Add_Task_Tile_Gold(_uint index);
-	HRESULT Add_Task_Tile_MoveWorld(_float3 Worldpos);
+	HRESULT Add_Task_PlayerMoveWorld(_float3 Worldpos);
+
+	HRESULT Add_Task_EnemyMoveWorld(_float3 Worldpos);
+
+	HRESULT Add_Task_EnemyMoveWorld_Dealy(TASKMAP_TIMER desc);
 
 	TASKBASE* Get_BackTask();
 
@@ -88,41 +98,20 @@ public:
 
 };
 
-//class CMyTask
-//	: public CBase
-//{
-//private:
-//	CMyTask() = default;
-//	virtual ~CMyTask() = default;
-//
-//public:
-//
-//	// CBase을(를) 통해 상속됨
-//	virtual void Free() override;
-//	
-//public:
-//	CDungeon_Task::E_TASK_TYPE mTaskID = CDungeon_Task::TASK_END;
-//};
-//
-//class CMyTask_Tile
-//	:public CMyTask
-//{
-//	// 타일 인덱스 저장
-//private:
-//	CMyTask_Tile() = default;
-//	virtual ~CMyTask_Tile() = default;
-//public:
-//	HRESULT NativeConstruct(CDungeon_Task::E_TASK_TYPE id)
-//	{
-//		mTaskID = id;
-//		return S_OK;
-//	}
-//	virtual void Free() override;
-//	_uint						mTileIndex = 0;
-//
-//
-//};
+struct TASKMAP_TIMER
+	:public TASKBASE
+{
 
+
+	TASKMAP_TIMER(_double timeMax,_float3 worldPos) 
+	{
+		mTimer = timeMax;
+		mWorldMapPickPos = worldPos;
+	}
+
+	_float3						mWorldMapPickPos;
+	_double						mTimer;
+};
 
 
 

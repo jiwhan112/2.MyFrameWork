@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Enemy.h"
+#include "GameObject/Dungeon_Manager.h"
+#include "AI/AI_Sequnce.h"
+
 
 CGameObject_Enemy::CGameObject_Enemy(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_3D_Dynamic(pDevice, pDeviceContext)
@@ -51,6 +54,17 @@ HRESULT CGameObject_Enemy::Tick_World(_double TimeDelta)
 		return UPDATEERROR;
 
 
+	mWorldCreateTimer += TimeDelta;
+	if (mWorldCreateTimer > 5)
+	{
+		mTimer_Dungeon += TimeDelta;
+		if (mTimer_Dungeon > 3)
+		{
+			mTimer_Dungeon = 0;
+			Set_GoDungeion();
+		}
+	}
+
 	return UPDATENONE;
 }
 
@@ -58,6 +72,8 @@ HRESULT CGameObject_Enemy::LateTick_World(_double TimeDelta)
 {
 	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
 		return UPDATEERROR;
+
+	
 
 	return UPDATENONE;
 }
@@ -76,8 +92,6 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	Set_Position(SpawnPos);
 
 	Set_LookDir(_float3(-1, 0, -1));
-
-
 	_float size = 0.8f;
 	mComTransform->Scaled(_float3(size, size, size));
 
@@ -102,10 +116,13 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	Update_Collider();
 
 	// 애니메이션
-	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_CARRIED));
 
 	// 소켓
 	// Add_Socket("crea_SnotPickaxe.fbx", "RArmDigit31");
+
+	mWorldCreateTimer = 0;
+	mTimer_Dungeon = 0;
 
 	return S_OK;
 }
@@ -125,6 +142,14 @@ HRESULT CGameObject_Enemy::Init_AI_Enemy()
 	// 월드 생성시 
 
 	// 월드에서 던전으로 옴
+
+	/*CSequnce_WorldMove_Enemy* Seq_WorldMove = CSequnce_WorldMove_Enemy::Create(this);
+	CSequnce_WorldMove_Enemy::SEQWORLDMOVE_ENEMY WorldDesc;
+	WorldDesc.TargetPos1 = _float3(0, 0, 0);
+	Seq_WorldMove->Restart(&WorldDesc);
+	mComBehavior->Add_Seqeunce("WORLD_ENEMY", Seq_WorldMove);*/
+
+	
 
 	// 전투 시퀀스 
 
@@ -147,6 +172,23 @@ HRESULT CGameObject_Enemy::Init_AI_Enemy()
 	// Seq_TILE->Restart(&DefaultTileDesc);
 	// mComBehavior->Add_Seqeunce("DIG", Seq_TILE);
 	// 
+
+	return S_OK;
+}
+
+HRESULT CGameObject_Enemy::Set_GoDungeion()
+{
+	//string NextKey = "WORLD_ENEMY";
+	//if (NextKey == mComBehavior->Get_CurrentSeqKey())
+	//	return S_OK;
+
+	////CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
+	//CSequnce_WorldMove_Enemy::SEQWORLDMOVE_ENEMY WorldDesc;
+	//WorldDesc.TargetPos1 = mWorldTargetPos1;
+	//WorldDesc.TargetPos2 = mWorldTargetPos2;
+	//WorldDesc.TargetPos3 = mWorldTargetPos3;
+	//FAILED_CHECK(mComBehavior->Select_Sequnce(NextKey, &WorldDesc));
+
 
 	return S_OK;
 }

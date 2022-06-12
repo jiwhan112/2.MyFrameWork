@@ -107,6 +107,7 @@ public:
 		MOVE_POS_NEAR,
 		MOVE_POS_TILE,
 		MOVE_POS_PICK,
+		MOVE_POS_GOALPOS,
 		MOVE_POS_END,
 	};
 
@@ -135,7 +136,10 @@ public:
 	{
 		meEasingID = e;
 	}
-
+	void Set_GoalPostiton(_float3 goalpos)
+	{
+		mGoalPosition = goalpos;
+	}
 private:
 	_double						mTimeMax=1;
 	_double						mCurrentTimer=0;

@@ -132,9 +132,9 @@ HRESULT CDungeon_Objects::Ready_Light()
 
 	LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vDirection = _float4(0, -1.f, 0, 0.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 
 	if (FAILED(pGameInstance->Add_Light(mDevice, mDeviceContext, LightDesc)))
 		return E_FAIL;

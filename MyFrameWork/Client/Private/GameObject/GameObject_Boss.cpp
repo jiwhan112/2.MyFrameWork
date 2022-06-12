@@ -122,7 +122,7 @@ HRESULT CGameObject_BOSS::Init_AI_Boss()
 	mComBehavior->Select_Sequnce("WORLDIDLE");
 
 	// ¿òÁ÷ÀÓ
-	CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
+	CSequnce_WorldMove_Player* Seq_WorldMove = CSequnce_WorldMove_Player::Create(this);
 	//	CSequnce_WorldMove::tag_SeqWorldMove DefaultDoorDesc;
 	//	Seq_Door->Restart(&DefaultDoorDesc);
 	mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);

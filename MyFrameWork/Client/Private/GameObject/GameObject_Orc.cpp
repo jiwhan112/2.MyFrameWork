@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Orc.h"
-#include "AI/AI_Action.h"
+#include "AI/AI_Sequnce.h"
 
 
 CGameObject_Orc::CGameObject_Orc(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -35,27 +35,51 @@ HRESULT CGameObject_Orc::NativeConstruct(void* pArg)
 
 HRESULT CGameObject_Orc::Init_Unit()
 {
-	/*string str("crea_Orc.fbx");
+	// 모델 결정
+	string str("crea_Orc.fbx");
 	strcpy_s(mModelDesc.mModelName, str.c_str());
 	Set_LoadModelDynamicDESC(mModelDesc);
 
-	_float size = 0.8f;
+	// Transform
+	_float3 SpawnPos = mSpawnPostitionDAUNGEON;
+	SpawnPos.y += 10;
+	Set_Position(SpawnPos);
 
+	Set_LookDir(_float3(-1, 0, -1));
+
+
+	_float size = 0.8f;
 	mComTransform->Scaled(_float3(size, size, size));
 
+	// 유닛 타입
+	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
+	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+
+	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
+	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
+	mTimeForSpeed = 0.5f;
+	mRotSpeed = 10.0f;
+
+	// 충돌 정보
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Update_Collider();
 
-	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_IDLE));*/
+	// 애니메이션
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SPAWNPOS));
+
+	// 소켓
+	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1), "crea_SnotPickaxe.fbx", "RArmDigit31");
+
+
 	return S_OK;
 }
 
 HRESULT CGameObject_Orc::Init_AI()
 {
-	
+	FAILED_CHECK(__super::Init_AI());
 	Init_AI_Default();
 
 	return S_OK;
@@ -65,49 +89,17 @@ HRESULT CGameObject_Orc::Init_AI()
 HRESULT CGameObject_Orc::Init_AI_Default()
 {	// AI 세부 구현
 
-	// IDLE 시퀀스 3개
-	CNode_Seqeunce* Seq_IDLE1 = CNode_Seqeunce::Create();
-	CNode_Seqeunce* Seq_IDLE2 = CNode_Seqeunce::Create();
+	CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
+	CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
 
-	// Set Action
-	CAction_DEALY* dealyTime = CAction_DEALY::Create("DealyTime", this);
-	CAction_DEALY* dealyAniIdle = CAction_DEALY::Create("DealyIdle", this);
-	CAction_DEALY* dealyMelee = CAction_DEALY::Create("DealyMelee", this);
+	DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
+	DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
 
-	dealyTime->Set_TimeMax(3.0f);
-	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-	dealyMelee->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
+	Seq_IDLE->Restart(&DefaultIdleDesc);
+	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
-	CAction_MOVE* MoveWalk = CAction_MOVE::Create("Walk", this);
-	CAction_MOVE* MoveRun = CAction_MOVE::Create("Run", this);
-	MoveWalk->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	MoveWalk->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-	MoveWalk->Set_TimeMax(1.2f);
-	MoveRun->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-	MoveRun->Set_TimeMax(0.8f);
 
-	// SetSeq
-	// IDLE1: 돌아다님
-	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-	Seq_IDLE1->PushBack_LeafNode(MoveWalk->Clone());
-
-	// IDLE2: 뛰어다님
-	Seq_IDLE2->PushBack_LeafNode(dealyAniIdle->Clone());
-	Seq_IDLE2->PushBack_LeafNode(dealyMelee->Clone());
-	Seq_IDLE2->PushBack_LeafNode(MoveRun->Clone());
-
-	mComBehavior->Add_Seqeunce("IDLE1", Seq_IDLE1);
-	mComBehavior->Add_Seqeunce("IDLE2", Seq_IDLE2);
-	mComBehavior->Select_Sequnce("IDLE1");
-
-	// Release
-	Safe_Release(dealyTime);
-	Safe_Release(dealyAniIdle);
-	Safe_Release(dealyMelee);
-
-	Safe_Release(MoveWalk);
-	Safe_Release(MoveRun);
+	
 	return S_OK;
 }
 

@@ -47,9 +47,21 @@ public:
 	virtual HRESULT Init_AI_Enemy();
 
 
+	// 던전으로 이동 명령
+	HRESULT Set_GoDungeion();
+
+
 	// 모델 구현 
 	E_ENEMYTYPE			meEnemyType = ENEMY_WARRIOR;
 protected:
+	_double				mWorldCreateTimer = 0;
+	_double				mTimer_Dungeon = 0;
+
+
+	const _float3 mWorld_EnemyDungeonPos = _float3(52.f, 8.72f, 11.f);
+	const _float3 mWorldTargetPos1 = _float3(12, 8.72f, 20);
+	const _float3 mWorldTargetPos2 = _float3(25, 8.72f, 15);
+	const _float3 mWorldTargetPos3 = _float3(50, 8.72f, 12);
 
 public:
 	static CGameObject_Enemy* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

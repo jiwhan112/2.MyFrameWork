@@ -165,6 +165,11 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 		mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
 		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
 		break;
+	case Client::CAction_MOVE::MOVE_POS_GOALPOS:
+		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
+
+		break;
+
 	case Client::CAction_MOVE::MOVE_POS_END:
 		break;
 	default:

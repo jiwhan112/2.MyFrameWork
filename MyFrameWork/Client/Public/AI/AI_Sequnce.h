@@ -194,7 +194,7 @@ public:
 
 // Seq_WorldMove
 // 월드에서 움직임
-class CSequnce_WorldMove:
+class CSequnce_WorldMove_Player:
 	public CSequnce_Base
 {
 public:
@@ -202,11 +202,11 @@ public:
 	{
 		_float3 GoalPosition = _float3();
 
-	}SEQWORLDMOVE;
+	}SEQWORLDMOVE_PlAYER;
 
 protected:
-	explicit CSequnce_WorldMove() = default;
-	virtual ~CSequnce_WorldMove() = default;
+	explicit CSequnce_WorldMove_Player() = default;
+	virtual ~CSequnce_WorldMove_Player() = default;
 
 public:
 	// 초기화와 다시시작시 정보 전달과 다름
@@ -214,10 +214,41 @@ public:
 	virtual void Restart(void* SeqData = nullptr)override;
 
 protected:
-	SEQWORLDMOVE					mSeqData;
+	SEQWORLDMOVE_PlAYER					mSeqData;
 
 public:
-	static CSequnce_WorldMove* Create(CGameObject_3D_Dynamic* targetobj);
+	static CSequnce_WorldMove_Player* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
+// Seq_WorldMove_ENEMY
+// 월드에서 움직임
+class CSequnce_WorldMove_Enemy :
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqWorldMove
+	{
+		_uint MaxPath;
+		_float3* TargetPos = nullptr;
+		
+	}SEQWORLDMOVE_ENEMY;
+
+protected:
+	explicit CSequnce_WorldMove_Enemy() = default;
+	virtual ~CSequnce_WorldMove_Enemy() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQWORLDMOVE_ENEMY					mSeqData;
+	_uint CurrentPath;
+
+public:
+	static CSequnce_WorldMove_Enemy* Create(CGameObject_3D_Dynamic* targetobj);
 	virtual void Free()override;
 };
 

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Mine.h"
 #include "GameObject/GameObject_3D_Tile.h"
-//#include "AI/AI_Action.h"
 #include "AI/AI_Sequnce.h"
 
 CGameObject_Mine::CGameObject_Mine(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -70,9 +69,6 @@ HRESULT CGameObject_Mine::LateTick_World(_double TimeDelta)
 	return UPDATENONE;
 }
 
-
-
-
 HRESULT CGameObject_Mine::Init_Unit()
 {
 	// 모델 결정
@@ -108,7 +104,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 	Update_Collider();
 
 	// 애니메이션
-	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
+	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SPAWNPOS));
 
 	// 소켓
 	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1),"crea_SnotPickaxe.fbx","RArmDigit31");

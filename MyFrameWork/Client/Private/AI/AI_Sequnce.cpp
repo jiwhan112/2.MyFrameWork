@@ -455,32 +455,30 @@ void CSequnce_WorldIdle::Free()
 
 }
 
-HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
+HRESULT CSequnce_WorldMove_Player::NativeConstruct(CGameObject_3D_Dynamic * obj)
 {
+	__super::NativeConstruct(obj);
+
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 
+	// 월드에서는 싸움이 걸리면 싸워야한다.
 	// 타일 움직임 -> 애니메이션 -> 함수 실행;
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
 	if (ComBehavior == nullptr)
 		return E_FAIL;
 
 
-	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+//	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
 //	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
-	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
+//	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
 	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_PICK);
 
-	// SetSeq
-	// Tile: 타일을 채굴
-	PushBack_LeafNode(movepath->Clone());
-	PushBack_LeafNode(ani->Clone());
-	
 
-	Safe_Release(ani);
+	PushBack_LeafNode(movepath->Clone());
 	Safe_Release(movepath);
 //	Safe_Release(funcion);
 
@@ -490,15 +488,19 @@ HRESULT CSequnce_WorldMove::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	return S_OK;
 }
 
-void CSequnce_WorldMove::Restart(void * SeqData)
+void CSequnce_WorldMove_Player::Restart(void * SeqData)
 {
 	__super::Restart(SeqData);
-	
+
+	if (SeqData)
+	{
+		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDMOVE_PlAYER));
+	}
 }
 
-CSequnce_WorldMove * CSequnce_WorldMove::Create(CGameObject_3D_Dynamic * targetobj)
+CSequnce_WorldMove_Player * CSequnce_WorldMove_Player::Create(CGameObject_3D_Dynamic * targetobj)
 {
-	CSequnce_WorldMove* pInstance = NEW CSequnce_WorldMove();
+	CSequnce_WorldMove_Player* pInstance = NEW CSequnce_WorldMove_Player();
 
 	if (FAILED(pInstance->NativeConstruct(targetobj)))
 	{
@@ -510,8 +512,85 @@ CSequnce_WorldMove * CSequnce_WorldMove::Create(CGameObject_3D_Dynamic * targeto
 	return pInstance;
 }
 
-void CSequnce_WorldMove::Free()
+void CSequnce_WorldMove_Player::Free()
 {
 	__super::Free();
 	
 }
+
+HRESULT CSequnce_WorldMove_Enemy::NativeConstruct(CGameObject_3D_Dynamic * obj)
+{
+	__super::NativeConstruct(obj);
+
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+
+	// 월드에서는 싸움이 걸리면 싸워야한다.
+	// 타일 움직임 -> 애니메이션 -> 함수 실행;
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
+
+
+	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+
+	//	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+
+	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
+
+	CurrentPath = 0;
+	mSeqData.MaxPath = 0;
+	PushBack_LeafNode(movepath->Clone());
+
+	Safe_Release(movepath);
+	//	Safe_Release(funcion);
+
+	// 객체 연결
+	Setup_TargetNode(obj);
+
+	return S_OK;
+}
+
+void CSequnce_WorldMove_Enemy::Restart(void * SeqData)
+{
+	__super::Restart(SeqData);
+
+	if (SeqData)
+	{
+		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDMOVE_ENEMY));
+	}
+
+
+
+	// auto move1 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+	// NULL_CHECK_BREAK(move1);
+	// ((CAction_MOVE*)move1)->Set_GoalPostiton(mSeqData.TargetPos1);
+	// auto move2 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH,1);
+	// NULL_CHECK_BREAK(move2);
+	// ((CAction_MOVE*)move2)->Set_GoalPostiton(mSeqData.TargetPos2);
+	// auto move3 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH,2);
+	// NULL_CHECK_BREAK(move3);
+	// ((CAction_MOVE*)move3)->Set_GoalPostiton(mSeqData.TargetPos3);
+}
+
+CSequnce_WorldMove_Enemy * CSequnce_WorldMove_Enemy::Create(CGameObject_3D_Dynamic * targetobj)
+{
+	CSequnce_WorldMove_Enemy* pInstance = NEW CSequnce_WorldMove_Enemy();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_WorldMove_Enemy");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CSequnce_WorldMove_Enemy::Free()
+{
+	__super::Free();
+
+}
+

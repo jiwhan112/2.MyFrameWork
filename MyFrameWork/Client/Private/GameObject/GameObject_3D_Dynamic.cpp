@@ -315,11 +315,6 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		// Seq_Fall->Restart(&worldIdle);
 		mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
 
-		CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
-		//	CSequnce_WorldMove::tag_SeqWorldMove DefaultDoorDesc;
-		//	Seq_Door->Restart(&DefaultDoorDesc);
-		mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
-
 		mComBehavior->Select_Sequnce("CREATE_FALL");
 	}
 
@@ -333,6 +328,13 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
 		Seq_Pick->Restart(&DefaultPickDesc);
 		mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
+
+		CSequnce_WorldMove_Player* Seq_WorldMove = CSequnce_WorldMove_Player::Create(this);
+		CSequnce_WorldMove_Player::SEQWORLDMOVE_PlAYER WorldDesc;
+		WorldDesc.GoalPosition = _float3(0, 0, 0);
+		Seq_WorldMove->Restart(&WorldDesc);
+		mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
+
 	}
 
 	else if (meUnitType == CGameObject_3D_Dynamic::UNIT_ENEMY)
@@ -344,10 +346,6 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 	{
 		
 	}
-
-	
-
-
 
 	return S_OK;
 }
@@ -731,7 +729,7 @@ HRESULT CGameObject_3D_Dynamic::Select_Fall()
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Select_WorldGo(_float3 pos)
+HRESULT CGameObject_3D_Dynamic::Select_WorldPostition(_float3 pos)
 {
 	FAILED_CHECK(FindPathForCurrentNavi(pos));
 	// CSequnce_WorldMove::SEQWORLDMOVE seq;

@@ -143,7 +143,7 @@ protected:
 public:
 	HRESULT Select_Door();
 	HRESULT Select_Fall();
-	HRESULT Select_WorldGo(_float3 pos);
+	HRESULT Select_WorldPostition(_float3 pos);
 	HRESULT Set_BehaviorMode(int index = -1);
 
 	// SOCKET
@@ -212,9 +212,16 @@ protected: // 3D모델 Com / DESC 추가
 	const _float mMouseOffset = 4;
 
 public:
+	// 생성 위치
 	const _float3 mSpawnPostitionDAUNGEON = _float3(20.f, 0.f, 14.5f);
 	const _float3 mSpawnPostitionENEMY = _float3(8.f, 8.f, 48.f);
 	const _float3 mSpawnPostitionBOSS = _float3(52.f, 8.f, 51.f);
+
+	// 던전입구
+	const _float3 mDungeonDoorGoalPos = _float3(22.4f, 0.010f, 23.5f);
+	const _float3 mDungeonDoorStartPos = _float3(22, 0.010f, 28.5f);
+	const _float3 mWorldDoorStartPos = _float3(59.3f, 8.72f, 4.15f);
+	const _float3 mWorldDoorGoalPos = _float3(52.24f, 8.72f, 11.3f);
 
 public:
 	static CGameObject_3D_Dynamic* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

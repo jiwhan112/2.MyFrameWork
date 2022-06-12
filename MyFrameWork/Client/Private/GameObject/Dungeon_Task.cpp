@@ -39,6 +39,17 @@ HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,void* desc)
 		base = NEW TASKMAP(*(_float3*)desc);
 		base->mTaskID = id; 
 		break;
+	case Client::CDungeon_Task::TASK_ENEMY_MOVE_WORLD:
+		base = NEW TASKMAP(*(_float3*)desc);
+		base->mTaskID = id;
+		break;
+
+	case Client::CDungeon_Task::TASK_ENEMY_MOVE_WORLD_DEALY:
+	//	base = NEW TASKMAP_TIMER(*(TASKMAP_TIMER*)desc);
+		base = (TASKMAP_TIMER*)desc;
+		base->mTaskID = id;
+		break;
+
 	case Client::CDungeon_Task::TASK_END:
 		break;
 	default:
@@ -58,12 +69,22 @@ HRESULT CDungeon_Task::Add_Task_Tile_Gold(_uint index)
 	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_GOLD, (void*)&index);
 }
 
-HRESULT CDungeon_Task::Add_Task_Tile_MoveWorld(_float3 Worldpos)
+HRESULT CDungeon_Task::Add_Task_PlayerMoveWorld(_float3 Worldpos)
 {
 
 	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_PLAYER_MOVE_WORLD, (void*)&Worldpos);
 }
 
+HRESULT CDungeon_Task::Add_Task_EnemyMoveWorld(_float3 Worldpos)
+{
+
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_ENEMY_MOVE_WORLD, (void*)&Worldpos);
+}
+
+HRESULT CDungeon_Task::Add_Task_EnemyMoveWorld_Dealy(TASKMAP_TIMER desc)
+{
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_ENEMY_MOVE_WORLD_DEALY, (void*)&desc);
+}
 
 TASKBASE * CDungeon_Task::Get_BackTask()
 {
