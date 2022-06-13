@@ -8,8 +8,9 @@ END
 
 BEGIN(Client)
 
-// 인스턴스로 랜더링될 파티클 오브젝트 나중에 구현
 
+// 인스턴싱으로 구현됨
+// 많은 파티클 오브젝트 사용시 사용
 class CGameObject_2D_Particle_Point:
 	public CGameObject_Base
 {

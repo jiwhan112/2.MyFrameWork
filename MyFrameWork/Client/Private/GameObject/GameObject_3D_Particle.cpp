@@ -26,7 +26,7 @@ HRESULT CGameObject_3D_Particle::NativeConstruct(void* pArg)
 
 	if (mModelName.length() < 2)
 	{
-		mModelName = "aaa.fbx";
+		mModelName = "skfx_Meteor_big_00.fbx";
 	}
 	mCurrentShaderPass = 0;
 
@@ -58,16 +58,9 @@ HRESULT CGameObject_3D_Particle::Render()
 		)
 		return E_FAIL;
 
-	//FAILED_CHECK(Set_ConstantTable_World());
-	//FAILED_CHECK(Set_ConstantTable_Texture());
-	//FAILED_CHECK(Set_ConstantTable_OnlyCameraPos());
-
-	//mComModel->Render(mComShader, mCurrentShaderPass);
-
-
 	FAILED_CHECK(Set_ConstantTable_World());
-	FAILED_CHECK(Set_ConstantTable_Light());
-	FAILED_CHECK(Set_ConstantTable_Model());
+//	FAILED_CHECK(Set_ConstantTable_Texture());
+	FAILED_CHECK(Set_ConstantTable_OnlyCameraPos());
 
 	if (mComModel != nullptr)
 	{
@@ -81,32 +74,32 @@ HRESULT CGameObject_3D_Particle::Render()
 		}
 	}
 
-
 	return S_OK;
 }
 
 
 HRESULT CGameObject_3D_Particle::Set_Component()
 {
-	//if (mComRenderer == nullptr)
-	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
+	if (mComRenderer == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_RENDERER), TEXT("Com_Renderer"), (CComponent**)&mComRenderer));
 
-	//if (mComShader == nullptr)
-	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_INSTANCE_POINT), TEXT("Com_Shader"), (CComponent**)&mComShader));
+	}
+	if (mComShader == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_INSTANCE_POINT), TEXT("Com_Shader"), (CComponent**)&mComShader));
+	}
 
-	//if (mComVIBuffer == nullptr)
-	//{
-	//	CVIBuffer_Point_Instance::PARTICLEDESC  ParticleDesc;
+	if (mComModel == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_MODEL), TEXT("Com_Model"), (CComponent**)&mComModel));
+	}
 
-	//	ParticleDesc.fMinSpeed = 2.f;
-	//	ParticleDesc.fMaxSpeed = 10.f;
-	//	ParticleDesc.vMoveDir = _float3(0.f, -1.f, 0.f);
-	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer,&ParticleDesc));
-	//}
+	if (mComTextureMap == nullptr)
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTextureMap));
 
-	//if (mComTexture == nullptr)
-	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
-
+	}
 	return S_OK;
 }
 
@@ -115,6 +108,8 @@ HRESULT CGameObject_3D_Particle::Set_ConstantTable_Model()
 	// 이외 텍스처 바인딩
 	if (mComTextureMap == nullptr)
 		return S_OK;
+
+	// 텍스처 
 
 	//auto tex1 = mComTexture->Get_MapTexture(mTexture_Model_DESC.mTextureKey_Normal);
 	//auto tex2 = mComTexture->Get_MapTexture(mTexture_Model_DESC.mTextureKey_Hieght);

@@ -7,6 +7,8 @@ class CModel;
 END
 
 // 파티클용 3D 오브젝트
+// 10개 이하로 사용
+
 BEGIN(Client)
 class CGameObject_3D_Particle:
 	public CGameObject_Base

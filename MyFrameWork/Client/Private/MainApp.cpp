@@ -290,6 +290,10 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_INSTANCE_POINT),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxPointInstance.hlsl"),
 			VTXPOINTINSTANCE_DECLARATION::Elements, VTXPOINTINSTANCE_DECLARATION::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_PARTICLE3D),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxParticle.hlsl"),
+			VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements)));
+
 
 
 	return S_OK;

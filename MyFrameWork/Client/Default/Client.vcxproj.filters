@@ -235,10 +235,16 @@
     <Filter Include="02.GameObject\01.2DObject\2.Particle">
       <UniqueIdentifier>{83ecc7d4-cb22-48ae-9acb-134f7486bfae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.2DObject\2.Particle\3D">
+    <Filter Include="02.GameObject\01.2DObject\2.Particle\4.3D">
       <UniqueIdentifier>{1c3bd05f-d80e-4543-8111-64ecf854fbd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.2DObject\2.Particle\2D">
+    <Filter Include="02.GameObject\01.2DObject\2.Particle\1.Manager">
+      <UniqueIdentifier>{6c3eabf9-45a0-4b06-9d4f-bf74b2678b43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.2DObject\2.Particle\2.2D_Rect">
+      <UniqueIdentifier>{00cf3962-1d75-4be7-b61e-629917cee925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.2DObject\2.Particle\3.2D_Instance">
       <UniqueIdentifier>{765d0330-4142-424e-88b9-2c5437390dfb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -454,10 +460,13 @@
       <Filter>97.Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h">
-      <Filter>02.GameObject\01.2DObject\2.Particle\2D</Filter>
+      <Filter>02.GameObject\01.2DObject\2.Particle\3.2D_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Particle.h">
-      <Filter>02.GameObject\01.2DObject\2.Particle\3D</Filter>
+      <Filter>02.GameObject\01.2DObject\2.Particle\4.3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Buffer.h">
+      <Filter>02.GameObject\01.2DObject\2.Particle\2.2D_Rect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -646,10 +655,13 @@
       <Filter>03.GameSystems\07.BehaviorTree_Ai\04.Selector</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Point.cpp">
-      <Filter>02.GameObject\01.2DObject\2.Particle\2D</Filter>
+      <Filter>02.GameObject\01.2DObject\2.Particle\3.2D_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Particle.cpp">
-      <Filter>02.GameObject\01.2DObject\2.Particle\3D</Filter>
+      <Filter>02.GameObject\01.2DObject\2.Particle\4.3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Buffer.cpp">
+      <Filter>02.GameObject\01.2DObject\2.Particle\2.2D_Rect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

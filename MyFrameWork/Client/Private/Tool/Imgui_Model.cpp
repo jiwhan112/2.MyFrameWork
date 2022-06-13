@@ -19,6 +19,7 @@ HRESULT CImgui_Model::NativeConstruct()
 
 	mCameraClient = nullptr;
 	meCreateLayer = LAY_OBJECT;
+	meCreateLayer_Particle = LAY_EFFECT;
 
 	return S_OK;
 }
@@ -92,39 +93,85 @@ HRESULT CImgui_Model::Render_UI()
 {
 	if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_MAIN)))
 	{
-		if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "3D_MODEL")))
+		ImGui::Checkbox("ParticleSetting", &mIsPartilceSetting);
+
+		if (mIsPartilceSetting)
 		{
-			// 빈 3D 오브젝트 생성
-			RENDER_CREATEEMPTY();
-
-			// 파일 불러오기
-			RENDER_CREATE_PROTO();
-
-			// 각 모드에 맞는 세팅
-			if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC)
+			if (ImGui::Begin("Particle_Tool"))
 			{
-				// 타입에 따라 저장
-				RENDER_STATIC_MODE();
-			}
 
-			if (meModelMode == CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
-			{
-				RENDER_DYNAMIC_MODE();
-			}
-			if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC_PARENT)
-			{
-				RENDER_STATIC_PARENT_MODE();
-			}
+				// 타일 브러시 일단 랜덤으로 사용
+				static ImGuiComboFlags flags = ImGuiComboFlags_PopupAlignLeft;
 
-			ImGui::Checkbox("ModelSetting", &mIsModelSetting);
+				const char* items[] = { "Particle2D","Particle3D","ParticleENd"};
+				static int item_current_idx = 0; // Here we store our selection data as an index.
+				const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 
-			if (mIsModelSetting)
-			{
-				if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_FBX)))
+				if (ImGui::BeginCombo("ParticleCombo", combo_preview_value, flags))
 				{
-					FBX_SETTINGMODE();
-					ImGui::End();
+					for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+					{
+						const bool is_selected = (item_current_idx == n);
+						if (ImGui::Selectable(items[n], is_selected))
+						{
+							item_current_idx = n;
+						}
+					}
+					ImGui::EndCombo();
 				}
+
+				if (item_current_idx == 0)
+				{
+					Edit_PARTICLE_2D();
+				}
+				else if (item_current_idx == 1)
+				{
+					Edit_PARTICLE_3D();
+				}				
+				ImGui::End();
+			}
+		}
+
+		else
+		{
+
+
+
+			if (ImGui::CollapsingHeader(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "3D_MODEL")))
+			{
+				// 빈 3D 오브젝트 생성
+				RENDER_CREATEEMPTY();
+
+				// 파일 불러오기
+				RENDER_CREATE_PROTO();
+
+				// 각 모드에 맞는 세팅
+				if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC)
+				{
+					// 타입에 따라 저장
+					RENDER_STATIC_MODE();
+				}
+
+				if (meModelMode == CImgui_Model::TOOLMODE_MODEL_DYNAMIC)
+				{
+					RENDER_DYNAMIC_MODE();
+				}
+				if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC_PARENT)
+				{
+					RENDER_STATIC_PARENT_MODE();
+				}
+
+				ImGui::Checkbox("ModelSetting", &mIsModelSetting);
+
+				if (mIsModelSetting)
+				{
+					if (ImGui::Begin(STR_IMGUITITLE(CImgui_Base::IMGUI_TITLE_FBX)))
+					{
+						FBX_SETTINGMODE();
+						ImGui::End();
+					}
+				}
+
 			}
 		}
 		ImGui::End();
@@ -886,6 +933,32 @@ HRESULT CImgui_Model::Edit_COL()
 			mCurrent_ModelStaticObject->Set_LoadColliderDESC(desc);
 			IMGUI_TREE_END
 		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CImgui_Model::Edit_PARTICLE_2D()
+{
+
+
+	return S_OK;
+}
+
+HRESULT CImgui_Model::Edit_PARTICLE_3D()
+{
+
+	if(ImGui::Button("CreateParticle"))
+	{
+		// 생성 
+
+
+	}
+	if (ImGui::Button("DelPartilce"))
+	{
+		// 삭제 
+
+
 	}
 
 	return S_OK;
