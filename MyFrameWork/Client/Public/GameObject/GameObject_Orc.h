@@ -31,9 +31,8 @@ public:
 	virtual HRESULT Init_AI();
 	HRESULT Init_AI_Default();
 
-	virtual HRESULT AttackFunc() override;
-	virtual HRESULT HitFunc()override;
-	virtual HRESULT DieFunc()override;
+//	virtual HRESULT AttackFunc() override;
+
 
 
 	// AI

@@ -42,6 +42,25 @@ CAction_DynamicBase * CSequnce_Base::Find_Action(CAction_DynamicBase::E_AcionID 
 	return nullptr;
 }
 
+CDeco_DynamicBase * CSequnce_Base::Find_Deco(CDeco_DynamicBase::E_DecoID id, _int index)
+{
+	int cnt = 0;
+	for (auto& obj : mListLeafNodes)
+	{
+		if (obj->Get_TREEID() == CNode_LeafTree::LEAFTREE_ID_DECORATOR)
+		{
+			CDeco_DynamicBase* castObj = static_cast<CDeco_DynamicBase*>(obj);
+			if (castObj->Get_DECOID() == id)
+			{
+				if (cnt == index)
+					return castObj;
+				else
+					cnt++;
+			}
+		}
+	}
+}
+
 void CSequnce_Base::Setup_TargetNode(CGameObject_3D_Dynamic * obj)
 {
 	// 내부에 같은 타겟 세팅
@@ -616,6 +635,7 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
 	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_Function* attackFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+	CDeco_Minus* testMinusDeco = (CDeco_Minus*)ComBehavior->Clone_Leaf(TAGDECO(DECO_MINUS));
 
 
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
@@ -625,10 +645,12 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
 	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
 
+	testMinusDeco->Set_Value(10);
 
 	PushBack_LeafNode(movepath->Clone());
 	PushBack_LeafNode(ani->Clone());
 	PushBack_LeafNode(attackFunc->Clone());
+	PushBack_LeafNode(testMinusDeco->Clone());
 
 
 	Safe_Release(movepath);
@@ -658,7 +680,9 @@ void CSequnce_WorldAttack_Player::Restart(void * SeqData)
 	NULL_CHECK_BREAK(ani);
 	((CAction_DEALY*)ani)->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
 
-	
+	auto deco = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	NULL_CHECK_BREAK(ani);
+	((CAction_DEALY*)ani)->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
 
 
 }

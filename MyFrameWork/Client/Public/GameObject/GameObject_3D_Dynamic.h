@@ -109,6 +109,12 @@ public: // GetSet
 	{
 		mTarget_Attack = target;
 	}
+	
+	// HP MP Damage
+	_int Get_Hp() { return mHP; };
+	_int Get_Mp() { return mMP; };
+	_int Get_Damage() { return mDamage; };
+
 
 	// Collision
 public: 
@@ -150,9 +156,9 @@ public:
 	HRESULT Set_BehaviorMode(int index = -1);
 
 	// 전투 연출
-	virtual HRESULT AttackFunc() { return S_OK; }
-	virtual HRESULT HitFunc() { return S_OK; }
-	virtual HRESULT DieFunc() { return S_OK; }
+	virtual HRESULT AttackFunc();
+	virtual HRESULT HitFunc(_int Damage);
+	virtual HRESULT DieFunc();
 
 
 	// SOCKET
@@ -224,8 +230,9 @@ protected: // 3D모델 Com / DESC 추가
 
 
 	// 속성
-	_int							mHP=100;
+	_int							mHP=30;
 	_int							mMP=0;
+	_int							mDamage = 10;
 
 
 public:

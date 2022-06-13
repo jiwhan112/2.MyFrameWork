@@ -5,6 +5,7 @@
 #include "Level_Loader.h"
 #include "GameObject/Client_Object.h""
 #include "AI/AI_Action.h"
+#include "AI/AI_Deco.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -294,6 +295,7 @@ HRESULT CMainApp::Ready_Prototype_Components_AI()
 	CBehaviorTree* baseTree = CBehaviorTree::Create(m_pDevice, m_pDeviceContext);
 	// baseTree->addLeaf();
 
+	// ACTION
 	CAction_DEALY*			Dealy = CAction_DEALY::Create("Dealy", nullptr);
 	CAction_MOVE*			Move = CAction_MOVE::Create("Move", nullptr);
 	CAction_MOVE_TARGET*	MoveTarget = CAction_MOVE_TARGET::Create("MoveTarget", nullptr);
@@ -303,6 +305,10 @@ HRESULT CMainApp::Ready_Prototype_Components_AI()
 	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGAI(AI_MOVE), Move));
 	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGAI(AI_MOVETARGET), MoveTarget));
 	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGAI(AI_FUNCTION), Func));
+
+	// DECO
+	CDeco_Minus*			minus = CDeco_Minus::Create("Minus", nullptr);
+	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGDECO(DECO_MINUS), minus));
 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_BEHAVIORTREE),

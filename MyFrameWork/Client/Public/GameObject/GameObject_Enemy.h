@@ -54,9 +54,7 @@ public:
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
 
 	// 공격 함수
-	virtual HRESULT AttackFunc() override;
-	virtual HRESULT HitFunc()override;
-	virtual HRESULT DieFunc()override;
+	// virtual HRESULT AttackFunc() override;
 
 
 	// 모델 구현 

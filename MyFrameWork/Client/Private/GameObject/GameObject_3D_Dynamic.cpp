@@ -767,6 +767,32 @@ HRESULT CGameObject_3D_Dynamic::Set_BehaviorMode(int index)
 	return S_OK;
 }
 
+HRESULT CGameObject_3D_Dynamic::AttackFunc()
+{
+	if (mTarget_Attack)
+	{
+		mTarget_Attack->HitFunc(mDamage);
+		if (mTarget_Attack->Get_Hp() <= 0)
+			mTarget_Attack = nullptr;
+
+	}
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
+{
+	 mHP -= Damage; 
+	 if (mHP <= 0)
+		 DieFunc(); 
+	 return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::DieFunc()
+{
+	 Set_Dead();
+	 return S_OK; 
+}
+
 HRESULT CGameObject_3D_Dynamic::Add_Socket_Model(string tag, string modelName, string boneName)
 {
 	auto find = Find_Socket(tag);

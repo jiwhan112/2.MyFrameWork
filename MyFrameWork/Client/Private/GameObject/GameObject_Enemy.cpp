@@ -210,20 +210,6 @@ HRESULT CGameObject_Enemy::CollisionFunc(_float3 PickPosition, _float dist, _uin
 	return S_OK;
 }
 
-HRESULT CGameObject_Enemy::AttackFunc()
-{
-	return S_OK;
-}
-
-HRESULT CGameObject_Enemy::HitFunc()
-{
-	return S_OK;
-}
-
-HRESULT CGameObject_Enemy::DieFunc()
-{
-	return S_OK;
-}
 
 
 CGameObject_Enemy * CGameObject_Enemy::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)

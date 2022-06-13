@@ -11,6 +11,14 @@ class CDeco_DynamicBase
 	:public CNode_Decorator
 
 {
+public:
+	enum E_DecoID
+	{
+		E_DECI_MINUS,
+		E_DECI_END
+	};
+
+
 protected:
 	explicit CDeco_DynamicBase(const char* str, CGameObject_3D_Dynamic* obj);
 	explicit CDeco_DynamicBase(const CDeco_DynamicBase& rhs);
@@ -19,6 +27,7 @@ protected:
 public:
 
 	virtual HRESULT ReStart(void* pArg = nullptr)override;
+	virtual E_DECOTYPE IsCorect(_double timer) = 0;
 
 
 	void SetUp_Target(CGameObject_3D_Dynamic* targetobj)
@@ -26,7 +35,11 @@ public:
 		mDynamicObject = targetobj;
 	}
 
+	E_DecoID Get_DECOID() const { return meDecoID; };
+
+
 protected:
+	E_DecoID meDecoID = E_DECI_END;
 	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
 
 public:
@@ -66,7 +79,7 @@ protected:
 
 public:
 	virtual HRESULT ReStart(void* pArg = nullptr)override;
-	virtual E_DECOTYPE IsCollect(_double timer);
+	virtual E_DECOTYPE IsCorect(_double timer);
 
 protected:
 	int MaxCount = -1;
@@ -78,6 +91,34 @@ public:
 	virtual CDeco_Count*				Clone()override;
 	virtual void Free()override;
 };
+
+
+// 음수 체크
+class CDeco_Minus
+	:public CDeco_DynamicBase
+{
+protected:
+	explicit CDeco_Minus(const char* str, CGameObject_3D_Dynamic* obj);
+	explicit CDeco_Minus(const CDeco_Minus& rhs);
+	virtual ~CDeco_Minus() = default;
+
+public:
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
+	virtual E_DECOTYPE IsCorect(_double timer) override;
+
+	void Set_Value(int i) { Value = i; }
+protected:
+	int Value = 0;
+
+
+public:
+	static	CDeco_Minus*				Create(const char* str, CGameObject_3D_Dynamic* obj);
+	virtual CDeco_Minus*				Clone()override;
+	virtual void Free()override;
+};
+
+
+
 
 #pragma endregion DECO
 

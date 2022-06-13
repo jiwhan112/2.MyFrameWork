@@ -115,27 +115,6 @@ HRESULT CGameObject_Orc::Init_AI_Default()
 	return S_OK;
 }
 
-HRESULT CGameObject_Orc::AttackFunc()
-{
-	if (mTarget_Attack)
-	{
-		mTarget_Attack->HitFunc();
-	}
-
-	return S_OK;
-}
-
-HRESULT CGameObject_Orc::HitFunc()
-{
-	return S_OK;
-}
-
-HRESULT CGameObject_Orc::DieFunc()
-{
-	return S_OK;
-}
-
-
 
 HRESULT CGameObject_Orc::Select_WorldAttack(CGameObject_3D_Dynamic* target )
 {

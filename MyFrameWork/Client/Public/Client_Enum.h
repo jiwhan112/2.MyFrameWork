@@ -458,6 +458,31 @@ static const char* STR_TAYAI(E_AI_TYPE str)
 	}
 
 }
+enum E_DECO_TYPE
+{
+	DECO_NONE = 0,
+	DECO_MINUS,
+	DECO_END,
+};
+static const char* STR_TAYDECO(E_DECO_TYPE str)
+{
+	switch (str)
+	{
+	case DECO_NONE:
+		return "DECO_NONE";
+		break;
+	case DECO_MINUS:
+		return "DECO_MINUS";
+		break;
+	case DECO_END:
+		break;
+	default:
+		return "";
+		break;
+	}
+
+}
+
 
 // 소켓 타입
 enum E_SOKET_TYPE
@@ -591,3 +616,4 @@ static const char* STR_TAYSOCKET(E_SOKET_TYPE str)
 #define  TAGFONT		STR_TAYFONT
 #define  TAGAI			STR_TAYAI
 #define  TAGSOCKET		STR_TAYSOCKET
+#define  TAGDECO		STR_TAYDECO

@@ -27,7 +27,7 @@ public:
 
 public: // Search_Action
 	CAction_DynamicBase* Find_Action(CAction_DynamicBase::E_AcionID id,_int index = 0);
-	//CDeco_DynamicBase* Find_Deco();
+	CDeco_DynamicBase* Find_Deco(CDeco_DynamicBase::E_DecoID id, _int index = 0);
 	//CSelect_DynamicBase* Find_Select();
 
 protected:
