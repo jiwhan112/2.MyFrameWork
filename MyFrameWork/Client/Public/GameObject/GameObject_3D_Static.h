@@ -65,7 +65,6 @@ public:
 	void		Set_ShdaerPass(int i) {  mCurrentShaderPass = i; }
 protected:
 	virtual HRESULT Set_Component()override;
-
 	virtual HRESULT Set_ConstantTable_Model(); // 모델 설정
 //	virtual HRESULT Set_ConstantTable_Light(_uint lightid = 0); // 라이팅
 
@@ -77,7 +76,7 @@ protected: // 3D모델 Com / DESC 추가
 	MODEL_STATIC_DESC			mModelStatic_Desc;
 	COLLIDER_DESC				mCollider_Desc;
 
-	E_TICKTYPE				meUpdateType = E_UPDATETYPE_NONE;
+	E_TICKTYPE					meUpdateType = E_UPDATETYPE_NONE;
 	_float						mOffsetY = 0;
 
 public:

@@ -1,6 +1,6 @@
-
 #include "Shader_Defines.hpp"
 
+// 포인트 인스턴싱
 texture2D			g_DiffuseTexture;
 
 struct VS_IN

@@ -14,6 +14,7 @@
 #include "VIBuffer.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Rect_Instance.h"
+#include "VIBuffer_Point_Instance.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
 

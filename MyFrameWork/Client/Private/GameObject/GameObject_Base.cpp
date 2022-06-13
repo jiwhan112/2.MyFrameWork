@@ -103,6 +103,14 @@ HRESULT CGameObject_Base::Set_ConstantTable_Light(_uint lightid)
 	return S_OK;
 }
 
+HRESULT CGameObject_Base::Set_ConstantTable_OnlyCameraPos()
+{
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+	FAILED_CHECK(mComShader->Set_RawValue(STR_CAMPOS, &pGameInstance->GetCameraPosition_vec(), sizeof(_float4)));
+
+	return S_OK;
+}
+
 //bool CGameObject_Base::PickObject_3D()
 //{
 //	if (mComVIBuffer == nullptr)

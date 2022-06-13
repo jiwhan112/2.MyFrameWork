@@ -232,6 +232,9 @@
     <Filter Include="03.GameSystems\07.BehaviorTree_Ai\01.Sequnce">
       <UniqueIdentifier>{d0bc3fe3-2ca1-46f9-9b87-7329eef44593}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.2DObject\2.Particle">
+      <UniqueIdentifier>{83ecc7d4-cb22-48ae-9acb-134f7486bfae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -375,9 +378,6 @@
     <ClInclude Include="..\Public\System\Astar.h">
       <Filter>03.GameSystems\03.AStar</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h">
-      <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\System\LevelMaster.h">
       <Filter>03.GameSystems\04.LevelMaster</Filter>
     </ClInclude>
@@ -446,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\AI\AI_Select.h">
       <Filter>03.GameSystems\07.BehaviorTree_Ai\04.Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h">
+      <Filter>02.GameObject\01.2DObject\2.Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -566,9 +569,6 @@
     <ClCompile Include="..\Private\System\Astar.cpp">
       <Filter>03.GameSystems\03.AStar</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp">
-      <Filter>02.GameObject\01.2DObject\0.Bsase</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\System\LevelMaster.cpp">
       <Filter>03.GameSystems\04.LevelMaster</Filter>
     </ClCompile>
@@ -635,6 +635,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI\AI_Select.cpp">
       <Filter>03.GameSystems\07.BehaviorTree_Ai\04.Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Point.cpp">
+      <Filter>02.GameObject\01.2DObject\2.Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

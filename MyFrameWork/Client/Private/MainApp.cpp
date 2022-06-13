@@ -133,6 +133,8 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
 		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pDeviceContext,30)));
 
 	
 	// 텍스처 컴포넌트
@@ -172,6 +174,8 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	// 마우스
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MOUSE),
 		CGameObject_Mouse::Create(m_pDevice, m_pDeviceContext)));
+
+	OBJECT_TYPE_2D_PARTICLE_POINT
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
 	//	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
@@ -285,7 +289,9 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxAni.hlsl"),
 			VTXANIMODEL_DECLARATION::Elements, VTXANIMODEL_DECLARATION::iNumElements)));
-
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_INSTANCE_POINT),
+		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexPointInstance.hlsl"),
+			VTXINSTANCE_DECLARATION::Elements, VTXINSTANCE_DECLARATION::iNumElements)));
 	return S_OK;
 }
 

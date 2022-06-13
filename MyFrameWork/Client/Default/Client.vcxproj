@@ -180,7 +180,7 @@
     <ClInclude Include="..\Public\GameObject\Dungeon_Objects.h" />
     <ClInclude Include="..\Public\GameObject\Dungeon_Task.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
-    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Boss.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Enemy.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Environment.h" />
@@ -263,7 +263,7 @@
     <ClCompile Include="..\Private\GameObject\Dungeon_Task.cpp" />
     <ClCompile Include="..\Private\GameObject\Dungeon_Objects.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
-    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Point.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Environment.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Boss.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Enemy.cpp" />
