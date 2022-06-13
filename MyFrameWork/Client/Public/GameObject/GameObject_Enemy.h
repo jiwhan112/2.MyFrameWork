@@ -49,14 +49,22 @@ public:
 
 	// 던전으로 이동 명령
 	HRESULT Set_GoDungeion();
+	
+	// CollisionFunc
+	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
+
+	// 공격 함수
+	virtual HRESULT AttackFunc() override;
+	virtual HRESULT HitFunc()override;
+	virtual HRESULT DieFunc()override;
 
 
 	// 모델 구현 
-	E_ENEMYTYPE			meEnemyType = ENEMY_WARRIOR;
 protected:
 	_double				mWorldCreateTimer = 0;
 	_double				mTimer_Dungeon = 0;
 
+	E_ENEMYTYPE			meEnemyType = ENEMY_WARRIOR;
 
 	const _float3 mWorld_EnemyDungeonPos = _float3(52.f, 8.72f, 11.f);
 	const _float3 mWorldTargetPos1 = _float3(12, 8.72f, 20);

@@ -122,7 +122,7 @@ HRESULT CGameObject_Mine::Init_AI()
 
 HRESULT CGameObject_Mine::Init_AI_MINE()
 {
-	// IDLE TILE 정보 생성
+	// IDLE 
 	CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
 	CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
 
@@ -132,12 +132,20 @@ HRESULT CGameObject_Mine::Init_AI_MINE()
 	Seq_IDLE->Restart(&DefaultIdleDesc);
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
+	// TILE
 	CSequnce_TILE* Seq_TILE= CSequnce_TILE::Create(this);
 	CSequnce_TILE::tag_SeqTILE DefaultTileDesc;
 	DefaultTileDesc.Runtime = mTimeForSpeed * 0.5f;
 
 	Seq_TILE->Restart(&DefaultTileDesc);
 	mComBehavior->Add_Seqeunce("DIG", Seq_TILE);
+
+	// PICK
+	CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
+	CSequnce_PICK::SEQPICK DefaultPickDesc;
+	DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
+	Seq_Pick->Restart(&DefaultPickDesc);
+	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 
 //
 //
@@ -226,7 +234,8 @@ void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
 	{
 		// 경로 탐색
 		mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
-		mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
+		if (mCurrentPathList.empty() == false)
+			mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
 	}
 
 	else

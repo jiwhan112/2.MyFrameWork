@@ -175,12 +175,20 @@ HRESULT CGameObject_3D_Dynamic::Tick_Dungeon(_double TimeDelta)
 
 	else if (meTickType == CGameObject_3D_Dynamic::TICK_TYPE_DUNGION_PICK)
 	{
+
 		_ray	ray = GetSingle(CGameManager)->Get_WorldRay();
 		_float3	newPos = ray.position;
 		newPos += ray.direction * mMouseOffset;
 		CTransform* CamTrans = GetSingle(CGameManager)->Get_LevelObject_LayerTag(TAGLAY(LAY_CAMERA))->Get_ComTransform();
-		_float3 CamDir = CamTrans->GetWorldFloat4x4().Backward();
+
+		_float3 CamDir = _float3();
+		if (mIsPickTurn)
+			CamDir = CamTrans->GetWorldFloat4x4().Backward();
+		else
+			CamDir = CamTrans->GetWorldFloat4x4().Forward();
+
 		CamDir.y = 0;
+
 		CamDir.Normalize();
 		mComTransform->LookAtDir(CamDir);
 		Set_Position(newPos);
@@ -283,7 +291,7 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER || 
 		meUnitType == CGameObject_3D_Dynamic::UNIT_ENEMY)
 	{
-		// 인간형
+		// 내려오기
 		CSequnce_MOVETARGET* Seq_CreateFall = CSequnce_MOVETARGET::Create(this);
 		CSequnce_MOVETARGET::SEQMOVETARGET DefaultCreateFallDesc;
 		DefaultCreateFallDesc.Dealytime = 0.1f;
@@ -297,6 +305,7 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		Seq_CreateFall->Restart(&DefaultCreateFallDesc);
 		mComBehavior->Add_Seqeunce("CREATE_FALL", Seq_CreateFall);
 
+		// 문
 		CSequnce_MOVETARGET* Seq_Door = CSequnce_MOVETARGET::Create(this);
 		CSequnce_MOVETARGET::SEQMOVETARGET DefaultDoorDesc;
 		Seq_Door->Restart(&DefaultDoorDesc);
@@ -311,29 +320,25 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		// World
 		// WorldIdle / WorldMove
 		CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
-		// CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
-		// Seq_Fall->Restart(&worldIdle);
-		mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
+		mComBehavior->Add_Seqeunce("WORLD_IDLE", Seq_WorldIdle);
 
 		mComBehavior->Select_Sequnce("CREATE_FALL");
 	}
 
-	
-
 	// 각각 타입에 따른 공통 AI
 	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
 	{
-		CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
-		CSequnce_PICK::SEQPICK DefaultPickDesc;
-		DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_DRAG;
-		Seq_Pick->Restart(&DefaultPickDesc);
-		mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
-
 		CSequnce_WorldMove_Player* Seq_WorldMove = CSequnce_WorldMove_Player::Create(this);
 		CSequnce_WorldMove_Player::SEQWORLDMOVE_PlAYER WorldDesc;
 		WorldDesc.GoalPosition = _float3(0, 0, 0);
 		Seq_WorldMove->Restart(&WorldDesc);
-		mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
+		mComBehavior->Add_Seqeunce("WORLD_MOVE", Seq_WorldMove);
+
+		CSequnce_WorldAttack_Player* Seq_WorldAttack = CSequnce_WorldAttack_Player::Create(this);
+		CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY attackDesc;
+		Seq_WorldAttack->Restart(&attackDesc);
+		mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
+
 
 	}
 
@@ -411,13 +416,13 @@ HRESULT CGameObject_3D_Dynamic::Switch_MapType()
 	else
 		Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 
-
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 
 	mIsTerrainHeight = false;
 	Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN, 0);
-
+	Set_BehaviorMode();
 	Select_Door();
+
 
 	return S_OK;
 }
@@ -667,7 +672,8 @@ HRESULT CGameObject_3D_Dynamic::Set_Terrain_HeightY(CGameObject_MyTerrain* terra
 	if (terrain == nullptr)
 		return E_FAIL;
 	_float3 CurrentPostiton = Get_WorldPostition();;
-	CurrentPostiton.y = terrain->Get_HeightY(CurrentPostiton);
+//	CurrentPostiton.y = terrain->Get_HeightY(CurrentPostiton);
+	CurrentPostiton.y = terrain->Get_HeightY(_float3(0,0,0));
 	mComTransform->Set_State(CTransform::E_STATE::STATE_POSITION, CurrentPostiton.ToVec4(1));
 	return S_OK;
 }
@@ -702,7 +708,7 @@ HRESULT CGameObject_3D_Dynamic::Select_Door()
 	default:
 		return E_FAIL;
 	}
-	Desc.eExitFunc = CAction_Function::E_FUNCION::FUNCION_SETGAMEMODE;
+	Desc.eExitFunc = CAction_Function::E_FUNCION::FUNCION_NONE;
 	Set_Position(Desc.StartPosition);
 	mComTransform->LookAt(Desc.EndPosition);
 	mComBehavior->Select_Sequnce("DOOR",&Desc);
@@ -732,11 +738,11 @@ HRESULT CGameObject_3D_Dynamic::Select_Fall()
 HRESULT CGameObject_3D_Dynamic::Select_WorldPostition(_float3 pos)
 {
 	FAILED_CHECK(FindPathForCurrentNavi(pos));
-	// CSequnce_WorldMove::SEQWORLDMOVE seq;
-	// seq.GoalPosition = pos;
-	FAILED_CHECK(mComBehavior->Select_Sequnce("WORLDMOVE"));
+	CSequnce_WorldMove_Player::SEQWORLDMOVE_PlAYER seq;
+	seq.GoalPosition = pos;
+	mTarget_Attack = nullptr;
 
-
+	FAILED_CHECK(mComBehavior->Select_Sequnce("WORLD_MOVE"));
 	return S_OK;
 }
 

@@ -252,6 +252,37 @@ public:
 	virtual void Free()override;
 };
 
+// Seq_Attack_Player
+// 공격 시퀀스
+class CSequnce_WorldAttack_Player:
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqWorldAttack
+	{
+		CGameObject_3D_Dynamic* Target;
+
+	}SEQWORLDATTACK_PLY;
+
+protected:
+	explicit CSequnce_WorldAttack_Player() = default;
+	virtual ~CSequnce_WorldAttack_Player() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQWORLDATTACK_PLY					mSeqData;
+	_uint CurrentPath;
+
+public:
+	static CSequnce_WorldAttack_Player* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
+
 
 // Seq_BossPattern
 class CSequnce_BossPattern1 :

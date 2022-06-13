@@ -167,9 +167,12 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 		break;
 	case Client::CAction_MOVE::MOVE_POS_GOALPOS:
 		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
-
 		break;
-
+	case Client::CAction_MOVE::MOVE_POS_TARGET:
+		if (mMoveTarget == nullptr)
+			End_Succed();
+		mDynamicObject->FindPathForCurrentNavi(mMoveTarget->Get_WorldPostition());
+		break;
 	case Client::CAction_MOVE::MOVE_POS_END:
 		break;
 	default:
@@ -207,12 +210,28 @@ HRESULT CAction_MOVE::Action(_double TimeDelta)
 			if (mCurrentTimer > mTimeMax)
 			{
 				mIsMoveCell = false;
+				mDynamicObject->Set_Position(CurrentPosition);
 			}
-			if (_float3::Distance(CurrentPosition, mNextGoalPosition) < 0.3f)
-			{
-				mIsMoveCell = false;
-			}
-			mDynamicObject->Set_Position(CurrentPosition);
+
+			//if (meMoveType == CAction_MOVE::MOVE_POS_TARGET)
+			//{
+			//	if (_float3::Distance(CurrentPosition, mNextGoalPosition) < 0.3f)
+			//	{
+			//		// mDynamicObject->Set_Position(mMoveTarget->GetAttackPos());
+			//		mIsMoveCell = false;
+			//	}
+
+			//}
+
+			//else
+			//{
+			//	if (mCurrentTimer > mTimeMax)
+			//	{
+			//		mIsMoveCell = false;
+			//	}
+			//	mDynamicObject->Set_Position(CurrentPosition);
+
+			//}
 		}
 
 		else
@@ -305,8 +324,11 @@ HRESULT CAction_Function::Action(_double timer)
 	case CAction_Function::FUNCION_LOOKTILE:
 		((CGameObject_Mine*)mDynamicObject)->LookTile();
 		break;
-	case CAction_Function::FUNCION_SETGAMEMODE:
-		((CGameObject_3D_Dynamic*)mDynamicObject)->Set_BehaviorMode();
+	case CAction_Function::FUNCION_ATTACK:
+		mDynamicObject->AttackFunc();
+		break;
+	case CAction_Function::FUNCION_DIE:
+		mDynamicObject->DieFunc();
 		break;
 	default:
 		break;

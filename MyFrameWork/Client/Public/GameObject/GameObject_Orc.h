@@ -31,7 +31,14 @@ public:
 	virtual HRESULT Init_AI();
 	HRESULT Init_AI_Default();
 
-	// ¸ðµ¨ ±¸Çö 
+	virtual HRESULT AttackFunc() override;
+	virtual HRESULT HitFunc()override;
+	virtual HRESULT DieFunc()override;
+
+
+	// AI
+public:
+	HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* target);
 
 protected:
 

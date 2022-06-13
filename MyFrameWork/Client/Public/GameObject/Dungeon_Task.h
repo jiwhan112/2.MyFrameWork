@@ -5,6 +5,8 @@
 BEGIN(Client)
 
 // 게임 전역 이벤트 관리
+class CGameObject_Base;
+
 struct TASKBASE;
 struct TASKMAP_TIMER;
 
@@ -51,10 +53,13 @@ public:
 	// 글로벌 작업 저장
 	HRESULT Add_Task_Tile_Rock(_uint index);
 	HRESULT Add_Task_Tile_Gold(_uint index);
+
+	// 플레이어 캐릭터 공격
 	HRESULT Add_Task_PlayerMoveWorld(_float3 Worldpos);
+	HRESULT Add_Task_PlayerAttackWorld(CGameObject_Base* Target);
 
+	// 적 캐릭터 공격
 	HRESULT Add_Task_EnemyMoveWorld(_float3 Worldpos);
-
 	HRESULT Add_Task_EnemyMoveWorld_Dealy(TASKMAP_TIMER desc);
 
 	TASKBASE* Get_BackTask();
@@ -101,8 +106,6 @@ public:
 struct TASKMAP_TIMER
 	:public TASKBASE
 {
-
-
 	TASKMAP_TIMER(_double timeMax,_float3 worldPos) 
 	{
 		mTimer = timeMax;
@@ -113,6 +116,28 @@ struct TASKMAP_TIMER
 	_double						mTimer;
 };
 
+struct TASK_OBJECT
+	:public TASKBASE
+{
+	TASK_OBJECT(CGameObject_Base* obj)
+	{
+		Target = obj;
+	}
+
+	CGameObject_Base* Target = nullptr;
+};
+
+
+struct TASK_VOID
+	:public TASKBASE
+{
+	TASK_VOID(void* arg)
+	{
+		pArg = arg;
+	}
+
+	void* pArg = nullptr;
+};
 
 
 END

@@ -29,25 +29,25 @@ HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,void* desc)
 	{
 	case Client::CDungeon_Task::TASK_TILE:
 		base = NEW TASKTILE(*(_uint*)desc);
-		base->mTaskID = id;
 		break;
 	case Client::CDungeon_Task::TASK_GOLD:
 		base = NEW TASKTILE(*(_uint*)desc);
-		base->mTaskID = id;	
+		
 		break;
 	case Client::CDungeon_Task::TASK_PLAYER_MOVE_WORLD:
 		base = NEW TASKMAP(*(_float3*)desc);
-		base->mTaskID = id; 
+		break;
+	case Client::CDungeon_Task::TASK_PLAYER_ATTACK_WORLD:
+		base = NEW TASK_OBJECT((CGameObject_Base*)desc);
+
 		break;
 	case Client::CDungeon_Task::TASK_ENEMY_MOVE_WORLD:
 		base = NEW TASKMAP(*(_float3*)desc);
-		base->mTaskID = id;
 		break;
 
 	case Client::CDungeon_Task::TASK_ENEMY_MOVE_WORLD_DEALY:
 	//	base = NEW TASKMAP_TIMER(*(TASKMAP_TIMER*)desc);
-		base = (TASKMAP_TIMER*)desc;
-		base->mTaskID = id;
+	//	base = (TASKMAP_TIMER*)desc;
 		break;
 
 	case Client::CDungeon_Task::TASK_END:
@@ -55,6 +55,7 @@ HRESULT CDungeon_Task::Add_Task(CDungeon_Task::E_TASK_TYPE id,void* desc)
 	default:
 		break;
 	}
+	base->mTaskID = id;
 	FAILED_CHECK(Add_Task(base));
 	return S_OK;
 }
@@ -73,6 +74,11 @@ HRESULT CDungeon_Task::Add_Task_PlayerMoveWorld(_float3 Worldpos)
 {
 
 	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_PLAYER_MOVE_WORLD, (void*)&Worldpos);
+}
+
+HRESULT CDungeon_Task::Add_Task_PlayerAttackWorld(CGameObject_Base * Target)
+{
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_PLAYER_ATTACK_WORLD, (void*)Target);
 }
 
 HRESULT CDungeon_Task::Add_Task_EnemyMoveWorld(_float3 Worldpos)

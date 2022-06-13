@@ -496,6 +496,12 @@ void CSequnce_WorldMove_Player::Restart(void * SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDMOVE_PlAYER));
 	}
+	
+
+	//auto movepath = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+	//NULL_CHECK_BREAK(movepath);
+	//((CAction_MOVE*)movepath)->Set_GoalPostiton(mSeqData.GoalPosition);
+
 }
 
 CSequnce_WorldMove_Player * CSequnce_WorldMove_Player::Create(CGameObject_3D_Dynamic * targetobj)
@@ -594,3 +600,86 @@ void CSequnce_WorldMove_Enemy::Free()
 
 }
 
+HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * obj)
+{
+	__super::NativeConstruct(obj);
+
+	// °ø°ÝÀº ÀûÀÌ Á×À»‹š±îÁö ·çÇÁ¸¦ µ·´Ù.
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
+
+	// ½Î¿òÀÌ °É¸®¸é ½Î¿î´Ù.
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
+
+	// Å¸°Ù¿¡ ´Ù°¡°£´Ù -> ½Î¿ì±â -> ÇÇ°Ý 
+	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_Function* attackFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+
+
+	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TARGET);
+
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
+	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
+
+
+	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(ani->Clone());
+	PushBack_LeafNode(attackFunc->Clone());
+
+
+	Safe_Release(movepath);
+	Safe_Release(ani);
+	Safe_Release(attackFunc);
+
+	// °´Ã¼ ¿¬°á
+	Setup_TargetNode(obj);
+	return S_OK;
+}
+
+void CSequnce_WorldAttack_Player::Restart(void * SeqData)
+{
+	__super::Restart(SeqData);
+
+	if (SeqData)
+	{
+		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDATTACK_PLY));
+	}
+
+	// Å¸°Ù ¼³Á¤
+	auto movepath = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+	NULL_CHECK_BREAK(movepath);
+	((CAction_MOVE*)movepath)->Set_MoveTarget(mSeqData.Target);
+
+	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+	NULL_CHECK_BREAK(ani);
+	((CAction_DEALY*)ani)->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
+
+	
+
+
+}
+
+CSequnce_WorldAttack_Player * CSequnce_WorldAttack_Player::Create(CGameObject_3D_Dynamic * targetobj)
+{
+	CSequnce_WorldAttack_Player* pInstance = NEW CSequnce_WorldAttack_Player();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_WorldAttack_Player");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CSequnce_WorldAttack_Player::Free()
+{
+	__super::Free();
+	
+
+}

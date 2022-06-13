@@ -105,7 +105,10 @@ public: // GetSet
 
 	void Set_LookAt_RotateXZ(_float4x4 mat);
 	void Set_RotateXZ(_float4x4 mat);
-
+	void Set_AttackTarget(CGameObject_3D_Dynamic* target)
+	{
+		mTarget_Attack = target;
+	}
 
 	// Collision
 public: 
@@ -145,6 +148,12 @@ public:
 	HRESULT Select_Fall();
 	HRESULT Select_WorldPostition(_float3 pos);
 	HRESULT Set_BehaviorMode(int index = -1);
+
+	// 전투 연출
+	virtual HRESULT AttackFunc() { return S_OK; }
+	virtual HRESULT HitFunc() { return S_OK; }
+	virtual HRESULT DieFunc() { return S_OK; }
+
 
 	// SOCKET
 protected:
@@ -207,9 +216,17 @@ protected: // 3D모델 Com / DESC 추가
 
 	// TICKTYPE
 	E_TICK_TYPE					meTickType = TICK_TYPE_END;
-
-
 	const _float mMouseOffset = 4;
+	_bool		mIsPickTurn = true;
+
+	// 공격 타겟
+	CGameObject_3D_Dynamic* mTarget_Attack = nullptr;
+
+
+	// 속성
+	_int							mHP=100;
+	_int							mMP=0;
+
 
 public:
 	// 생성 위치

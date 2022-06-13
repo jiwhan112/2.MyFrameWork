@@ -71,6 +71,7 @@ HRESULT CGameObject_Goblin::Init_Unit()
 	// 家南
 	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1), "crea_SnotPickaxe.fbx", "RArmDigit31");
 
+	mIsPickTurn = false;
 	return S_OK;
 
 }
@@ -87,17 +88,43 @@ HRESULT CGameObject_Goblin::Init_AI()
 HRESULT CGameObject_Goblin::Init_AI_Default()
 {
 	// AI 技何 备泅
-
 	CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
 	CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
-
 	DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
 	DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
-
 	Seq_IDLE->Restart(&DefaultIdleDesc);
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
+	CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
+	CSequnce_PICK::SEQPICK DefaultPickDesc;
+	DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_CARRIED;
+	Seq_Pick->Restart(&DefaultPickDesc);
+	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 
+	return S_OK;
+}
+
+
+HRESULT CGameObject_Goblin::Select_WorldAttack(CGameObject_3D_Dynamic* target)
+{
+	// 利阑 努腐且 嫐 角青
+
+	if (target == false)
+		return E_FAIL;
+
+	if (mTarget_Attack)
+	{
+		bool targetlife = mTarget_Attack->Get_IsLife();
+		if (targetlife)
+			return S_OK;
+		else
+			targetlife = nullptr;
+	}
+	mTarget_Attack = target;
+
+	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY desc;
+	desc.Target = mTarget_Attack;
+	mComBehavior->Select_Sequnce("ATTACK_WORLD", &desc);
 	return S_OK;
 }
 

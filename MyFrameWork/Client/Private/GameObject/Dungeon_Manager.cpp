@@ -58,10 +58,12 @@ _int CDungeon_Manager::Tick_Game(_double timeDelta)
 	if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_DUNGEON)
 	{
 
+		// Dungeon Global
 	}
 	else
 	{
-		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
+		// World Global
+		if (KEYDOWN(DIK_R))
 		{
 			_float3 worldPos = GetSingle(CGameManager)->Get_PickPos();
 			FAILED_CHECK_NONERETURN(Add_Task_WorldMove(worldPos));
@@ -186,7 +188,12 @@ HRESULT CDungeon_Manager::Add_Task_Gold(_uint index)
 
 HRESULT CDungeon_Manager::Add_Task_WorldMove(_float3 WorldPos)
 {
-	return 	mDungeon_TaskMgr->Add_Task_PlayerMoveWorld(WorldPos);
+	return
+		mDungeon_TaskMgr->Add_Task_PlayerMoveWorld(WorldPos);
+}
+HRESULT CDungeon_Manager::Add_Task_Player_WorldAttack(CGameObject_Base* target)
+{
+	return 	mDungeon_TaskMgr->Add_Task_PlayerAttackWorld(target);
 }
 
 HRESULT CDungeon_Manager::Check_Task()
@@ -213,6 +220,9 @@ _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 		break;
 	case CDungeon_Task::TASK_PLAYER_MOVE_WORLD:
 		Task_Player_Move_World(task);
+		break;
+	case CDungeon_Task::TASK_PLAYER_ATTACK_WORLD:
+		Task_Player_Attack_World(task);
 		break;
 
 	case CDungeon_Task::TASK_ENEMY_MOVE_WORLD_DEALY:
@@ -280,6 +290,35 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 	{
 		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
 			FAILED_CHECK_NONERETURN(unit->Select_WorldPostition(worldPos));
+	}
+
+	Safe_Delete(task);
+	return true;
+}
+
+_bool CDungeon_Manager::Task_Player_Attack_World(TASKBASE * task)
+{
+	// 1. 월드 유닛 / 월드 타일 인덱스 검색
+	auto unitlist = mDungeon_Objects->Get_UnitList_World();
+	CGameObject_3D_Dynamic* worldTarget = (CGameObject_3D_Dynamic*)(static_cast<TASK_VOID*>(task)->pArg);
+
+	// 2. 유닛에게 정보 전달 
+	for (auto& unit : *unitlist)
+	{
+		E_OBJECT_TYPE objtype = unit->Get_ObjectTypeID_Client();
+		switch (objtype)
+		{
+		case OBJECT_TYPE_3D_DYNAMIC_GOBLIN:
+			static_cast<CGameObject_Goblin*>(unit)->Select_WorldAttack(worldTarget);
+			break;
+		case OBJECT_TYPE_3D_DYNAMIC_ORC:
+			static_cast<CGameObject_Orc*>(unit)->Select_WorldAttack(worldTarget);
+			break;
+		
+		default:
+			break;
+		}
+	
 	}
 
 	Safe_Delete(task);

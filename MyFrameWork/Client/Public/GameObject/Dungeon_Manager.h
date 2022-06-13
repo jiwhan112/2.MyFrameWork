@@ -76,6 +76,7 @@ public:	// For. Task
 	HRESULT Add_Task_Tile(_uint index);
 	HRESULT Add_Task_Gold(_uint index);
 	HRESULT Add_Task_WorldMove(_float3 WorldPos);
+	HRESULT Add_Task_Player_WorldAttack(CGameObject_Base* target);
 
 	HRESULT Check_Task();
 
@@ -84,6 +85,7 @@ private:
 	_bool Task_Trigger(TASKBASE* task);
 	_bool Task_Mine(TASKBASE* task);
 	_bool Task_Player_Move_World(TASKBASE* task);
+	_bool Task_Player_Attack_World(TASKBASE* task);
 
 
 

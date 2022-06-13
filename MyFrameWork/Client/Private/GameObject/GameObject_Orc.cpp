@@ -57,7 +57,7 @@ HRESULT CGameObject_Orc::Init_Unit()
 
 	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-	mTimeForSpeed = 0.5f;
+	mTimeForSpeed = 0.1f;// Test
 	mRotSpeed = 10.0f;
 
 	// 충돌 정보
@@ -72,7 +72,7 @@ HRESULT CGameObject_Orc::Init_Unit()
 
 	// 소켓
 	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1), "crea_SnotPickaxe.fbx", "RArmDigit31");
-
+	mIsPickTurn = false;
 
 	return S_OK;
 }
@@ -98,12 +98,72 @@ HRESULT CGameObject_Orc::Init_AI_Default()
 	Seq_IDLE->Restart(&DefaultIdleDesc);
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
+	CSequnce_PICK* Seq_Pick = CSequnce_PICK::Create(this);
+	CSequnce_PICK::SEQPICK DefaultPickDesc;
+	DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_CARRIED;
+	Seq_Pick->Restart(&DefaultPickDesc);
+	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
+
+
+	//CSequnce_WorldAttack_Player* Seq_Attack = CSequnce_WorldAttack_Player::Create(this);
+	//CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY DefaulAttackDesc;
+	//DefaulAttackDesc.Target = nullptr;
+	//Seq_Attack->Restart(&DefaulAttackDesc);
+	//mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_Attack);
 
 	
 	return S_OK;
 }
 
+HRESULT CGameObject_Orc::AttackFunc()
+{
+	if (mTarget_Attack)
+	{
+		mTarget_Attack->HitFunc();
+	}
 
+	return S_OK;
+}
+
+HRESULT CGameObject_Orc::HitFunc()
+{
+	return S_OK;
+}
+
+HRESULT CGameObject_Orc::DieFunc()
+{
+	return S_OK;
+}
+
+
+
+HRESULT CGameObject_Orc::Select_WorldAttack(CGameObject_3D_Dynamic* target )
+{
+	// 적을 클릭할 떄 실행
+
+	if (target == false)
+		return E_FAIL;
+
+	if (mTarget_Attack)
+	{
+		if (mTarget_Attack == target)
+		{
+			bool targetlife = mTarget_Attack->Get_IsLife();
+			if (targetlife)
+				return S_OK;
+			else
+				mTarget_Attack = nullptr;
+		}
+
+	}
+
+	mTarget_Attack = target;
+	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY desc;
+	desc.Target = mTarget_Attack;
+	mComBehavior->Select_Sequnce("WORLD_ATTACK", &desc);
+
+	return S_OK;
+}
 
 CGameObject_Orc * CGameObject_Orc::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

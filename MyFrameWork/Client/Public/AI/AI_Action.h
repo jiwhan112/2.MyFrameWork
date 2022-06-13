@@ -108,6 +108,7 @@ public:
 		MOVE_POS_TILE,
 		MOVE_POS_PICK,
 		MOVE_POS_GOALPOS,
+		MOVE_POS_TARGET,
 		MOVE_POS_END,
 	};
 
@@ -140,6 +141,12 @@ public:
 	{
 		mGoalPosition = goalpos;
 	}
+	void Set_MoveTarget(CGameObject_3D_Dynamic* taget)
+	{
+		meMoveType = MOVE_POS_TARGET;
+		mMoveTarget = taget;
+	}
+
 private:
 	_double						mTimeMax=1;
 	_double						mCurrentTimer=0;
@@ -157,6 +164,7 @@ private:
 	E_MOVEPOSFLAG				meMoveType = MOVE_POS_NEAR;
 	EasingTypeID				meEasingID = TYPE_Linear;
 
+	CGameObject_3D_Dynamic*		mMoveTarget = nullptr;
 public:
 	static	CAction_MOVE*				Create(const char* str, CGameObject_3D_Dynamic* obj);
 	virtual CAction_MOVE*				Clone() override;
@@ -213,7 +221,8 @@ public:
 		FUNCION_NONE,
 		FUNCION_REMOVE_TILE,
 		FUNCION_LOOKTILE,
-		FUNCION_SETGAMEMODE,
+		FUNCION_ATTACK,
+		FUNCION_DIE,
 		FUNCION_END,
 
 	};
