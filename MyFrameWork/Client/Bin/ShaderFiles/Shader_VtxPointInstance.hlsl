@@ -1,6 +1,11 @@
+
 #include "Shader_Defines.hpp"
 
-// 포인트 인스턴싱
+cbuffer CameraDesc
+{
+	vector			g_vCamPosition;
+};
+
 texture2D			g_DiffuseTexture;
 
 struct VS_IN
@@ -35,14 +40,14 @@ VS_OUT VS_MAIN(VS_IN In)
 }
 
 struct GS_IN
-{
+{	
 	float4		vPosition : POSITION;
-	float		fPSize : PSIZE;
+	float		fPSize : PSIZE;	
 };
 
 struct GS_OUT
 {
-	float4		vPosition : SV_POSITION;
+	float4		vPosition : SV_POSITION;	
 	float2		vTexUV : TEXCOORD0;
 };
 
@@ -51,7 +56,7 @@ void GS_MAIN(in point GS_IN In[1], inout TriangleStream<GS_OUT> Trianglestream)
 {
 	GS_OUT			Out[4];
 
-	float3		vLook = (g_CameraPosition - In[0].vPosition).xyz;
+	float3		vLook = (g_vCamPosition - In[0].vPosition).xyz;
 	float3		vAxisY = float3(0.f, 1.f, 0.f);
 	float3		vRight = cross(vAxisY, vLook);
 	float3		vUp = cross(vLook, vRight);
@@ -68,11 +73,11 @@ void GS_MAIN(in point GS_IN In[1], inout TriangleStream<GS_OUT> Trianglestream)
 
 	vPosition = In[0].vPosition.xyz + vRight * fHalfSize + vUp * fHalfSize;
 	Out[0].vPosition = mul(vector(vPosition, 1.f), matVP);
-	Out[0].vTexUV = float2(0.f, 0.f);
+	Out[0].vTexUV = float2(0.f, 0.f);	
 
 	vPosition = In[0].vPosition.xyz - vRight * fHalfSize + vUp * fHalfSize;
 	Out[1].vPosition = mul(vector(vPosition, 1.f), matVP);
-	Out[1].vTexUV = float2(1.f, 0.f);
+	Out[1].vTexUV = float2(1.f, 0.f);	
 
 	vPosition = In[0].vPosition.xyz - vRight * fHalfSize - vUp * fHalfSize;
 	Out[2].vPosition = mul(vector(vPosition, 1.f), matVP);
@@ -130,5 +135,5 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
-	}
+	}	
 }

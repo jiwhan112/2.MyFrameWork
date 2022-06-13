@@ -24,7 +24,7 @@ HRESULT CVIBuffer_Point_Instance::NativeConstruct_Prototype(_uint NumInstance)
 
 	m_iNumIndicesPerPrimitive = 1;
 	m_iNumVertices = 1;
-	m_iNumVertexBuffers = 1; // 버퍼의 슬롯이 2개
+	m_iNumVertexBuffers = 2; // 버퍼의 슬롯이 2개
 
 	// 기본 버텍스 버퍼세팅과 동일하다.
 	m_VBDesc.ByteWidth = sizeof(VTXMATRIX) * m_iNumVertices;
@@ -36,7 +36,7 @@ HRESULT CVIBuffer_Point_Instance::NativeConstruct_Prototype(_uint NumInstance)
 	VTXPOINT*		pVertices = NEW VTXPOINT[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXPOINT) * m_iNumVertices);
 
-	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
+	pVertices[0].vPosition = _float3(0, 0, 0.f);
 	pVertices[0].fPSize = 1.f;
 
 	ZeroMemory(&m_VBSubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -53,31 +53,24 @@ HRESULT CVIBuffer_Point_Instance::NativeConstruct_Prototype(_uint NumInstance)
 #pragma region INDEX_BUFFER
 	// 들어가는 인수는 DX9과 비슷한다.
 	m_iNumInstance = NumInstance;
-	m_iNumPrimitive = m_iNumInstance * 2;
+	m_iNumPrimitive = m_iNumInstance;
 	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
-	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
 
 	ZeroMemory(&m_IBDesc, sizeof(D3D11_BUFFER_DESC));
-	m_IBDesc.ByteWidth = sizeof(FACEINDICES16) * m_iNumPrimitive;
+	m_IBDesc.ByteWidth = sizeof(_ushort) * m_iNumPrimitive;
 	m_IBDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	m_IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-	FACEINDICES16*	pIndices = NEW FACEINDICES16[m_iNumPrimitive];
-	ZeroMemory(pIndices, sizeof(FACEINDICES16) * m_iNumPrimitive);
+	_ushort*	pIndices = NEW _ushort[m_iNumPrimitive];
+	ZeroMemory(pIndices, sizeof(_ushort) * m_iNumPrimitive);
 
 	// 인스턴스 개수만큼 인덱스 버퍼 세팅
+	// 점이기 떄문에 동일함.
 	_uint iNumFaces = 0;
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		pIndices[iNumFaces]._0 = 0;
-		pIndices[iNumFaces]._1 = 1;
-		pIndices[iNumFaces]._2 = 2;
-		++iNumFaces;
-
-		pIndices[iNumFaces]._0 = 0;
-		pIndices[iNumFaces]._1 = 2;
-		pIndices[iNumFaces]._2 = 3;
-		++iNumFaces;
+		pIndices[i] = 0;
 	}
 
 	// DX11에서는 버퍼정보를 모두 서브 데이터 넣어 세팅해준다.

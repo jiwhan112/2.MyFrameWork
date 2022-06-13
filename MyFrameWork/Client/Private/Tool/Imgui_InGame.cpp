@@ -142,6 +142,15 @@ HRESULT CImgui_InGame::Edit_InGame()
 	ImGui::DragFloat("OffsetY", &GetSingle(CGameManager)->Get_DaungonManager()->mDebugValue);
 
 
+	// partilceTest
+
+	if (ImGui::Button("Create_Particle"))
+	{
+		_float3 SpawnPos = mSpawnPostitionBOSS;
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_2D_PARTICLE_POINT, SpawnPos);
+
+	}
 	return S_OK;
 }
 

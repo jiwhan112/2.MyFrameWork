@@ -175,8 +175,6 @@ HRESULT CMainApp::Ready_Prototype_GameObject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MOUSE),
 		CGameObject_Mouse::Create(m_pDevice, m_pDeviceContext)));
 
-	OBJECT_TYPE_2D_PARTICLE_POINT
-
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_FBXTEST),
 	//	CGameObject_FBX::Create(m_pDevice, m_pDeviceContext)));
 	//
@@ -289,9 +287,12 @@ HRESULT CMainApp::Ready_Prototype_Components_Shader()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_VTXANIMODEL),
 		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxAni.hlsl"),
 			VTXANIMODEL_DECLARATION::Elements, VTXANIMODEL_DECLARATION::iNumElements)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_INSTANCE_POINT),
-		CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexPointInstance.hlsl"),
-			VTXINSTANCE_DECLARATION::Elements, VTXINSTANCE_DECLARATION::iNumElements)));
+
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_INSTANCE_POINT),
+	//	CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_VtxPointInstance.hlsl"),
+	//		VTXINSTANCE_DECLARATION::Elements, VTXINSTANCE_DECLARATION::iNumElements)));
+
+
 	return S_OK;
 }
 
@@ -352,7 +353,7 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_STATIC2),
 		CGameObject_3D_Static2::Create(m_pDevice, m_pDeviceContext)));
 
-	// 유닛 깡통
+	// 유닛 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC_MINE),
 		CGameObject_Mine::Create(m_pDevice, m_pDeviceContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC_GOBLIN),
@@ -364,25 +365,25 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_DYNAMIC_BOSS),
 		CGameObject_BOSS::Create(m_pDevice, m_pDeviceContext)));
 
-	// 지형 깡통
+	// 지형 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_MYTERRAIN),
 		CGameObject_MyTerrain::Create(m_pDevice, m_pDeviceContext)));
 
-	// 소켓 깡통
+	// 소켓 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_SOCKET),
 		CGameObject_3D_Socket::Create(m_pDevice, m_pDeviceContext)));
 
-	// 환경오브젝트 깡통
+	// 환경오브젝트 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_ENVIRONMENT),
 		CGameObject_Environment::Create(m_pDevice, m_pDeviceContext)));
-
-	// 구체화 오브젝트 초기화
-	// 깡통 오브젝트로 만들어진 구체화 오브젝트
 
 	// 타일
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_TILE),
 		CGameObject_3D_Tile::Create(m_pDevice, m_pDeviceContext)));
 
+	// 파티클 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_2D_PARTICLE_POINT),
+		CGameObject_2D_Particle_Point::Create(m_pDevice, m_pDeviceContext)));
 
 
 	return S_OK;

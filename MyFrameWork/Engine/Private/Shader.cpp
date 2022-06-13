@@ -137,6 +137,7 @@ CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceC
 	if (FAILED(pInstance->NativeConstruct_Prototype(pShaderFilePath, pElements, iNumElements)))
 	{
 		MSGBOX("Failed to Creating CShader");
+		DEBUGBREAK;
 		Safe_Release(pInstance);
 	}
 	return pInstance;

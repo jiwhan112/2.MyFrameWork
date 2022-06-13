@@ -362,7 +362,7 @@ bool CObjectIO::Create_CreateMap_ProtoType(HANDLE& hFile, wstring keyname)
 			CGameObject_3D_Static2* oobj = static_cast<CGameObject_3D_Static2*>(emptyObject);
 
 			oobj->Add_StaticObejct(newchildObj);
-		}		
+		}	
 	}
 		break;
 	case OBJECT_TYPE_3D_DYNAMIC:

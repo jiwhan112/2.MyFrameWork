@@ -300,9 +300,6 @@
     <ClInclude Include="..\Public\GameObject_Skybox.h">
       <Filter>02.GameObject\99.BackGround\2.Sky</Filter>
     </ClInclude>
-    <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp">
-      <Filter>97.Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\GameObject_Terrain.h">
       <Filter>02.GameObject\99.BackGround\3.Terrain</Filter>
     </ClInclude>
@@ -449,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h">
       <Filter>02.GameObject\01.2DObject\2.Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp">
+      <Filter>97.Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -654,28 +654,28 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Terrain.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexCube.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
-      <Filter>97.Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl">
-      <Filter>97.Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAni.hlsl">
-      <Filter>97.Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexPointInstance.hlsl">
-      <Filter>97.Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Terrain.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAni.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
   </ItemGroup>
