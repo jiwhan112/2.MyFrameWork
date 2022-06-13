@@ -30,7 +30,7 @@ public:
 
 private:
 	// 인스턴스용 버퍼
-	ID3D11Buffer*				m_pVBInstance;
+	ID3D11Buffer*				m_pVBInstance = nullptr;
 	D3D11_BUFFER_DESC			m_VBInstDesc;
 	D3D11_SUBRESOURCE_DATA		m_VBInstSubResource;
 	_uint						m_iNumInstance = 0; // 인스턴스 개수

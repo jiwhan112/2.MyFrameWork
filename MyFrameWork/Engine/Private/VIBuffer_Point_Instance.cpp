@@ -127,7 +127,7 @@ HRESULT CVIBuffer_Point_Instance::NativeConstruct(void * pArg)
 		memcpy(&m_ParticleDesc, pArg, sizeof(m_ParticleDesc));
 
 	// 속도 변경
-	m_pSpeeds =  NEW _float[m_iNumInstance];
+	m_pSpeeds = NEW _float[m_iNumInstance];
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 		m_pSpeeds[i] = rand() % _uint(m_ParticleDesc.fMaxSpeed - m_ParticleDesc.fMinSpeed + 1) + m_ParticleDesc.fMinSpeed;

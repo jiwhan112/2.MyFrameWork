@@ -90,7 +90,7 @@ HRESULT CGameObject_2D_Particle_Point::Set_Component()
 	}
 
 	if (mComTexture == nullptr)
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComShader));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
 
 	return S_OK;
 }
