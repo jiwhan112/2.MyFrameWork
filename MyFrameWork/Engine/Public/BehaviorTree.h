@@ -225,18 +225,19 @@ public:
 };
 
 // 조건 판단
+enum E_DECOTYPE
+{
+	DECOTYPE_NEXT,
+	DECOTYPE_PREV,
+	DECOTYPE_BREAK,
+	DECOTYPE_BACKFIRST,
+	DECOTYPE_END,
+};
+
+
 class ENGINE_DLL CNode_Decorator
 	: public CNode_LeafTree
 {
-public:
-	enum E_DECOTYPE
-	{
-		DECOTYPE_NEXT,
-		DECOTYPE_PREV,
-		DECOTYPE_BREAK,
-		DECOTYPE_BACKFIRST,
-		DECOTYPE_END,
-	};
 
 protected:
 	explicit CNode_Decorator(const char* str);

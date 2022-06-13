@@ -288,25 +288,26 @@ HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 		// 성공하면 다음노드 이동
 		// 실패하면 시퀀드 탈락
 		// 실패하면 이전노드 이동 
-		/*CNode_Decorator::E_DECOTYPE type = static_cast<CNode_Decorator*>(mCurrentLeafTree)->IsCorect(timer);
+		E_DECOTYPE type = static_cast<CNode_Decorator*>(mCurrentLeafTree)->IsCorect(timer);
 
 		switch (type)
 		{
-		case CNode_Decorator::DECOTYPE_NEXT:
+		case DECOTYPE_NEXT:
 			mCurrentLeafTree = NextNode();
 			break;
-		case CNode_Decorator::DECOTYPE_PREV:
+		case DECOTYPE_PREV:
 			mCurrentLeafTree = mPreLeafTree;
 			break;
-		case CNode_Decorator::DECOTYPE_BREAK:
+		case DECOTYPE_BREAK:
 			End_Sequnce();
 			break;
-		case CNode_Decorator::DECOTYPE_BACKFIRST:
-			mCurrentLeafTree = mListSequnce.front();
+		case DECOTYPE_BACKFIRST:
+			Restart();
+			mCurrentLeafTree = mListLeafNodes.front();
 			break;
 		default:
 			break;
-		}*/
+		}
 	}
 		break;
 	case CNode_LeafTree::LEAFTREE_ID_SELECTER:

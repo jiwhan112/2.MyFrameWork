@@ -93,7 +93,7 @@ public:
 };
 
 
-// 음수 체크
+// 음수 체크 연결된 포인터로 인수를 판단한다.
 class CDeco_Minus
 	:public CDeco_DynamicBase
 {
@@ -106,9 +106,10 @@ public:
 	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual E_DECOTYPE IsCorect(_double timer) override;
 
-	void Set_Value(int i) { Value = i; }
+	void Set_Value(_int* pVal) { pValue = pVal; }
 protected:
-	int Value = 0;
+	_int *pValue = nullptr;
+
 
 
 public:

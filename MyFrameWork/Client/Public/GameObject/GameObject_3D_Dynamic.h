@@ -111,9 +111,9 @@ public: // GetSet
 	}
 	
 	// HP MP Damage
-	_int Get_Hp() { return mHP; };
-	_int Get_Mp() { return mMP; };
-	_int Get_Damage() { return mDamage; };
+	_int& Get_Hp() { return mHP; };
+	_int& Get_Mp() { return mMP; };
+	_int& Get_Damage() { return mDamage; };
 
 
 	// Collision

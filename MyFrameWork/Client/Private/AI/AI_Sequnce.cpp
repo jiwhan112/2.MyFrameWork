@@ -59,6 +59,7 @@ CDeco_DynamicBase * CSequnce_Base::Find_Deco(CDeco_DynamicBase::E_DecoID id, _in
 			}
 		}
 	}
+	return nullptr;
 }
 
 void CSequnce_Base::Setup_TargetNode(CGameObject_3D_Dynamic * obj)
@@ -73,9 +74,9 @@ void CSequnce_Base::Setup_TargetNode(CGameObject_3D_Dynamic * obj)
 		case Engine::CNode_LeafTree::LEAFTREE_ID_ACTION:
 			static_cast<CAction_DynamicBase*>(node)->SetUp_Target(obj);
 			break;
-		//case Engine::CNode_LeafTree::LEAFTREE_ID_DECORATOR:
-		//	static_cast<CDeco_DynamicBase*>(node)->SetUp_Target(obj);
-		//	break;
+		case Engine::CNode_LeafTree::LEAFTREE_ID_DECORATOR:
+			static_cast<CDeco_DynamicBase*>(node)->SetUp_Target(obj);
+			break;
 		//case Engine::CNode_LeafTree::LEAFTREE_ID_SELECTER:
 		//	static_cast<CSelect_DynamicBase*>(node)->SetUp_Target(obj);
 		//	break;
@@ -624,7 +625,7 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 	__super::NativeConstruct(obj);
 
 	// °ø°ÝÀº ÀûÀÌ Á×À»‹š±îÁö ·çÇÁ¸¦ µ·´Ù.
-	Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 
 	// ½Î¿òÀÌ °É¸®¸é ½Î¿î´Ù.
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
@@ -645,7 +646,7 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
 	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
 
-	testMinusDeco->Set_Value(10);
+	testMinusDeco->Set_Value(nullptr);
 
 	PushBack_LeafNode(movepath->Clone());
 	PushBack_LeafNode(ani->Clone());
@@ -656,6 +657,7 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 	Safe_Release(movepath);
 	Safe_Release(ani);
 	Safe_Release(attackFunc);
+	Safe_Release(testMinusDeco);
 
 	// °´Ã¼ ¿¬°á
 	Setup_TargetNode(obj);
@@ -669,22 +671,16 @@ void CSequnce_WorldAttack_Player::Restart(void * SeqData)
 	if (SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDATTACK_PLY));
+
+		auto movepath = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+		NULL_CHECK_BREAK(movepath);
+		((CAction_MOVE*)movepath)->Set_MoveTarget(mSeqData.Target);
+
+		auto hpDeco = Find_Deco(CDeco_DynamicBase::E_DECI_MINUS);
+		NULL_CHECK_BREAK(hpDeco);
+		((CDeco_Minus*)hpDeco)->Set_Value(&(mSeqData.Target->Get_Hp()));
+
 	}
-
-	// Å¸°Ù ¼³Á¤
-	auto movepath = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
-	NULL_CHECK_BREAK(movepath);
-	((CAction_MOVE*)movepath)->Set_MoveTarget(mSeqData.Target);
-
-	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
-	NULL_CHECK_BREAK(ani);
-	((CAction_DEALY*)ani)->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
-
-	auto deco = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
-	NULL_CHECK_BREAK(ani);
-	((CAction_DEALY*)ani)->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
-
-
 }
 
 CSequnce_WorldAttack_Player * CSequnce_WorldAttack_Player::Create(CGameObject_3D_Dynamic * targetobj)

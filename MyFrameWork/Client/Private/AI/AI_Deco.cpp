@@ -16,6 +16,7 @@ CDeco_DynamicBase::CDeco_DynamicBase(const CDeco_DynamicBase & rhs)
 
 {
 	mDynamicObject = rhs.mDynamicObject;
+	meDecoID = rhs.meDecoID;
 }
 
 HRESULT CDeco_DynamicBase::ReStart(void * pArg)
@@ -80,6 +81,7 @@ CDeco_Minus::CDeco_Minus(const char * str, CGameObject_3D_Dynamic * obj)
 	:CDeco_DynamicBase(str, obj)
 
 {
+	meDecoID = CDeco_DynamicBase::E_DECI_MINUS;
 }
 
 CDeco_Minus::CDeco_Minus(const CDeco_Minus & rhs)
@@ -91,18 +93,23 @@ CDeco_Minus::CDeco_Minus(const CDeco_Minus & rhs)
 HRESULT CDeco_Minus::ReStart(void * pArg)
 {
 	__super::ReStart(pArg);
+	
 
 	return S_OK;
 }
 
 E_DECOTYPE CDeco_Minus::IsCorect(_double timer)
 {
-	if (Value<0)
-	{
-		return E_DECOTYPE::DECOTYPE_END;
-	}
+	if (pValue == nullptr)
+		return DECOTYPE_NEXT;
 
-	return E_DECOTYPE::DECOTYPE_NEXT;
+	// ¸ØÃã
+	if (*pValue <=0)
+	{
+		return E_DECOTYPE::DECOTYPE_BREAK;
+	}
+	
+	return E_DECOTYPE::DECOTYPE_BACKFIRST;
 }
 
 CDeco_Minus * CDeco_Minus::Create(const char * str, CGameObject_3D_Dynamic * obj)
