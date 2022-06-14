@@ -53,7 +53,7 @@ private:
 private:
 	HRESULT Edit_FBX(); // Fbx 파일 변경
 	HRESULT Edit_ANI(); // 애니메이션 툴
-	HRESULT Edit_COL(); // 충돌체 툴
+	HRESULT Edit_SETTING(); // 충돌체 툴
 
 	HRESULT Edit_PARTICLE_2D(); // 파티클2D 툴
 	HRESULT Edit_PARTICLE_3D(); // 파티클3D 툴

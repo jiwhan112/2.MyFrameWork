@@ -119,6 +119,8 @@ public: // GetSet
 	// Collision
 public: 
 	virtual HRESULT CollisionFunc(_float3 PickPosition, _float dist, _uint ColliderIndex);
+	virtual HRESULT CollisionFunc(CGameObject_3D_Dynamic* dynamic,_double Timer);
+//	virtual HRESULT CollisionFunc(CGameObject_Base* object);
 
 	// Move AI
 public: 
@@ -126,6 +128,7 @@ public:
 	_bool	Get_PathList_Frontpop(_float3* NextPosition);
 	// 갈 수 있는 위치 뽑기
 	_bool	FindPathRandAblePostition(_int fRange, _float3* GoalPos);
+	_bool	FindPathRandDungeonAblePostition(_float3* GoalPos);
 
 	_float3 Get_PathGoalPostition()const;
 
@@ -133,6 +136,7 @@ public:
 	_bool	Get_IsTerrainHeight() const { return mIsTerrainHeight; }
 	_float3	Get_TerrainHeightPostition() ;
 	void	Tick_LookUpdate(_double time);
+
 
 
 	// Animation
@@ -145,7 +149,7 @@ public:
 	// AI
 protected:
 	virtual HRESULT Set_Component() override;
-	HRESULT Update_Collider();
+	HRESULT Init_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 	HRESULT Set_Sequnce(const char* statename, void* desc);
 

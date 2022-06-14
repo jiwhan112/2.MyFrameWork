@@ -125,26 +125,29 @@ bool CCollider::ColliderCheck(CCollider* TargetCollider)
 	if (TargetCollider == nullptr || meType == CCollider::COL_END)
 		return false;
 
+	mIsCollision = false;
+
 	// 현재 들고있는 타입에 대해 충돌처리
 	if (meType == CCollider::COL_AABB)
-		return Update_AABB(TargetCollider);
+		return mIsCollision = Update_AABB(TargetCollider);
 	else if (meType == CCollider::COL_OBB)
-		return Update_OBB(TargetCollider);
+		return mIsCollision = Update_OBB(TargetCollider);
 	else if (meType == CCollider::COL_SPHERE)
-		return Update_SPHERE(TargetCollider);
+		return mIsCollision = Update_SPHERE(TargetCollider);
 
 	return false;
 }
 
 bool CCollider::ColliderCheck(_float3 point1, _float3 point2, _float3 point3)
 {
+	mIsCollision = false;
 	if (meType == CCollider::COL_AABB)
-		return mAABB->Intersects(point1, point2, point3);
+		return mIsCollision = mAABB->Intersects(point1, point2, point3);
 	else if (meType == CCollider::COL_OBB)
-		return mOBB->Intersects(point1, point2, point3);
+		return mIsCollision = mOBB->Intersects(point1, point2, point3);
 	else if (meType == CCollider::COL_SPHERE)
-		return mSphere->Intersects(point1, point2, point3);
-	return false;
+		return mIsCollision = mSphere->Intersects(point1, point2, point3);
+	return mIsCollision;
 }
 
 bool CCollider::ColliderCheck(_ray worldDIr, _float& dist)
@@ -211,16 +214,17 @@ HRESULT CCollider::Render()
 	mBaseEffect->SetProjection(XMLoadFloat4x4(&pPipeLine->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	mBaseEffect->Apply(m_pDeviceContext);
+	_vector			vColliderColor = mIsCollision == true ? DirectX::Colors::Red : DirectX::Colors::Green;
 
 	// 배치 클래스의 Begin ~ End 까지 물체를 그린다.
 	mBatch->Begin();
 
 	if (nullptr != mAABB)
-		DX::Draw(mBatch, *mAABB, DirectX::Colors::Green);
+		DX::Draw(mBatch, *mAABB, vColliderColor);
 	if (nullptr != mOBB)
-		DX::Draw(mBatch, *mOBB, DirectX::Colors::Green);
+		DX::Draw(mBatch, *mOBB, vColliderColor);
 	if (nullptr != mSphere)
-		DX::Draw(mBatch, *mSphere, DirectX::Colors::Blue);
+		DX::Draw(mBatch, *mSphere, vColliderColor);
 
 	mBatch->End();
 

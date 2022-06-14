@@ -101,7 +101,6 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			}
 		}
 	}
-
 	
 	// 버그 코드
 	// Tick_LookUpdate(TimeDelta);
@@ -145,8 +144,13 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 	// 공통 업데이트
 	if (mComBehavior)
 		mComBehavior->LateTick(TimeDelta);
+
 	if (mCurrentNavi)
+	{
 		mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
+		Set_Position(mCurrentNavi->Move_OnNavigation_Able(Get_WorldPostition()));
+	}
+		
 	
 
 	if (GetSingle(CGameInstance)->IsIn_WorldSpace(Get_WorldPostition(), 2.f))
@@ -496,6 +500,19 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 	return S_OK;
 }
 
+HRESULT CGameObject_3D_Dynamic::CollisionFunc(CGameObject_3D_Dynamic * dynamic,_double Timer)
+{
+	if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+	{
+		// 서로 밀어내기
+		_float3 look = dynamic->Get_WorldPostition() - Get_WorldPostition();
+		look.Normalize();
+		mComTransform->MovetoDir(-look, Timer);
+	}
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Dynamic::FindPathForCurrentNavi(_float3 GoalPosition)
 {
 	// 현재 네비메시로 경로 탐색
@@ -535,7 +552,6 @@ _bool CGameObject_3D_Dynamic::Get_PathList_Frontpop(_float3 * NextPosition)
 _bool CGameObject_3D_Dynamic::FindPathRandAblePostition(_int Range,_float3* GoalPos)
 {
 	// 범위내에서 갈 수 있는 타일 
-	
 	int count = 0;
 	while (true)
 	{
@@ -556,6 +572,35 @@ _bool CGameObject_3D_Dynamic::FindPathRandAblePostition(_int Range,_float3* Goal
 			return false;
 	}
 
+	return true;
+}
+
+_bool CGameObject_3D_Dynamic::FindPathRandDungeonAblePostition(_float3* GoalPos)
+{
+	// 던전내에 갈 수 있는 타일로 이동
+
+	/*
+	int count = 0;
+	while (true)
+	{
+		_float3 CurrentPos = Get_WorldPostition();
+		_int RangeX = CHelperClass::RandomInt(-Range, Range);
+		_int RangeZ = CHelperClass::RandomInt(-Range, Range);
+
+		CurrentPos.x += RangeX;
+		CurrentPos.z += RangeZ;
+
+		FAILED_CHECK_NONERETURN(FindPathForCurrentNavi(CurrentPos));
+		if (mCurrentPathList.empty() == false)
+		{
+			*GoalPos = CurrentPos;
+			return true;
+		}
+		count++;
+		if (count > 30)
+			return false;
+	}
+	*/
 	return true;
 }
 
@@ -581,6 +626,16 @@ void CGameObject_3D_Dynamic::Tick_LookUpdate(_double time)
 	if (mLookPostiton != _float3())
 		mComTransform->LookAtY(mLookPostiton, time, mRotSpeed);
 }
+//
+//void CGameObject_3D_Dynamic::MoveAbleNaviMesh()
+//{
+//	// 갈 수 있는 타일로 업데이트
+//	if (mCurrentNavi->Get_CurrentCell()->Get_CellType() == CCell::CELLTYPE_STOP)
+//	{
+//		mCurrentNavi
+//	}
+//	if (mCurrentNavi->Get_CurrentCell()->Get_CellType());
+//}
 
 
 HRESULT CGameObject_3D_Dynamic::Set_Component()
@@ -622,7 +677,7 @@ HRESULT CGameObject_3D_Dynamic::Set_Component()
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Update_Collider()
+HRESULT CGameObject_3D_Dynamic::Init_Collider()
 {
 	// Desc 정보로 리스트를 새로 정의한다.
 	if (mComListCollider == nullptr)
@@ -771,9 +826,15 @@ HRESULT CGameObject_3D_Dynamic::AttackFunc()
 {
 	if (mTarget_Attack)
 	{
-		mTarget_Attack->HitFunc(mDamage);
 		if (mTarget_Attack->Get_Hp() <= 0)
+		{
 			mTarget_Attack = nullptr;
+		}
+		else
+		{
+			mTarget_Attack->HitFunc(mDamage);
+
+		}
 
 	}
 	return S_OK;

@@ -282,15 +282,63 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 
 	// 1. 월드 유닛 / 월드 타일 인덱스 검색
 	auto unitlist = mDungeon_Objects->Get_UnitList_World(); 
+	if (unitlist == nullptr)
+		return false;
+	if (unitlist->empty())
+		return false;
+
 	_float3 worldPos = static_cast<TASKMAP*>(task)->mWorldMapPickPos;
 	_uint  GoalTileIndex = mDungeon_Objects->Get_WorldMap()->Get_TileIndex(worldPos);
 
-	// 2. 유닛에게 정보 전달 
+	// 2. 가운데 유닛에게만 이동명령
+
+
+	// 유닛하나에 정보를 주고 전체 따라가게 한다.
+	// Flocking 사용
+	// 중심 객체 구하기
+
+	_float3 centerPos = _float3();
+	CGameObject_3D_Dynamic* OrderObject = nullptr;
+	_int PlayerCnt = 0;
 	for (auto& unit : *unitlist)
 	{
 		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
-			FAILED_CHECK_NONERETURN(unit->Select_WorldPostition(worldPos));
+		{
+			centerPos += unit->Get_WorldPostition();
+			OrderObject = unit;
+			PlayerCnt++;
+		}
+		
 	}
+	if (PlayerCnt == 0)
+		return false;
+
+	centerPos /= PlayerCnt;
+
+	_float MinDistance = INT_MAX;
+	for (auto& unit : *unitlist)
+	{
+		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
+		{
+			_float dis = _float3::Distance(unit->Get_WorldPostition(), centerPos);
+			if (dis < MinDistance)
+			{
+				OrderObject = unit;
+				MinDistance = dis;
+			}
+		}
+	}
+
+	// 3. 무리이동 시키기
+	FAILED_CHECK_NONERETURN(OrderObject->Select_WorldPostition(worldPos));
+
+	//for (auto& unit : *unitlist)
+	//{
+	//	if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
+	//	{
+	//		FAILED_CHECK_NONERETURN(OrderObject);
+	//	}
+	//}
 
 	Safe_Delete(task);
 	return true;

@@ -41,6 +41,7 @@ public:
 	virtual bool ColliderCheck(_ray worldDIr, _float& dist);
 	virtual bool ColliderCheck(_float3 point1, _float3 point2, _float3 point3);
 
+	_bool Get_IsCollision()const { return mIsCollision; }
 public:
 	void Set_Scale(_float3 size);
 	void Set_Offset(_float3 offset);
@@ -93,6 +94,7 @@ private: // 충돌체 정보
 	COLLIDERDESC				mColliderDesc;
 
 	_float3						mOffset = _float3(0,0,0);
+	_bool						mIsCollision = false;
 
 	// Draw 관련
 #ifdef _DEBUG

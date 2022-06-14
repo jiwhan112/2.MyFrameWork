@@ -99,9 +99,10 @@ HRESULT CGameObject_Mine::Init_Unit()
 	// 충돌 정보
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc.mOffset = _float3(0, size, 0);
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
-	Update_Collider();
+	Init_Collider();
 
 	// 애니메이션
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SPAWNPOS));

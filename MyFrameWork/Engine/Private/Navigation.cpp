@@ -253,11 +253,49 @@ _bool CNavigation::Move_OnNavigation(_fvector vPosition)
 		{
 			// 슬라이딩 벡터로 구현
 			// 반사 벡터를 구하는 것처럼 구한다.
+
 			return false;
 		}
 	}
 	else
 		return true;
+}
+
+_float3 CNavigation::Move_OnNavigation_Able(_float3 vPosition)
+{
+	// 이동할 위치의 셀이 Stop이라면 이동하지 않는다.
+
+	_int		iNeighborIndex = -1;
+	if (false == mVecCells[mCurrentIndex]->isIn(vPosition, &iNeighborIndex))
+	{
+		// 이웃이 있다면 그 지점으로 인덱스를 변경한다.
+		if (0 <= iNeighborIndex)
+		{
+			while (true)
+			{
+				_int	iCurrentNeighborIndex = -1;
+
+				if (true == mVecCells[iNeighborIndex]->isIn(vPosition, &iCurrentNeighborIndex))
+				{
+					if (mVecCells[iNeighborIndex]->Get_CellType() == CCell::CELLTYPE_STOP)
+					{
+
+						_float3 returnPos = mVecCells[mCurrentIndex]->Get_CenterPoint();
+
+						return returnPos;
+					}
+					else
+					{
+						mCurrentIndex = iCurrentNeighborIndex;
+						return vPosition;
+
+					}
+					break;
+				}
+			}
+		}
+	}
+	return vPosition;
 }
 
 HRESULT CNavigation::Save_NaviMeshData(wstring wpath)

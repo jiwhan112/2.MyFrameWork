@@ -718,12 +718,6 @@ namespace DirectX
 
             float Dot(const Quaternion& Q) const noexcept;
 
-			void RotateTowards(const Quaternion& target, float maxAngle) noexcept;
-			void __cdecl RotateTowards(const Quaternion& target, float maxAngle, Quaternion& result) const noexcept;
-
-			// Computes rotation about y-axis (y), then x-axis (x), then z-axis (z)
-			Vector3 ToEuler() const noexcept;
-
             // Static functions
             static Quaternion CreateFromAxisAngle(const Vector3& axis, float angle) noexcept;
             static Quaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll) noexcept;

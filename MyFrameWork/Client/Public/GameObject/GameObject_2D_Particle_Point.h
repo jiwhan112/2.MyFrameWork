@@ -32,8 +32,8 @@ public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
 
-	virtual _int Tick(_double TimeDelta);
-	virtual _int LateTick(_double TimeDelta);
+	virtual _int	Tick(_double TimeDelta);
+	virtual _int	LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
 protected:

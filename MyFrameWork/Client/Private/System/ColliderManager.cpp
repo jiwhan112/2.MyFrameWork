@@ -22,6 +22,9 @@ HRESULT CColliderManager::Tick_ColliderCheck(_double Timer)
 	ColCheck_MOUSE_Terrain();
 
 	// 2. 객체들의 충돌 체크
+	ColCheck_OBJECTS(Timer);
+
+
 
 	// 오브젝트 지우기
 	ReleaseObjects();
@@ -49,9 +52,40 @@ HRESULT CColliderManager::ReleaseObjects()
 	return S_OK;
 }
 
-HRESULT CColliderManager::ColCheck_OBJECTS()
+HRESULT CColliderManager::ColCheck_OBJECTS(_double timer)
 {
-	// 오브젝트 끼리의 충돌
+	// 던전에서 충돌
+	// 움직이는 오브젝트끼리 충돌
+
+	for (auto& obj1 : mListColliders[COLLIDEROBJ_DYNAMIC])
+	{
+		CGameObject_3D_Dynamic* oobj1 = static_cast<CGameObject_3D_Dynamic*>(obj1);
+		if (oobj1 == nullptr)
+			continue;
+
+		for (auto& obj2 : mListColliders[COLLIDEROBJ_DYNAMIC])
+		{
+			if (obj1 == obj2)
+				continue;
+
+			CGameObject_3D_Dynamic* oobj2 = static_cast<CGameObject_3D_Dynamic*>(obj2);
+			if (oobj2 == nullptr)
+				continue;
+
+			if (oobj1->Get_CurrentMap() == oobj2->Get_CurrentMap())
+			{
+				auto objectList1 = oobj1->Get_ComListCollider();
+				auto objectList2 = oobj2->Get_ComListCollider();
+				if (objectList1 == nullptr || objectList2 == nullptr)
+					continue;
+
+				if (ColCheck_Dynamic(*objectList1->begin(), *objectList2->begin()))
+				{
+					oobj1->CollisionFunc(oobj2, timer);
+				}
+			}
+		}
+	}
 	return S_OK;
 }
 
@@ -134,6 +168,14 @@ bool CColliderManager::Check_Mouse_Object(_ray worldRay)
 			}
 		}
 	}
+	return false;
+}
+
+bool CColliderManager::ColCheck_Dynamic(CCollider * a, CCollider * b)
+{
+	if (a->ColliderCheck(b))
+		return true;
+
 	return false;
 }
 

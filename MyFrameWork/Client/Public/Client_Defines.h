@@ -19,6 +19,8 @@ namespace Client {}
 
 using namespace Client;
 
+
+
 #define  KEYDOWN(x)				GetSingle(CGameInstance)->Get_DIKeyState(x)&DIS_Down
 #define  KEYUP(x)				GetSingle(CGameInstance)->Get_DIKeyState(x)&DIS_Up
 #define  KEYPRESS(x)			GetSingle(CGameInstance)->Get_DIKeyState(x)&DIS_Press

@@ -247,6 +247,29 @@ void CTransform::MovetoTarget(_float3 vTarget, _double fDeltaTime)
 	Set_State(STATE_POSITION, vPos);
 }
 
+void CTransform::Set_Rotate(_float3 rot)
+{
+	_quaterion quat_x, quat_y, quat_z, quat;
+	_float4x4 matrix;
+	_float3 axis_x(1.0f, 0.0f, 0.0f);
+	_float3 axis_y(0.0f, 1.0f, 0.0f);
+	_float3 axis_z(0.0f, 0.0f, 1.0f);
+
+	// XMQuaternionRotationAxis();
+	quat_x = _quaterion::CreateFromAxisAngle(axis_x, rot.x);
+	quat_y = _quaterion::CreateFromAxisAngle(axis_y, rot.y);
+	quat_z = _quaterion::CreateFromAxisAngle(axis_z, rot.z);
+
+	quat = quat_y * quat_x * quat_z;
+	quat.Normalize();
+	quat.CreateFromRotationMatrix(matrix);
+	matrix = _float4x4::CreateFromQuaternion(quat);
+
+	Set_State(CTransform::STATE_RIGHT, *(_float3*)&matrix.m[0]);
+	Set_State(CTransform::STATE_UP, *(_float3*)&matrix.m[1]);
+	Set_State(CTransform::STATE_LOOK, *(_float3*)&matrix.m[2]);
+}
+
 HRESULT CTransform::Turn(_fvector vAxis, _double time)
 {
 	_vector		vRight = GetState(CTransform::STATE_RIGHT);

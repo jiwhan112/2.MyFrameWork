@@ -134,12 +134,12 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_CUBE),
 		CVIBuffer_Cube::Create(m_pDevice, m_pDeviceContext)));
 
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_20),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pDeviceContext,20)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_100),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pDeviceContext, 100)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_300),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pDeviceContext, 300)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_20),
+	//	CVIBuffer_Point_Instance::Create(m_pDevice, m_pDeviceContext,20)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_100),
+	//	CVIBuffer_Point_Instance::Create(m_pDevice, m_pDeviceContext, 100)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_300),
+	//	CVIBuffer_Point_Instance::Create(m_pDevice, m_pDeviceContext, 300)));
 
 	
 	// 텍스처 컴포넌트

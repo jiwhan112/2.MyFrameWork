@@ -212,7 +212,7 @@ void CImgui_Model::FBX_SETTINGMODE()
 		// 선택된 FBX 오브젝트 수정
 		FAILED_CHECK_NONERETURN(Edit_FBX());
 		FAILED_CHECK_NONERETURN(Edit_ANI());
-		FAILED_CHECK_NONERETURN(Edit_COL());
+		FAILED_CHECK_NONERETURN(Edit_SETTING());
 	}
 }
 
@@ -907,10 +907,12 @@ HRESULT CImgui_Model::Edit_ANI()
 	return S_OK;
 }
 
-HRESULT CImgui_Model::Edit_COL()
+HRESULT CImgui_Model::Edit_SETTING()
 {
+	
 	if (meModelMode == CImgui_Model::TOOLMODE_MODEL_STATIC)
 	{
+		// Collider
 		IMGUI_TREE_BEGIN("Collider_Setting")
 		{
 			COLLIDER_DESC desc = mCurrent_ModelStaticObject->Get_ColliderDESC();
@@ -932,6 +934,16 @@ HRESULT CImgui_Model::Edit_COL()
 			}
 
 			mCurrent_ModelStaticObject->Set_LoadColliderDESC(desc);
+			IMGUI_TREE_END
+		}
+		// Quaterion
+		IMGUI_TREE_BEGIN("Quaterion_Setting")
+		{
+			CTransform* Transform = mCurrent_ModelStaticObject->Get_ComTransform();
+
+			static _float3 rot = _float3();
+			ImGui::DragFloat3("RotTest", (float*)&rot, 1, -360, 360);
+			Transform->Set_Rotate(rot);
 			IMGUI_TREE_END
 		}
 	}

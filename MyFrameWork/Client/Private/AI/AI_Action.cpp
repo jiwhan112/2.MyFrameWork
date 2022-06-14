@@ -157,6 +157,11 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 		mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition);
 		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
 		break;
+	case Client::CAction_MOVE::MOVE_POS_ABLEDUNGEON:
+		mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition);
+		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
+		break;
+
 	case Client::CAction_MOVE::MOVE_POS_TILE:
 		// 이미 탐색된 정보 활용
 		mGoalPosition = mDynamicObject->Get_PathGoalPostition();

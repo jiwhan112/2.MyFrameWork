@@ -40,8 +40,9 @@ public:
 
 	void Pick_ChangeCellOption(const _float4x4& WorldMatrixInverse, CCell::E_CELLTYPE type);
 	
-	_uint Get_CurrentCellIndex()const { return mCurrentIndex; }
-	
+	_uint	Get_CurrentCellIndex()const { return mCurrentIndex; }
+	CCell*	Get_CurrentCell() const { return Get_TileForIndex(mCurrentIndex); }
+
 	const vector<CCell*>* Get_CellVector() const
 	{
 		return &mVecCells;
@@ -52,6 +53,8 @@ public:
 
 	// 움직임 연산
 	_bool Move_OnNavigation(_fvector vPos);
+	_float3 Move_OnNavigation_Able(_float3 vPosition);
+
 
 public:
 	HRESULT Save_NaviMeshData(wstring wpath);

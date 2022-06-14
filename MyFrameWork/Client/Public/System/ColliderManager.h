@@ -39,15 +39,16 @@ public:
 	HRESULT ReleaseObjects();
 	
 private:	
-	HRESULT ColCheck_OBJECTS();
+	HRESULT ColCheck_OBJECTS(_double timer);
 	bool	ColCheck_MOUSE_Object();
 	bool	ColCheck_MOUSE_Terrain();
-	
+
 	bool Check_Navi(_float4x4 worldinv,CNavigation* navi);
 
 	bool Check_Mouse_Terrain();
 	bool Check_Mouse_Object(_ray MouseWorldRay);
 
+	bool ColCheck_Dynamic(CCollider* a, CCollider* b);
 
 private:
 	list<CGameObject_Base*> mListColliders[E_COLLIDEROBJ_TYPE::COLLIDEROBJ_END];

@@ -109,6 +109,7 @@ public:
 	void MovetoDir(_float3 vDir, _float Speed, _double fDeltaTime);
 	void MovetoTarget(_float3 vTarget, _double fDeltaTime);
 
+	void Set_Rotate(_float3 rot);
 	
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);
@@ -138,9 +139,9 @@ public:
 private:
 	TRANSFORMDESC	mDesc;
 
-	_float4x4		mLocalMatrix; // 자식 행렬
-
-	_float4x4		mWorldMatrix; // 최종 행렬
+	_float4x4		mLocalMatrix;	// 자식 행렬
+	_float4x4		mWorldMatrix;	// 최종 행렬
+	_quaterion		mQuaterion;		// 쿼터니언
 
 
 public:
