@@ -106,9 +106,10 @@ public:
 	HRESULT GO_WorldVec(_float3 vec, _float Angle, E_ROTTYPE type, _double deltatime);
 
 	void MovetoDir(_float3 vDir, _double fDeltaTime);
+	void MovetoDir(_float3 vDir, _float Speed, _double fDeltaTime);
 	void MovetoTarget(_float3 vTarget, _double fDeltaTime);
 
-
+	
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);
 	void Turn_CW(_float3 vAxis, _float fDeltaTime  ,_float speed);

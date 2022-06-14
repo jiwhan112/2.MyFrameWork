@@ -13,6 +13,7 @@ public:
 	enum E_CAMERA_MODE
 	{
 		CAMERA_MODE_DEFAULT,
+		CAMERA_MODE_FROZEN,
 		CAMERA_MODE_RETURN,
 		CAMERA_MODE_TARGET,
 		CAMERA_MODE_TERRAIN,
@@ -43,6 +44,7 @@ public:
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
+	void Set_CameraMode_Tool(E_CAMERA_MODE e);
 	void Set_CameraMode(E_CAMERA_MODE e, E_CAMERA_MOVEPOS_STATE eMove = CAMERA_MOVEPOS_STATE_END,CGameObject* target = nullptr);
 	void ReleaseTarget();
 
@@ -51,11 +53,14 @@ public:
 		mComTransform->LookAtDir(Dir);
 	}
 
+
+
 	HRESULT Set_GameCameraMode();
 	HRESULT EnterCamera(E_CAMERA_MOVEPOS_STATE mode, _double TimeMax);
 
 private:
 	HRESULT Update_Default(_double TimeDelta);
+	HRESULT Update_Frozen(_double TimeDelta);
 	HRESULT Update_Target_Unit(_double TimeDelta);
 	HRESULT Update_Target_Terrain(_double TimeDelta);
 

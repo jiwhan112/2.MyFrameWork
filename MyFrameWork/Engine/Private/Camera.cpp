@@ -78,6 +78,27 @@ HRESULT CCamera::Render()
 	return S_OK;
 }
 
+void CCamera::Set_NewCameraPos(_float3 CameraPos , _float3 LookPos)
+{
+
+	// 카메라 위치에따른 월드행렬 구하기
+	_float3		vLook = LookPos - CameraPos;
+	vLook.Normalize();
+
+	_float3		vRight = _float3::Up.Cross(vLook);
+	vRight.Normalize();
+
+
+	_float3		vUp = vLook.Cross(vRight);
+	vUp.Normalize();
+
+	mComTransform->Set_State(CTransform::STATE_UP, vUp);
+	mComTransform->Set_State(CTransform::STATE_RIGHT, vRight);
+	mComTransform->Set_State(CTransform::STATE_LOOK, vLook);
+	// float3 형을 4의 vecotr로 바꿔서 넣어준다. &는 주소를 넘겨야하기 때문에
+	mComTransform->Set_State(CTransform::STATE_POSITION, CameraPos.ToVec4(1));
+}
+
 void CCamera::Free()
 {
 	__super::Free();

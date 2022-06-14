@@ -20,10 +20,10 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 {
 	if (iLevelIndex >= m_iNumLevels ||
 		nullptr == mMapProtos)
-		return E_FAIL;
+		return S_FALSE;
 
 	if (nullptr != Find_Component(iLevelIndex, pPrototypeTag))
-		return E_FAIL;
+		return S_FALSE;
 
 	mMapProtos[iLevelIndex].emplace(pPrototypeTag, pPrototype);
 

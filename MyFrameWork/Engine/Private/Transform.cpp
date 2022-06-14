@@ -222,6 +222,21 @@ void CTransform::MovetoDir(_float3 vDir, _double fDeltaTime)
 	Set_State(STATE_POSITION, vPos);
 }
 
+void CTransform::MovetoDir(_float3 vDir, _float Speed, _double fDeltaTime)
+{
+	if (vDir == _float3(0, 0, 0))
+		return;
+
+	_float3 vPos = GetState(STATE_POSITION);
+
+	vDir.Normalize();
+	vPos += vDir * Speed * fDeltaTime;
+
+	Set_State(STATE_POSITION, vPos);
+}
+
+
+
 void CTransform::MovetoTarget(_float3 vTarget, _double fDeltaTime)
 {
 	_float3 vPos = GetState(STATE_POSITION);

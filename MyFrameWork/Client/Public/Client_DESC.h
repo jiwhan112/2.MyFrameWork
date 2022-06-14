@@ -237,7 +237,7 @@ typedef struct tag_Particle_DESC
 {
 	// 중심점 진행방향 시간 
 	_int	Index = 0;
-	_float4 CreatePos = _float4();
+	_float3 CreatePos = _float3();
 	_float3 Dir = _float3();
 	_float  Distance = 0;
 	_float	Timer=0;
@@ -250,12 +250,13 @@ typedef struct tag_Particle_DESC
 typedef struct tag_ParticleCreate_DESC
 {
 	_uint	Count;
-	_uint	MinTime;
-	_uint	MaxTime;
-	_uint	MinDistance;
-	_uint	MaxDistance;
+	_float	MinTime;
+	_float	MaxTime;
+	_float	MinDistance;
+	_float	MaxDistance;
 	_float3	MinDir;
 	_float3	MaxDir;
+	_float3 CreatePos;
 
 }PARTICLECREATEDESC;
 

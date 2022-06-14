@@ -23,8 +23,6 @@ HRESULT CGameObject_2D_Particle_Point::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	mComTransform->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
-
 	if (strlen(mTexStrDESC.mTextureKey_Diffuse) < 2)
 	{
 		string str("Snow.png");
@@ -65,6 +63,7 @@ HRESULT CGameObject_2D_Particle_Point::Render()
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Texture());
 	FAILED_CHECK(Set_ConstantTable_OnlyCameraPos());
+
 	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 
 	return S_OK;

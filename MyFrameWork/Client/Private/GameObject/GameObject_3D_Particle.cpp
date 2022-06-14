@@ -9,6 +9,7 @@ CGameObject_3D_Particle::CGameObject_3D_Particle(ID3D11Device* pDevice, ID3D11De
 
 CGameObject_3D_Particle::CGameObject_3D_Particle(const CGameObject_3D_Particle& rhs)
 	: CGameObject_Base(rhs)
+	, mModelName(rhs.mModelName)
 {
 
 }
@@ -28,7 +29,7 @@ HRESULT CGameObject_3D_Particle::NativeConstruct(void* pArg)
 	{
 		mModelName = "skfx_Meteor_big_00.fbx";
 	}
-	mCurrentShaderPass = 0;
+
 
 	return S_OK;
 }
@@ -38,6 +39,15 @@ _int CGameObject_3D_Particle::Tick(_double TimeDelta)
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	// 파티클 움직임
+	mParticleDESC.Timer += TimeDelta;
+
+	mComTransform->MovetoDir(mParticleDESC.Dir, 0.3f,TimeDelta);
+
+	if (mParticleDESC.TimeMax < mParticleDESC.Timer)
+	{
+		// Dead;
+		Set_Dead();
+	}
 
 	return UPDATENONE;
 }
@@ -58,12 +68,15 @@ HRESULT CGameObject_3D_Particle::Render()
 		mComShader == nullptr ||
 		mComModel == nullptr
 		)
-		return E_FAIL;
+		return S_FALSE;
 
 	FAILED_CHECK(Set_ConstantTable_World());
+	FAILED_CHECK(Set_ConstantTable_Light());
+
 //	FAILED_CHECK(Set_ConstantTable_Texture());
 //	FAILED_CHECK(Set_ConstantTable_OnlyCameraPos());
 
+	mCurrentShaderPass = 0;
 	if (mComModel != nullptr)
 	{
 		_uint iNumMaterials = mComModel->Get_NumMaterials();
@@ -80,6 +93,32 @@ HRESULT CGameObject_3D_Particle::Render()
 }
 
 
+HRESULT CGameObject_3D_Particle::Set_LoadParticleDesc(PARTICLEDESC desc)
+{
+	mParticleDESC = desc;
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Particle::Set_LoadModelDesc(string str)
+{
+
+	mModelName = str.c_str();
+
+	// 해당 모델 컴포넌트로 변경
+	if (mComModel != nullptr)
+	{
+		Safe_Release(mComModel);
+		mComModel = nullptr;
+	}
+
+	wstring ModelName = CHelperClass::Convert_str2wstr(mModelName);
+
+	FAILED_CHECK(__super::Release_Component(TEXT("Com_Model")));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, ModelName.c_str(), TEXT("Com_Model"), (CComponent**)&mComModel));
+
+	return S_OK;
+}
+
 HRESULT CGameObject_3D_Particle::Set_Component()
 {
 	if (mComRenderer == nullptr)
@@ -89,14 +128,10 @@ HRESULT CGameObject_3D_Particle::Set_Component()
 	}
 	if (mComShader == nullptr)
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_INSTANCE_POINT), TEXT("Com_Shader"), (CComponent**)&mComShader));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_SHADER_PARTICLE3D), TEXT("Com_Shader"), (CComponent**)&mComShader));
 	}
 
-	if (mComModel == nullptr)
-	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_MODEL), TEXT("Com_Model"), (CComponent**)&mComModel));
-	}
-
+	mComModel = nullptr;
 	if (mComTextureMap == nullptr)
 	{
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTextureMap));

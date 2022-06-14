@@ -122,6 +122,15 @@ namespace Engine
 			return rand() % newint + MIN;
 		}
 
+		// 0~1까지의 랜덤 값 생성
+		static float RandomFloat(_float minTime)
+		{
+			int newint = rand() % 1000;
+			float newfloat = (newint / 1000) + minTime;
+			return newfloat;
+		}
+
+
 		static std::string to_utf8(const wchar_t* buffer, int len)
 		{
 			int nChars = ::WideCharToMultiByte(

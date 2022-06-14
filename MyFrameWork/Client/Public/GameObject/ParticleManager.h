@@ -37,11 +37,12 @@ public:
 	HRESULT Create_Partilce_Instance2D(string tag, PARTICLECREATEDESC des);
 
 	// 툴용 생성
-	HRESULT Create_Partilce_3D_Tool(PARTICLECREATEDESC createDesc,PARTICLEDESC particleDesc);
-	HRESULT Create_Partilce_Rect2D_Tool(PARTICLECREATEDESC createDesc, PARTICLEDESC particleDesc);
-	HRESULT Create_Partilce_Instance2D_Tool(PARTICLECREATEDESC createDesc, PARTICLEDESC particleDesc);
+	HRESULT Create_Partilce_3D_Tool(string modelName, PARTICLECREATEDESC createDesc);
+	HRESULT Create_Partilce_Rect2D_Tool(PARTICLECREATEDESC createDesc, PARTICLECREATEDESC particleDesc);
+	HRESULT Create_Partilce_Instance2D_Tool(string diffuseName, PARTICLECREATEDESC particleDesc);
 	HRESULT Delete_Particle();
 
+	PARTICLEDESC RandomParticleDesc(PARTICLECREATEDESC* desc);
 protected:
 	CGameObject_3D_Particle*		Find_3DPartilce(string tag);
 	CGameObject_2D_Particle_Point*	Find_2DPartilce_Instance(string tag);

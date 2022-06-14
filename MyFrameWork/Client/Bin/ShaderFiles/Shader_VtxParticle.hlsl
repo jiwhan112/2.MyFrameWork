@@ -60,36 +60,8 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 	// 텍스처 색상
 	float4	DiffuseMap = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
 
-	// 노말
-	// float3	NormalMap = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
-	//
-	// NormalMap = normalize(NormalMap*2-1);
-	 // float3x3 TBN = float3x3(In.vTangent, cross(In.vTangent, In.vNormal), In.vNormal);
-	// float3x3 TBN = float3x3(In.vTangent, cross(In.vNormal, In.vTangent), In.vNormal);
-	//
-	//
-	// float3	WorldNormal = mul(TBN, NormalMap);
-	//
 
-	// 노말2
-
-	float	Noraml = saturate(dot(normalize(In.vNormal), normalize(g_vLightDir) * -1));
-
-	// 스펙큘러
-	float4		vReflect = reflect(normalize(g_vLightDir), In.vNormal);
-	float4		vLook = normalize(g_CameraPosition - In.vWorldPos);
-	float		fSpecular = pow(saturate(dot(normalize(vReflect), vLook)), 30.f);
-
-	float4  Diffuse = g_vLightDiffuse * DiffuseMap;
-	float4  Shade = saturate(Noraml + (g_vLightAmbient * g_vMtrlAmbient));
-	float4  Specular = 0;//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
-
-	float4 color = Diffuse * Shade + Specular;
-	color.a = DiffuseMap.a;
-	if (color.a < 0.5f)
-		discard;
-
-	Out.vColor = color;
+	Out.vColor = float4(1,0,0,1);
 	return Out;
 }
 

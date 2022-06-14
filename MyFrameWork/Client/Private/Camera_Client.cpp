@@ -40,7 +40,10 @@ _int CCamera_Client::Tick(_double TimeDelta)
 	case CCamera_Client::CAMERA_MODE_DEFAULT:
 		Update_Default(TimeDelta);
 		break;
+	case CCamera_Client::CAMERA_MODE_FROZEN:
+		Update_Frozen(TimeDelta);
 
+		break;
 	case CCamera_Client::CAMERA_MODE_RETURN:
 		mComTransform->Set_WorldMat(mStartWorlMat);
 		meCameraMode = CAMERA_MODE_DEFAULT;
@@ -82,6 +85,12 @@ HRESULT CCamera_Client::Render()
 	FAILED_CHECK(__super::Render());
 	return S_OK;
 }
+
+void CCamera_Client::Set_CameraMode_Tool(E_CAMERA_MODE e)
+{
+	meCameraMode = e;
+}
+
 
 void CCamera_Client::Set_CameraMode(E_CAMERA_MODE e, E_CAMERA_MOVEPOS_STATE eMove,CGameObject * target)
 {
@@ -150,6 +159,32 @@ HRESULT CCamera_Client::Update_Default(_double TimeDelta)
 
 	return S_OK;
 }
+HRESULT CCamera_Client::Update_Frozen(_double TimeDelta)
+{
+	CGameInstance*		pGameInstance = GetSingle(CGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_W) & DIS_Press)
+	{
+		mComTransform->GO_Up(TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_S) & DIS_Press)
+	{
+		mComTransform->GO_Down(TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_A) & DIS_Press)
+	{
+		mComTransform->GO_Left(TimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_D) & DIS_Press)
+	{
+		mComTransform->GO_Right(TimeDelta);
+	}
+	return S_OK;
+}
+
 
 HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 {

@@ -141,7 +141,7 @@ PS_OUT PS_MAIN_TERRAIN_FITER(PS_IN In)
 
 	float	Nomal = saturate(dot(normalize(g_vLightDir) * -1.f, In.vNormal));
 
-	float4	Diffuse = g_vLightDiffuse * vMtrlDiffuse * saturate(Nomal + (g_vLightAmbient * g_vMtrlAmbient)) + vBrushColor;
+	float4	Diffuse = g_vLightDiffuse * vMtrlDiffuse * saturate(Nomal + (g_vLightAmbient * g_vMtrlAmbient)); //+ vBrushColor;
 
 	float3	PN = In.vNormal* dot(normalize(g_vLightDir) * -1.f, In.vNormal);
 	float3	Reflection = normalize(g_vLightDir) + 2 * PN;
@@ -149,6 +149,9 @@ PS_OUT PS_MAIN_TERRAIN_FITER(PS_IN In)
 
 	float  SpecularPow = pow(saturate(dot(normalize(Reflection), LookVec)), 30.0f);
 	float4 Specular = g_vLightSpecular * g_vMtrlSpecular* SpecularPow;
+
+	if (vBrushColor.a > 0.1f)
+		Diffuse *= 1.5f;
 
 	Out.vColor = Diffuse + Specular;
 

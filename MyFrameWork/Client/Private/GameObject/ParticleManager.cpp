@@ -42,29 +42,44 @@ HRESULT CParticleManager::Create_Partilce_Instance2D(string tag, PARTICLECREATED
 	return S_OK;
 }
 
-HRESULT CParticleManager::Create_Partilce_3D_Tool(PARTICLECREATEDESC createDesc, PARTICLEDESC particleDesc )
+HRESULT CParticleManager::Create_Partilce_3D_Tool(string modelName, PARTICLECREATEDESC createDesc )
 {
+	_int idx = GetSingle(CGameManager)->Get_CurrentLevel();
+
 	for (int i=0;i<createDesc.Count;++i)
 	{
 		CGameObject_Base* particle = GetSingle(CGameManager)->Get_CreaterManager()->CreateEmptyObject(GAMEOBJECT_3D_PARTICLE);
-	//	static_cast<CGameObject_3D_Particle*>(particle)->Set_Desc(particleDesc);
-	//	CGameObject_Base* particle = GetSingle(CGameManager)->Get_CreaterManager()->CreateEmptyObject(GAMEOBJECT_3D_PARTICLE);
-
+		PARTICLEDESC particledesc = RandomParticleDesc(&createDesc);
+		static_cast<CGameObject_3D_Particle*>(particle)->Set_LoadModelDesc(modelName);
+		static_cast<CGameObject_3D_Particle*>(particle)->Set_LoadParticleDesc(particledesc);
+		GetSingle(CGameManager)->Get_CreaterManager()->PushObject(&particle,idx,TAGLAY(LAY_EFFECT));
+		
 	}
 
 	return S_OK;
 }
 
-HRESULT CParticleManager::Create_Partilce_Rect2D_Tool(PARTICLECREATEDESC createDesc, PARTICLEDESC particleDesc )
+HRESULT CParticleManager::Create_Partilce_Rect2D_Tool(PARTICLECREATEDESC createDesc, PARTICLECREATEDESC particleDesc )
 {
 //	GetSingle(CGameManager)->Get_CreaterManager()->CreateEmptyObject(GAMEOBJECT_2D_PARTICLE_BUFFER);
 
 	return S_OK;
 }
 
-HRESULT CParticleManager::Create_Partilce_Instance2D_Tool(PARTICLECREATEDESC createDesc, PARTICLEDESC particleDesc)
+HRESULT CParticleManager::Create_Partilce_Instance2D_Tool(string diffuseName, PARTICLECREATEDESC particleDesc)
 {
-//	GetSingle(CGameManager)->Get_CreaterManager()->CreateEmptyObject(GAMEOBJECT_2D_PARTICLE_POINT);
+	_int idx = GetSingle(CGameManager)->Get_CurrentLevel();
+
+	particleDesc;
+
+	for (int i = 0; i < particleDesc.Count; ++i)
+	{
+		CGameObject_Base* particle = GetSingle(CGameManager)->Get_CreaterManager()->CreateEmptyObject(GAMEOBJECT_2D_PARTICLE_POINT);
+		// PARTICLEDESC particledesc = RandomParticleDesc(&createDesc);
+		// static_cast<CGameObject_2D_Particle_Point*>(particle)->Set_LoadModelDesc(modelName);
+		// static_cast<CGameObject_2D_Particle_Point*>(particle)->Set_LoadParticleDesc(particledesc);
+		// GetSingle(CGameManager)->Get_CreaterManager()->PushObject(&particle, idx, TAGLAY(LAY_EFFECT));
+	}
 
 	return S_OK;
 }
@@ -73,6 +88,18 @@ HRESULT CParticleManager::Delete_Particle()
 {
 	GetSingle(CGameManager)->Set_DeadLayer(TAGLAY(LAY_EFFECT));
 	return S_OK;
+}
+
+PARTICLEDESC CParticleManager::RandomParticleDesc(PARTICLECREATEDESC * desc)
+{
+	PARTICLEDESC newdesc;
+	newdesc.CreatePos = desc->CreatePos;
+	newdesc.Dir = desc->MinDir;
+	newdesc.Distance = 3;// desc->MinDistance , desc->MaxDistance;
+	newdesc.Timer = 0;
+	newdesc.TimeMax = 2.f;//desc->MinTime, desc->MaxTime;
+
+	return newdesc;
 }
 
 CGameObject_3D_Particle * CParticleManager::Find_3DPartilce(string tag)

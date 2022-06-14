@@ -941,6 +941,28 @@ HRESULT CImgui_Model::Edit_COL()
 
 HRESULT CImgui_Model::Edit_PARTICLE_2D()
 {
+	CParticleManager* PartilceManager = GetSingle(CGameManager)->Get_PartilceManager();
+
+	static string PartilceImageName_Diffuse= "";
+
+
+	if (ImGui::Button("CreateParticle2D"))
+	{
+		PARTICLECREATEDESC	createDesc;
+		createDesc.Count = 1;
+		createDesc.MinTime = 3;
+		createDesc.MaxTime = 5;
+		createDesc.MinDistance = 5;
+		createDesc.MaxDistance = 5;
+		createDesc.MinDir = _float3(-1, -1, -1);
+		createDesc.MaxDir = _float3(1, 1, 1);;
+
+		// 积己
+		if (PartilceImageName_Diffuse.length() > 2)
+			PartilceManager->Create_Partilce_Instance2D_Tool(PartilceImageName_Diffuse, createDesc);
+
+	}
+
 
 
 	return S_OK;
@@ -950,31 +972,68 @@ HRESULT CImgui_Model::Edit_PARTICLE_3D()
 {
 	CParticleManager* PartilceManager = GetSingle(CGameManager)->Get_PartilceManager();
 
+	// 3D葛胆 捞抚
+	INIT_FBXPathList();
+	if (mFBX_Static_pathList->empty())
+		return E_FAIL;
 
-	PARTICLECREATEDESC	createDesc;
-	PARTICLEDESC		particleDesc;
+	static int selectedTex = -1;
+
+	// 沥利 FBX 贸府
 	
-	createDesc.Count = 10;
-	createDesc.MinTime = 3;
-	createDesc.MaxTime = 5;
-	createDesc.MinDistance = 5;
-	createDesc.MaxDistance = 5;
-	createDesc.MinDir = _float3(-1,-1,-1);
-	createDesc.MaxDir = _float3(1, 1, 1);;
-
-
-	if(ImGui::Button("CreateParticle"))
+	static string ParticleModelName = "";
+	if (ImGui::BeginListBox(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_FBX, "ParticleFBX")))
 	{
+
+		_uint cnt = 0;
+		static ImGuiTextFilter filter;
+		filter.Draw();
+
+		for (auto iter = mFBX_Static_pathList->begin(); iter != mFBX_Static_pathList->end(); ++cnt, iter++)
+		{
+			if (filter.PassFilter(iter->c_str()))
+			{
+				if (ImGui::Selectable(iter->c_str(), selectedTex == cnt))
+				{
+					selectedTex = cnt;
+					ParticleModelName = *iter;
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+
+	if(ImGui::Button("CreateParticle3D"))
+	{
+		PARTICLECREATEDESC	createDesc;
+		createDesc.Count = 1;
+		createDesc.MinTime = 3;
+		createDesc.MaxTime = 5;
+		createDesc.MinDistance = 5;
+		createDesc.MaxDistance = 5;
+		createDesc.MinDir = _float3(-1, -1, -1);
+		createDesc.MaxDir = _float3(1, 1, 1);;
+
 		// 积己
-
-
-		PartilceManager->Create_Partilce_3D_Tool(createDesc, particleDesc);
-
+		if (ParticleModelName.length() > 2)
+			PartilceManager->Create_Partilce_3D_Tool(ParticleModelName,createDesc);
 
 	}
 	if (ImGui::Button("DelPartilce"))
 	{
 		// 昏力 
+		PartilceManager->Delete_Particle();
+	}
+
+	// ImGui::DragFloat3();
+	static int CameraZ = 5;
+	ImGui::DragInt("CameraZ",&CameraZ, 1, 3, 20);
+
+	if (ImGui::Button("NewCamera"))
+	{
+		mCameraClient->Set_CameraMode_Tool(CCamera_Client::CAMERA_MODE_FROZEN);
+		mCameraClient->Set_NewCameraPos(_float3(0, 0, -CameraZ), _float3(0, 0, 0));
 
 	}
 

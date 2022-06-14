@@ -30,6 +30,9 @@ public:
 public:
 	CModel*		Get_ComModel() const { return mComModel; }
 
+	HRESULT Set_LoadParticleDesc(PARTICLEDESC desc);
+	HRESULT Set_LoadModelDesc(string str);
+
 protected:
 	virtual HRESULT Set_Component()override;
 	virtual HRESULT Set_ConstantTable_Model(); // 모델 설정
@@ -40,7 +43,7 @@ protected: // 3D모델 Com / DESC 추가
 	CTexture_map*				mComTextureMap = nullptr;
 
 	// 파티클 모델 / 텍스처 이름 / 파티클 속성
-	string						mModelName;
+	string						mModelName = "";
 	TEXTURE_NAMES_DESC			mTexStrDESC;
 	PARTICLEDESC				mParticleDESC;
 

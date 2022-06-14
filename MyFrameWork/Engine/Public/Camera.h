@@ -31,6 +31,7 @@ public:
 	virtual _int LateTick(_double fTimeDelta);
 	virtual HRESULT Render();
 
+	void Set_NewCameraPos(_float3 CameraPos, _float3 LookPos);
 protected:
 	CAMERADESC					mCameraDesc;
 	class CPipeLine*			mpPipeLine = nullptr;
