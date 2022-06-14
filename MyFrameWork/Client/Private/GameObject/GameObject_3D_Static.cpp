@@ -37,6 +37,7 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 		strcpy_s(mModelStatic_Desc.mModelName, str.c_str());
 	}
 	Set_Component();
+	mShader_Timer = 0;
 
 	return S_OK;
 }
@@ -44,6 +45,9 @@ HRESULT CGameObject_3D_Static::NativeConstruct(void* pArg)
 _int CGameObject_3D_Static::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
+	mShader_Timer += TimeDelta;
+	if (mShader_Timer > 10)
+		mShader_Timer = 0;
 
 	if (meUpdateType == CGameObject_3D_Static::E_UPDATETYPE_NONE)
 	{
@@ -66,6 +70,10 @@ _int CGameObject_3D_Static::Tick(_double TimeDelta)
 			_float4x4 transmat = _float4x4::CreateTranslation(pickTilePos);
 			mComTransform->Set_State(CTransform::STATE_POSITION, transmat.Translation());
 		}
+	}
+	else
+	{
+
 	}
 
 	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
@@ -214,9 +222,13 @@ HRESULT CGameObject_3D_Static::Set_Component()
 HRESULT CGameObject_3D_Static::Set_ConstantTable_Model()
 {
 	// 이외 텍스처 바인딩
+	
+
+	if (mCurrentShaderPass == 4)
+		FAILED_CHECK(mComShader->Set_RawValue("g_Timer", &mShader_Timer, sizeof(_float)));
+
 	if (mComTexture == nullptr)
 		return S_OK;
-
 	//auto tex1 = mComTexture->Get_MapTexture(mTexture_Model_DESC.mTextureKey_Normal);
 	//auto tex2 = mComTexture->Get_MapTexture(mTexture_Model_DESC.mTextureKey_Hieght);
 

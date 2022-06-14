@@ -20,6 +20,7 @@ class CGameObject_3D_Static :
 
 		// 마우스 피킹시 
 		E_UPDATETYPE_PICK,
+		E_UPDATETYPE_ELSE,
 		E_UPDATETYPE_END
 
 	};
@@ -54,6 +55,13 @@ public:
 	{
 		meUpdateType = E_UPDATETYPE_PICK;
 	}
+
+	void		Set_DUNGON_HEART()
+	{
+		meUpdateType = E_UPDATETYPE_ELSE;
+		mCurrentShaderPass = 4;
+	}
+
 	void Set_OffsetY(_float y)
 	{
 		mOffsetY = y;
@@ -79,6 +87,7 @@ protected: // 3D모델 Com / DESC 추가
 	E_TICKTYPE					meUpdateType = E_UPDATETYPE_NONE;
 	_float						mOffsetY = 0;
 
+	_float						mShader_Timer= 0;
 public:
 	static CGameObject_3D_Static* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
 	virtual CGameObject_3D_Static* Clone(void* pArg);

@@ -17,6 +17,15 @@ class CDungeon_Objects final :
 	public CBase
 {
 public:
+	enum E_SHADERPASS_INTERACTIVE
+	{
+		// 각 던전 / 월드에 있는 문
+	E_SHADERPASS_INTERACTIVE_HEART01=4, // 발광
+	E_SHADERPASS_INTERACTIVE_HEART02, // Hit
+	E_SHADERPASS_INTERACTIVE_DOOR, // Default
+	};
+
+
 	enum E_STATICOBJECT
 	{
 		// 각 던전 / 월드에 있는 문

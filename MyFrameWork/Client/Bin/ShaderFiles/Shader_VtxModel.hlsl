@@ -3,7 +3,7 @@
 // 정적 모델 셰이더
 
 texture2D g_DiffuseTexture;
-//texture2D g_NormalTexture;
+
 
 // 소켓
 cbuffer SocketMatrix
@@ -11,6 +11,12 @@ cbuffer SocketMatrix
 	matrix		g_SocketMatrix;
 };
 
+cbuffer Timer
+{
+	float		g_Timer;
+	
+
+};
 
 // VS
 struct VS_IN
@@ -155,6 +161,38 @@ PS_OUT PS_MAIN_GREEN(PS_IN In)
 	return Out;
 }
 
+// 던전 하트용 
+PS_OUT PS_MAIN_EMSIVE_HEART(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	// 텍스처 색상
+	float4	DiffuseMap = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	float4  Diffuse = g_vLightDiffuse * DiffuseMap;
+
+	//if (DiffuseMap.r > 0.2f)
+	//{
+	//	Diffuse = DiffuseMap * cos(g_Timer);;
+	//}
+	//else
+	//{
+	//	Diffuse = g_vLightDiffuse * DiffuseMap;
+	//	
+	//}
+
+	Diffuse = g_vLightDiffuse * DiffuseMap;
+
+	float4 color = Diffuse;
+
+	color.a = DiffuseMap.a;
+	if (color.a < 0.5f)
+		discard;
+
+	Out.vColor = color;
+	return Out;
+}
+
+
 
 technique11		DefaultTechnique
 {
@@ -163,7 +201,7 @@ technique11		DefaultTechnique
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
 		//	SetRasterizerState(CullMode_ccw);
-		SetRasterizerState(CullMode_None);
+		SetRasterizerState(CullMode_ccw);
 
 		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
 		GeometryShader = NULL;
@@ -175,7 +213,7 @@ technique11		DefaultTechnique
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
 		//	SetRasterizerState(CullMode_ccw);
-		SetRasterizerState(CullMode_None);
+		SetRasterizerState(CullMode_ccw);
 
 		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
 		GeometryShader = NULL;
@@ -187,7 +225,7 @@ technique11		DefaultTechnique
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
 		//	SetRasterizerState(CullMode_ccw);
-		SetRasterizerState(CullMode_None);
+		SetRasterizerState(CullMode_ccw);
 
 		VertexShader = compile vs_5_0 VS_MAIN_SOCKET();
 		GeometryShader = NULL;
@@ -199,10 +237,43 @@ technique11		DefaultTechnique
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(ZTestAndWriteState, 0);
 		//	SetRasterizerState(CullMode_ccw);
-		SetRasterizerState(CullMode_None);
+		SetRasterizerState(CullMode_ccw);
 
 		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_GREEN();
 	}
+
+	pass DUNGEONHEART_EMSV // 4
+	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(ZTestAndWriteState, 0);
+		SetRasterizerState(CullMode_ccw);
+
+		VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_EMSIVE_HEART();
+	}
+
+	//pass DUNGEONHEART // 5
+	//{
+	//	SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+	//	SetDepthStencilState(ZTestAndWriteState, 0);
+	//	SetRasterizerState(CullMode_ccw);
+
+	//	VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
+	//	GeometryShader = NULL;
+	//	PixelShader = compile ps_5_0 PS_MAIN_GREEN();
+	//}
+	//pass DUNGEONDOOR // 6
+	//{
+	//	SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+	//	SetDepthStencilState(ZTestAndWriteState, 0);
+	//	SetRasterizerState(CullMode_ccw);
+
+	//	VertexShader = compile vs_5_0 VS_MAIN_DEFAULT();
+	//	GeometryShader = NULL;
+	//	PixelShader = compile ps_5_0 PS_MAIN_GREEN();
+	//}
+
 }

@@ -235,6 +235,7 @@ HRESULT CDungeon_Objects::Ready_StaticObject()
 	heartColDesc.mSize = _float3(1, 5.f, 1);
 
 	mStatic_InterActive_Objects[STATICOBJECT_HEART]->Set_LoadColliderDESC(heartColDesc);
+	mStatic_InterActive_Objects[STATICOBJECT_HEART]->Set_DUNGON_HEART();
 
 	for (auto& obj : mStatic_InterActive_Objects)
 	{
