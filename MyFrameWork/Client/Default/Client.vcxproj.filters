@@ -247,6 +247,9 @@
     <Filter Include="02.GameObject\01.2DObject\2.Particle\3.2D_Instance">
       <UniqueIdentifier>{765d0330-4142-424e-88b9-2c5437390dfb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.2DObject\3.UI">
+      <UniqueIdentifier>{76bf655a-38c2-492b-b36e-d1a86cee6464}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -468,6 +471,9 @@
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Buffer.h">
       <Filter>02.GameObject\01.2DObject\2.Particle\2.2D_Rect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_UI.h">
+      <Filter>02.GameObject\01.2DObject\3.UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -663,6 +669,9 @@
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Buffer.cpp">
       <Filter>02.GameObject\01.2DObject\2.Particle\2.2D_Rect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_UI.cpp">
+      <Filter>02.GameObject\01.2DObject\3.UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -703,6 +712,9 @@
       <Filter>97.Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxParticle.hlsl">
+      <Filter>97.Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl">
       <Filter>97.Shaders</Filter>
     </FxCompile>
   </ItemGroup>

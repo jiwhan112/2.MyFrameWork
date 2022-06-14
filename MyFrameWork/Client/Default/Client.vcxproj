@@ -180,6 +180,7 @@
     <ClInclude Include="..\Public\GameObject\Dungeon_Objects.h" />
     <ClInclude Include="..\Public\GameObject\Dungeon_Task.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_UI.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Buffer.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Particle.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="..\Private\GameObject\Dungeon_Task.cpp" />
     <ClCompile Include="..\Private\GameObject\Dungeon_Objects.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_UI.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Buffer.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Particle.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Point.cpp" />
@@ -353,6 +355,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexCube.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
