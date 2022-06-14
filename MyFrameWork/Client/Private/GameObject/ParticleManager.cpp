@@ -75,10 +75,10 @@ HRESULT CParticleManager::Create_Partilce_Instance2D_Tool(string diffuseName, PA
 	for (int i = 0; i < particleDesc.Count; ++i)
 	{
 		CGameObject_Base* particle = GetSingle(CGameManager)->Get_CreaterManager()->CreateEmptyObject(GAMEOBJECT_2D_PARTICLE_POINT);
-		// PARTICLEDESC particledesc = RandomParticleDesc(&createDesc);
-		// static_cast<CGameObject_2D_Particle_Point*>(particle)->Set_LoadModelDesc(modelName);
-		// static_cast<CGameObject_2D_Particle_Point*>(particle)->Set_LoadParticleDesc(particledesc);
-		// GetSingle(CGameManager)->Get_CreaterManager()->PushObject(&particle, idx, TAGLAY(LAY_EFFECT));
+		//static_cast<CGameObject_2D_Particle_Point*>(particle)->Set_LoadModelDesc(modelName);
+		//static_cast<CGameObject_2D_Particle_Point*>(particle)->Set_LoadParticleDesc(particledesc);
+		//GetSingle(CGameManager)->Get_CreaterManager()->PushObject(&particle, idx, TAGLAY(LAY_EFFECT));
+		
 	}
 
 	return S_OK;

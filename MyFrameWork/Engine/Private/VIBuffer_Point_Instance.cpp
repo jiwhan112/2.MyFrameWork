@@ -124,7 +124,7 @@ HRESULT CVIBuffer_Point_Instance::NativeConstruct_Prototype(_uint NumInstance)
 HRESULT CVIBuffer_Point_Instance::NativeConstruct(void * pArg)
 {
 	if (nullptr != pArg)
-		memcpy(&m_ParticleDesc, pArg, sizeof(m_ParticleDesc));
+		memcpy(&m_ParticleDesc, pArg, sizeof(PARTICLE_INSTANCEDESC));
 
 	// 속도 변경
 	//m_pSpeeds = NEW _float[m_iNumInstance];
@@ -183,16 +183,33 @@ void CVIBuffer_Point_Instance::Update(_double TimeDelta)
 	{
 		_vector		vPosition = XMLoadFloat4(&(((VTXMATRIX*)SubResource.pData)[i].vTranslation));
 
-		vPosition += XMVector3Normalize(XMLoadFloat3(&m_ParticleDesc.vMoveDir)) * m_pSpeeds[i] * TimeDelta;
+		vPosition += XMVector3Normalize(XMLoadFloat3(&m_ParticleDesc.vMoveDir)) * m_ParticleDesc.fSpeed * TimeDelta;
 
 		if (XMVectorGetY(vPosition) < -10.f)
 			vPosition = XMVectorSetY(vPosition, 0.f);
 
 		XMStoreFloat4(&(((VTXMATRIX*)SubResource.pData)[i].vTranslation), vPosition);
 	}
+	m_pDeviceContext->Unmap(m_pVBInstance, 0);
 
+}
 
+void CVIBuffer_Point_Instance::Tick_Client(_double TimeDelta, PARTICLE_INSTANCEDESC NewDesc)
+{
+	if (nullptr == m_pDeviceContext)
+		return;
 
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+	m_pDeviceContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	for (_uint i = 0; i < m_iNumInstance; ++i)
+	{
+		_vector		vPosition = XMLoadFloat4(&(((VTXMATRIX*)SubResource.pData)[i].vTranslation));
+
+		vPosition += XMVector3Normalize(XMLoadFloat3(&NewDesc.vMoveDir)) * NewDesc.fSpeed * TimeDelta;
+
+		XMStoreFloat4(&(((VTXMATRIX*)SubResource.pData)[i].vTranslation), vPosition);
+	}
 	m_pDeviceContext->Unmap(m_pVBInstance, 0);
 
 }
@@ -225,7 +242,6 @@ void CVIBuffer_Point_Instance::Free()
 {
 	__super::Free();
 
-	Safe_Delete_Array(m_pSpeeds);
 	Safe_Release(m_pVBInstance);
 
 }

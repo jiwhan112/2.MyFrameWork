@@ -45,8 +45,9 @@ _int CGameObject_2D_Particle_Point::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	mComVIBuffer->Update(TimeDelta);
-	mComRenderer->Add_RenderGroup(CRenderer::RENDER_NONBLEND_SECOND, this);
+	CVIBuffer_Point_Instance::PARTICLE_INSTANCEDESC desc;
+	mComVIBuffer->Tick_Client(TimeDelta, desc);
+	mComRenderer->Add_RenderGroup(CRenderer::RENDER_BLEND, this);
 
 	return UPDATENONE;
 }
@@ -80,12 +81,9 @@ HRESULT CGameObject_2D_Particle_Point::Set_Component()
 
 	if (mComVIBuffer == nullptr)
 	{
-		CVIBuffer_Point_Instance::PARTICLEDESC  ParticleDesc;
-
-		ParticleDesc.fMinSpeed = 2.f;
-		ParticleDesc.fMaxSpeed = 10.f;
-		ParticleDesc.vMoveDir = _float3(0.f, -1.f, 0.f);
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer,&ParticleDesc));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_20), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_100), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
+	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_VIBUFFER_INSTANCE_POINT_300), TEXT("Com_VIBuffer"), (CComponent**)&mComVIBuffer));
 	}
 
 	if (mComTexture == nullptr)

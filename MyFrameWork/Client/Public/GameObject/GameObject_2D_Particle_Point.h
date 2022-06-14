@@ -49,7 +49,8 @@ protected:
 	CTexture_map*					mComTexture = nullptr;
 
 	TEXTURE_NAMES_DESC				mTexStrDESC;
-	PARTICLEDESC					mParticleDESC;
+	PARTICLECREATEDESC				mParticleDESC;
+
 
 
 public:

@@ -7,11 +7,19 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Point_Instance final : public CVIBuffer
 {
 public:
+	//typedef struct tagParticleDesc
+	//{
+	//	_float		fMinSpeed, fMaxSpeed;
+	//	_float3		vMoveDir;
+	//}PARTICLEDESC;
+
 	typedef struct tagParticleDesc
 	{
-		_float		fMinSpeed, fMaxSpeed;
-		_float3		vMoveDir;
-	}PARTICLEDESC;
+		_float		fSpeed=1.0f;
+		_float3		vMoveDir = _float3(1, 0, 0);
+
+	}PARTICLE_INSTANCEDESC;
+
 
 public:
 	CVIBuffer_Point_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -27,7 +35,8 @@ public:
 
 public:
 	void Update(_double TimeDelta);
-
+	void Tick_Client(_double TimeDelta, PARTICLE_INSTANCEDESC Desc);
+	
 private:
 	// 인스턴스용 버퍼
 	ID3D11Buffer*				m_pVBInstance = nullptr;
@@ -35,8 +44,8 @@ private:
 	D3D11_SUBRESOURCE_DATA		m_VBInstSubResource;
 	_uint						m_iNumInstance = 0; // 인스턴스 개수
 
-	PARTICLEDESC				m_ParticleDesc;
-	_float*						m_pSpeeds = nullptr;
+	PARTICLE_INSTANCEDESC		m_ParticleDesc;
+
 
 public:
 	static CVIBuffer_Point_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, _uint NumInstance);
