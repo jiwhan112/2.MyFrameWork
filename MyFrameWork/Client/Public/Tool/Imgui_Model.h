@@ -98,6 +98,8 @@ private:
 	E_TAYLAY						meCreateLayer_Particle = LAY_EFFECT;
 	E_TOOLMODE_MODEL				meModelMode = TOOLMODE_MODEL_END;
 
+
+
 public:
 	static CImgui_Model* Create(ID3D11Device* deviec, ID3D11DeviceContext* context);
 	virtual void Free() override;

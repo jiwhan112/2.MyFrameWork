@@ -5,6 +5,8 @@
 #include "../Public/FIleIO/ObjectIO.h"
 #include "../Public/GameObject/Client_Object.h"
 #include "../Public/System/ColliderManager.h"
+#include "../Public/GameObject/ParticleManager.h"
+
 
 
 #include "Level_Logo.h"
@@ -38,6 +40,9 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 		mDaungonManager = CDungeon_Manager::Create(d,c);
 	if (mColliderManager == nullptr)
 		mColliderManager = CColliderManager::Create();
+
+	if (mParticleManager == nullptr)
+		mParticleManager = CParticleManager::Create(d,c);
 
 	if (mGameInstance == nullptr)
 	{
@@ -94,6 +99,13 @@ CColliderManager * CGameManager::Get_ColliderManager()
 		return nullptr;
 
 	return mColliderManager;
+}
+CParticleManager * CGameManager::Get_PartilceManager()
+{
+	if (mParticleManager == nullptr)
+		return nullptr;
+
+	return mParticleManager;
 }
 const list<MYFILEPATH*>* CGameManager::Get_PathList(E_PATHTYPE type) const
 {
@@ -206,6 +218,19 @@ const list<CGameObject*>* CGameManager::Get_LevelObject_List(const wchar_t * lay
 	if (GameObjectList == nullptr)
 		return nullptr;
 	return GameObjectList;
+}
+
+void CGameManager::Set_DeadLayer(const wchar_t * layerTag)
+{
+	auto particleList = GetSingle(CGameManager)->Get_LevelObject_List(layerTag);
+	if (particleList)
+	{
+		for (auto part : *particleList)
+		{
+			part->Set_Dead();
+		}
+
+	}
 }
 
 HRESULT CGameManager::Set_VisibleTag(const wchar_t * layerTag, bool b)
@@ -364,5 +389,6 @@ void CGameManager::Free()
 	Safe_Release(mObjectIoManager);
 	Safe_Release(mDaungonManager);
 	Safe_Release(mColliderManager);
+	Safe_Release(mParticleManager);
 	Safe_Release(mGameInstance);
 }

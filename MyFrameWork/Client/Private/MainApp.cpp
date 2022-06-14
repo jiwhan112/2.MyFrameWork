@@ -389,7 +389,10 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	// ÆÄÆ¼Å¬ 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_2D_PARTICLE_POINT),
 		CGameObject_2D_Particle_Point::Create(m_pDevice, m_pDeviceContext)));
-
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_2D_PARTICLE_BUFFER),
+		CGameObject_2D_Particle_Buffer::Create(m_pDevice, m_pDeviceContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_PARTICLE),
+		CGameObject_3D_Particle::Create(m_pDevice, m_pDeviceContext)));
 
 	return S_OK;
 }

@@ -11,7 +11,7 @@ BEGIN(Client)
 
 // Rect 버퍼 사용  
 
-class GameObject_2D_Particle_Buffer:
+class CGameObject_2D_Particle_Buffer:
 	public CGameObject_Base
 {
 public:
@@ -32,9 +32,9 @@ public:
 	//}PARTICLEDESC;
 
 protected:
-	explicit GameObject_2D_Particle_Buffer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
-	explicit GameObject_2D_Particle_Buffer(const GameObject_2D_Particle_Buffer& rhs);
-	virtual ~GameObject_2D_Particle_Buffer() = default;
+	explicit CGameObject_2D_Particle_Buffer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	explicit CGameObject_2D_Particle_Buffer(const CGameObject_2D_Particle_Buffer& rhs);
+	virtual ~CGameObject_2D_Particle_Buffer() = default;
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -60,8 +60,8 @@ protected:
 //	PARTICLE_DESC					mParticleDESC;
 
 public:
-	static GameObject_2D_Particle_Buffer* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
-	virtual GameObject_2D_Particle_Buffer* Clone(void* pArg);
+	static CGameObject_2D_Particle_Buffer* Create(ID3D11Device* d, ID3D11DeviceContext* cont);
+	virtual CGameObject_2D_Particle_Buffer* Clone(void* pArg);
 	virtual void Free() override;
 };
 

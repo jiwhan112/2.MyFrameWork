@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Tool/Imgui_Model.h"
 #include "GameObject/Client_Object.h"
+#include "GameObject/ParticleManager.h"
 
 
 #include "Model.h"
@@ -947,17 +948,33 @@ HRESULT CImgui_Model::Edit_PARTICLE_2D()
 
 HRESULT CImgui_Model::Edit_PARTICLE_3D()
 {
+	CParticleManager* PartilceManager = GetSingle(CGameManager)->Get_PartilceManager();
+
+
+	PARTICLECREATEDESC	createDesc;
+	PARTICLEDESC		particleDesc;
+	
+	createDesc.Count = 10;
+	createDesc.MinTime = 3;
+	createDesc.MaxTime = 5;
+	createDesc.MinDistance = 5;
+	createDesc.MaxDistance = 5;
+	createDesc.MinDir = _float3(-1,-1,-1);
+	createDesc.MaxDir = _float3(1, 1, 1);;
+
 
 	if(ImGui::Button("CreateParticle"))
 	{
-		// 积己 
+		// 积己
+
+
+		PartilceManager->Create_Partilce_3D_Tool(createDesc, particleDesc);
 
 
 	}
 	if (ImGui::Button("DelPartilce"))
 	{
 		// 昏力 
-
 
 	}
 

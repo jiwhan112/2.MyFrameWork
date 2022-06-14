@@ -36,4 +36,6 @@
 // ±×¿Ü
 #include "GameObject/GameObject_2D.h"
 #include "GameObject/GameObject_2D_Particle_Point.h"
+#include "GameObject/GameObject_2D_Particle_Buffer.h"
+#include "GameObject/GameObject_3D_Particle.h"
 #include "GameObject/GameObject_Mouse.h"

@@ -37,6 +37,8 @@ _int CGameObject_3D_Particle::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
+	// 파티클 움직임
+
 	return UPDATENONE;
 }
 
@@ -60,7 +62,7 @@ HRESULT CGameObject_3D_Particle::Render()
 
 	FAILED_CHECK(Set_ConstantTable_World());
 //	FAILED_CHECK(Set_ConstantTable_Texture());
-	FAILED_CHECK(Set_ConstantTable_OnlyCameraPos());
+//	FAILED_CHECK(Set_ConstantTable_OnlyCameraPos());
 
 	if (mComModel != nullptr)
 	{

@@ -474,6 +474,9 @@
     <ClInclude Include="..\Public\GameObject\GameObject_2D_UI.h">
       <Filter>02.GameObject\01.2DObject\3.UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\ParticleManager.h">
+      <Filter>02.GameObject\01.2DObject\2.Particle\1.Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -671,6 +674,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D_UI.cpp">
       <Filter>02.GameObject\01.2DObject\3.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\ParticleManager.cpp">
+      <Filter>02.GameObject\01.2DObject\2.Particle\1.Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

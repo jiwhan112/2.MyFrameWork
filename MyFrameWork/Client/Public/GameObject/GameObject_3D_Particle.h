@@ -39,8 +39,11 @@ protected: // 3D모델 Com / DESC 추가
 	CModel*						mComModel = nullptr;
 	CTexture_map*				mComTextureMap = nullptr;
 
+	// 파티클 모델 / 텍스처 이름 / 파티클 속성
 	string						mModelName;
 	TEXTURE_NAMES_DESC			mTexStrDESC;
+	PARTICLEDESC				mParticleDESC;
+
 
 public:
 	static CGameObject_3D_Particle* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

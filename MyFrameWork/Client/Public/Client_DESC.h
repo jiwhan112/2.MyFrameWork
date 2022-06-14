@@ -233,3 +233,29 @@ typedef struct tag_TERRAIN_DESC // : public BASE_DESC
 
 }TERRAIN_DESC;
 
+typedef struct tag_Particle_DESC
+{
+	// 중심점 진행방향 시간 
+	_int	Index = 0;
+	_float4 CreatePos = _float4();
+	_float3 Dir = _float3();
+	_float  Distance = 0;
+	_float	Timer=0;
+	_float	TimeMax=1;
+	_uint	OptionA=0;
+	_uint	OptionB=0;
+	_uint	OptionC=0;
+}PARTICLEDESC;
+
+typedef struct tag_ParticleCreate_DESC
+{
+	_uint	Count;
+	_uint	MinTime;
+	_uint	MaxTime;
+	_uint	MinDistance;
+	_uint	MaxDistance;
+	_float3	MinDir;
+	_float3	MaxDir;
+
+}PARTICLECREATEDESC;
+

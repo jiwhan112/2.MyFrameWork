@@ -1,25 +1,25 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_2D_Particle_Buffer.h"
 
-GameObject_2D_Particle_Buffer::GameObject_2D_Particle_Buffer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+CGameObject_2D_Particle_Buffer::CGameObject_2D_Particle_Buffer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_Base(pDevice, pDeviceContext)
 {
 	mObjectTypeid = (int)E_OBJECT_TYPE::OBJECT_TYPE_2D_PARTICLE_RECT;
 }
 
-GameObject_2D_Particle_Buffer::GameObject_2D_Particle_Buffer(const GameObject_2D_Particle_Buffer& rhs)
+CGameObject_2D_Particle_Buffer::CGameObject_2D_Particle_Buffer(const CGameObject_2D_Particle_Buffer& rhs)
 	: CGameObject_Base(rhs)
 {
 
 }
 
-HRESULT GameObject_2D_Particle_Buffer::NativeConstruct_Prototype()
+HRESULT CGameObject_2D_Particle_Buffer::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 	return S_OK;
 }
 
-HRESULT GameObject_2D_Particle_Buffer::NativeConstruct(void* pArg)
+HRESULT CGameObject_2D_Particle_Buffer::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
@@ -35,14 +35,14 @@ HRESULT GameObject_2D_Particle_Buffer::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
-_int GameObject_2D_Particle_Buffer::Tick(_double TimeDelta)
+_int CGameObject_2D_Particle_Buffer::Tick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::Tick(TimeDelta));
 
 	return UPDATENONE;
 }
 
-_int GameObject_2D_Particle_Buffer::LateTick(_double TimeDelta)
+_int CGameObject_2D_Particle_Buffer::LateTick(_double TimeDelta)
 {
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
@@ -51,7 +51,7 @@ _int GameObject_2D_Particle_Buffer::LateTick(_double TimeDelta)
 	return UPDATENONE;
 }
 
-HRESULT GameObject_2D_Particle_Buffer::Render()
+HRESULT CGameObject_2D_Particle_Buffer::Render()
 {
 	FAILED_CHECK(__super::Render());
 	if (
@@ -70,7 +70,7 @@ HRESULT GameObject_2D_Particle_Buffer::Render()
 }
 
 
-HRESULT GameObject_2D_Particle_Buffer::Set_Component()
+HRESULT CGameObject_2D_Particle_Buffer::Set_Component()
 {
 	if (mComRenderer == nullptr)
 	{
@@ -95,7 +95,7 @@ HRESULT GameObject_2D_Particle_Buffer::Set_Component()
 	return S_OK;
 }
 
-HRESULT GameObject_2D_Particle_Buffer::Set_ConstantTable_Texture()
+HRESULT CGameObject_2D_Particle_Buffer::Set_ConstantTable_Texture()
 {
 //	FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
 	return S_OK;
@@ -103,32 +103,32 @@ HRESULT GameObject_2D_Particle_Buffer::Set_ConstantTable_Texture()
 
 
 
-GameObject_2D_Particle_Buffer * GameObject_2D_Particle_Buffer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+CGameObject_2D_Particle_Buffer * CGameObject_2D_Particle_Buffer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
-	GameObject_2D_Particle_Buffer*	pInstance = NEW GameObject_2D_Particle_Buffer(pDevice, pDeviceContext);
+	CGameObject_2D_Particle_Buffer*	pInstance = NEW CGameObject_2D_Particle_Buffer(pDevice, pDeviceContext);
 
 	if (FAILED(pInstance->NativeConstruct_Prototype()))
 	{
-		MSGBOX("Failed to Creating GameObject_2D_Particle_Buffer");
+		MSGBOX("Failed to Creating CGameObject_2D_Particle_Buffer");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
-GameObject_2D_Particle_Buffer* GameObject_2D_Particle_Buffer::Clone(void* pArg)
+CGameObject_2D_Particle_Buffer* CGameObject_2D_Particle_Buffer::Clone(void* pArg)
 {
-	GameObject_2D_Particle_Buffer*	pInstance = NEW GameObject_2D_Particle_Buffer(*this);
+	CGameObject_2D_Particle_Buffer*	pInstance = NEW CGameObject_2D_Particle_Buffer(*this);
 
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{
-		MSGBOX("Failed to Creating GameObject_2D_Particle_Buffer");
+		MSGBOX("Failed to Creating CGameObject_2D_Particle_Buffer");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void GameObject_2D_Particle_Buffer::Free()
+void CGameObject_2D_Particle_Buffer::Free()
 {
 	__super::Free();
 	Safe_Release(mComVIBuffer);

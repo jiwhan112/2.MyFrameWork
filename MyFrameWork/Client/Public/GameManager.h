@@ -19,6 +19,7 @@ class CGameObject_Creater;
 class CImguiMgr;
 class CObjectIO;
 class CDungeon_Manager;
+class CParticleManager;
 class CGameObject_MyTerrain;
 class CCamera_Client;
 
@@ -50,6 +51,7 @@ public:
 	CObjectIO*					Get_ObjectIOManager();
 	CDungeon_Manager*			Get_DaungonManager();
 	CColliderManager*			Get_ColliderManager();
+	CParticleManager*			Get_PartilceManager();
 
 	const list<MYFILEPATH*>*	Get_PathList(E_PATHTYPE type) const;
 
@@ -66,6 +68,7 @@ public:
 
 
 	const list<CGameObject*>* Get_LevelObject_List(const wchar_t* layerTag);
+	void Set_DeadLayer (const wchar_t* layerTag);
 	// list<CGameObject_Base*> Get_ListObjecID(E_OBJECT_TYPE id);
 
 	E_LEVEL Get_CurrentLevel() const { return mCurrentLevel; }
@@ -104,6 +107,7 @@ private:
 
 	CDungeon_Manager*			mDaungonManager = nullptr;	
 	CColliderManager*			mColliderManager = nullptr;
+	CParticleManager*			mParticleManager = nullptr;
 
 	E_LEVEL						mCurrentLevel = LEVEL_END;
 
