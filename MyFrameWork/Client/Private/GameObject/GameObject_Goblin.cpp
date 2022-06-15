@@ -30,6 +30,26 @@ HRESULT CGameObject_Goblin::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
+HRESULT CGameObject_Goblin::Tick_Dungeon(_double TimeDelta)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CGameObject_Goblin::LateTick_Dungeon(_double TimeDelta)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CGameObject_Goblin::Tick_World(_double TimeDelta)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CGameObject_Goblin::LateTick_World(_double TimeDelta)
+{
+	return E_NOTIMPL;
+}
+
 
 HRESULT CGameObject_Goblin::Init_Unit()
 {
@@ -53,7 +73,7 @@ HRESULT CGameObject_Goblin::Init_Unit()
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 
-	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
+	meUnitType = UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
 	mRotSpeed = 10.0f;
@@ -128,9 +148,6 @@ HRESULT CGameObject_Goblin::Select_WorldAttack(CGameObject_3D_Dynamic* target)
 	mComBehavior->Select_Sequnce("ATTACK_WORLD", &desc);
 	return S_OK;
 }
-
-
-
 
 CGameObject_Goblin * CGameObject_Goblin::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

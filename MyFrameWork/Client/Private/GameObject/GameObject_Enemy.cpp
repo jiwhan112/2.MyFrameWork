@@ -98,7 +98,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 	Set_BehaviorMode(1);
 
-	meUnitType = CGameObject_3D_Dynamic::UNIT_ENEMY;
+	meUnitType = UNIT_ENEMY;
 	meEnemyType = CGameObject_Enemy::ENEMY_WARRIOR;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;

@@ -32,6 +32,36 @@ HRESULT CGameObject_Orc::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
+HRESULT CGameObject_Orc::Tick_Dungeon(_double TimeDelta)
+{
+	FAILED_CHECK(__super::Tick_Dungeon(TimeDelta));
+	
+	return S_OK;
+}
+
+HRESULT CGameObject_Orc::LateTick_Dungeon(_double TimeDelta)
+{
+	FAILED_CHECK(__super::LateTick_Dungeon(TimeDelta));
+
+	return S_OK;
+}
+
+HRESULT CGameObject_Orc::Tick_World(_double TimeDelta)
+{
+	FAILED_CHECK(__super::Tick_World(TimeDelta));
+	
+
+
+	return S_OK;
+}
+
+HRESULT CGameObject_Orc::LateTick_World(_double TimeDelta)
+{
+	FAILED_CHECK(__super::LateTick_World(TimeDelta));
+
+	return S_OK;
+}
+
 
 HRESULT CGameObject_Orc::Init_Unit()
 {
@@ -55,7 +85,7 @@ HRESULT CGameObject_Orc::Init_Unit()
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 
-	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
+	meUnitType = UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.1f;// Test
 	mRotSpeed = 10.0f;
@@ -145,6 +175,8 @@ HRESULT CGameObject_Orc::Select_WorldAttack(CGameObject_3D_Dynamic* target )
 
 	return S_OK;
 }
+
+
 
 CGameObject_Orc * CGameObject_Orc::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {

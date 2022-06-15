@@ -54,6 +54,8 @@ _int CDungeon_Manager::LateTick(_double TimeDelta)
 _int CDungeon_Manager::Tick_Game(_double timeDelta)
 {
 	FAILED_CHECK_NONERETURN(Check_Task());
+	FAILED_CHECK_NONERETURN(Check_World());
+
 
 	if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_DUNGEON)
 	{
@@ -206,6 +208,18 @@ HRESULT CDungeon_Manager::Check_Task()
 	return S_OK;
 }
 
+HRESULT CDungeon_Manager::Check_World()
+{
+	// 자동 전투 명령
+	auto unitlist = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_PLAYER);
+	auto unitlist2 = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_ENEMY);
+
+
+
+
+	return S_OK;
+}
+
 _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 {
 	// 테스크를 유닛에게 전달한다.
@@ -302,7 +316,7 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 	_int PlayerCnt = 0;
 	for (auto& unit : *unitlist)
 	{
-		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
+		if (unit->Get_UnitType() == E_UNITTYPE::UNIT_PLAYER)
 		{
 			centerPos += unit->Get_WorldPostition();
 			OrderObject = unit;
@@ -319,7 +333,7 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 	_float MinDistance = INT_MAX;
 	for (auto& unit : *unitlist)
 	{
-		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
+		if (unit->Get_UnitType() == E_UNITTYPE::UNIT_PLAYER)
 		{
 			_float dis = _float3::Distance(unit->Get_WorldPostition(), centerPos);
 			if (dis < MinDistance)
@@ -337,7 +351,7 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 	// TestCode
 	for (auto& unit : *unitlist)
 	{
-		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
+		if (unit->Get_UnitType() == E_UNITTYPE::UNIT_PLAYER)
 		{
 			FAILED_CHECK_NONERETURN(unit->Select_WorldPostition(worldPos));
 

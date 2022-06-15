@@ -391,6 +391,30 @@ list<CGameObject_Base*> CDungeon_Objects::Get_ListObjecID(E_OBJECT_TYPE id)
 	return ListObjectID;
 }
 
+list<CGameObject_3D_Dynamic*> CDungeon_Objects::Get_ListUnitID(E_UNITTYPE id)
+{
+	// 오브젝트 ID로 리스트
+	list<CGameObject_3D_Dynamic*> ListObjectID;
+
+	_uint idx = GetSingle(CGameManager)->Get_CurrentLevel();
+
+	const list<CGameObject*>* GameObjectList = GetSingle(CGameInstance)->Get_GameObjectLayerList(idx, TAGLAY((E_TAYLAY::LAY_OBJECT_UNIT)));
+	if (GameObjectList == nullptr)
+		return ListObjectID;
+
+	for (auto& obj : *GameObjectList)
+	{
+		CGameObject_3D_Dynamic* base = (CGameObject_3D_Dynamic*)obj;
+		if (base == nullptr)
+			continue;
+		if (base->Get_UnitType() == id)
+			ListObjectID.push_front(base);
+
+	}
+	return ListObjectID;
+}
+
+
 CGameObject_3D_Static * CDungeon_Objects::Get_ModelName(string name, CGameObject_3D_Static* samename)
 {
 	auto staticlist = Get_ListObjecID(OBJECT_TYPE_3D_STATIC);

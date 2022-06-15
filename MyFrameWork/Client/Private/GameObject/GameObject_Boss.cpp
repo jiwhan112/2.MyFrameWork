@@ -72,7 +72,7 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 	Set_BehaviorMode(1);
 
-	meUnitType = CGameObject_3D_Dynamic::UNIT_BOSS;
+	meUnitType = UNIT_BOSS;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
 	mRotSpeed = 10.0f;

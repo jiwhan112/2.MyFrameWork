@@ -296,8 +296,8 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 
 	// 생성 / 내려오기 / PICK / OpenDoor /
 
-	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER || 
-		meUnitType == CGameObject_3D_Dynamic::UNIT_ENEMY)
+	if (meUnitType == UNIT_PLAYER || 
+		meUnitType == UNIT_ENEMY)
 	{
 		// 내려오기
 		CSequnce_MOVETARGET* Seq_CreateFall = CSequnce_MOVETARGET::Create(this);
@@ -334,7 +334,7 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 	}
 
 	// 각각 타입에 따른 공통 AI
-	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
+	if (meUnitType == UNIT_PLAYER)
 	{
 		CSequnce_WorldMove_Player* Seq_WorldMove = CSequnce_WorldMove_Player::Create(this);
 		CSequnce_WorldMove_Player::SEQWORLDMOVE_PlAYER WorldDesc;
@@ -350,12 +350,12 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 
 	}
 
-	else if (meUnitType == CGameObject_3D_Dynamic::UNIT_ENEMY)
+	else if (meUnitType == UNIT_ENEMY)
 	{
 
 	}
 
-	else if (meUnitType == CGameObject_3D_Dynamic::UNIT_BOSS)
+	else if (meUnitType == UNIT_BOSS)
 	{
 		
 	}
@@ -474,7 +474,7 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 {
 	// 잘된다.
 
-	if (meUnitType == CGameObject_3D_Dynamic::UNIT_PLAYER)
+	if (meUnitType == UNIT_PLAYER)
 	{
 		// Drag
 		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)& DIS_Down)

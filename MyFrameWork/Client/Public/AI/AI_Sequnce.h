@@ -280,6 +280,35 @@ public:
 	virtual void Free()override;
 };
 
+// 자돟공격 시퀀스
+class CSequnce_WorldAutoAttack:
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqWorldAutoAttack
+	{
+		CGameObject_3D_Dynamic* Target;
+
+	}SEQWORLDAUTOATTACK;
+
+protected:
+	explicit CSequnce_WorldAutoAttack() = default;
+	virtual ~CSequnce_WorldAutoAttack() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQWORLDAUTOATTACK					mSeqData;
+
+public:
+	static CSequnce_WorldAutoAttack* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
+
 
 
 // Seq_BossPattern

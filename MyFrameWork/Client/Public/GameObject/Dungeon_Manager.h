@@ -79,6 +79,7 @@ public:	// For. Task
 	HRESULT Add_Task_Player_WorldAttack(CGameObject_Base* target);
 
 	HRESULT Check_Task();
+	HRESULT Check_World();
 
 private:
 	// 테스크에 따른 유닛 할당

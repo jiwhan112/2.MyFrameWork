@@ -17,13 +17,7 @@ class CGameObject_3D_Dynamic  :
 	public CGameObject_Base
 {
 public:
-	enum E_UNITTYPE
-	{
-		UNIT_PLAYER,
-		UNIT_ENEMY,
-		UNIT_BOSS,
-		UNIT_END,
-	};
+	
 
 	enum E_MAPTYPE
 	{

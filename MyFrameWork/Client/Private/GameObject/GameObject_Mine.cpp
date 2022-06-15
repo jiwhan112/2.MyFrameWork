@@ -91,7 +91,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_DUNGEON);
 	mCurrentNavi->Move_OnNavigation(Get_WorldPostition());
 
-	meUnitType = CGameObject_3D_Dynamic::UNIT_PLAYER;
+	meUnitType = UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
 	mRotSpeed = 10.0f;

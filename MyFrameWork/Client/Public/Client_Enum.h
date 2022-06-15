@@ -640,6 +640,14 @@ static const char* STR_TAYSOCKET(E_SOKET_TYPE str)
 	return "";
 }
 
+enum E_UNITTYPE
+{
+	UNIT_PLAYER,
+	UNIT_ENEMY,
+	UNIT_BOSS,
+	UNIT_END,
+};
+
 #define  TAGLAY			STR_TAYLAY
 #define  TAGCOM			STR_TAYCOM
 #define  TAGOBJ			STR_TAYOBJ

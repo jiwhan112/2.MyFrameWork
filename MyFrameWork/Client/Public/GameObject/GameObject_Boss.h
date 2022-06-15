@@ -23,10 +23,6 @@ public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
 
-
-	//virtual HRESULT Tick_Dungeon(_double TimeDelta);
-	//virtual HRESULT LateTick_Dungeon(_double TimeDelta);
-
 	virtual HRESULT Tick_World(_double TimeDelta);
 	virtual HRESULT LateTick_World(_double TimeDelta);
 

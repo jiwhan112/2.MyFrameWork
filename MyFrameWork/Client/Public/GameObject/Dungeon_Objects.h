@@ -74,6 +74,7 @@ public: // СіЧќ
 public: // РЏДж
 	HRESULT								Create_Unit(E_TAYGAMEOBJECT id, _float3 PositionXZ);
 	list<CGameObject_Base*>				Get_ListObjecID(E_OBJECT_TYPE id);
+	list<CGameObject_3D_Dynamic*>		Get_ListUnitID(E_UNITTYPE id);
 	CGameObject_3D_Static*				Get_ModelName(string name, CGameObject_3D_Static* samename = nullptr);
 	CGameObject_3D_Static*				Get_InterActiveModel(E_STATICOBJECT e)
 	{
