@@ -83,10 +83,10 @@ public: // GetSet
 
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC desc);
 	HRESULT		Add_ColliderDesc(COLLIDER_DESC* desc,int size);
-	void		Set_LookPos(_float3 lookpos)
-	{
-		mLookPostiton = lookpos;
-	}
+	//void		Set_LookPos(_float3 lookpos)
+	//{
+	//	mLookPostiton = lookpos;
+	//}
 
 	void		Set_LookDir(_float3 dir);
 
@@ -135,7 +135,8 @@ public:
 	void	Set_IsTerrainHeight(_bool b) { mIsTerrainHeight = b; }
 	_bool	Get_IsTerrainHeight() const { return mIsTerrainHeight; }
 	_float3	Get_TerrainHeightPostition();
-	void	Tick_LookUpdate(_double time);
+	void	Set_RotationFlag(_float3 Target);
+	HRESULT WorldPathLerp(_float range=3);
 
 
 
@@ -204,7 +205,7 @@ protected: // 3D모델 Com / DESC 추가
 	// MOVE
 	list<CCell*>					mCurrentPathList;
 	_float3							mGoalPosition; // 목표위치
-	_float3							mLookPostiton;
+//	_float3							mLookPostiton;
 
 	// 지형
 	E_MAPTYPE						meCurrentMap = MAPTYPE_END;

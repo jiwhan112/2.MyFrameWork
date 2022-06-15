@@ -129,15 +129,27 @@ public:
 
 
 	HRESULT Chase(_fvector TargetPos, _double time);
-	HRESULT LookAt(_fvector TargetPos, _double time, _float speed = 1);
-	HRESULT LookAtY(_fvector TargetPos, _double time, _float speed = 1);
-	HRESULT LookAt(_fvector TargetPos);
-	HRESULT LookAtDir(_float3 Dir);
+	HRESULT LookAt(_fvector  TargetPos, _double time, _float speed = 1);
+	HRESULT LookAt(_fvector  TargetPos);
+	HRESULT LookAtDir(_fvector  Dir);
+	HRESULT LookAt_Tick(_double time, _float speed = 1);
+
+	// 회전 명령
+	void Set_RotationFlag(_fvector target)
+	{
+		if (mIsRotating == false)
+		{
+			mTargetPos = target;
+			mIsRotating = true;
+		}
+	}
+
 
 	// scaled
 	HRESULT Scaled(_fvector scale);
 	void Scaling(_float3 vScale, _double fDeltaTime);
 
+	_double GetAngleXZ(_float3 start, _float3 end);
 
 private:
 	TRANSFORMDESC	mDesc;
@@ -146,6 +158,9 @@ private:
 	_float4x4		mWorldMatrix;	// 최종 행렬
 	_quaterion		mQuaterion;		// 쿼터니언
 
+	_float3			mTargetPos;
+	_bool			mIsRotating = false;
+	_float			mRotTimer=0;
 
 public:
 	static CTransform* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext);

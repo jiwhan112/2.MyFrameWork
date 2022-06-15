@@ -510,7 +510,7 @@ static const char* STR_TAYDECO(E_DECO_TYPE str)
 		return "";
 		break;
 	}
-
+	return "";
 }
 
 
@@ -637,6 +637,7 @@ static const char* STR_TAYSOCKET(E_SOKET_TYPE str)
 	
 
 	}
+	return "";
 }
 
 #define  TAGLAY			STR_TAYLAY

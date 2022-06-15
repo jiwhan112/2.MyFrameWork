@@ -101,12 +101,16 @@ _int CGameObject_3D_Dynamic::Tick(_double TimeDelta)
 			}
 		}
 	}
-	
-	// 버그 코드
-	// Tick_LookUpdate(TimeDelta);
+
+	// 목표위치로 회전
+
+	mComTransform->LookAt_Tick(TimeDelta);
+
+	// Tick_LookUpdate(1);
+
 	Tick_Socket(TimeDelta);
 
-//	Tick_DEBUG(TimeDelta);
+	//	Tick_DEBUG(TimeDelta);
 
 
 	return UPDATENONE;
@@ -531,7 +535,13 @@ HRESULT CGameObject_3D_Dynamic::FindPathForCurrentNavi(_float3 GoalPosition)
 		// 경로 탐색
 		mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
 		if (!mCurrentPathList.empty())
+		{
+			// 월드맵 경로 보간
+			if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+				WorldPathLerp();
 			mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
+		}
+
 		return S_OK;
 	}
 
@@ -657,11 +667,49 @@ _float3 CGameObject_3D_Dynamic::Get_TerrainHeightPostition()
 	return TargetPos;
 }
 
-void CGameObject_3D_Dynamic::Tick_LookUpdate(_double time)
+void CGameObject_3D_Dynamic::Set_RotationFlag(_float3 Target)
 {
-	if (mLookPostiton != _float3())
-		mComTransform->LookAtY(mLookPostiton, time, mRotSpeed);
+	mComTransform->Set_RotationFlag(Target);
 }
+
+HRESULT CGameObject_3D_Dynamic::WorldPathLerp(_float range)
+{
+
+	// 월드맵 경로 보간
+	
+	// 1. 인접 인덱스라면 삭제하는 방법
+	// 생각보다 괜찮음..
+	list<CCell*> newPath;
+	newPath.push_back(*mCurrentPathList.begin());
+
+	for (auto iter = mCurrentPathList.begin(); iter != mCurrentPathList.end();)
+	{
+		auto nextiter = iter;
+		nextiter++;
+
+		for (; nextiter != mCurrentPathList.end(); nextiter++)
+		{
+			_float3 PosA = (*iter)->Get_CenterPoint();
+			_float3 PosB = (*nextiter)->Get_CenterPoint();
+
+			if (_float3::Distance(PosA, PosB) > range)
+			{
+				// 현재 탐색 
+				iter = nextiter;
+				newPath.push_back(*iter);
+				break;
+			}
+		}
+		iter++;
+	}
+
+	mCurrentPathList.clear();
+	mCurrentPathList.assign(newPath.begin(), newPath.end());
+
+
+	return S_OK;
+}
+
 //
 //void CGameObject_3D_Dynamic::MoveAbleNaviMesh()
 //{

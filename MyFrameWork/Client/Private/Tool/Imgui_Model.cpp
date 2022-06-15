@@ -953,7 +953,7 @@ HRESULT CImgui_Model::Edit_SETTING()
 			IMGUI_TREE_END
 		}
 
-		// Quaterion
+		// QuaterionTest
 		IMGUI_TREE_BEGIN("Target_RotSetting")
 		{
 			CTransform* Transform = mCurrent_ModelStaticObject->Get_ComTransform();
@@ -973,6 +973,35 @@ HRESULT CImgui_Model::Edit_SETTING()
 
 
 			IMGUI_TREE_END
+		}
+
+		IMGUI_TREE_BEGIN("Target_RotSetting2")
+		{
+			CTransform* Transform = mCurrent_ModelStaticObject->Get_ComTransform();
+
+			static _float3 TargetPos = _float3();
+			ImGui::DragFloat3("TargetPosition", (float*)&TargetPos, 1, -360, 360);
+
+			_float3 TargetDir = TargetPos - _float3();
+			TargetDir.Normalize();
+
+			TargetDir = _float3(XMConvertToDegrees(TargetDir.x),
+				XMConvertToDegrees(TargetDir.y), XMConvertToDegrees(TargetDir.z));
+		
+
+			static _float Time = 0;
+			ImGui::DragFloat("Time", &Time, 0.1, 0, 1);
+
+			_quaterion myqu = Transform->Get_DegreeFormQuater(_float3(0, 0, 0));
+			_quaterion targetqu = Transform->Get_DegreeFormQuater(TargetDir);
+
+			_quaterion squ = _quaterion::Slerp(myqu, targetqu, Time);
+			_float4x4 rotmat = _float4x4::CreateFromQuaternion(squ);
+			Transform->Set_Rotate(rotmat);
+
+
+			IMGUI_TREE_END
+
 		}
 	}
 

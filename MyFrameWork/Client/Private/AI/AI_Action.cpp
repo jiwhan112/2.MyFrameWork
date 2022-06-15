@@ -205,18 +205,19 @@ HRESULT CAction_MOVE::Action(_double TimeDelta)
 			else if (meMoveAni == CAction_MOVE::MOVE_ANI_WALK)
 				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_WALK,0);
 
-			// _float3 newLook = _float3(mNextGoalPosition.x, mStartPosition.y, mNextGoalPosition.z);
-			// mDynamicObject->Get_ComTransform()->LookAt(newLook);
-			mDynamicObject->Set_LookPos(mNextGoalPosition);
+			 mDynamicObject->Set_RotationFlag(mNextGoalPosition);
 
 			mCurrentTimer += TimeDelta;
 			_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(meEasingID, mStartPosition, mNextGoalPosition, mCurrentTimer, mTimeMax);
 
+			
 			if (mCurrentTimer > mTimeMax)
 			{
 				mIsMoveCell = false;
 				mDynamicObject->Set_Position(CurrentPosition);
 			}
+			else
+				mDynamicObject->Set_Position(CurrentPosition);
 
 			//if (meMoveType == CAction_MOVE::MOVE_POS_TARGET)
 			//{

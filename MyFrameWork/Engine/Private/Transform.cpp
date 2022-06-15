@@ -396,7 +396,7 @@ HRESULT CTransform::Chase(_fvector TargetPos, _double time)
 	return S_OK;
 }
 
-HRESULT CTransform::LookAt(_fvector targetPos, _double time,_float speed)
+HRESULT CTransform::LookAt(_fvector  targetPos, _double time,_float speed)
 {
 	_float3 TargetPos = targetPos;
 	_float3 vPos = mWorldMatrix.Translation();
@@ -433,21 +433,98 @@ HRESULT CTransform::LookAt(_fvector targetPos, _double time,_float speed)
 	return S_OK;
 }
 
-HRESULT CTransform::LookAtY(_fvector targetPos, _double time, _float speed)
+HRESULT CTransform::LookAt_Tick(_double Deltatime, _float speed)
 {
-	// Y만 
+	//if (mIsRotating)
+	//{
+	//	
+	//	
+	//	// 타겟과의 앵글을 구해서 Y축 회전 수행
+	//	_float3 vPos = mWorldMatrix.Translation();
+	//	vPos.y = 0;
+	//	mTargetPos.y = 0;
 
-	_float3 CurrentLook = GetState(CTransform::STATE_LOOK);
-	CurrentLook.Normalize();
 
-	_float3 TargetPos = targetPos;
+	//	_float3 TargetDir = mTargetPos - vPos;
+	//	TargetDir.Normalize();
+
+	//	Turn_CW(_float3::Up, Deltatime,10);
+
+	//	_float3 look =  GetState(CTransform::STATE_LOOK);
+	//	look.y = 0;
+	//	look.Normalize();
+
+	//	float dot = look.Dot(TargetDir);
+	//	if(dot>0.8f)
+	//		mIsRotating = false;
+
+
+
+
+	//	//TargetDir.Normalize(); // Look
+	//	//_float3 MyLook = GetState(CTransform::STATE_LOOK);
+	//	//_float theta = MyLook.Dot(TargetDir);
+	//	//if (theta > 0.8f)
+	//	//{
+	//	//	mIsRotating = false;
+	//	//	return S_OK;
+	//	//}
+
+	//	//_double angle =  GetAngleXZ(vPos, mTargetPos);
+
+	//	//Set_Rotate(_float3(0, angle, 0));
+
+
+	//	
+
+	//	//_float angle = XMConvertToDegrees(theta);
+	//	//mRotTimer += Deltatime;
+	//	//if (mRotTimer >= 1.f)
+	//	//{
+	//	//	mIsRotating = false;
+	//	//	mRotTimer = 0;
+	//	//	return S_OK;
+	//	//}
+
+	//}
+	//else
+	//{
+	//	mRotTimer = 0;
+	//}
+
+	//return S_OK;
+
+
+
+
+
+
+
+
+
+	
+
+
+	_float3 TargetPos = mTargetPos;
+	TargetPos.y = 0;
+
 	_float3 vPos = mWorldMatrix.Translation();
+	vPos.y = 0;
+
+	if (_float3::Distance(vPos, mTargetPos) < 0.3f)
+	{
+		mIsRotating = false;
+		return S_OK;
+	}
+
 	_float3 TargetLook = TargetPos - vPos;
 	TargetLook.Normalize();
 
+	_float3 CurrentLook = GetState(CTransform::STATE_LOOK);
+	CurrentLook.Normalize();
+	
 	_float lookDot = CurrentLook.Dot(TargetLook);
-
-	if (0.8 < lookDot)
+	if (0.9f < lookDot)
 	{
 		// 회전 한계
 		return S_OK;
@@ -460,13 +537,24 @@ HRESULT CTransform::LookAtY(_fvector targetPos, _double time, _float speed)
 		_float rightLeft = CurrentRight.Dot(TargetLook);
 		
 		if (rightLeft > 0)
-			Turn_CW(_float3::Up, time, speed);
+			Turn_CW(_float3::Up, Deltatime, 10);
 		else
-			Turn_CCW(_float3::Up, time, speed);
+			Turn_CCW(_float3::Up, Deltatime, 10);
+
+		mIsRotating = false;
+
 		return S_OK;
-
 	}
+	return S_OK;
+}
 
+double CTransform::GetAngleXZ(_float3 start, _float3 end)
+{
+
+	double dz = end.y - start.z;
+	double dx = end.x - start.x;
+
+	return atan2(dz, dx) * (180.0 / 3.1415);
 }
 
 HRESULT CTransform::LookAt(_fvector targetPos)
@@ -503,7 +591,7 @@ HRESULT CTransform::LookAt(_fvector targetPos)
 	return S_OK;
 }
 
-HRESULT CTransform::LookAtDir(_float3 Dir)
+HRESULT CTransform::LookAtDir(_fvector  Dir)
 {
 	_float3 vLook, vRight, vUp;
 	_float3 vScale = GetScaleXYZ();
