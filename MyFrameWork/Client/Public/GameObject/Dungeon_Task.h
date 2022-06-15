@@ -138,6 +138,4 @@ struct TASK_VOID
 
 	void* pArg = nullptr;
 };
-
-
 END

@@ -936,14 +936,42 @@ HRESULT CImgui_Model::Edit_SETTING()
 			mCurrent_ModelStaticObject->Set_LoadColliderDESC(desc);
 			IMGUI_TREE_END
 		}
+
 		// Quaterion
 		IMGUI_TREE_BEGIN("Quaterion_Setting")
 		{
 			CTransform* Transform = mCurrent_ModelStaticObject->Get_ComTransform();
 
-			static _float3 rot = _float3();
-			ImGui::DragFloat3("RotTest", (float*)&rot, 1, -360, 360);
-			Transform->Set_Rotate(rot);
+			static _float3 rotDegree = _float3();
+			ImGui::DragFloat3("RotTest", (float*)&rotDegree, 0.1, -360, 360);
+
+			_float3 Radian = _float3(XMConvertToRadians(rotDegree.x), XMConvertToRadians(rotDegree.y), XMConvertToRadians(rotDegree.z));
+
+			ImGui::Text("Radian: %.2f,%.2f,%f.2", Radian.x, Radian.y, Radian.z);
+
+			Transform->Set_Rotate(Radian);
+			IMGUI_TREE_END
+		}
+
+		// Quaterion
+		IMGUI_TREE_BEGIN("Target_RotSetting")
+		{
+			CTransform* Transform = mCurrent_ModelStaticObject->Get_ComTransform();
+
+			static _float3 TargetRot_Degreee = _float3();
+			ImGui::DragFloat3("TargetRot_Degreee", (float*)&TargetRot_Degreee, 0.1, -360, 360);
+
+			static _float Time = 0;
+			ImGui::DragFloat("Time", &Time, 0.1, 0, 1);
+
+			_quaterion myqu = Transform->Get_DegreeFormQuater(_float3(0, 0, 0));
+			_quaterion targetqu = Transform->Get_DegreeFormQuater(TargetRot_Degreee);
+			
+			_quaterion squ = _quaterion::Slerp(myqu, targetqu,Time);			
+			_float4x4 rotmat = _float4x4::CreateFromQuaternion(squ);
+			 Transform->Set_Rotate(rotmat);
+
+
 			IMGUI_TREE_END
 		}
 	}

@@ -154,14 +154,14 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 	switch (meMoveType)
 	{
 	case Client::CAction_MOVE::MOVE_POS_NEAR:
-		mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition);
-		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
+		// 던전에서 갈 수 있는 곳 랜덤
+		if (mDynamicObject->FindPathRandDungeonAblePostition(10, 50, &mGoalPosition) == false)
+		{
+			// 탐색실패 
+			mGoalPosition = mStartPosition;
+		}
+	//	mGoalPosition = mDynamicObject->Get_PathGoalPostition();
 		break;
-	case Client::CAction_MOVE::MOVE_POS_ABLEDUNGEON:
-		mDynamicObject->FindPathRandAblePostition(3, &mGoalPosition);
-		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
-		break;
-
 	case Client::CAction_MOVE::MOVE_POS_TILE:
 		// 이미 탐색된 정보 활용
 		mGoalPosition = mDynamicObject->Get_PathGoalPostition();

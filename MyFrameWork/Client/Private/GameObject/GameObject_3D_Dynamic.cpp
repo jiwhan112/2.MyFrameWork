@@ -575,32 +575,68 @@ _bool CGameObject_3D_Dynamic::FindPathRandAblePostition(_int Range,_float3* Goal
 	return true;
 }
 
-_bool CGameObject_3D_Dynamic::FindPathRandDungeonAblePostition(_float3* GoalPos)
+_bool CGameObject_3D_Dynamic::FindPathRandDungeonAblePostition(_uint Mincount,_uint NebiorMaxCount, _float3* GoalPos)
 {
-	// 던전내에 갈 수 있는 타일로 이동
+	// 던전내에 Count 만큼 이웃하는 타일 찾아서 반환
 
-	/*
-	int count = 0;
-	while (true)
+	int NeiborCount = CHelperClass::RandomInt(Mincount, NebiorMaxCount);
+
+	_float3 CurrentPos = Get_WorldPostition();
+	const CCell* StartCell = mCurrentNavi->Get_CurrentCell();
+	const CCell* CurrentCell = StartCell;
+
+	list<int> ListPreIndex;
+	ListPreIndex.push_front(mCurrentNavi->Get_CurrentCellIndex());
+
+	int cnt_neviorSearch = 0;
+	int cnt_while = 0;
+	while(cnt_neviorSearch<NeiborCount)
 	{
-		_float3 CurrentPos = Get_WorldPostition();
-		_int RangeX = CHelperClass::RandomInt(-Range, Range);
-		_int RangeZ = CHelperClass::RandomInt(-Range, Range);
+		cnt_while++;
 
-		CurrentPos.x += RangeX;
-		CurrentPos.z += RangeZ;
-
-		FAILED_CHECK_NONERETURN(FindPathForCurrentNavi(CurrentPos));
-		if (mCurrentPathList.empty() == false)
+		// 각 셀에 연결된 랜덤위치 반환
+		// 이전 인덱스 X
+		int NextIndex = CurrentCell->Get_RandomNeighborIndex();
+		if (NextIndex == -1)
+			continue;
+		bool isInListCell = false;
+		for (auto& index : ListPreIndex)
 		{
-			*GoalPos = CurrentPos;
-			return true;
+
+			if (index == NextIndex)
+			{
+				isInListCell = true;
+				break;
+			}
 		}
-		count++;
-		if (count > 30)
-			return false;
+
+		if (isInListCell == false)
+		{
+			ListPreIndex.push_front(NextIndex);
+			const CCell* nextCell = mCurrentNavi->Get_CellFromIndex(NextIndex);
+			if (nextCell != nullptr && nextCell->Get_CellType() != CCell::CELLTYPE_STOP)
+			{
+				CurrentCell = nextCell;
+				cnt_neviorSearch++;
+			}
+		}
+
+		if (cnt_while > 500)
+			break;
 	}
-	*/
+
+	if (StartCell == CurrentCell)
+		return false;
+
+	_float3 TargetPos = CurrentCell->Get_CenterPoint();
+
+	FAILED_CHECK_NONERETURN(FindPathForCurrentNavi(TargetPos));
+	if (mCurrentPathList.empty() == false)
+	{
+		*GoalPos = TargetPos;
+		return true;
+	}
+
 	return true;
 }
 

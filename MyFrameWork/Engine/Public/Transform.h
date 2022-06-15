@@ -110,7 +110,10 @@ public:
 	void MovetoTarget(_float3 vTarget, _double fDeltaTime);
 
 	void Set_Rotate(_float3 rot);
-	
+	void Set_Rotate(const _float4x4& rotmat);
+	_quaterion Get_Quaterion();
+	_quaterion Get_DegreeFormQuater(_float3 rot);
+
 	// Rot
 	HRESULT Turn(_fvector vAxis,_double time);
 	void Turn_CW(_float3 vAxis, _float fDeltaTime  ,_float speed);

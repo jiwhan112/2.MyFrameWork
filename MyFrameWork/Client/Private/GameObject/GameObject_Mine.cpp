@@ -223,8 +223,15 @@ void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
 		tile->Add_TileTask_this();
 		return;
 	}
+	// 이미지 타일이 있다면 리턴
+	if (mSearchTile)
+	{
+		tile->Add_TileTask_this();
+		return;
+	}
 
-	// 뚫린 타일 위치 찾기
+
+	// 뚫을 타일 위치 찾기
 	_float3 GoalPos =  tile->Get_AbleTilePos(0.5f);
 	
 	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();

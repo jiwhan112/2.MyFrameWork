@@ -128,13 +128,13 @@ public:
 	_bool	Get_PathList_Frontpop(_float3* NextPosition);
 	// 갈 수 있는 위치 뽑기
 	_bool	FindPathRandAblePostition(_int fRange, _float3* GoalPos);
-	_bool	FindPathRandDungeonAblePostition(_float3* GoalPos);
+	_bool	FindPathRandDungeonAblePostition(_uint Mincount,_uint NebiorMaxCount,_float3* GoalPos);
 
 	_float3 Get_PathGoalPostition()const;
 
 	void	Set_IsTerrainHeight(_bool b) { mIsTerrainHeight = b; }
 	_bool	Get_IsTerrainHeight() const { return mIsTerrainHeight; }
-	_float3	Get_TerrainHeightPostition() ;
+	_float3	Get_TerrainHeightPostition();
 	void	Tick_LookUpdate(_double time);
 
 

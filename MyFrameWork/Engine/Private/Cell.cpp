@@ -7,6 +7,22 @@ CCell::CCell()
 	//Safe_AddRef(m_pDeviceContext);
 }
 
+_int CCell::Get_RandomNeighborIndex() const
+{
+	int count = 0;
+	int RandomIndex = -1;
+	while (RandomIndex == -1)
+	{
+		int rand = CHelperClass::RandomInt(0, 3);
+		RandomIndex = mNeighborIndex[rand];
+		count++;
+		if (count > 10)
+			return -1;
+	}
+	return RandomIndex;
+}
+
+
 HRESULT CCell::NativeConstruct(const _float3 * pPoints, _uint iIndex)
 {
 	// 점 3개와 인덱스 초기화

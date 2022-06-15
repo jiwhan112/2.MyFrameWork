@@ -105,7 +105,6 @@ public:
 	enum E_MOVEPOSFLAG
 	{
 		MOVE_POS_NEAR,
-		MOVE_POS_ABLEDUNGEON, // 던전에서 갈 수 있는 곳 찾기
 		MOVE_POS_TILE,
 		MOVE_POS_PICK,
 		MOVE_POS_GOALPOS,

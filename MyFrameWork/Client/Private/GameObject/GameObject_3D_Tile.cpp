@@ -108,6 +108,7 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 
 		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_RBUTTON)& DIS_Down)
 		{
+			// 타일 정보 넣기
 			Add_TileTask_this();
 			return S_OK;
 		}
@@ -181,21 +182,20 @@ _float3 CGameObject_3D_Tile::Get_AbleTilePos(_float offset)
 	_float3 worldPos = Get_WorldPostition();
 	_float3 goalPos = worldPos;
 
+	// 채굴 포인트 마다 타일 위치 변경
 	if (mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_LEFT] == -1)
 	{ 
 		goalPos = _float3(worldPos.x - offsetPos,worldPos.y,worldPos.z);
-
 	}
 
 	else if (mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_RIGHT] == -1)
 	{
-		goalPos = _float3(worldPos.x + offsetPos, worldPos.y, worldPos.z);
-
+		goalPos = _float3(worldPos.x + offsetPos*2, worldPos.y, worldPos.z);
 	}
 
 	else if (mNeighborIndex[E_NEIGHBOR_TILE::NEIGHBOR_TILE_TOP] == -1)
 	{
-		goalPos = _float3(worldPos.x , worldPos.y, worldPos.z + offsetPos);
+		goalPos = _float3(worldPos.x , worldPos.y, worldPos.z + offsetPos*2);
 
 	}
 

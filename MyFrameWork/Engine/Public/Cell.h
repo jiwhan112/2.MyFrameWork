@@ -68,7 +68,9 @@ public:
 		return mCenterPoint;
 	}
 
-
+	// 갈 수 있는 랜덤한 인접셀
+	_int Get_RandomNeighborIndex()const;
+	
 
 public:
 	HRESULT NativeConstruct(const _float3* pPoints, _uint iIndex);

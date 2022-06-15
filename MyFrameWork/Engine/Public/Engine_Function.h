@@ -119,7 +119,7 @@ namespace Engine
 				return MIN;
 
 			int newint = MAX + abs(MIN);
-			return rand() % newint + MIN;
+			return rand() % newint - MIN;
 		}
 
 		// 0~1까지의 랜덤 값 생성

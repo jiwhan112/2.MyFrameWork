@@ -47,7 +47,12 @@ public:
 	{
 		return &mVecCells;
 	}
-	
+	const CCell* Get_CellFromIndex(_uint index) const
+	{
+		return mVecCells[index];
+	}
+
+
 	HRESULT SetUp_NewNaviMesh(list<_float3*>& vpointlist);
 	HRESULT SetUp_AutoMesh(class CVIBuffer_Terrain* terrain);
 
