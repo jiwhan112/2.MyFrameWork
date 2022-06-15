@@ -674,9 +674,7 @@ void CGameObject_3D_Dynamic::Set_RotationFlag(_float3 Target)
 
 HRESULT CGameObject_3D_Dynamic::WorldPathLerp(_float range)
 {
-
 	// 월드맵 경로 보간
-	
 	// 1. 인접 인덱스라면 삭제하는 방법
 	// 생각보다 괜찮음..
 	list<CCell*> newPath;

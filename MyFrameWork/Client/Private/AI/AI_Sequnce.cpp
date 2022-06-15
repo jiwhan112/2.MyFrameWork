@@ -558,19 +558,22 @@ HRESULT CSequnce_WorldMove_Enemy::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 
 	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+	// 카운터를 올림
+	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION)); 
 
-	//	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
 	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
 
-	CurrentPath = 0;
-	mSeqData.MaxPath = 0;
+	funcion->Set_Funcion(CAction_Function::FUNCION_ENEMY_MOVENEXT);
+
+	mSeqData.GoalPostition = _float3();
 	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(funcion->Clone());
 
 	Safe_Release(movepath);
-	//	Safe_Release(funcion);
+	Safe_Release(funcion);
 
 	// 객체 연결
 	Setup_TargetNode(obj);
@@ -587,17 +590,9 @@ void CSequnce_WorldMove_Enemy::Restart(void * SeqData)
 		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDMOVE_ENEMY));
 	}
 
-
-
-	// auto move1 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
-	// NULL_CHECK_BREAK(move1);
-	// ((CAction_MOVE*)move1)->Set_GoalPostiton(mSeqData.TargetPos1);
-	// auto move2 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH,1);
-	// NULL_CHECK_BREAK(move2);
-	// ((CAction_MOVE*)move2)->Set_GoalPostiton(mSeqData.TargetPos2);
-	// auto move3 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH,2);
-	// NULL_CHECK_BREAK(move3);
-	// ((CAction_MOVE*)move3)->Set_GoalPostiton(mSeqData.TargetPos3);
+	 auto move1 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+	 NULL_CHECK_BREAK(move1);
+	 ((CAction_MOVE*)move1)->Set_GoalPostiton(mSeqData.GoalPostition);
 }
 
 CSequnce_WorldMove_Enemy * CSequnce_WorldMove_Enemy::Create(CGameObject_3D_Dynamic * targetobj)

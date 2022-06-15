@@ -4,6 +4,7 @@
 
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_Mine.h"
+#include "GameObject/GameObject_Enemy.h"
 
 CAction_DynamicBase::CAction_DynamicBase(const char * str, CGameObject_3D_Dynamic * obj)
 	:CNode_Action(str), mDynamicObject(obj)
@@ -154,16 +155,15 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 	switch (meMoveType)
 	{
 	case Client::CAction_MOVE::MOVE_POS_NEAR:
-		// 던전에서 갈 수 있는 곳 랜덤
+		// 갈 수 있는 타일 랜덤 탐색
 		if (mDynamicObject->FindPathRandDungeonAblePostition(10, 50, &mGoalPosition) == false)
 		{
 			// 탐색실패 
 			mGoalPosition = mStartPosition;
 		}
-	//	mGoalPosition = mDynamicObject->Get_PathGoalPostition();
 		break;
 	case Client::CAction_MOVE::MOVE_POS_TILE:
-		// 이미 탐색된 정보 활용
+		// 타일 정보 
 		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
 		break;
 	case Client::CAction_MOVE::MOVE_POS_PICK:
@@ -171,6 +171,7 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
 		break;
 	case Client::CAction_MOVE::MOVE_POS_GOALPOS:
+		// Set_Goal을 넣어주고 탐색
 		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
 		break;
 	case Client::CAction_MOVE::MOVE_POS_TARGET:
@@ -336,6 +337,9 @@ HRESULT CAction_Function::Action(_double timer)
 	case CAction_Function::FUNCION_DIE:
 		mDynamicObject->DieFunc();
 		break;
+	case CAction_Function::FUNCION_ENEMY_MOVENEXT:
+		((CGameObject_Enemy*)mDynamicObject)->Set_MoveCount();
+
 	default:
 		break;
 	}

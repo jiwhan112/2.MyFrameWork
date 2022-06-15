@@ -310,6 +310,7 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 		}
 		
 	}
+
 	if (PlayerCnt == 0)
 		return false;
 
@@ -329,16 +330,21 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 		}
 	}
 
-	// 3. 무리이동 시키기
+	// 3. 같은 경로 따라가게 하기
 	FAILED_CHECK_NONERETURN(OrderObject->Select_WorldPostition(worldPos));
 
-	//for (auto& unit : *unitlist)
-	//{
-	//	if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
-	//	{
-	//		FAILED_CHECK_NONERETURN(OrderObject);
-	//	}
-	//}
+	// 4. 따라가게 하기
+	// TestCode
+	for (auto& unit : *unitlist)
+	{
+		if (unit->Get_UnitType() == CGameObject_3D_Dynamic::UNIT_PLAYER)
+		{
+			FAILED_CHECK_NONERETURN(unit->Select_WorldPostition(worldPos));
+
+		}
+	}
+
+
 
 	Safe_Delete(task);
 	return true;

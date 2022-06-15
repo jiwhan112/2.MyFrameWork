@@ -55,14 +55,11 @@ HRESULT CGameObject_Enemy::Tick_World(_double TimeDelta)
 
 
 	mWorldCreateTimer += TimeDelta;
-	if (mWorldCreateTimer > 5)
+	if (mWorldCreateTimer > mWorldMoveTimeMax && mIsCreateOrder == false)
 	{
-		mTimer_Dungeon += TimeDelta;
-		if (mTimer_Dungeon > 3)
-		{
-			mTimer_Dungeon = 0;
-			Set_GoDungeion();
-		}
+		Set_GoDungeon();
+		mIsCreateOrder = true;
+
 	}
 
 	return UPDATENONE;
@@ -119,10 +116,18 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_CARRIED));
 
 	// 소켓
-	// Add_Socket("crea_SnotPickaxe.fbx", "RArmDigit31");
+	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1), "wep_WarriorSword_T1.fbx", "RArmDigit22");
+
+
+	mMoveTarget[ENEMY_MOVETARGET_WORLD1] = mWorldTargetPos1;
+	mMoveTarget[ENEMY_MOVETARGET_WORLD2] = mWorldTargetPos2;
+	mMoveTarget[ENEMY_MOVETARGET_WORLD3] = mWorldTargetPos3;
+	mMoveTarget[ENEMY_MOVETARGET_DUNGEON] = _float3();
+	mWorldMoveIndex = 0;
 
 	mWorldCreateTimer = 0;
-	mTimer_Dungeon = 0;
+	mWorldMoveTimeMax = 5;
+	mIsCreateOrder = false;
 
 	return S_OK;
 }
@@ -137,23 +142,26 @@ HRESULT CGameObject_Enemy::Init_AI()
 
 HRESULT CGameObject_Enemy::Init_AI_Enemy()
 {
-	// 던전에 들어왔을떄
+	// 1. 생성뒤에 던전으로 길찾기.
 
-	// 월드 생성시 
-
-	// 월드에서 던전으로 옴
-
-	/*CSequnce_WorldMove_Enemy* Seq_WorldMove = CSequnce_WorldMove_Enemy::Create(this);
+	CSequnce_WorldMove_Enemy* Seq_WorldMove = CSequnce_WorldMove_Enemy::Create(this);
 	CSequnce_WorldMove_Enemy::SEQWORLDMOVE_ENEMY WorldDesc;
-	WorldDesc.TargetPos1 = _float3(0, 0, 0);
 	Seq_WorldMove->Restart(&WorldDesc);
-	mComBehavior->Add_Seqeunce("WORLD_ENEMY", Seq_WorldMove);*/
+	mComBehavior->Add_Seqeunce("WORLD_ENEMY", Seq_WorldMove);
 
-	
+	// IDLE 
+	CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
+	CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
 
+	DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
+	DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_MELEE;
+
+	Seq_IDLE->Restart(&DefaultIdleDesc);
+	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
+
+
+	//
 	// 전투 시퀀스 
-
-
 
 	// IDLE TILE 정보 생성 예제
 	// CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
@@ -171,24 +179,47 @@ HRESULT CGameObject_Enemy::Init_AI_Enemy()
 	// 
 	// Seq_TILE->Restart(&DefaultTileDesc);
 	// mComBehavior->Add_Seqeunce("DIG", Seq_TILE);
-	// 
+
+
+	// 던전에 들어왔을떄
+	// 던전 Heart에 공격한다.
+	
+	return S_OK;
+}
+
+HRESULT CGameObject_Enemy::Set_MoveCount()
+{
+	mWorldMoveIndex++;
+	if (mWorldMoveIndex >= ENEMY_MOVETARGET_DUNGEON)
+	{
+
+		mWorldMoveIndex = ENEMY_MOVETARGET_DUNGEON;
+	}
+	mWorldCreateTimer = 0;
+	mWorldMoveTimeMax = 2;
+	mIsCreateOrder = false;
 
 	return S_OK;
 }
 
-HRESULT CGameObject_Enemy::Set_GoDungeion()
+HRESULT CGameObject_Enemy::Set_GoDungeon()
 {
-	//string NextKey = "WORLD_ENEMY";
-	//if (NextKey == mComBehavior->Get_CurrentSeqKey())
-	//	return S_OK;
+	// 현재 인덱스가 GoalPoint로 되서 경로 이동을 수행한다.
+	if (mWorldMoveIndex == E_ENEMY_MOVETARGET::ENEMY_MOVETARGET_DUNGEON)
+	{
+		Switch_MapType();
 
-	////CSequnce_WorldMove* Seq_WorldMove = CSequnce_WorldMove::Create(this);
-	//CSequnce_WorldMove_Enemy::SEQWORLDMOVE_ENEMY WorldDesc;
-	//WorldDesc.TargetPos1 = mWorldTargetPos1;
-	//WorldDesc.TargetPos2 = mWorldTargetPos2;
-	//WorldDesc.TargetPos3 = mWorldTargetPos3;
-	//FAILED_CHECK(mComBehavior->Select_Sequnce(NextKey, &WorldDesc));
+	}
+	else
+	{
+		// 던전에서 이동
 
+		// 월드 이동
+		_float3 GoalPos = mMoveTarget[mWorldMoveIndex];
+		CSequnce_WorldMove_Enemy::SEQWORLDMOVE_ENEMY MoveEnemyDesc;
+		MoveEnemyDesc.GoalPostition = GoalPos;
+		mComBehavior->Select_Sequnce("WORLD_ENEMY", &MoveEnemyDesc);
+	}
 
 	return S_OK;
 }

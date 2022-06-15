@@ -229,9 +229,8 @@ class CSequnce_WorldMove_Enemy :
 public:
 	typedef struct tag_SeqWorldMove
 	{
-		_uint MaxPath;
-		_float3* TargetPos = nullptr;
-		
+		_float3 GoalPostition = _float3();
+
 	}SEQWORLDMOVE_ENEMY;
 
 protected:
@@ -245,7 +244,6 @@ public:
 
 protected:
 	SEQWORLDMOVE_ENEMY					mSeqData;
-	_uint CurrentPath;
 
 public:
 	static CSequnce_WorldMove_Enemy* Create(CGameObject_3D_Dynamic* targetobj);

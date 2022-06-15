@@ -70,7 +70,7 @@ HRESULT CGameObject_Goblin::Init_Unit()
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SPAWNPOS));
 
 	// ╪рдо
-	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1), "crea_SnotPickaxe.fbx", "RArmDigit31");
+	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1), "wep_OgreClub.fbx", "RArmDigit22");
 
 	mIsPickTurn = false;
 	return S_OK;
