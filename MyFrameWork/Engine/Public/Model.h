@@ -42,6 +42,7 @@ public: // ani
 	HRESULT SetUp_AnimEnum(CAnimatior::E_COMMON_ANINAME e);
 	_double Get_AniTime_Ratio()const;
 	_double Get_AniTimeMax()const;
+	void Set_AniNoLoop();
 
 
 public:

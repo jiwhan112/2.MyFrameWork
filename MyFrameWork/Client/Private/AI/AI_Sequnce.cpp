@@ -954,7 +954,7 @@ HRESULT CSequnce_DIE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
 	// 애니메이션을 역재생해서 써야함..
-	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP,-1,false);
 	funcion->Set_Funcion(CAction_Function::FUNCION_DIE);
 
 	PushBack_LeafNode(ani->Clone());

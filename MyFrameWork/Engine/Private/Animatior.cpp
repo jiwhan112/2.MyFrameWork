@@ -57,10 +57,10 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices(_double timer)
 		// 애니메이션 채널의 해당 시간에 따른 뼈 위치 갱신
 		if (mIsFoward)
 		{
-			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(timer);
+			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices(timer);
 		}
-		else
-			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(-timer);
+		else if (mIsFoward == false)
+			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices(-timer);
 
 		if (mVecAnimations[m_iCurrentAniIndex]->Get_Finished())
 		{
@@ -94,7 +94,7 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices_OnlyTime(_double timer
 		{
 			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(timer);
 		}
-		else 
+		else if (mIsFoward == false)
 			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(-timer);
 
 		if (mVecAnimations[m_iCurrentAniIndex]->Get_Finished())
@@ -105,6 +105,13 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices_OnlyTime(_double timer
 		}
 	}
 	return S_OK;
+
+}
+
+void CAnimatior::Set_AniNoLoop()
+{
+	mVecAnimations[m_iCurrentAniIndex]->Set_Loop(false);
+//	mVecAnimations[m_iCurrentAniIndex].Set_Loop(false);
 
 }
 

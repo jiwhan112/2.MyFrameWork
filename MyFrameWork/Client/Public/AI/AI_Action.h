@@ -70,13 +70,14 @@ protected:
 public:
 	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
-	void Set_Animation(CAnimatior::E_COMMON_ANINAME e,int index = -1);
+	void Set_Animation(CAnimatior::E_COMMON_ANINAME e,int index = -1,_bool foward = true);
 	void Set_TimeMax(_double timeMax);
 
 private:
 	_double	mTimeMax=1;
 	_double	mCurrentTimer = 0;
 	_int	mAniIndex = -1;
+	_bool	mIsFoward = true;
 
 	E_DEALY_FALG					meDealyType = DEALY_NONE;
 	CAnimatior::E_COMMON_ANINAME	meAnimation = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE;

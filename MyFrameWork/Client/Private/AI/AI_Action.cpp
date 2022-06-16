@@ -51,7 +51,7 @@ HRESULT CAction_DEALY::ReStart(void* pArg)
 
 	if (meDealyType == CAction_DEALY::DEALY_ANI)
 	{
-		FAILED_CHECK(mDynamicObject->Set_AniEnum(meAnimation, mAniIndex));
+		FAILED_CHECK(mDynamicObject->Set_AniEnum(meAnimation, mAniIndex, mIsFoward));
 	}
 	return S_OK;
 }
@@ -80,12 +80,12 @@ HRESULT CAction_DEALY::Action(_double timer)
 	return S_OK;
 }
 
-void CAction_DEALY::Set_Animation(CAnimatior::E_COMMON_ANINAME e,int index)
+void CAction_DEALY::Set_Animation(CAnimatior::E_COMMON_ANINAME e,int index,_bool foward)
 {
 	meDealyType = CAction_DEALY::DEALY_ANI;
 	meAnimation = e;
 	mAniIndex = index;
-
+	mIsFoward = foward;
 }
 
 void CAction_DEALY::Set_TimeMax(_double timeMax)
@@ -351,7 +351,7 @@ HRESULT CAction_Function::Action(_double timer)
 		mDynamicObject->AttackFunc();
 		break;
 	case CAction_Function::FUNCION_DIE:
-		mDynamicObject->DieFunc();
+		mDynamicObject->Set_Dead();
 		break;
 	case CAction_Function::FUNCION_ENEMY_MOVENEXT:
 		((CGameObject_Enemy*)mDynamicObject)->Set_MoveCount();

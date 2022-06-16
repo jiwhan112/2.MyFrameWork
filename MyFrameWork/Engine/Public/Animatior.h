@@ -230,6 +230,7 @@ public:
 public:
 	HRESULT Update_CombinedTransformationMatrices(_double timer);
 	HRESULT Update_CombinedTransformationMatrices_OnlyTime(_double TimeDelta);
+	void Set_AniNoLoop();
 
 	// 애니메이션 뼈 찾기
 	CHierarchyNode* Find_HierarchyNode(const char* pName, _uint* pOut = nullptr) const;
@@ -241,7 +242,7 @@ private:
 
 private:
 	_int Find_Animation(string aniname) const;
-
+	
 
 
 private: // 애니메이터 기능

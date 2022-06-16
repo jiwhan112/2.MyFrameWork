@@ -49,7 +49,8 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 	m_PlayTimeAcc += m_TickPerSecond * TimeDelta;
 	if (m_IsFinished)
 	{
-		m_PlayTimeAcc = 0;
+		if (m_IsLoop)
+			m_PlayTimeAcc = 0;
 		m_IsFrame = true;
 	}
 

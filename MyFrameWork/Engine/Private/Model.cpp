@@ -236,6 +236,11 @@ _double CModel::Get_AniTimeMax() const
 	return mAnimator->Get_CurrentAnimaion()->Get_MaxAnimaionTime();
 }
 
+void CModel::Set_AniNoLoop()
+{
+	mAnimator->Set_AniNoLoop();
+}
+
 HRESULT CModel::SetUp_AnimName(string tag)
 {
 	mAnimator->Set_AniString(tag);

@@ -38,7 +38,11 @@ public:
 	{
 		return m_IsFinished;
 	}
-
+	void Set_Loop(_bool b) 
+	{
+		m_IsLoop = b;
+	}
+	
 
 public:
 	HRESULT NativeConstruct(const char* pName, _double Duration, _double TickPerSecond);
@@ -72,6 +76,8 @@ private:
 
 	_bool		m_IsFinished = false;
 	_bool		m_IsFrame = false;
+	_bool		m_IsLoop = true;
+
 
 
 public:
