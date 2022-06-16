@@ -55,7 +55,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	Init_Unit();
 	Init_AI();
 
-	mDieFlag = false;
 	return S_OK;
 }
 
@@ -123,8 +122,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
 
-	if (mDieFlag)
-		Select_Die();
+
 
 	//if (meTickType == TICK_TOOL)
 	//{
@@ -956,11 +954,13 @@ HRESULT CGameObject_3D_Dynamic::Select_Fall()
 HRESULT CGameObject_3D_Dynamic::Select_Die()
 {
 	// DIe
-	if (mComBehavior->Get_CurrentSeqKey() == "DIE")
-		return S_OK;
+	Set_Dead();
 
-	mComBehavior->Select_Sequnce("DIE");
-	mComModel->Set_AniNoLoop();
+	//if (mComBehavior->Get_CurrentSeqKey() == "DIE")
+	//	return S_OK;
+
+	//mComBehavior->Select_Sequnce("DIE");
+	//mComModel->Set_AniNoLoop();
 	return S_OK;
 }
 
@@ -1042,12 +1042,13 @@ HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
 {
 	 mHP -= Damage; 
 	 if (mHP <= 0)
-		 mDieFlag = true;
+		 DieFunc();
 	 return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::DieFunc()
 {
+	Set_Dead();
 //	Select_Die();
 	return S_OK;
 }

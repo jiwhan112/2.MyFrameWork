@@ -147,6 +147,7 @@ public:
 	{
 		meMoveType = MOVE_POS_TARGET;
 		mMoveTarget = taget;
+
 	}
 
 private:

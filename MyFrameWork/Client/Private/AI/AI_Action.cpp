@@ -309,6 +309,8 @@ CAction_MOVE * CAction_MOVE::Clone()
 void CAction_MOVE::Free()
 {
 	__super::Free();
+	Safe_Release(mMoveTarget);
+
 	
 }
 

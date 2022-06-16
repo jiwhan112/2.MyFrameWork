@@ -310,7 +310,7 @@ class CSequnce_WorldAttack_Player:
 public:
 	typedef struct tag_SeqWorldAttack
 	{
-		CGameObject_3D_Dynamic* Target;
+		CGameObject_3D_Dynamic* Target = nullptr;
 
 	}SEQWORLDATTACK_PLY;
 
@@ -339,7 +339,7 @@ class CSequnce_WorldAutoAttack:
 public:
 	typedef struct tag_SeqWorldAutoAttack
 	{
-		CGameObject_3D_Dynamic* Target;
+		CGameObject_3D_Dynamic*  Target = nullptr;
 
 	}SEQWORLDAUTOATTACK;
 

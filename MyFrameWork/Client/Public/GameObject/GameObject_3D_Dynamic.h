@@ -237,7 +237,6 @@ protected: // 3D모델 Com / DESC 추가
 	_int							mMP=0; // 스킬
 	_int							mDamage = 10;
 
-	_bool							mDieFlag = false;
 
 public:
 	// 생성 위치
