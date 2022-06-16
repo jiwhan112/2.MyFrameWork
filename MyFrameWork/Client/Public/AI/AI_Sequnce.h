@@ -251,7 +251,7 @@ public:
 };
 
 // Seq_Attack_Player
-// 공격 시퀀스
+// 플레이어 공격 시퀀스
 class CSequnce_WorldAttack_Player:
 	public CSequnce_Base
 {
@@ -280,7 +280,7 @@ public:
 	virtual void Free()override;
 };
 
-// 자돟공격 시퀀스
+// 적 자돟공격 시퀀스
 class CSequnce_WorldAutoAttack:
 	public CSequnce_Base
 {

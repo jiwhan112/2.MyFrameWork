@@ -211,11 +211,33 @@ HRESULT CDungeon_Manager::Check_Task()
 HRESULT CDungeon_Manager::Check_World()
 {
 	// 자동 전투 명령
-	auto unitlist = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_PLAYER);
-	auto unitlist2 = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_ENEMY);
+	auto PlayerList = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_PLAYER);
+	auto EnemyList = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_ENEMY);
 
+	float Range = 5.0f;
 
+	for (auto& ply : PlayerList)
+	{
+		if (ply->Get_CurrentMap() != CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+			continue;
 
+		for (auto& emy : EnemyList)
+		{
+			if (emy->Get_CurrentMap() != CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+				continue;
+
+			_float3 p = ply->Get_WorldPostition();
+			_float3 e = emy->Get_WorldPostition();
+			_float distance= _float3::Distance(p, e);
+
+			if (Range > distance)
+			{
+				// 서로 전투 명령
+				ply->Select_WorldAttack(emy);
+				emy->Select_WorldAttack(ply);
+			}
+		}
+	}
 
 	return S_OK;
 }

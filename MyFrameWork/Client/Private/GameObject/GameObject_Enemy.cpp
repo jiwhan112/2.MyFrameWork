@@ -82,6 +82,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	string str("hero_Warrior_T1.fbx");
 	strcpy_s(mModelDesc.mModelName, str.c_str());
 	Set_LoadModelDynamicDESC(mModelDesc);
+	mHP = 1000;
 
 	// Transform
 	_float3 SpawnPos = mSpawnPostitionENEMY;
@@ -101,7 +102,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	meUnitType = UNIT_ENEMY;
 	meEnemyType = CGameObject_Enemy::ENEMY_WARRIOR;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-	mTimeForSpeed = 0.5f;
+	mTimeForSpeed = 2.0f;
 	mRotSpeed = 10.0f;
 
 
@@ -159,27 +160,13 @@ HRESULT CGameObject_Enemy::Init_AI_Enemy()
 	Seq_IDLE->Restart(&DefaultIdleDesc);
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
+	// 자동 공격
+	//CSequnce_WorldAutoAttack* Seq_WorldAttack = CSequnce_WorldAutoAttack::Create(this);
+	//CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK attackDesc;
+	//attackDesc.Target = nullptr;
+	//Seq_WorldAttack->Restart(&attackDesc);
 
-	//
-	// 전투 시퀀스 
-
-	// IDLE TILE 정보 생성 예제
-	// CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
-	// CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
-	// 
-	// DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
-	// DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
-	// 
-	// Seq_IDLE->Restart(&DefaultIdleDesc);
-	// mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
-	// 
-	// CSequnce_TILE* Seq_TILE = CSequnce_TILE::Create(this);
-	// CSequnce_TILE::tag_SeqTILE DefaultTileDesc;
-	// DefaultTileDesc.Runtime = mTimeForSpeed * 0.5f;
-	// 
-	// Seq_TILE->Restart(&DefaultTileDesc);
-	// mComBehavior->Add_Seqeunce("DIG", Seq_TILE);
-
+	//mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
 
 	// 던전에 들어왔을떄
 	// 던전 Heart에 공격한다.
@@ -208,8 +195,8 @@ HRESULT CGameObject_Enemy::Set_GoDungeon()
 	if (mWorldMoveIndex == E_ENEMY_MOVETARGET::ENEMY_MOVETARGET_DUNGEON)
 	{
 		Switch_MapType();
-
 	}
+
 	else
 	{
 		// 던전에서 이동
@@ -241,6 +228,32 @@ HRESULT CGameObject_Enemy::CollisionFunc(_float3 PickPosition, _float dist, _uin
 	return S_OK;
 }
 
+HRESULT CGameObject_Enemy::Select_WorldAttack(CGameObject_3D_Dynamic* target)
+{
+	// 적을 클릭할 떄 실행
+
+	if (target == false)
+		return E_FAIL;
+
+	if (mTarget_Attack)
+	{
+		if (mTarget_Attack == target)
+		{
+			bool targetlife = mTarget_Attack->Get_IsLife();
+			if (targetlife)
+				return S_OK;
+			else
+				mTarget_Attack = nullptr;
+		}
+	}
+
+	mTarget_Attack = target;
+	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY desc;
+	desc.Target = mTarget_Attack;
+	mComBehavior->Select_Sequnce("WORLD_ATTACK", &desc);
+
+	return S_OK;
+}
 
 
 CGameObject_Enemy * CGameObject_Enemy::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)

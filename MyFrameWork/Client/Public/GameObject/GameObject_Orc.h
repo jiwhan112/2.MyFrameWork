@@ -43,7 +43,7 @@ public:
 
 	// AI
 public:
-	HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* target);
+	virtual HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* target)override;
 	
 
 protected:

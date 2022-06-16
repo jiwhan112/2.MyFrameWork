@@ -58,7 +58,8 @@ private:
 	// 각 액션의 클론 생성을 위해 원본을 저장해두자.
 	map<string, CNode_LeafTree*>		mMapLeafNode;
 
-	_uint		mSeqMode = 0;
+	_uint		mSeqMode	= 0;
+	// _uint		mSeqMode2	= 0;
 
 
 public:

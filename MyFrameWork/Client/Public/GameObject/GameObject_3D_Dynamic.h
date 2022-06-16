@@ -152,6 +152,10 @@ public:
 	HRESULT Select_Door();
 	HRESULT Select_Fall();
 	HRESULT Select_WorldPostition(_float3 pos);
+	virtual HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* obj);
+
+
+	
 	HRESULT Set_BehaviorMode(int index = -1);
 
 	// 전투 연출

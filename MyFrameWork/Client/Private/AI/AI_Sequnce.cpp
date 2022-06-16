@@ -704,44 +704,44 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 {
 	__super::NativeConstruct(obj);
 
-	//// 공격은 적이 죽을떄까지 루프를 돈다.
-	//Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	// 공격은 적이 죽을떄까지 루프를 돈다.
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
 
-	//// 싸움이 걸리면 싸운다.
-	//CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
-	//if (ComBehavior == nullptr)
-	//	return E_FAIL;
+	// 싸움이 걸리면 싸운다.
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
 
-	//// 타겟에 다가간다 -> 싸우기 -> 피격 
-	//CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
-	//CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-	//CAction_Function* attackFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
-	//// 조건 판단
-	//CDeco_Minus* MinusDeco = (CDeco_Minus*)ComBehavior->Clone_Leaf(TAGDECO(DECO_MINUS));
-
-
-	//movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	//movepath->Set_TimeMax(obj->Get_TimeForSpeed());
-	//movepath->Set_Postition(CAction_MOVE::MOVE_POS_TARGET);
-
-	//ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
-	//attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
-
-	//testMinusDeco->Set_Value(nullptr);
-
-	//PushBack_LeafNode(movepath->Clone());
-	//PushBack_LeafNode(ani->Clone());
-	//PushBack_LeafNode(attackFunc->Clone());
-	//PushBack_LeafNode(testMinusDeco->Clone());
+	// 타겟에 다가간다 -> 싸우기 -> 피격 
+	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_Function* attackFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+	// 조건 판단
+	CDeco_Minus* MinusDeco = (CDeco_Minus*)ComBehavior->Clone_Leaf(TAGDECO(DECO_MINUS));
 
 
-	//Safe_Release(movepath);
-	//Safe_Release(ani);
-	//Safe_Release(attackFunc);
-	//Safe_Release(testMinusDeco);
+	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TARGET);
 
-	//// 객체 연결
-	//Setup_TargetNode(obj);
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
+	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
+
+	MinusDeco->Set_Value(nullptr);
+
+	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(ani->Clone());
+	PushBack_LeafNode(attackFunc->Clone());
+	PushBack_LeafNode(MinusDeco->Clone());
+
+
+	Safe_Release(movepath);
+	Safe_Release(ani);
+	Safe_Release(attackFunc);
+	Safe_Release(MinusDeco);
+
+	// 객체 연결
+	Setup_TargetNode(obj);
 	return S_OK;
 }
 

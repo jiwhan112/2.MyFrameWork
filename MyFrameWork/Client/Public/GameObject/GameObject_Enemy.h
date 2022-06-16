@@ -73,6 +73,9 @@ public:
 
 
 	// ¸ðµ¨ ±¸Çö 
+	virtual HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* target)override;
+
+
 protected:
 	_double				mWorldCreateTimer = 0;
 	_bool				mIsCreateOrder = false;

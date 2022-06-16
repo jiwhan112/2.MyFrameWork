@@ -38,7 +38,8 @@ public:
 	HRESULT Init_AI_Default();
 
 	// ¸ðµ¨ ±¸Çö 
-	HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* target); 
+	
+	virtual HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* target)override;
 
 
 protected:

@@ -352,6 +352,7 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 
 	else if (meUnitType == UNIT_ENEMY)
 	{
+		
 
 	}
 
@@ -880,6 +881,14 @@ HRESULT CGameObject_3D_Dynamic::Select_WorldPostition(_float3 pos)
 	mTarget_Attack = nullptr;
 
 	FAILED_CHECK(mComBehavior->Select_Sequnce("WORLD_MOVE"));
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Select_WorldAttack(CGameObject_3D_Dynamic * obj)
+{
+	// 공격 명령 // 마인은 수행안함
+
+
 	return S_OK;
 }
 
