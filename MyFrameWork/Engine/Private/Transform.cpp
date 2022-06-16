@@ -511,7 +511,7 @@ HRESULT CTransform::LookAt_Tick(_double Deltatime, _float speed)
 	_float3 vPos = mWorldMatrix.Translation();
 	vPos.y = 0;
 
-	if (_float3::Distance(vPos, mTargetPos) < 0.3f)
+	if (_float3::Distance(vPos, mTargetPos) < 0.2f)
 	{
 		mIsRotating = false;
 		return S_OK;
@@ -527,6 +527,7 @@ HRESULT CTransform::LookAt_Tick(_double Deltatime, _float speed)
 	if (0.9f < lookDot)
 	{
 		// 회전 한계
+		mIsRotating = false;
 		return S_OK;
 	}
 	else
@@ -541,7 +542,7 @@ HRESULT CTransform::LookAt_Tick(_double Deltatime, _float speed)
 		else
 			Turn_CCW(_float3::Up, Deltatime, 10);
 
-		mIsRotating = false;
+	//	mIsRotating = false;
 
 		return S_OK;
 	}
