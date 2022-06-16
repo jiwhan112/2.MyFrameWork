@@ -65,24 +65,7 @@ HRESULT CGameObject_Enemy::Tick_World(_double TimeDelta)
 		}
 	}
 
-	// 자동 전투
-	if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
-	{
-		auto PlayerList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_PLAYER);
-		const _float Range = 5.f;
-		for (auto& plyobj : PlayerList)
-		{
-			if (plyobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
-			{
-				_float dis = _float3::Distance(plyobj->Get_WorldPostition(), Get_WorldPostition());
-				if (dis < Range)
-				{
-					Select_WorldAttack(plyobj);
-					break;
-				}
-			}
-		}
-	}
+	
 	
 
 	return UPDATENONE;

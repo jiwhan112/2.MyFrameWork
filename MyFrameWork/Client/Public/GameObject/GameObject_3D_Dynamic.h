@@ -17,8 +17,6 @@ class CGameObject_3D_Dynamic  :
 	public CGameObject_Base
 {
 public:
-	
-
 	enum E_MAPTYPE
 	{
 		MAPTYPE_DUNGEON,
@@ -33,8 +31,6 @@ public:
 		TICK_TOOL,
 		TICK_TYPE_END,
 	};
-
-	
 
 protected:
 	explicit CGameObject_3D_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -148,6 +144,7 @@ protected:
 	HRESULT Init_Collider();
 	HRESULT Set_Terrain_HeightY(class CGameObject_MyTerrain* terrain);
 	HRESULT Set_Sequnce(const char* statename, void* desc);
+	HRESULT	Check_AutoAttackForWorld();
 
 public:
 	HRESULT Select_Door();

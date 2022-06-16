@@ -219,12 +219,16 @@ HRESULT CGameObject_3D_Dynamic::Tick_World(_double TimeDelta)
 		if (mIsTerrainHeight)
 			Set_Terrain_HeightY(mCurrentMap);
 	}
+	
 
 	return UPDATENONE;
 }
 
 HRESULT CGameObject_3D_Dynamic::LateTick_World(_double TimeDelta)
 {
+	Check_AutoAttackForWorld();
+
+
 	return UPDATENONE;
 }
 
@@ -820,6 +824,57 @@ HRESULT CGameObject_3D_Dynamic::Set_Sequnce(const char * statename, void * desc)
 {
 	// 각 상태마다 void 포인터로 넘겨서 정보전달..
 	FAILED_CHECK(mComBehavior->Select_Sequnce(statename, desc));
+	return S_OK;
+}
+
+HRESULT CGameObject_3D_Dynamic::Check_AutoAttackForWorld()
+{
+	// 자동전투
+	if (meUnitType == UNIT_PLAYER)
+	{
+		// 공격중이 아니면 자동 전투 수행
+		if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
+		{
+			auto EnemyList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_ENEMY);
+			const _float Range = 5.f;
+			for (auto& ememy : EnemyList)
+			{
+				if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+				{
+					_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
+					if (dis < Range)
+					{
+						Select_WorldAttack(ememy);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	else if (meUnitType == UNIT_ENEMY)
+	{
+		// 공격중이 아니면 자동 전투 수행
+		if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
+		{
+			auto PlayerList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_PLAYER);
+			const _float Range = 5.f;
+			for (auto& plyobj : PlayerList)
+			{
+				if (plyobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+				{
+					_float dis = _float3::Distance(plyobj->Get_WorldPostition(), Get_WorldPostition());
+					if (dis < Range)
+					{
+						Select_WorldAttack(plyobj);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+
 	return S_OK;
 }
 

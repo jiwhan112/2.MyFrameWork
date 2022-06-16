@@ -17,7 +17,6 @@ CGameObject_BOSS::CGameObject_BOSS(const CGameObject_BOSS& rhs)
 HRESULT CGameObject_BOSS::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-
 	mCurrentShaderPass = 0;
 
 	return S_OK;
@@ -26,8 +25,6 @@ HRESULT CGameObject_BOSS::NativeConstruct_Prototype()
 HRESULT CGameObject_BOSS::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
-
-
 	return S_OK;
 }
 
@@ -44,8 +41,6 @@ HRESULT CGameObject_BOSS::LateTick_World(_double TimeDelta)
 {
 	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
 		return UPDATEERROR;
-
-
 
 	return UPDATENONE;
 }
@@ -74,9 +69,8 @@ HRESULT CGameObject_BOSS::Init_Unit()
 
 	meUnitType = UNIT_BOSS;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-	mTimeForSpeed = 0.5f;
-
-	
+	mTimeForSpeed = 2.0f;
+	mTimeForSpeed_World = 3.0f;
 
 
 	// 충돌 정보

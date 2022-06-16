@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Orc.h"
+#include "GameObject/Dungeon_Manager.h"
+#include "GameObject/Dungeon_Objects.h"
 #include "AI/AI_Sequnce.h"
-
 
 CGameObject_Orc::CGameObject_Orc(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CGameObject_3D_Dynamic(pDevice, pDeviceContext)
@@ -50,6 +51,25 @@ HRESULT CGameObject_Orc::Tick_World(_double TimeDelta)
 {
 	FAILED_CHECK(__super::Tick_World(TimeDelta));
 	
+	// 자동 전투
+	/*if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
+	{
+		auto EnemyList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_ENEMY);
+		const _float Range = 5.f;
+		for (auto& plyobj : EnemyList)
+		{
+			if (plyobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+			{
+				_float dis = _float3::Distance(plyobj->Get_WorldPostition(), Get_WorldPostition());
+				if (dis < Range)
+				{
+					Select_WorldAttack(plyobj);
+					break;
+				}
+			}
+		}
+	}*/
+
 
 
 	return S_OK;
