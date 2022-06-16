@@ -511,7 +511,8 @@ HRESULT CGameObject_3D_Dynamic::CollisionFunc(_float3 PickPosition, _float dist,
 
 HRESULT CGameObject_3D_Dynamic::CollisionFunc(CGameObject_3D_Dynamic * dynamic,_double Timer)
 {
-	if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+	// Test
+	//if (meCurrentMap == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
 	{
 		// 서로 밀어내기
 		_float3 look = dynamic->Get_WorldPostition() - Get_WorldPostition();
@@ -986,6 +987,22 @@ HRESULT CGameObject_3D_Dynamic::AttackFunc()
 	return S_OK;
 }
 
+HRESULT CGameObject_3D_Dynamic::RotTargetFunc()
+{
+	if (mTarget_Attack)
+	{
+		if (mTarget_Attack->Get_Hp() <= 0)
+		{
+			mTarget_Attack = nullptr;
+		}
+		else
+		{
+			Set_RotationFlag(mTarget_Attack->Get_WorldPostition());
+		}
+	}
+	return S_OK;
+
+}
 HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
 {
 	 mHP -= Damage; 

@@ -356,6 +356,9 @@ HRESULT CAction_Function::Action(_double timer)
 	case CAction_Function::FUNCION_ENEMY_MOVENEXT:
 		((CGameObject_Enemy*)mDynamicObject)->Set_MoveCount();
 		break;
+	case CAction_Function::FUNCION_ROTFLAG:
+		//mDynamicObject->Set_RotationFlag();
+		break;
 
 	case CAction_Function::FUNCION_BOSS_FUNC1:
 	//	((CGameObject_BOSS*)mDynamicObject)->Set_MoveCount();

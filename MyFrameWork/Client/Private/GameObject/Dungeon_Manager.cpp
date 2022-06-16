@@ -194,16 +194,24 @@ HRESULT CDungeon_Manager::Add_Task_Gold(_uint index)
 {
 	return 	mDungeon_TaskMgr->Add_Task_Tile_Gold(index);
 }
+//HRESULT CDungeon_Manager::Add_Task_Tile_Room(_uint index)
+//{
+//	return 	mDungeon_TaskMgr->Add_Task_Tile_Gold(index);
+//}
+//HRESULT CDungeon_Manager::Add_Task_Tile_Room(_uint index)
+//{
+//	return 	mDungeon_TaskMgr->Add_Task_Tile_Gold(index);
+//}
 
 HRESULT CDungeon_Manager::Add_Task_WorldMove(_float3 WorldPos)
 {
-	return
-		mDungeon_TaskMgr->Add_Task_PlayerMoveWorld(WorldPos);
+	return	mDungeon_TaskMgr->Add_Task_PlayerMoveWorld(WorldPos);
 }
 HRESULT CDungeon_Manager::Add_Task_Player_WorldAttack(CGameObject_Base* target)
 {
 	return 	mDungeon_TaskMgr->Add_Task_PlayerAttackWorld(target);
 }
+
 
 HRESULT CDungeon_Manager::Check_Task()
 {

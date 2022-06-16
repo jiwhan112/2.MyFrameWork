@@ -70,6 +70,16 @@ HRESULT CDungeon_Task::Add_Task_Tile_Gold(_uint index)
 	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_GOLD, (void*)&index);
 }
 
+HRESULT CDungeon_Task::Add_Task_Tile_Room(_float3 pos)
+{
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_TILE_ROOM, (void*)&pos);
+}
+
+HRESULT CDungeon_Task::Add_Task_Tile_Build(_float3 pos)
+{
+	return Add_Task(CDungeon_Task::E_TASK_TYPE::TASK_BUILD, (void*)&pos);
+}
+
 HRESULT CDungeon_Task::Add_Task_PlayerMoveWorld(_float3 Worldpos)
 {
 

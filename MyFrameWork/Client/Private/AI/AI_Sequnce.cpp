@@ -641,6 +641,8 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
 	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_Function* attackFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+	CAction_Function* rotFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+	
 	// 조건 판단
 	CDeco_Minus* MinusDeco = (CDeco_Minus*)ComBehavior->Clone_Leaf(TAGDECO(DECO_MINUS));
 
@@ -651,10 +653,12 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
 	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
+	rotFunc->Set_Funcion(CAction_Function::FUNCION_ROTFLAG);
 
 	MinusDeco->Set_Value(nullptr);
 
 	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(rotFunc->Clone());
 	PushBack_LeafNode(ani->Clone());
 	PushBack_LeafNode(attackFunc->Clone());
 	PushBack_LeafNode(MinusDeco->Clone());
@@ -664,7 +668,8 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 	Safe_Release(ani);
 	Safe_Release(attackFunc);
 	Safe_Release(MinusDeco);
-
+	Safe_Release(rotFunc);
+	
 	// 객체 연결
 	Setup_TargetNode(obj);
 	return S_OK;
@@ -706,8 +711,6 @@ CSequnce_WorldAttack_Player * CSequnce_WorldAttack_Player::Create(CGameObject_3D
 void CSequnce_WorldAttack_Player::Free()
 {
 	__super::Free();
-	
-
 }
 
 HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
@@ -727,6 +730,7 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
 	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_Function* attackFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+	CAction_Function* rotFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 	// 조건 판단
 	CDeco_Minus* MinusDeco = (CDeco_Minus*)ComBehavior->Clone_Leaf(TAGDECO(DECO_MINUS));
 
@@ -737,10 +741,12 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE0);
 	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
+	rotFunc->Set_Funcion(CAction_Function::FUNCION_ROTFLAG);
 
 	MinusDeco->Set_Value(nullptr);
 
 	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(rotFunc->Clone());
 	PushBack_LeafNode(ani->Clone());
 	PushBack_LeafNode(attackFunc->Clone());
 	PushBack_LeafNode(MinusDeco->Clone());
@@ -749,6 +755,7 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	Safe_Release(movepath);
 	Safe_Release(ani);
 	Safe_Release(attackFunc);
+	Safe_Release(rotFunc);
 	Safe_Release(MinusDeco);
 
 	// 객체 연결

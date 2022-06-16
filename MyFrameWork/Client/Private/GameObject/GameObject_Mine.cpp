@@ -99,6 +99,7 @@ HRESULT CGameObject_Mine::Init_Unit()
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 	desc.mOffset = _float3(0, size, 0);
+	size = size * 0.5f;
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Init_Collider();

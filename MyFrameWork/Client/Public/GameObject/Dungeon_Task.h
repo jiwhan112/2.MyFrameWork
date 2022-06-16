@@ -18,6 +18,8 @@ public:
 	{
 		TASK_TILE,
 		TASK_GOLD,
+		TASK_TILE_ROOM, // 방 타일 바꾸기
+		TASK_BUILD,		// 방에 침대 생성
 
 		// 월드 명령
 		TASK_PLAYER_MOVE_WORLD, 
@@ -53,6 +55,8 @@ public:
 	// 글로벌 작업 저장
 	HRESULT Add_Task_Tile_Rock(_uint index);
 	HRESULT Add_Task_Tile_Gold(_uint index);
+	HRESULT Add_Task_Tile_Room(_float3 pos);
+	HRESULT Add_Task_Tile_Build(_float3 pos);
 
 	// 플레이어 캐릭터 공격
 	HRESULT Add_Task_PlayerMoveWorld(_float3 Worldpos);

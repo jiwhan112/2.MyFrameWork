@@ -160,6 +160,7 @@ public:
 	virtual HRESULT AttackFunc();
 	virtual HRESULT HitFunc(_int Damage);
 	virtual HRESULT DieFunc();
+	HRESULT RotTargetFunc();
 
 
 	// SOCKET
