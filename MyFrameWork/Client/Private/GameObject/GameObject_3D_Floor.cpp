@@ -29,12 +29,22 @@ HRESULT CGameObject_3D_Floor::Set_Component()
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
 	}
 
-	/*if (mComTexture == nullptr)
+	if (mComTexture == nullptr)
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX), TEXT("Com_Texture"), (CComponent**)&mComTexture));
-	}*/
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP), TEXT("Com_Texture"), (CComponent**)&mComTexture));
+		mComTexture->Set_TextureMap(TexName1);
+
+	}
 
 	return S_OK;
+}
+
+HRESULT CGameObject_3D_Floor::Set_ConstantTable_Model()
+{
+	if (mComTexture == nullptr)
+		return S_OK;
+	return S_OK;
+
 }
 
 HRESULT CGameObject_3D_Floor::NativeConstruct_Prototype()
@@ -74,17 +84,21 @@ HRESULT CGameObject_3D_Floor::Render()
 {
 	FAILED_CHECK(Set_ConstantTable_World());
 	FAILED_CHECK(Set_ConstantTable_Light());
-
+//	FAILED_CHECK(Set_ConstantTable_Model());
+	
 
 	if (mComModel != nullptr)
 	{
 		_uint iNumMaterials = mComModel->Get_NumMaterials();
 
+		mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE);
+
+
 		// 재질 개수만큼 루프
 		for (int i = 0; i < iNumMaterials; ++i)
 		{
 			// 1. Diffuse 텍스처 설정
-			mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
+		//	mComModel->Bind_OnShader(mComShader, i, aiTextureType_DIFFUSE, STR_TEX_DIFFUSE);
 
 			// 2. 랜더링
 			// 여기서 뼈를 넘긴다.

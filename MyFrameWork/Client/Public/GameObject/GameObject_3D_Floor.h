@@ -18,7 +18,7 @@ public:
 	{
 		// 기본
 		TICKTYPE_NONE,		// 생성
-		TICKTYPE_VISIBLE,   // 생성안된상태
+		TICKTYPE_PRE,		// 생성안된상태
 		TICKTYPE_PICK,		// 선택 상태
 		TICKTYPE_END,
 	};
@@ -47,6 +47,8 @@ protected:
 
 	// 컴포넌트 설정
 	virtual HRESULT Set_Component()override;
+	virtual HRESULT Set_ConstantTable_Model()override; // 모델 설정
+
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
@@ -67,6 +69,8 @@ public:
 	
 	const char* FloorFbxName = "tileset_GreyRock_FLOOR.fbx";
 	const char* BuildFbxName = "tileset_GreyRock_FLOOR.fbx";
+	const char* TexName1 = "WATER.dds";
+	const char* TexName2 = "WATER.dds";
 
 
 protected:
