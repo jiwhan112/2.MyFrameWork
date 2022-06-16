@@ -75,7 +75,6 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	meUnitType = UNIT_BOSS;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
-	mRotSpeed = 10.0f;
 
 	
 

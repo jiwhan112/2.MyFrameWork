@@ -219,7 +219,6 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 
 	_bool						mIsTerrainHeight = false;
 
-	_float						mRotSpeed= 3.0f;
 	_float						mTimeForSpeed=0.3f;
 
 

@@ -94,7 +94,6 @@ HRESULT CGameObject_Mine::Init_Unit()
 	meUnitType = UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.5f;
-	mRotSpeed = 10.0f;
 
 	// 충돌 정보
 	COLLIDER_DESC desc;

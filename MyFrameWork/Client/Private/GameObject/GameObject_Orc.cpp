@@ -88,7 +88,6 @@ HRESULT CGameObject_Orc::Init_Unit()
 	meUnitType = UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
 	mTimeForSpeed = 0.1f;// Test
-	mRotSpeed = 10.0f;
 
 	// 충돌 정보
 	COLLIDER_DESC desc;
@@ -137,11 +136,11 @@ HRESULT CGameObject_Orc::Init_AI_Default()
 	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 
 
-	//CSequnce_WorldAttack_Player* Seq_Attack = CSequnce_WorldAttack_Player::Create(this);
-	//CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY DefaulAttackDesc;
-	//DefaulAttackDesc.Target = nullptr;
-	//Seq_Attack->Restart(&DefaulAttackDesc);
-	//mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_Attack);
+	CSequnce_WorldAttack_Player* Seq_Attack = CSequnce_WorldAttack_Player::Create(this);
+	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY DefaulAttackDesc;
+	DefaulAttackDesc.Target = nullptr;
+	Seq_Attack->Restart(&DefaulAttackDesc);
+	mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_Attack);
 
 	
 	return S_OK;

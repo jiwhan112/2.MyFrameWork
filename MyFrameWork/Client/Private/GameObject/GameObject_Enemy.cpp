@@ -102,8 +102,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	meUnitType = UNIT_ENEMY;
 	meEnemyType = CGameObject_Enemy::ENEMY_WARRIOR;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-	mTimeForSpeed = 2.0f;
-	mRotSpeed = 10.0f;
+	mTimeForSpeed = 5.0f;
 
 
 	// 충돌 정보
@@ -160,7 +159,7 @@ HRESULT CGameObject_Enemy::Init_AI_Enemy()
 	Seq_IDLE->Restart(&DefaultIdleDesc);
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
-	// 자동 공격
+	// 월드 이동 자동 공격
 	//CSequnce_WorldAutoAttack* Seq_WorldAttack = CSequnce_WorldAutoAttack::Create(this);
 	//CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK attackDesc;
 	//attackDesc.Target = nullptr;

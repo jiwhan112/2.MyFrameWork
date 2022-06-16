@@ -9,7 +9,6 @@ class CNode_Decorator;
 class CNode_Action;
 
 
-
 // 행동트리 컴포넌트
 class ENGINE_DLL CBehaviorTree final : public CComponent
 {
@@ -58,8 +57,7 @@ private:
 	// 각 액션의 클론 생성을 위해 원본을 저장해두자.
 	map<string, CNode_LeafTree*>		mMapLeafNode;
 
-	_uint		mSeqMode	= 0;
-	// _uint		mSeqMode2	= 0;
+	_uint			mSeqMode	= 0;
 
 
 public:
@@ -83,6 +81,16 @@ public:
 		SEQTYPE_LOOP, // 연속 상태
 		SEQTYPE_ONETIME, // 한번만
 		SEQTYPE_END,
+	};
+
+	// 시퀀스 행동 타입 
+	enum E_SEQMOTAIONTYPE
+	{
+		SEQMOTAIONTYPE_IDLE,
+		SEQMOTAIONTYPE_MOVE,
+		SEQMOTAIONTYPE_ATTACK,
+		SEQMOTAIONTYPE_PICK,
+		SEQMOTAIONTYPE_END
 	};
 
 protected:
@@ -114,7 +122,10 @@ public:
 	CNode_LeafTree* Get_CurrentLeafNode() const { return mCurrentLeafTree; }
 
 	void Set_SeqType(E_SEQTYPE e) { meSeqType = e; };
+	void Set_SeqMoveType(E_SEQMOTAIONTYPE e) { meSeqMoveType = e; };
+
 	E_SEQTYPE Get_SeqType() const { return meSeqType; };
+	E_SEQMOTAIONTYPE Get_SeqMoveType() const { return meSeqMoveType; }
 
 	void Set_SeqLevel(_uint level) { mSeqLevel = level; };
 	_uint Get_SeqLevel() const { return mSeqLevel; };
@@ -128,8 +139,9 @@ protected:
 
 	// 시퀀스에서는 해당하는 Leaf 노드 라스트로 가지고 있는다.
 	list< CNode_LeafTree*> mListLeafNodes;
-	_bool		mbEnd_Sequnce = false;
-	E_SEQTYPE	meSeqType = SEQTYPE_IDLE0;
+	_bool						mbEnd_Sequnce = false;
+	E_SEQTYPE					meSeqType = SEQTYPE_IDLE0;
+	E_SEQMOTAIONTYPE			meSeqMoveType = SEQMOTAIONTYPE_IDLE;
 
 	_uint		mSeqLevel = 0;
 

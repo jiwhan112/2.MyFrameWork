@@ -218,6 +218,10 @@ HRESULT CDungeon_Manager::Check_World()
 
 	for (auto& ply : PlayerList)
 	{
+		// 전투중이면 나간다.
+		auto ss = ply->Get_ComBehavior()->Get_CurrentSequnce();
+		auto s =  ply->Get_ComBehavior()->Get_CurrentSequnce()->Get_SeqMoveType();
+
 		if (ply->Get_CurrentMap() != CGameObject_3D_Dynamic::MAPTYPE_WORLD)
 			continue;
 
@@ -379,9 +383,6 @@ _bool CDungeon_Manager::Task_Player_Move_World(TASKBASE * task)
 
 		}
 	}
-
-
-
 	Safe_Delete(task);
 	return true;
 }
@@ -395,16 +396,16 @@ _bool CDungeon_Manager::Task_Player_Attack_World(TASKBASE * task)
 	// 2. 유닛에게 정보 전달 
 	for (auto& unit : *unitlist)
 	{
-		E_OBJECT_TYPE objtype = unit->Get_ObjectTypeID_Client();
+		E_UNITTYPE objtype =  unit->Get_UnitType();
+
 		switch (objtype)
 		{
-		case OBJECT_TYPE_3D_DYNAMIC_GOBLIN:
-			static_cast<CGameObject_Goblin*>(unit)->Select_WorldAttack(worldTarget);
+		case UNIT_PLAYER:
+			unit->Select_WorldAttack(worldTarget);
 			break;
-		case OBJECT_TYPE_3D_DYNAMIC_ORC:
-			static_cast<CGameObject_Orc*>(unit)->Select_WorldAttack(worldTarget);
+		case UNIT_ENEMY:
+			unit->Select_WorldAttack(worldTarget);
 			break;
-		
 		default:
 			break;
 		}

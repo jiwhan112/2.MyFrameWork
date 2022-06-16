@@ -110,6 +110,7 @@ HRESULT CSequnce_IDLE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	__super::NativeConstruct(obj);
 	
 	Set_SeqType(CNode_Seqeunce::E_SEQTYPE::SEQTYPE_IDLE0);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_IDLE);
 
 	// 생성은 각 객체가 복사될 떄 한다.
 
@@ -190,6 +191,8 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 {
 	__super::NativeConstruct(obj);
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_MOVE);
+
 
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
 	if (ComBehavior == nullptr)
@@ -282,6 +285,7 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 {
 	__super::NativeConstruct(obj);
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_MOVE);
 
 	// 타일 움직임 -> 애니메이션 -> 함수 실행;
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
@@ -361,6 +365,7 @@ HRESULT CSequnce_PICK::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	__super::NativeConstruct(obj);
 
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_LOOP);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_PICK);
 
 	// IDLE에서 사용할 상태 정의
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
@@ -420,6 +425,7 @@ HRESULT CSequnce_WorldIdle::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	__super::NativeConstruct(obj);
 
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_IDLE1);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_IDLE);
 
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
 	if (ComBehavior == nullptr)
@@ -480,6 +486,7 @@ HRESULT CSequnce_WorldMove_Player::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	__super::NativeConstruct(obj);
 
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_MOVE);
 
 	// 월드에서는 싸움이 걸리면 싸워야한다.
 	// 타일 움직임 -> 애니메이션 -> 함수 실행;
@@ -549,6 +556,9 @@ HRESULT CSequnce_WorldMove_Enemy::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	__super::NativeConstruct(obj);
 
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_MOVE);
+
+
 
 	// 월드에서는 싸움이 걸리면 싸워야한다.
 	// 타일 움직임 -> 애니메이션 -> 함수 실행;
@@ -621,6 +631,7 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 
 	// 공격은 적이 죽을떄까지 루프를 돈다.
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK);
 
 	// 싸움이 걸리면 싸운다.
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
@@ -706,6 +717,7 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	// 공격은 적이 죽을떄까지 루프를 돈다.
 	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK);
 
 	// 싸움이 걸리면 싸운다.
 	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
