@@ -87,9 +87,11 @@ HRESULT CGameObject_Orc::Init_Unit()
 
 	meUnitType = UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-	mTimeForSpeed = 0.1f;// Test
+	mTimeForSpeed = 1.0f;// Test
+	mTimeForSpeed_World = 1.0f;
 
 	// 충돌 정보
+
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 	desc.mOffset = _float3(0, size, 0);

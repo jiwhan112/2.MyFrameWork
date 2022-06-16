@@ -304,6 +304,7 @@ HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 		case DECOTYPE_BACKFIRST:
 			Restart();
 			mCurrentLeafTree = mListLeafNodes.front();
+			mCurrentLeafTree->ReStart();
 			break;
 		default:
 			break;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Enemy.h"
 #include "GameObject/Dungeon_Manager.h"
+#include "GameObject/Dungeon_Objects.h"
 #include "AI/AI_Sequnce.h"
 
 
@@ -53,14 +54,36 @@ HRESULT CGameObject_Enemy::Tick_World(_double TimeDelta)
 	if (UPDATEERROR == __super::Tick_World(TimeDelta))
 		return UPDATEERROR;
 
-
-	mWorldCreateTimer += TimeDelta;
-	if (mWorldCreateTimer > mWorldMoveTimeMax && mIsCreateOrder == false)
+	if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() == CNode_Seqeunce::SEQMOTAIONTYPE_IDLE)
 	{
-		Set_GoDungeon();
-		mIsCreateOrder = true;
+		mWorldIdleTimer += TimeDelta;
+		if (mWorldIdleTimer > mWorldMoveTimeMax && mIsCreateOrder == false)
+		{
+			Set_GoDungeon();
+			mIsCreateOrder = true;
 
+		}
 	}
+
+	// 자동 전투
+	if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
+	{
+		auto PlayerList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_PLAYER);
+		const _float Range = 5.f;
+		for (auto& plyobj : PlayerList)
+		{
+			if (plyobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+			{
+				_float dis = _float3::Distance(plyobj->Get_WorldPostition(), Get_WorldPostition());
+				if (dis < Range)
+				{
+					Select_WorldAttack(plyobj);
+					break;
+				}
+			}
+		}
+	}
+	
 
 	return UPDATENONE;
 }
@@ -102,12 +125,14 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	meUnitType = UNIT_ENEMY;
 	meEnemyType = CGameObject_Enemy::ENEMY_WARRIOR;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-	mTimeForSpeed = 5.0f;
+	mTimeForSpeed = 1.0f;
+	mTimeForSpeed_World = 1.0f;
 
 
 	// 충돌 정보
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+	desc.mOffset = _float3(0, size, 0);
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Init_Collider();
@@ -125,7 +150,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	mMoveTarget[ENEMY_MOVETARGET_DUNGEON] = _float3();
 	mWorldMoveIndex = 0;
 
-	mWorldCreateTimer = 0;
+	mWorldIdleTimer = 0;
 	mWorldMoveTimeMax = 5;
 	mIsCreateOrder = false;
 
@@ -160,12 +185,11 @@ HRESULT CGameObject_Enemy::Init_AI_Enemy()
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
 	// 월드 이동 자동 공격
-	//CSequnce_WorldAutoAttack* Seq_WorldAttack = CSequnce_WorldAutoAttack::Create(this);
-	//CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK attackDesc;
-	//attackDesc.Target = nullptr;
-	//Seq_WorldAttack->Restart(&attackDesc);
-
-	//mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
+	CSequnce_WorldAutoAttack* Seq_WorldAttack = CSequnce_WorldAutoAttack::Create(this);
+	CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK attackDesc;
+	attackDesc.Target = nullptr;
+	Seq_WorldAttack->Restart(&attackDesc);
+	mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
 
 	// 던전에 들어왔을떄
 	// 던전 Heart에 공격한다.
@@ -181,7 +205,7 @@ HRESULT CGameObject_Enemy::Set_MoveCount()
 
 		mWorldMoveIndex = ENEMY_MOVETARGET_DUNGEON;
 	}
-	mWorldCreateTimer = 0;
+	mWorldIdleTimer = 0;
 	mWorldMoveTimeMax = 2;
 	mIsCreateOrder = false;
 
@@ -230,7 +254,6 @@ HRESULT CGameObject_Enemy::CollisionFunc(_float3 PickPosition, _float dist, _uin
 HRESULT CGameObject_Enemy::Select_WorldAttack(CGameObject_3D_Dynamic* target)
 {
 	// 적을 클릭할 떄 실행
-
 	if (target == false)
 		return E_FAIL;
 
@@ -247,7 +270,7 @@ HRESULT CGameObject_Enemy::Select_WorldAttack(CGameObject_3D_Dynamic* target)
 	}
 
 	mTarget_Attack = target;
-	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY desc;
+	CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK desc;
 	desc.Target = mTarget_Attack;
 	mComBehavior->Select_Sequnce("WORLD_ATTACK", &desc);
 

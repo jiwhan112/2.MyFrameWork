@@ -62,6 +62,9 @@ public:
 		E_COMMON_ANINAME_SPAWNPOS,
 		E_COMMON_ANINAME_SLEEPING,
 		E_COMMON_ANINAME_MELEE,
+		E_COMMON_ANINAME_MELEE0,
+		E_COMMON_ANINAME_MELEE1,
+		E_COMMON_ANINAME_MELEE2,
 		E_COMMON_ANINAME_ANGRY,	// 화
 		E_COMMON_ANINAME_UP,
 		E_COMMON_ANINAME_CARRIED, // 마우스
@@ -109,6 +112,14 @@ public:
 			return "drag";
 		case E_COMMON_ANINAME_MELEE:
 			return "melee";
+
+		case E_COMMON_ANINAME_MELEE0:
+			return "melee0";
+		case E_COMMON_ANINAME_MELEE1:
+			return "melee1";
+		case E_COMMON_ANINAME_MELEE2:
+			return "melee2";
+
 		case E_COMMON_ANINAME_UP:
 			return "up";
 		case E_COMMON_ANINAME_SPAWNPOS:

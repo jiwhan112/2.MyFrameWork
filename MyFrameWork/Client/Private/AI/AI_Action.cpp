@@ -51,7 +51,7 @@ HRESULT CAction_DEALY::ReStart(void* pArg)
 
 	if (meDealyType == CAction_DEALY::DEALY_ANI)
 	{
-		mDynamicObject->Set_AniEnum(meAnimation);
+		FAILED_CHECK(mDynamicObject->Set_AniEnum(meAnimation));
 	}
 	return S_OK;
 }
@@ -147,6 +147,7 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 
 	__super::ReStart(pArg);
 
+	mStartPosition = mDynamicObject->Get_WorldPostition();
 
 	// 목표위치 설정
 	// 1. 랜덤
@@ -177,17 +178,23 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 	case Client::CAction_MOVE::MOVE_POS_TARGET:
 		if (mMoveTarget == nullptr)
 			End_Succed();
-		mDynamicObject->FindPathForCurrentNavi(mMoveTarget->Get_WorldPostition());
+		mGoalPosition = mMoveTarget->Get_WorldPostition();
+		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);
 		break;
 	case Client::CAction_MOVE::MOVE_POS_END:
 		break;
 	default:
 		break;
 	}
-
-	mIsMoveNaviPath = true;
-	mIsMoveCell = false;
-	mCurrentTimer = 0;
+	bool isNear = (2 > _float3::Distance(mGoalPosition, mStartPosition)) ? true : false;
+	if (isNear)
+		End_Succed();
+	else
+	{
+		mIsMoveNaviPath = true;
+		mIsMoveCell = false;
+		mCurrentTimer = 0;
+	}
 
 	return S_OK;
 }

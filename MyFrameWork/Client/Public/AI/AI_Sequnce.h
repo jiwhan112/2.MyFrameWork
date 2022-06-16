@@ -308,9 +308,6 @@ public:
 	virtual void Free()override;
 };
 
-
-
-
 // Seq_BossPattern
 class CSequnce_BossPattern1 :
 	public CSequnce_Base

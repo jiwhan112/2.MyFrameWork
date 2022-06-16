@@ -104,6 +104,8 @@ private:
 
 public: // DEBUG
 	_float						mDebugValue = 5;
+	_float						mWorldCheckTimer = 0;
+
 
 public: // SETTING
 	const _float3 mDungeonDoorGoalPos = _float3(22.4f, 0.010f, 23.5f);

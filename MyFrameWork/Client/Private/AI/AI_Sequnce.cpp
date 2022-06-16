@@ -501,7 +501,7 @@ HRESULT CSequnce_WorldMove_Player::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 //	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed_World());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_PICK);
 
 
@@ -573,9 +573,8 @@ HRESULT CSequnce_WorldMove_Enemy::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed_World());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
-
 	funcion->Set_Funcion(CAction_Function::FUNCION_ENEMY_MOVENEXT);
 
 	mSeqData.GoalPostition = _float3();
@@ -647,7 +646,7 @@ HRESULT CSequnce_WorldAttack_Player::NativeConstruct(CGameObject_3D_Dynamic * ob
 
 
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed_World());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TARGET);
 
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
@@ -733,10 +732,10 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	movepath->Set_TimeMax(obj->Get_TimeForSpeed());
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed_World());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TARGET);
 
-	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE0);
 	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
 
 	MinusDeco->Set_Value(nullptr);
@@ -759,13 +758,39 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 void CSequnce_WorldAutoAttack::Restart(void * SeqData)
 {
+	__super::Restart(SeqData);
+
+	if (SeqData)
+	{
+		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDAUTOATTACK));
+
+		auto movepath = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+		NULL_CHECK_BREAK(movepath);
+		((CAction_MOVE*)movepath)->Set_MoveTarget(mSeqData.Target);
+
+		auto hpDeco = Find_Deco(CDeco_DynamicBase::E_DECI_MINUS);
+		NULL_CHECK_BREAK(hpDeco);
+		((CDeco_Minus*)hpDeco)->Set_Value(&(mSeqData.Target->Get_Hp()));
+	}
 }
 
 CSequnce_WorldAutoAttack * CSequnce_WorldAutoAttack::Create(CGameObject_3D_Dynamic * targetobj)
 {
-	return nullptr;
+	CSequnce_WorldAutoAttack* pInstance = NEW CSequnce_WorldAutoAttack();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_WorldAutoAttack");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CSequnce_WorldAutoAttack::Free()
 {
+	__super::Free();
+
+
 }

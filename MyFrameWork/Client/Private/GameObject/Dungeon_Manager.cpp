@@ -4,6 +4,7 @@
 #include "GameObject/Dungeon_Task.h"
 #include "GameObject/Client_Object.h"
 #include "Camera_Client.h"
+#include "AI/AI_Sequnce.h"
 
 
 
@@ -22,7 +23,7 @@ HRESULT CDungeon_Manager::NativeConstruct(ID3D11Device* device,ID3D11DeviceConte
 
 	Safe_AddRef(mDevice);
 	Safe_AddRef(mDeviceContext);
-
+	mWorldCheckTimer = 0;
 	return S_OK;
 }
 
@@ -54,7 +55,13 @@ _int CDungeon_Manager::LateTick(_double TimeDelta)
 _int CDungeon_Manager::Tick_Game(_double timeDelta)
 {
 	FAILED_CHECK_NONERETURN(Check_Task());
-	FAILED_CHECK_NONERETURN(Check_World());
+
+	// 1초마다 체크 월드에서 체크 할 것 체크
+	mWorldCheckTimer += timeDelta;
+	if (mWorldCheckTimer > 1)
+	{
+		FAILED_CHECK_NONERETURN(Check_World());
+	}
 
 
 	if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_DUNGEON)
@@ -210,38 +217,7 @@ HRESULT CDungeon_Manager::Check_Task()
 
 HRESULT CDungeon_Manager::Check_World()
 {
-	// 자동 전투 명령
-	auto PlayerList = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_PLAYER);
-	auto EnemyList = mDungeon_Objects->Get_ListUnitID(E_UNITTYPE::UNIT_ENEMY);
-
-	float Range = 5.0f;
-
-	for (auto& ply : PlayerList)
-	{
-		// 전투중이면 나간다.
-		auto ss = ply->Get_ComBehavior()->Get_CurrentSequnce();
-		auto s =  ply->Get_ComBehavior()->Get_CurrentSequnce()->Get_SeqMoveType();
-
-		if (ply->Get_CurrentMap() != CGameObject_3D_Dynamic::MAPTYPE_WORLD)
-			continue;
-
-		for (auto& emy : EnemyList)
-		{
-			if (emy->Get_CurrentMap() != CGameObject_3D_Dynamic::MAPTYPE_WORLD)
-				continue;
-
-			_float3 p = ply->Get_WorldPostition();
-			_float3 e = emy->Get_WorldPostition();
-			_float distance= _float3::Distance(p, e);
-
-			if (Range > distance)
-			{
-				// 서로 전투 명령
-				ply->Select_WorldAttack(emy);
-				emy->Select_WorldAttack(ply);
-			}
-		}
-	}
+	// 월드 체크 요소
 
 	return S_OK;
 }

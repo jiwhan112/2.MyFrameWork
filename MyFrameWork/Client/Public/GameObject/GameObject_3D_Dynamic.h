@@ -91,6 +91,7 @@ public: // GetSet
 		return meCurrentMap;
 	}
 	_float Get_TimeForSpeed() const { return mTimeForSpeed; }
+	_float Get_TimeForSpeed_World() const { return mTimeForSpeed_World; }
 
 	E_UNITTYPE Get_UnitType()const
 	{
@@ -220,6 +221,7 @@ protected: // 3D¸ðµ¨ Com / DESC Ãß°¡
 	_bool						mIsTerrainHeight = false;
 
 	_float						mTimeForSpeed=0.3f;
+	_float						mTimeForSpeed_World = 1.0f;
 
 
 	// TICKTYPE

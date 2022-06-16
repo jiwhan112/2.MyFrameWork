@@ -77,7 +77,7 @@ public:
 
 
 protected:
-	_double				mWorldCreateTimer = 0;
+	_double				mWorldIdleTimer = 0;
 	_bool				mIsCreateOrder = false;
 	_double				mWorldMoveTimeMax = 5;
 
