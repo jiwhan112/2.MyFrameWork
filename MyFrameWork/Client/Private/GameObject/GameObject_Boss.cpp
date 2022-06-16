@@ -47,6 +47,9 @@ HRESULT CGameObject_BOSS::LateTick_World(_double TimeDelta)
 
 HRESULT CGameObject_BOSS::Init_Unit()
 {
+	mHP = 200;
+
+
 	// 모델 결정
 	string str("npc_Ent.fbx");
 	strcpy_s(mModelDesc.mModelName, str.c_str());
@@ -58,7 +61,7 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	mStartPostition = SpawnPos;
 	Set_LookDir(_float3(-1, 0, -1));
 
-	_float size = 1.0f;
+	_float size = 5.0f;
 	mComTransform->Scaled(_float3(size, size, size));
 
 
@@ -83,27 +86,26 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	// 애니메이션
 	FAILED_CHECK(Set_AniEnum(CAnimatior::E_COMMON_ANINAME_SKINPOSE));
 
-	// 소켓
-	// 보스 뼈 이름
-	// LDigit11 / LDigit12 // 손목 / 손가락
-	// LDigit21 / LDigit22 // 숫자가 크면 더 안쪽 뼈
-	//Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit21");
-	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit22");
-	//Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_3), "RDigit21");
-	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_2), "RDigit22");
+	//// 소켓
+	//// 보스 뼈 이름
+	//// LDigit11 / LDigit12 // 손목 / 손가락
+	//// LDigit21 / LDigit22 // 숫자가 크면 더 안쪽 뼈
+	////Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit21");
+	//Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit22");
+	////Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_3), "RDigit21");
+	//Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_2), "RDigit22");
 
-	CGameObject_3D_Socket* socketL = Find_Socket(TAGSOCKET(SOCKET_ANY_1));
-	CGameObject_3D_Socket* socketR = Find_Socket(TAGSOCKET(SOCKET_ANY_2));
+	//CGameObject_3D_Socket* socketL = Find_Socket(TAGSOCKET(SOCKET_ANY_1));
+	//CGameObject_3D_Socket* socketR = Find_Socket(TAGSOCKET(SOCKET_ANY_2));
 
-	COLLIDER_DESC coldesc1;
-	coldesc1.mSize = _float3(1.5f, 1.5f, 1.5f);
-	socketL->Set_LoadColliderDESC(coldesc1);
-	COLLIDER_DESC coldesc2;
-	coldesc2.mSize = _float3(1.5f, 1.5f, 1.5f);
-	socketR->Set_LoadColliderDESC(coldesc2);
+	//COLLIDER_DESC coldesc1;
+	//coldesc1.mSize = _float3(1.5f, 1.5f, 1.5f);
+	//socketL->Set_LoadColliderDESC(coldesc1);
+	//COLLIDER_DESC coldesc2;
+	//coldesc2.mSize = _float3(1.5f, 1.5f, 1.5f);
+	//socketR->Set_LoadColliderDESC(coldesc2);
 
 	mIsTerrainHeight = true;
-
 	
 
 

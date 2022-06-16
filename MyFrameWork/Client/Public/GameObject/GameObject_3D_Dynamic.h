@@ -233,7 +233,7 @@ protected: // 3D모델 Com / DESC 추가
 
 	// 속성
 	_int							mHP=30;
-	_int							mMP=0;
+	_int							mMP=0; // 스킬
 	_int							mDamage = 10;
 
 

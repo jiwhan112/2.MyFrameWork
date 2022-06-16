@@ -51,26 +51,6 @@ HRESULT CGameObject_Orc::Tick_World(_double TimeDelta)
 {
 	FAILED_CHECK(__super::Tick_World(TimeDelta));
 	
-	// 자동 전투
-	/*if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
-	{
-		auto EnemyList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_ENEMY);
-		const _float Range = 5.f;
-		for (auto& plyobj : EnemyList)
-		{
-			if (plyobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
-			{
-				_float dis = _float3::Distance(plyobj->Get_WorldPostition(), Get_WorldPostition());
-				if (dis < Range)
-				{
-					Select_WorldAttack(plyobj);
-					break;
-				}
-			}
-		}
-	}*/
-
-
 
 	return S_OK;
 }
@@ -115,7 +95,7 @@ HRESULT CGameObject_Orc::Init_Unit()
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 	desc.mOffset = _float3(0, size, 0);
-	size = size * 0.5f;
+	size = size * 0.8f;
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Init_Collider();

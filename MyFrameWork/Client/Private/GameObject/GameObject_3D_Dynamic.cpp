@@ -830,6 +830,8 @@ HRESULT CGameObject_3D_Dynamic::Set_Sequnce(const char * statename, void * desc)
 
 HRESULT CGameObject_3D_Dynamic::Check_AutoAttackForWorld()
 {
+	const _float Range = 4.0f;
+
 	// 자동전투
 	if (meUnitType == UNIT_PLAYER)
 	{
@@ -837,8 +839,22 @@ HRESULT CGameObject_3D_Dynamic::Check_AutoAttackForWorld()
 		if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
 		{
 			auto EnemyList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_ENEMY);
-			const _float Range = 5.f;
+			auto BossList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_BOSS);
+
 			for (auto& ememy : EnemyList)
+			{
+				if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+				{
+					_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
+					if (dis < Range)
+					{
+						Select_WorldAttack(ememy);
+						break;
+					}
+				}
+			}
+
+			for (auto& ememy : BossList)
 			{
 				if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
 				{
@@ -859,7 +875,7 @@ HRESULT CGameObject_3D_Dynamic::Check_AutoAttackForWorld()
 		if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
 		{
 			auto PlayerList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_PLAYER);
-			const _float Range = 5.f;
+
 			for (auto& plyobj : PlayerList)
 			{
 				if (plyobj->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
@@ -980,7 +996,7 @@ HRESULT CGameObject_3D_Dynamic::AttackFunc()
 		else
 		{
 			mTarget_Attack->HitFunc(mDamage);
-
+			mMP++;
 		}
 
 	}
