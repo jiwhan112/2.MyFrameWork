@@ -250,6 +250,9 @@
     <Filter Include="02.GameObject\03.ParticleObject\4.3D">
       <UniqueIdentifier>{1c3bd05f-d80e-4543-8111-64ecf854fbd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.3DObject\0.Base\01.Static\04.GameObject_Floor">
+      <UniqueIdentifier>{13b56bf1-b2b1-4b20-8c88-c7f552d9fe2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\MainApp.h">
@@ -477,6 +480,9 @@
     <ClInclude Include="..\Public\GameObject\ParticleManager.h">
       <Filter>02.GameObject\03.ParticleObject\1.Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Floor.h">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static\04.GameObject_Floor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -677,6 +683,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\ParticleManager.cpp">
       <Filter>02.GameObject\03.ParticleObject\1.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Floor.cpp">
+      <Filter>02.GameObject\02.3DObject\0.Base\01.Static\04.GameObject_Floor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

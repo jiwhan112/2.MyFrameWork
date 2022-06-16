@@ -183,6 +183,7 @@
     <ClInclude Include="..\Public\GameObject\GameObject_2D_UI.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Buffer.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Floor.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Particle.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Boss.h" />
     <ClInclude Include="..\Public\GameObject\GameObject_Enemy.h" />
@@ -271,6 +272,7 @@
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Buffer.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Particle.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Point.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Floor.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Environment.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Boss.cpp" />
     <ClCompile Include="..\Private\GameObject\GameObject_Enemy.cpp" />

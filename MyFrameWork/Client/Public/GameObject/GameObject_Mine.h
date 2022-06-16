@@ -39,6 +39,8 @@ public:
 	// ¸ðµ¨ ±¸Çö 
 	void Set_Dig_Tile(class CGameObject_3D_Tile* tile);
 	void Set_Dig_Gold(class CGameObject_3D_Tile* tile);
+	void Set_Room(_float3 Pos);
+	void Set_Build(_float3 Pos);
 
 	class CGameObject_3D_Tile* Get_SearchTile()const { return mSearchTile; }
 

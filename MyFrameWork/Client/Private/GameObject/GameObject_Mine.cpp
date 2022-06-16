@@ -263,6 +263,20 @@ void CGameObject_Mine::Set_Dig_Gold(CGameObject_3D_Tile * tile)
 
 }
 
+void CGameObject_Mine::Set_Room(_float3 Pos)
+{
+	// 해당 위치에 룸 객체 설치
+
+
+}
+
+void CGameObject_Mine::Set_Build(_float3 Pos)
+{
+	// 해당 위치에 침대 설치
+
+
+}
+
 HRESULT CGameObject_Mine::RemoveTile()
 {
 	if (mSearchTile)

@@ -77,6 +77,9 @@ public:	// For. Task
 	HRESULT Add_Task_Gold(_uint index);
 	HRESULT Add_Task_WorldMove(_float3 WorldPos);
 	HRESULT Add_Task_Player_WorldAttack(CGameObject_Base* target);
+	HRESULT Add_Task_Tile_Room(_float3 WorldPos);
+	HRESULT Add_Task_Build(_float3 WorldPos);
+
 
 	HRESULT Check_Task();
 	HRESULT Check_World();
@@ -84,7 +87,8 @@ public:	// For. Task
 private:
 	// 테스크에 따른 유닛 할당
 	_bool Task_Trigger(TASKBASE* task);
-	_bool Task_Mine(TASKBASE* task);
+	_bool Task_Mine_Tile(TASKBASE* task);
+	_bool Task_Mine_Pos(TASKBASE* task);
 	_bool Task_Player_Move_World(TASKBASE* task);
 	_bool Task_Player_Attack_World(TASKBASE* task);
 

@@ -194,14 +194,14 @@ HRESULT CDungeon_Manager::Add_Task_Gold(_uint index)
 {
 	return 	mDungeon_TaskMgr->Add_Task_Tile_Gold(index);
 }
-//HRESULT CDungeon_Manager::Add_Task_Tile_Room(_uint index)
-//{
-//	return 	mDungeon_TaskMgr->Add_Task_Tile_Gold(index);
-//}
-//HRESULT CDungeon_Manager::Add_Task_Tile_Room(_uint index)
-//{
-//	return 	mDungeon_TaskMgr->Add_Task_Tile_Gold(index);
-//}
+HRESULT CDungeon_Manager::Add_Task_Tile_Room(_float3 pos)
+{
+	return 	mDungeon_TaskMgr->Add_Task_Tile_Room(pos);
+}
+HRESULT CDungeon_Manager::Add_Task_Build(_float3 pos)
+{
+	return 	mDungeon_TaskMgr->Add_Task_Tile_Build(pos);
+}
 
 HRESULT CDungeon_Manager::Add_Task_WorldMove(_float3 WorldPos)
 {
@@ -227,6 +227,8 @@ HRESULT CDungeon_Manager::Check_World()
 {
 	// 월드 체크 요소
 
+	// 침대 판단
+
 
 
 	return S_OK;
@@ -239,10 +241,13 @@ _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 	switch (task->mTaskID)
 	{
 	case CDungeon_Task::TASK_TILE:
-		Task_Mine(task);
+		Task_Mine_Tile(task);
 		break;
 	case CDungeon_Task::TASK_GOLD:
-		Task_Mine(task);
+		Task_Mine_Tile(task);
+		break;
+	case CDungeon_Task::TASK_TILE_ROOM:
+		Task_Mine_Tile(task);
 		break;
 	case CDungeon_Task::TASK_PLAYER_MOVE_WORLD:
 		Task_Player_Move_World(task);
@@ -250,7 +255,6 @@ _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 	case CDungeon_Task::TASK_PLAYER_ATTACK_WORLD:
 		Task_Player_Attack_World(task);
 		break;
-
 	case CDungeon_Task::TASK_ENEMY_MOVE_WORLD_DEALY:
 		Task_Player_Move_World(task);
 		break;
@@ -262,7 +266,7 @@ _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 	return true;
 }
 
-_bool CDungeon_Manager::Task_Mine(TASKBASE* task)
+_bool CDungeon_Manager::Task_Mine_Tile(TASKBASE* task)
 {
 	// 테스크를 유닛에게 전달한다.
 	
@@ -297,6 +301,44 @@ _bool CDungeon_Manager::Task_Mine(TASKBASE* task)
 	else if(task->mTaskID == CDungeon_Task::TASK_GOLD)
 		SearchMine->Set_Dig_Gold(tile);
 
+	Safe_Delete(task);
+	return true;
+}
+
+_bool CDungeon_Manager::Task_Mine_Pos(TASKBASE * task)
+{
+	// 테스크를 유닛에게 전달한다.
+
+	// 1. 유닛과 타일을 찾음
+	auto unitlist = mDungeon_Objects->Get_ListObjecID(OBJECT_TYPE_3D_DYNAMIC_MINE);
+	_float3 DaungeomPos = static_cast<TASKMAP*>(task)->mWorldMapPickPos;
+	// CGameObject_3D_Tile* tile = mDungeon_Objects->Find_TileForIndex(tileindex);
+
+	_float maxdis = INT8_MAX;
+	CGameObject_Mine *SearchMine = nullptr;
+
+	// 2. 조건 찾기
+	for (auto& unit : unitlist)
+	{
+		// 타일과 가까운 유닛 찾기
+		_float distance = _float3::Distance(unit->Get_WorldPostition(), DaungeomPos);
+		if (distance < maxdis)
+		{
+			maxdis = distance;
+			SearchMine = (CGameObject_Mine*)unit;
+		}
+	}
+
+	if (SearchMine == nullptr)
+		return false;
+
+
+	// 3. 유닛에게 정보전달
+	if (task->mTaskID == CDungeon_Task::TASK_TILE_ROOM)
+		SearchMine->Set_Room(DaungeomPos);
+
+	else if (task->mTaskID == CDungeon_Task::TASK_BUILD)
+		SearchMine->Set_Build(DaungeomPos);
 
 	Safe_Delete(task);
 	return true;
