@@ -794,3 +794,139 @@ void CSequnce_WorldAutoAttack::Free()
 
 
 }
+
+HRESULT CSequnce_WorldMove_Boss::NativeConstruct(CGameObject_3D_Dynamic * obj)
+{
+	__super::NativeConstruct(obj);
+
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_MOVE);
+
+
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
+
+	CAction_MOVE* movepath = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
+
+	// 카운터를 올림
+	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+
+
+	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_WALK);
+	movepath->Set_TimeMax(obj->Get_TimeForSpeed_World());
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
+	funcion->Set_Funcion(CAction_Function::FUNCION_BOSS_FUNC1);
+//	funcion->Set_Funcion(CAction_Function::FUNCION_BOSS_FUNC2);
+
+	mSeqData.GoalPostition = _float3();
+	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(funcion->Clone());
+
+	Safe_Release(movepath);
+	Safe_Release(funcion);
+
+	// 객체 연결
+	Setup_TargetNode(obj);
+	return S_OK;
+}
+
+void CSequnce_WorldMove_Boss::Restart(void * SeqData)
+{
+	__super::Restart(SeqData);
+
+	if (SeqData)
+	{
+		memcpy(&mSeqData, SeqData, sizeof(SEQWORLDMOVE_BOSS));
+	}
+
+	auto move1 = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+	NULL_CHECK_BREAK(move1);
+	((CAction_MOVE*)move1)->Set_GoalPostiton(mSeqData.GoalPostition);
+}
+
+CSequnce_WorldMove_Boss * CSequnce_WorldMove_Boss::Create(CGameObject_3D_Dynamic * targetobj)
+{
+	CSequnce_WorldMove_Boss* pInstance = NEW CSequnce_WorldMove_Boss();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_WorldMove_Boss");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CSequnce_WorldMove_Boss::Free()
+{
+	__super::Free();
+	
+}
+
+HRESULT CSequnce_BossDealy::NativeConstruct(CGameObject_3D_Dynamic * obj)
+{
+	__super::NativeConstruct(obj);
+
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_IDLE);
+
+
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
+
+	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+
+	ani->Set_Animation(mSeqData.AniType, mSeqData.index);
+	funcion->Set_Funcion(CAction_Function::FUNCION_BOSS_FUNC1);
+
+	PushBack_LeafNode(ani->Clone());
+	PushBack_LeafNode(funcion->Clone());
+
+	Safe_Release(ani);
+	Safe_Release(funcion);
+
+	// 객체 연결
+	Setup_TargetNode(obj);
+
+	return S_OK;
+}
+
+void CSequnce_BossDealy::Restart(void * SeqData)
+{
+	__super::Restart(SeqData);
+
+	if (SeqData)
+	{
+		memcpy(&mSeqData, SeqData, sizeof(SEQBOSSDEALY));
+
+		auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+		NULL_CHECK_BREAK(ani);
+		((CAction_DEALY*)ani)->Set_Animation(mSeqData.AniType, mSeqData.index);
+
+	}
+	
+
+}
+
+CSequnce_BossDealy * CSequnce_BossDealy::Create(CGameObject_3D_Dynamic * targetobj)
+{
+	CSequnce_BossDealy* pInstance = NEW CSequnce_BossDealy();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_BossDealy");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CSequnce_BossDealy::Free()
+{
+	__super::Free();
+}

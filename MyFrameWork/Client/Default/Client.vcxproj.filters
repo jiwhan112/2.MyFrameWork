@@ -58,9 +58,6 @@
     <Filter Include="10.Imgui\02.Tools\00.BaseTool">
       <UniqueIdentifier>{84f726a0-0677-4385-9aba-6ee4f5c75cfb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\02.Camera">
-      <UniqueIdentifier>{bc388d12-b47d-405c-817c-c4e00817d90f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\01.2DObject">
       <UniqueIdentifier>{b83ff735-73f2-4cf5-9a01-c76e93931aed}</UniqueIdentifier>
     </Filter>
@@ -99,12 +96,6 @@
     </Filter>
     <Filter Include="02.GameObject\01.2DObject\1.Mouse">
       <UniqueIdentifier>{115695f8-f861-4788-a0fc-55117f281519}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\02.Camera\1.BaseCam">
-      <UniqueIdentifier>{c680008a-144e-4771-803e-da9a7b0a2dd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\02.Camera\2.GameCam">
-      <UniqueIdentifier>{2007639c-901d-495a-8dfe-4b51c79e2f9f}</UniqueIdentifier>
     </Filter>
     <Filter Include="00.GameManager">
       <UniqueIdentifier>{4fdfa3e7-578f-438a-843d-467f150b0ce0}</UniqueIdentifier>
@@ -232,23 +223,32 @@
     <Filter Include="03.GameSystems\07.BehaviorTree_Ai\01.Sequnce">
       <UniqueIdentifier>{d0bc3fe3-2ca1-46f9-9b87-7329eef44593}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.2DObject\2.Particle">
-      <UniqueIdentifier>{83ecc7d4-cb22-48ae-9acb-134f7486bfae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.2DObject\2.Particle\4.3D">
-      <UniqueIdentifier>{1c3bd05f-d80e-4543-8111-64ecf854fbd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.2DObject\2.Particle\1.Manager">
-      <UniqueIdentifier>{6c3eabf9-45a0-4b06-9d4f-bf74b2678b43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.2DObject\2.Particle\2.2D_Rect">
-      <UniqueIdentifier>{00cf3962-1d75-4be7-b61e-629917cee925}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.2DObject\2.Particle\3.2D_Instance">
-      <UniqueIdentifier>{765d0330-4142-424e-88b9-2c5437390dfb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\01.2DObject\3.UI">
       <UniqueIdentifier>{76bf655a-38c2-492b-b36e-d1a86cee6464}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Camera">
+      <UniqueIdentifier>{bc388d12-b47d-405c-817c-c4e00817d90f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Camera\1.BaseCam">
+      <UniqueIdentifier>{c680008a-144e-4771-803e-da9a7b0a2dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Camera\2.GameCam">
+      <UniqueIdentifier>{2007639c-901d-495a-8dfe-4b51c79e2f9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.ParticleObject">
+      <UniqueIdentifier>{424059e4-213a-41ba-b8cd-7e190d797861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.ParticleObject\1.Manager">
+      <UniqueIdentifier>{6c3eabf9-45a0-4b06-9d4f-bf74b2678b43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.ParticleObject\2.2D_Rect">
+      <UniqueIdentifier>{00cf3962-1d75-4be7-b61e-629917cee925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.ParticleObject\3.2D_Instance">
+      <UniqueIdentifier>{765d0330-4142-424e-88b9-2c5437390dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.ParticleObject\4.3D">
+      <UniqueIdentifier>{1c3bd05f-d80e-4543-8111-64ecf854fbd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -361,10 +361,10 @@
       <Filter>01.Level\01.GamePlay\02.MyGameScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Client.h">
-      <Filter>02.GameObject\02.Camera\1.BaseCam</Filter>
+      <Filter>02.GameObject\05.Camera\1.BaseCam</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\Camera_Game.h">
-      <Filter>02.GameObject\02.Camera\2.GameCam</Filter>
+      <Filter>02.GameObject\05.Camera\2.GameCam</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h">
       <Filter>02.GameObject\01.2DObject\1.Mouse</Filter>
@@ -463,19 +463,19 @@
       <Filter>97.Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h">
-      <Filter>02.GameObject\01.2DObject\2.Particle\3.2D_Instance</Filter>
+      <Filter>02.GameObject\03.ParticleObject\3.2D_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_3D_Particle.h">
-      <Filter>02.GameObject\01.2DObject\2.Particle\4.3D</Filter>
+      <Filter>02.GameObject\03.ParticleObject\4.3D</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Buffer.h">
-      <Filter>02.GameObject\01.2DObject\2.Particle\2.2D_Rect</Filter>
+      <Filter>02.GameObject\03.ParticleObject\2.2D_Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\GameObject_2D_UI.h">
       <Filter>02.GameObject\01.2DObject\3.UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject\ParticleManager.h">
-      <Filter>02.GameObject\01.2DObject\2.Particle\1.Manager</Filter>
+      <Filter>02.GameObject\03.ParticleObject\1.Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -567,10 +567,10 @@
       <Filter>01.Level\01.GamePlay\02.MyGameScene</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Client.cpp">
-      <Filter>02.GameObject\02.Camera\1.BaseCam</Filter>
+      <Filter>02.GameObject\05.Camera\1.BaseCam</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\Camera_Game.cpp">
-      <Filter>02.GameObject\02.Camera\2.GameCam</Filter>
+      <Filter>02.GameObject\05.Camera\2.GameCam</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp">
       <Filter>02.GameObject\01.2DObject\1.Mouse</Filter>
@@ -664,19 +664,19 @@
       <Filter>03.GameSystems\07.BehaviorTree_Ai\04.Selector</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Point.cpp">
-      <Filter>02.GameObject\01.2DObject\2.Particle\3.2D_Instance</Filter>
+      <Filter>02.GameObject\03.ParticleObject\3.2D_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_3D_Particle.cpp">
-      <Filter>02.GameObject\01.2DObject\2.Particle\4.3D</Filter>
+      <Filter>02.GameObject\03.ParticleObject\4.3D</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Buffer.cpp">
-      <Filter>02.GameObject\01.2DObject\2.Particle\2.2D_Rect</Filter>
+      <Filter>02.GameObject\03.ParticleObject\2.2D_Rect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\GameObject_2D_UI.cpp">
       <Filter>02.GameObject\01.2DObject\3.UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject\ParticleManager.cpp">
-      <Filter>02.GameObject\01.2DObject\2.Particle\1.Manager</Filter>
+      <Filter>02.GameObject\03.ParticleObject\1.Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -115,12 +115,26 @@ namespace Engine
 
 		static int RandomInt(int MIN, int MAX)
 		{
+			if (MIN < 0)
+				return 0;
+
+			if (MAX <= MIN)
+				return MIN;
+
+			int newint = MAX - MIN;
+			return rand() % newint + MIN;
+		}
+
+		static int RandomInt_Min(int MIN, int MAX)
+		{
 			if (MAX <= MIN)
 				return MIN;
 
 			int newint = MAX + abs(MIN);
-			return rand() % newint - MIN;
+			return rand() % newint + MIN;
 		}
+
+
 
 		// 0~1까지의 랜덤 값 생성
 		static float RandomFloat(_float minTime)

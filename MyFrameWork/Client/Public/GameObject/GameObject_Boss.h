@@ -32,9 +32,20 @@ public:
 	virtual HRESULT Init_AI_Boss();
 
 
+//	void Select_Idle();
+	void Select_Move();
+	void Select_Warrior(CAnimatior::E_COMMON_ANINAME type = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SKILL,int index=-1); // Heal »ç¿ë
+	void Select_Warrior_();
+
+	void Select_Pattern1();
+	void Select_Pattern2();
+	void Select_Pattern3();
+
+	void Select_Pattern();
 
 
 protected:
+	_float3 mStartPostition = _float3();
 
 public:
 	static CGameObject_BOSS* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

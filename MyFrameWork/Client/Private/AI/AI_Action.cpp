@@ -51,7 +51,7 @@ HRESULT CAction_DEALY::ReStart(void* pArg)
 
 	if (meDealyType == CAction_DEALY::DEALY_ANI)
 	{
-		FAILED_CHECK(mDynamicObject->Set_AniEnum(meAnimation));
+		FAILED_CHECK(mDynamicObject->Set_AniEnum(meAnimation, mAniIndex));
 	}
 	return S_OK;
 }
@@ -80,10 +80,12 @@ HRESULT CAction_DEALY::Action(_double timer)
 	return S_OK;
 }
 
-void CAction_DEALY::Set_Animation(CAnimatior::E_COMMON_ANINAME e)
+void CAction_DEALY::Set_Animation(CAnimatior::E_COMMON_ANINAME e,int index)
 {
 	meDealyType = CAction_DEALY::DEALY_ANI;
 	meAnimation = e;
+	mAniIndex = index;
+
 }
 
 void CAction_DEALY::Set_TimeMax(_double timeMax)
@@ -208,17 +210,24 @@ HRESULT CAction_MOVE::Action(_double TimeDelta)
 		{
 			// 애니메이션 결정
 			if (meMoveAni == CAction_MOVE::MOVE_ANI_RUN)
-				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN,0);
+				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_RUN, 0);
 
 			else if (meMoveAni == CAction_MOVE::MOVE_ANI_WALK)
-				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_WALK,0);
+				mDynamicObject->Set_AniEnum(CAnimatior::E_COMMON_ANINAME_WALK, 0);
 
-			 mDynamicObject->Set_RotationFlag(mNextGoalPosition);
+			mDynamicObject->Set_RotationFlag(mNextGoalPosition);
 
 			mCurrentTimer += TimeDelta;
 			_float3 CurrentPosition = GetSingle(CGameInstance)->Easing3(meEasingID, mStartPosition, mNextGoalPosition, mCurrentTimer, mTimeMax);
 
-			
+			// Test
+			//if (_float3::Distance(mStartPosition, mNextGoalPosition) < 5.0f)
+			//{
+			//	mDynamicObject->Set_Position(CurrentPosition);
+			//	mIsMoveCell = false;
+
+			//}
+		
 			if (mCurrentTimer > mTimeMax)
 			{
 				mIsMoveCell = false;
@@ -346,7 +355,15 @@ HRESULT CAction_Function::Action(_double timer)
 		break;
 	case CAction_Function::FUNCION_ENEMY_MOVENEXT:
 		((CGameObject_Enemy*)mDynamicObject)->Set_MoveCount();
+		break;
 
+	case CAction_Function::FUNCION_BOSS_FUNC1:
+	//	((CGameObject_BOSS*)mDynamicObject)->Set_MoveCount();
+		break;
+
+	case CAction_Function::FUNCION_BOSS_FUNC2:
+	//	((CGameObject_BOSS*)mDynamicObject)->Set_MoveCount();
+		break;
 	default:
 		break;
 	}

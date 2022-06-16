@@ -55,7 +55,7 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	// Transform
 	_float3 SpawnPos = mSpawnPostitionBOSS;
 	Set_Position(SpawnPos);
-
+	mStartPostition = SpawnPos;
 	Set_LookDir(_float3(-1, 0, -1));
 
 	_float size = 1.0f;
@@ -87,10 +87,25 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	// 보스 뼈 이름
 	// LDigit11 / LDigit12 // 손목 / 손가락
 	// LDigit21 / LDigit22 // 숫자가 크면 더 안쪽 뼈
-	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit21");
-	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_2), "LDigit22");
-	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_3), "RDigit21");
-	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_4), "RDigit22");
+	//Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit21");
+	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_1), "LDigit22");
+	//Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_3), "RDigit21");
+	Add_Socket_NULL(TAGSOCKET(SOCKET_ANY_2), "RDigit22");
+
+	CGameObject_3D_Socket* socketL = Find_Socket(TAGSOCKET(SOCKET_ANY_1));
+	CGameObject_3D_Socket* socketR = Find_Socket(TAGSOCKET(SOCKET_ANY_2));
+
+	COLLIDER_DESC coldesc1;
+	coldesc1.mSize = _float3(1.5f, 1.5f, 1.5f);
+	socketL->Set_LoadColliderDESC(coldesc1);
+	COLLIDER_DESC coldesc2;
+	coldesc2.mSize = _float3(1.5f, 1.5f, 1.5f);
+	socketR->Set_LoadColliderDESC(coldesc2);
+
+	mIsTerrainHeight = true;
+
+	
+
 
 	return S_OK;
 }
@@ -105,28 +120,81 @@ HRESULT CGameObject_BOSS::Init_AI_Boss()
 {
 	// 보스 패턴
 
-	// 대기
+	// 생성
 	CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
 	CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
 	worldIdle.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SLEEPING;
-
 	Seq_WorldIdle->Restart(&worldIdle);
-	mComBehavior->Add_Seqeunce("WORLDIDLE", Seq_WorldIdle);
-	mComBehavior->Select_Sequnce("WORLDIDLE");
+	mComBehavior->Add_Seqeunce("WORLD_IDLE", Seq_WorldIdle);
+	mComBehavior->Select_Sequnce("WORLD_IDLE");
 
-	// 움직임
-	CSequnce_WorldMove_Player* Seq_WorldMove = CSequnce_WorldMove_Player::Create(this);
-	//	CSequnce_WorldMove::tag_SeqWorldMove DefaultDoorDesc;
-	//	Seq_Door->Restart(&DefaultDoorDesc);
-	mComBehavior->Add_Seqeunce("WORLDMOVE", Seq_WorldMove);
+	// 대기하면서 범위이동
+	CSequnce_WorldMove_Boss* Seq_WorldMove= CSequnce_WorldMove_Boss::Create(this);
+	CSequnce_WorldMove_Boss::SEQWORLDMOVE_BOSS worldMove;
+	worldMove.GoalPostition = _float3();
+	Seq_WorldMove->Restart(&worldMove);
+	mComBehavior->Add_Seqeunce("WORLD_MOVE", Seq_WorldMove);
 
 
-	// 패턴 1,2,3
+
+	// 적발견 후 포효
+	CSequnce_BossDealy* Seq_WorldDealy= CSequnce_BossDealy::Create(this);
+	CSequnce_BossDealy::SEQBOSSDEALY dealyDesc;
+	dealyDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SKILL;
+	Seq_WorldDealy->Restart(&dealyDesc);
+	mComBehavior->Add_Seqeunce("WORLD_WARRIOR", Seq_WorldDealy);
+
+	
+
+
+	// 패턴 123 
 
 
 
 
 	return S_OK;
+}
+
+void CGameObject_BOSS::Select_Move()
+{
+	// 꺠어나서 주위 배외
+	CSequnce_WorldMove_Boss::SEQWORLDMOVE_BOSS worldMove;
+	
+	int RandIntX = CHelperClass::RandomInt_Min(-5, 5);
+	int RandIntZ = CHelperClass::RandomInt_Min(-5, 5);
+
+	_float3 newRandPostition = mStartPostition;
+	newRandPostition.x += RandIntX;
+	newRandPostition.z += RandIntZ;
+
+	worldMove.GoalPostition = newRandPostition;
+
+	mComBehavior->Select_Sequnce("WORLD_MOVE",&worldMove);
+
+
+}
+
+void CGameObject_BOSS::Select_Warrior(CAnimatior::E_COMMON_ANINAME type, int index)
+{
+	CSequnce_BossDealy::SEQBOSSDEALY desc;
+
+	desc.AniType = type;
+	desc.index = index;
+
+	mComBehavior->Select_Sequnce("WORLD_WARRIOR", &desc);
+
+
+}
+
+void CGameObject_BOSS::Select_Warrior_()
+{
+	// 포효 명령
+	CSequnce_BossDealy::SEQBOSSDEALY desc;
+	desc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SKILL;
+	desc.index = 2;
+
+	mComBehavior->Select_Sequnce("WORLD_WARRIOR", &desc);
+
 }
 
 

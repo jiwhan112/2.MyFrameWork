@@ -250,6 +250,33 @@ public:
 	virtual void Free()override;
 };
 
+class CSequnce_WorldMove_Boss :
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqWorldMove_BOSS
+	{
+		_float3 GoalPostition = _float3();
+
+	}SEQWORLDMOVE_BOSS;
+
+protected:
+	explicit CSequnce_WorldMove_Boss() = default;
+	virtual ~CSequnce_WorldMove_Boss() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQWORLDMOVE_BOSS					mSeqData;
+
+public:
+	static CSequnce_WorldMove_Boss* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
 // Seq_Attack_Player
 // 플레이어 공격 시퀀스
 class CSequnce_WorldAttack_Player:
@@ -308,6 +335,36 @@ public:
 	virtual void Free()override;
 };
 
+
+
+// Seq_BossPattern
+class CSequnce_BossDealy:
+	public CSequnce_Base
+{
+public:
+	typedef struct tag_SeqBossBossDealy
+	{
+		CAnimatior::E_COMMON_ANINAME AniType;
+		int							 index=-1;
+	}SEQBOSSDEALY;
+
+protected:
+	explicit CSequnce_BossDealy() = default;
+	virtual ~CSequnce_BossDealy() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+	SEQBOSSDEALY					mSeqData;
+
+public:
+	static CSequnce_BossDealy* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+
+};
 // Seq_BossPattern
 class CSequnce_BossPattern1 :
 	public CSequnce_Base

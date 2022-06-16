@@ -122,13 +122,87 @@ HRESULT CImgui_InGame::Edit_InGame()
 			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ENEMY, SpawnPos);
 	}
 
-	if (ImGui::Button("Create_Dungeon_BOSS"))
-	{
-		_float3 SpawnPos = mSpawnPostitionBOSS;
 
-		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
-			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_BOSS, SpawnPos);
+	IMGUI_TREE_BEGIN("___BossOption___")
+	{
+
+		if (ImGui::Button("Create_Dungeon_BOSS"))
+		{
+			_float3 SpawnPos = mSpawnPostitionBOSS;
+
+			GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+				Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_BOSS, SpawnPos);
+		}
+
+		if (ImGui::Button("BossMoveTest"))
+		{
+			_float3 SpawnPos = mSpawnPostitionBOSS;
+
+			auto listBoss = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_UnitList_World();
+			for (auto& obj : *listBoss)
+			{
+				static_cast<CGameObject_BOSS*>(obj)->Select_Move();
+			}
+		}
+
+		static int index = -1;
+		ImGui::InputInt("Skillindex", &index, -1, 100);
+		ImGui::SameLine();
+		if (ImGui::Button("BossSkillAnimationTest"))
+		{
+			_float3 SpawnPos = mSpawnPostitionBOSS;
+
+			auto listBoss = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_UnitList_World();
+			for (auto& obj : *listBoss)
+			{
+				static_cast<CGameObject_BOSS*>(obj)->Select_Warrior(CAnimatior::E_COMMON_ANINAME_SKILL, index);
+
+			}
+		}
+
+		if (ImGui::Button("BossMeleeAnimationTest"))
+		{
+			_float3 SpawnPos = mSpawnPostitionBOSS;
+
+			auto listBoss = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_UnitList_World();
+			for (auto& obj : *listBoss)
+			{
+				static_cast<CGameObject_BOSS*>(obj)->Select_Warrior(CAnimatior::E_COMMON_ANINAME_MELEE);
+
+			}
+		}
+		if (ImGui::Button("BossAttAttack"))
+		{
+			_float3 SpawnPos = mSpawnPostitionBOSS;
+
+			auto listBoss = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_UnitList_World();
+			for (auto& obj : *listBoss)
+			{
+				static_cast<CGameObject_BOSS*>(obj)->Select_Warrior(CAnimatior::E_COMMON_ANINAME_ATT);
+
+			}
+		}
+
+		if (ImGui::Button("BossWarriorTest"))
+		{
+			_float3 SpawnPos = mSpawnPostitionBOSS;
+
+			auto listBoss = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_UnitList_World();
+			for (auto& obj : *listBoss)
+			{
+				static_cast<CGameObject_BOSS*>(obj)->Select_Warrior_();
+
+			}
+		}
+
+
+		IMGUI_TREE_END
 	}
+
+
+	
+
+	
 
 
 	//if (ImGui::Button("Create_WorldObject"))

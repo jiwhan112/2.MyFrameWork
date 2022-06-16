@@ -70,12 +70,13 @@ protected:
 public:
 	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
-	void Set_Animation(CAnimatior::E_COMMON_ANINAME e);
+	void Set_Animation(CAnimatior::E_COMMON_ANINAME e,int index = -1);
 	void Set_TimeMax(_double timeMax);
 
 private:
 	_double	mTimeMax=1;
-	_double	mCurrentTimer=0;
+	_double	mCurrentTimer = 0;
+	_int	mAniIndex = -1;
 
 	E_DEALY_FALG					meDealyType = DEALY_NONE;
 	CAnimatior::E_COMMON_ANINAME	meAnimation = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE;
@@ -224,6 +225,9 @@ public:
 		FUNCION_ATTACK,
 		FUNCION_DIE,
 		FUNCION_ENEMY_MOVENEXT,
+		FUNCION_BOSS_FUNC1,
+		FUNCION_BOSS_FUNC2,
+		FUNCION_BOSS_FUNC3,
 		FUNCION_END,
 
 	};
