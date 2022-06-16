@@ -55,9 +55,19 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices(_double timer)
 	{
 		// 현재 애니메이션을 시간에 맞게 업데이트를 시켜준다.
 		// 애니메이션 채널의 해당 시간에 따른 뼈 위치 갱신
-		mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices(timer);
-		if(mVecAnimations[m_iCurrentAniIndex]->Get_Finished())
+		if (mIsFoward)
+		{
+			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(timer);
+		}
+		else
+			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(-timer);
+
+		if (mVecAnimations[m_iCurrentAniIndex]->Get_Finished())
+		{
+
 			mIsCurrentAniEnd = true;
+			mIsFoward = true;
+		}
 	}
 
 	// 갱신된 뼈행렬을 계층으로 업데이트 시켜준다.
@@ -80,9 +90,19 @@ HRESULT CAnimatior::Update_CombinedTransformationMatrices_OnlyTime(_double timer
 	{
 		// 현재 애니메이션을 시간에 맞게 업데이트를 시켜준다.
 		// 애니메이션 채널의 해당 시간에 따른 뼈 위치 갱신
-		mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(timer);
+		if (mIsFoward)
+		{
+			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(timer);
+		}
+		else 
+			mVecAnimations[m_iCurrentAniIndex]->Update_TransformMatrices_OnlyTime(-timer);
+
 		if (mVecAnimations[m_iCurrentAniIndex]->Get_Finished())
+		{
+
 			mIsCurrentAniEnd = true;
+			mIsFoward = true;
+		}
 	}
 	return S_OK;
 
@@ -187,12 +207,15 @@ HRESULT CAnimatior::SetUp_AnimIndex(_uint iAnimIndex)
 	return S_OK;
 }
 
-HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName, _int index)
+HRESULT CAnimatior::Set_AniEnum(E_COMMON_ANINAME AniName, _int index, _bool isFoward)
 {
 	// 공통적인 애니메이션 재성
 	_int aniIndex = Get_AniEnum2Index(AniName, index);
 	if (aniIndex < 0)
 		return E_FAIL;
+
+	// 애니 역재생
+	mIsFoward = isFoward;
 
 	SetUp_AnimIndex(aniIndex);
 	return S_OK;
@@ -346,10 +369,18 @@ HRESULT CAnimatior::AniMationBlend(int startindex, int endindex, _double delta)
 		endindex >= m_iNumAnimations)
 		return E_FAIL;
 
-	// 1. 1번 애니의 시작과 1번 애니의 끝과 2번애니의 끝의 위치를 가져와야한다.
+	// 1. 1번 애니의 시작과 1번 애니의 끝과 2번애니의 시작위치를 가져와야한다.
 	// 1번 애니 2번 애니메이션의 채널리스트를 가져온다.
 	auto VecStart_AniChannel = mVecAnimations[startindex]->Get_Channels();
 	auto VecEnd_AniChannel = mVecAnimations[endindex]->Get_Channels();
+
+	if (mIsFoward == false)
+	{
+		// 역재생이라면 가장 끝에서 시작
+		mVecAnimations[endindex]->Set_AniMationTimeMAX();
+		VecEnd_AniChannel = mVecAnimations[endindex]->Get_Channels();
+	}
+	
 //	m_HierarchyNodes
 
 	if (VecStart_AniChannel == nullptr||

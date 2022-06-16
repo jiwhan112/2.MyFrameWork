@@ -23,6 +23,16 @@ void CAnimationClip::Set_AniMationTime(_double timer)
 
 }
 
+void CAnimationClip::Set_AniMationTimeMAX()
+{
+	m_PlayTimeAcc = m_Duration;
+	for (_uint i = 0; i < m_iNumChannels; ++i)
+	{
+		m_Channels[i]->Set_CurrentKeyFrame(m_PlayTimeAcc);
+	}
+
+}
+
 HRESULT CAnimationClip::NativeConstruct(const char* pName, _double Duration, _double TickPerSecond)
 {
 	strcpy_s(m_szName, pName);
@@ -43,7 +53,7 @@ HRESULT CAnimationClip::Update_TransformMatrices(_double TimeDelta)
 		m_IsFrame = true;
 	}
 
-	if (m_PlayTimeAcc >= m_Duration)
+	if (m_PlayTimeAcc >= m_Duration || m_PlayTimeAcc<0)
 	{
 		m_IsFinished = true;
 	}

@@ -937,3 +937,61 @@ void CSequnce_BossDealy::Free()
 {
 	__super::Free();
 }
+
+HRESULT CSequnce_DIE::NativeConstruct(CGameObject_3D_Dynamic * obj)
+{
+	__super::NativeConstruct(obj);
+	
+	Set_SeqType(CNode_Seqeunce::SEQTYPE_ONETIME);
+	Set_SeqMoveType(CNode_Seqeunce::SEQMOTAIONTYPE_END);
+
+
+	CBehaviorTree* ComBehavior = obj->Get_ComBehavior();
+	if (ComBehavior == nullptr)
+		return E_FAIL;
+
+	CAction_DEALY* ani = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_Function* funcion = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
+
+	// 애니메이션을 역재생해서 써야함..
+	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
+	funcion->Set_Funcion(CAction_Function::FUNCION_DIE);
+
+	PushBack_LeafNode(ani->Clone());
+	PushBack_LeafNode(funcion->Clone());
+
+	Safe_Release(ani);
+	Safe_Release(funcion);
+
+	// 객체 연결
+	Setup_TargetNode(obj);
+
+	return S_OK;
+}
+
+void CSequnce_DIE::Restart(void * SeqData)
+{
+	__super::Restart(SeqData);
+
+}
+
+CSequnce_DIE * CSequnce_DIE::Create(CGameObject_3D_Dynamic * targetobj)
+{
+	CSequnce_DIE* pInstance = NEW CSequnce_DIE();
+
+	if (FAILED(pInstance->NativeConstruct(targetobj)))
+	{
+		MSGBOX("Failed to Created CSequnce_DIE");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CSequnce_DIE::Free()
+{
+	
+	__super::Free();
+	
+}

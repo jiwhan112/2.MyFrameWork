@@ -69,6 +69,31 @@ public:
 	virtual void Free()override;
 };
 
+// IDLE 상태 시퀀스 
+class CSequnce_DIE :
+	public CSequnce_Base
+{
+public:
+	
+
+protected:
+	explicit CSequnce_DIE() = default;
+	virtual ~CSequnce_DIE() = default;
+
+public:
+	// 초기화와 다시시작시 정보 전달과 다름
+	virtual HRESULT NativeConstruct(CGameObject_3D_Dynamic* obj)override;
+	virtual void Restart(void* SeqData = nullptr)override;
+
+protected:
+//	SEQIDLE					mSeqData;
+
+public:
+	static CSequnce_DIE* Create(CGameObject_3D_Dynamic* targetobj);
+	virtual void Free()override;
+};
+
+
 // 임의의 위치 이동 시퀀스
 class CSequnce_MOVETARGET 
 	:public CSequnce_Base

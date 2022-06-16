@@ -190,7 +190,7 @@ public: // Get Set
 
 	HRESULT SetUp_AnimIndex(_uint index);
 	HRESULT Set_AniString(string AniName);
-	HRESULT Set_AniEnum(E_COMMON_ANINAME AniName, _int index = -1); // enum 중 랜덤 혹은 index
+	HRESULT Set_AniEnum(E_COMMON_ANINAME AniName, _int index = -1, _bool isFoward = true); // enum 중 랜덤 혹은 index
 	_int	Get_AniEnum2Index(E_COMMON_ANINAME AniName,_int index = -1);
 
 	_double	Get_AniIndex2AniMaxTime(_int index);
@@ -268,6 +268,9 @@ private: // 애니메이터
 	_double									mBlendMaxTime = 0.2f;
 	_double									mBlendTimer = 0;
 	_bool									mIsCurrentAniEnd = false;
+
+	// 애니역재생 플래그
+	_bool									mIsFoward = true;
 
 
 public:

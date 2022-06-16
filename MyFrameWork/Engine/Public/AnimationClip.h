@@ -26,6 +26,7 @@ public:
 	const char* Get_Name();
 
 	void Set_AniMationTime(_double timer);
+	void Set_AniMationTimeMAX();
 	_double Get_AniMationTime()const { return m_PlayTimeAcc; }
 
 	_double Get_MaxAnimaionTime()const

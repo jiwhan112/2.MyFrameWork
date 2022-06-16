@@ -1146,12 +1146,12 @@ HRESULT CGameObject_3D_Dynamic::Tick_DEBUG(_double timer)
 	return S_OK;
 }
 
-HRESULT CGameObject_3D_Dynamic::Set_AniEnum(CAnimatior::E_COMMON_ANINAME name,_int index)
+HRESULT CGameObject_3D_Dynamic::Set_AniEnum(CAnimatior::E_COMMON_ANINAME name,_int index, _bool isFoward)
 {
 	if (mComModel == nullptr)
 		return E_FAIL;
 
-	return mComModel->Get_Animaitor()->Set_AniEnum(name, index);
+	return mComModel->Get_Animaitor()->Set_AniEnum(name, index, isFoward);
 }
 
 HRESULT CGameObject_3D_Dynamic::Set_AniIndex(_uint AniIndex)

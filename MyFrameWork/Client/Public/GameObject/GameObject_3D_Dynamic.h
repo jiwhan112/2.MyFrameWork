@@ -133,7 +133,7 @@ public:
 
 	// Animation
 public: 
-	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name, _int index=-1);
+	HRESULT Set_AniEnum(CAnimatior::E_COMMON_ANINAME name, _int index=-1,_bool isFoward = true);
 	HRESULT Set_AniIndex(_uint AniIndex);
 	HRESULT Set_AniString(string str);
 
