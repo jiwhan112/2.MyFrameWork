@@ -23,6 +23,7 @@
 #include "GameObject/GameObject_3D_Static2.h"
 #include "GameObject/GameObject_3D_Dynamic.h"
 #include "GameObject/GameObject_3D_Tile.h"
+#include "GameObject/GameObject_3D_Floor.h"
 #include "GameObject/GameObject_Socket.h"
 #include "GameObject/GameObject_Environment.h"
 

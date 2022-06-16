@@ -76,7 +76,8 @@ _int CGameObject_3D_Static::Tick(_double TimeDelta)
 
 	}
 
-	mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
+	if (mComCollider)
+		mComCollider->Update_Transform(mComTransform->GetWorldFloat4x4());
 	return UPDATENONE;
 }
 

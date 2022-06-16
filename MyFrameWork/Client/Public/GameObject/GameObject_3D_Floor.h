@@ -25,8 +25,8 @@ public:
 	
 	enum E_FLOORTYPE
 	{
-		FLOOR_A,
-		FLOOR_B,
+		FLOOR_FLOOR, // 바탁 타일
+		FLOOR_BUILD, // 건물 
 		FLOOR_END,
 
 	};
@@ -56,13 +56,17 @@ public:
 	//virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render()override;
 
+	HRESULT Set_LoadNewFBX(E_FLOORTYPE type);
+
+	
 
 public:
 	//// 타일의 이웃정보에 따라 자신의 상태 변경
 	//HRESULT Update_NeighborTile();
 	//HRESULT Update_Tile_CrossCheck();
 	
-
+	const char* FloorFbxName = "tileset_GreyRock_FLOOR.fbx";
+	const char* BuildFbxName = "tileset_GreyRock_FLOOR.fbx";
 
 
 protected:

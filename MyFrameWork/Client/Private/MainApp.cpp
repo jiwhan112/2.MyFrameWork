@@ -390,6 +390,9 @@ HRESULT CMainApp::Ready_Prototype_GameObject_Emptyobject()
 	// 타일
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_TILE),
 		CGameObject_3D_Tile::Create(m_pDevice, m_pDeviceContext)));
+	// Floor
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_3D_FLOOR),
+		CGameObject_3D_Floor::Create(m_pDevice, m_pDeviceContext)));
 
 	// 파티클 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TAGOBJ(GAMEOBJECT_2D_PARTICLE_POINT),

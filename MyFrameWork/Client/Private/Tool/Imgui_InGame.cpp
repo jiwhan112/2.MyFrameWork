@@ -200,8 +200,14 @@ HRESULT CImgui_InGame::Edit_InGame()
 	}
 
 
-	
+	static _float3 FloorPos = _float3();
 
+	ImGui::DragFloat3("Pos", (float*)&FloorPos, 0.1f, -100, 100);
+
+	if (ImGui::Button("Create_FloorTest"))
+	{
+		GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Create_Unit(GAMEOBJECT_3D_FLOOR, FloorPos);
+	}
 	
 
 
