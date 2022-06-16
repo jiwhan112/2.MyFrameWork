@@ -69,7 +69,7 @@ public:
 	virtual void Free()override;
 };
 
-// IDLE 상태 시퀀스 
+// DIE 상태 시퀀스 
 class CSequnce_DIE :
 	public CSequnce_Base
 {

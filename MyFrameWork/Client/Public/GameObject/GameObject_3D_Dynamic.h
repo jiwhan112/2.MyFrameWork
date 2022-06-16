@@ -225,8 +225,8 @@ protected: // 3D모델 Com / DESC 추가
 
 	// TICKTYPE
 	E_TICK_TYPE					meTickType = TICK_TYPE_END;
-	const _float mMouseOffset = 4;
-	_bool		mIsPickTurn = true;
+	const _float				mMouseOffset = 4;
+	_bool						mIsPickTurn = true;
 
 	// 공격 타겟
 	CGameObject_3D_Dynamic* mTarget_Attack = nullptr;
@@ -236,7 +236,6 @@ protected: // 3D모델 Com / DESC 추가
 	_int							mHP=30;
 	_int							mMP=0; // 스킬
 	_int							mDamage = 10;
-
 
 public:
 	// 생성 위치

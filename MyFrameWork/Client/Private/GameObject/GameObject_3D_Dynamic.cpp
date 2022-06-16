@@ -54,7 +54,6 @@ HRESULT CGameObject_3D_Dynamic::NativeConstruct(void* pArg)
 	// 생성시 유닛별 초기화 함수 따로 만들기..
 	Init_Unit();
 	Init_AI();
-
 	return S_OK;
 }
 
@@ -121,6 +120,7 @@ _int CGameObject_3D_Dynamic::LateTick(_double TimeDelta)
 {
 
 	FAILED_UPDATE(__super::LateTick(TimeDelta));
+
 
 
 
@@ -349,10 +349,7 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		Seq_WorldMove->Restart(&WorldDesc);
 		mComBehavior->Add_Seqeunce("WORLD_MOVE", Seq_WorldMove);
 
-		CSequnce_WorldAttack_Player* Seq_WorldAttack = CSequnce_WorldAttack_Player::Create(this);
-		CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY attackDesc;
-		Seq_WorldAttack->Restart(&attackDesc);
-		mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
+
 
 
 	}
@@ -368,9 +365,9 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		
 	}
 
-	CSequnce_DIE* Seq_WorldMove = CSequnce_DIE::Create(this);
-	Seq_WorldMove->Restart();
-	mComBehavior->Add_Seqeunce("DIE", Seq_WorldMove);
+	//CSequnce_DIE* Seq_WorldMove = CSequnce_DIE::Create(this);
+	//Seq_WorldMove->Restart();
+	//mComBehavior->Add_Seqeunce("DIE", Seq_WorldMove);
 	return S_OK;
 }
 
@@ -845,7 +842,7 @@ HRESULT CGameObject_3D_Dynamic::Check_AutoAttackForWorld()
 		if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
 		{
 			auto EnemyList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_ENEMY);
-			auto BossList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_BOSS);
+		//	auto BossList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_BOSS);
 
 			for (auto& ememy : EnemyList)
 			{
@@ -860,18 +857,18 @@ HRESULT CGameObject_3D_Dynamic::Check_AutoAttackForWorld()
 				}
 			}
 
-			for (auto& ememy : BossList)
-			{
-				if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
-				{
-					_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
-					if (dis < Range)
-					{
-						Select_WorldAttack(ememy);
-						break;
-					}
-				}
-			}
+			//for (auto& ememy : BossList)
+			//{
+			//	if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+			//	{
+			//		_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
+			//		if (dis < Range)
+			//		{
+			//			Select_WorldAttack(ememy);
+			//			break;
+			//		}
+			//	}
+			//}
 		}
 	}
 
@@ -954,7 +951,7 @@ HRESULT CGameObject_3D_Dynamic::Select_Fall()
 HRESULT CGameObject_3D_Dynamic::Select_Die()
 {
 	// DIe
-	Set_Dead();
+	// Set_Dead();
 
 	//if (mComBehavior->Get_CurrentSeqKey() == "DIE")
 	//	return S_OK;
@@ -1042,14 +1039,12 @@ HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
 {
 	 mHP -= Damage; 
 	 if (mHP <= 0)
-		 DieFunc();
+		 Set_Dead();
 	 return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::DieFunc()
 {
-	Set_Dead();
-//	Select_Die();
 	return S_OK;
 }
 

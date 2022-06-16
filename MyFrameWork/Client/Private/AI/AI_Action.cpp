@@ -309,7 +309,6 @@ CAction_MOVE * CAction_MOVE::Clone()
 void CAction_MOVE::Free()
 {
 	__super::Free();
-	Safe_Release(mMoveTarget);
 
 	
 }
@@ -353,7 +352,7 @@ HRESULT CAction_Function::Action(_double timer)
 		mDynamicObject->AttackFunc();
 		break;
 	case CAction_Function::FUNCION_DIE:
-		mDynamicObject->Set_Dead();
+	//	mDynamicObject->Set_Dead();
 		break;
 	case CAction_Function::FUNCION_ENEMY_MOVENEXT:
 		((CGameObject_Enemy*)mDynamicObject)->Set_MoveCount();
