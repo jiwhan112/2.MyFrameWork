@@ -143,20 +143,26 @@ PS_OUT PS_MAIN_TOON(PS_IN In)
 PS_OUT PS_MAIN_RED(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
+	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
 
-	Out.vColor.rgba = 0.0f;
-	Out.vColor.r = 1.0f;
-	Out.vColor.a = 1.0f;
+	Albedo.a = 1.f;
 
+	// Out.vColor.rgba = 0.0f;
+	// Out.vColor.r = 1.0f;
+	// Out.vColor.a = 1.0f;
+	Out.vColor = Albedo;
 	return Out;
 }
 PS_OUT PS_MAIN_GREEN(PS_IN In)
 {
-	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor.rgba = 0.0f;
-	Out.vColor.g = 1.0f;
-	Out.vColor.a = 1.0f;
+	PS_OUT			Out = (PS_OUT)0;
+	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+
+	Albedo.a = 1.f;
+	Albedo *= 1.3f;
+
+	Out.vColor = Albedo;
 
 	return Out;
 }

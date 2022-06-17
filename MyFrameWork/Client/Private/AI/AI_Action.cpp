@@ -165,10 +165,6 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 			mGoalPosition = mStartPosition;
 		}
 		break;
-	case Client::CAction_MOVE::MOVE_POS_TILE:
-		// 타일 정보 
-		mGoalPosition = mDynamicObject->Get_PathGoalPostition();
-		break;
 	case Client::CAction_MOVE::MOVE_POS_PICK:
 		mGoalPosition = GetSingle(CGameManager)->Get_PickPos();
 		mDynamicObject->FindPathForCurrentNavi(mGoalPosition);

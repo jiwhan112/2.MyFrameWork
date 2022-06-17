@@ -299,10 +299,7 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	movepath->Set_TimeMax(0.6f);
-	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TILE);
-
-
+	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
 
 	funcion->Set_Funcion(CAction_Function::FUNCION_LOOKTILE);
 
@@ -333,11 +330,16 @@ void CSequnce_TILE::Restart(void * SeqData)
 	if (SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQTILE));
-	}
 
-	auto pathmove = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
-	NULL_CHECK_BREAK(pathmove);
-	((CAction_MOVE*)pathmove)->Set_TimeMax(mSeqData.Runtime);
+
+		auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
+		NULL_CHECK_BREAK(ani);
+		((CAction_DEALY*)ani)->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG, mSeqData.DigAniIndex);
+
+		auto pathmove = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
+		NULL_CHECK_BREAK(pathmove);
+		((CAction_MOVE*)pathmove)->Set_GoalPostiton(mSeqData.GoalPos);
+	}
 
 }
 

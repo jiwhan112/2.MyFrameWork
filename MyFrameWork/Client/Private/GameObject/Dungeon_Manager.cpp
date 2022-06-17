@@ -213,6 +213,12 @@ HRESULT CDungeon_Manager::Add_Task_Player_WorldAttack(CGameObject_Base* target)
 }
 
 
+HRESULT CDungeon_Manager::Add_ReTask(TASKBASE* task)
+{
+	mDungeon_TaskMgr->Add_ReTask(task);
+	return S_OK;
+
+}
 HRESULT CDungeon_Manager::Check_Task()
 {
 	TASKBASE* getTask = nullptr;
@@ -281,17 +287,31 @@ _bool CDungeon_Manager::Task_Mine_Tile(TASKBASE* task)
 	// 2. 조건 찾기
 	for (auto& unit : unitlist)
 	{
-		// 타일과 가까운 유닛 찾기
-		_float distance = _float3::Distance(unit->Get_WorldPostition(), tile->Get_WorldPostition());
-		if (distance < maxdis)
+		CGameObject_Mine *Mine = static_cast<CGameObject_Mine*>(unit);
+		if (Mine == nullptr)
+			continue;
+		if(Mine->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+			continue;
+
+		if (Mine->Get_ComBehavior()->Get_CurrentSequnce()->Get_SeqMoveType() == CNode_Seqeunce::SEQMOTAIONTYPE_IDLE)
 		{
-			maxdis = distance;
-			SearchMine = (CGameObject_Mine*)unit;
+			// 타일과 가까운 유닛 찾기
+			_float distance = _float3::Distance(unit->Get_WorldPostition(), tile->Get_WorldPostition());
+			if (distance < maxdis)
+			{
+				maxdis = distance;
+				SearchMine = Mine;
+			}
 		}
+		
 	}
 
 	if (SearchMine == nullptr)
+	{
+		// 재탐색
+		Add_ReTask(task);
 		return false;
+	}
 	
 
 	// 3. 유닛에게 정보전달

@@ -46,6 +46,7 @@ protected:
 public:
 	HRESULT NativeConstruct_Prototype();
 
+	HRESULT Add_ReTask(TASKBASE* task);
 
 private:
 	HRESULT Add_Task(TASKBASE* task);
@@ -70,6 +71,7 @@ public:
 
 private:
 	list<TASKBASE*> mListTask;
+	list<TASKBASE*> mReListTask;
 
 public:
 	static CDungeon_Task* Create();

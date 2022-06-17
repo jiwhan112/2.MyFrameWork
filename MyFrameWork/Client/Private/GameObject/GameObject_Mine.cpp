@@ -136,8 +136,7 @@ HRESULT CGameObject_Mine::Init_AI_MINE()
 	// TILE
 	CSequnce_TILE* Seq_TILE= CSequnce_TILE::Create(this);
 	CSequnce_TILE::tag_SeqTILE DefaultTileDesc;
-	DefaultTileDesc.Runtime = mTimeForSpeed * 0.5f;
-
+	DefaultTileDesc.DigAniIndex = -1;
 	Seq_TILE->Restart(&DefaultTileDesc);
 	mComBehavior->Add_Seqeunce("DIG", Seq_TILE);
 
@@ -232,29 +231,34 @@ void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
 
 
 	// 뚫을 타일 위치 찾기
-	_float3 GoalPos =  tile->Get_AbleTilePos(0.5f);
+	_float3 GoalPos =  tile->Get_AbleTilePos(0.3f);
 	
-	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
-	_uint GoalIndex = StartIndex;
+	// GoalPos;
+
+	/*_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
+	_uint GoalIndex = StartIndex;*/
 
 	// 해당 위치의 네비메시 셀 인덱스 반환
-	if (mCurrentNavi->Get_PickPosForIndex(GoalPos, &GoalIndex))
-	{
-		// 경로 탐색
-		mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
-		if (mCurrentPathList.empty() == false)
-			mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
-	}
+	//if (mCurrentNavi->Get_PickPosForIndex(GoalPos, &GoalIndex))
+	//{
+	//	// 경로 탐색
+	//	mCurrentPathList = mCurrentNavi->AstartPathFind(StartIndex, GoalIndex);
+	//	if (mCurrentPathList.empty() == false)
+	//		mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
+	//}
 
-	else
-	{
-		tile->Add_TileTask_this();
-		return;
-	}
+	//else
+	//{
+	//	tile->Add_TileTask_this();
+	//	return;
+	//}
 
 	// 타일 채굴
+	CSequnce_TILE::SEQTILE desc;
+	desc.GoalPos = GoalPos;
+	desc.DigAniIndex = 1;
 	mSearchTile = tile;
-	mComBehavior->Select_Sequnce("DIG");
+	mComBehavior->Select_Sequnce("DIG",&desc);
 }
 
 void CGameObject_Mine::Set_Dig_Gold(CGameObject_3D_Tile * tile)

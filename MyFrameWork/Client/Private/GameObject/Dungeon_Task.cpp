@@ -12,6 +12,12 @@ HRESULT CDungeon_Task::NativeConstruct_Prototype()
 	return S_OK;
 }
 
+HRESULT CDungeon_Task::Add_ReTask(TASKBASE * task)
+{
+	mReListTask.push_front(task);
+	return S_OK;
+}
+
 HRESULT CDungeon_Task::Add_Task(TASKBASE * task)
 {
 	if (task != nullptr)
@@ -104,8 +110,19 @@ HRESULT CDungeon_Task::Add_Task_EnemyMoveWorld_Dealy(TASKMAP_TIMER desc)
 
 TASKBASE * CDungeon_Task::Get_BackTask()
 {
+	// 다시 ReTask를 넣음
+	if (mReListTask.empty() == false)
+	{
+		TASKBASE* retask = mReListTask.front();
+		mReListTask.pop_front();
+		mListTask.push_front(retask);
+	}
+
+
 	if (mListTask.empty())
+	{
 		return nullptr;
+	}
 
 	TASKBASE* baseTask = mListTask.back();
 	mListTask.pop_back();

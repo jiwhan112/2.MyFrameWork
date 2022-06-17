@@ -73,6 +73,7 @@ public: // For. object
 public:	// For. Task
 	// 피킹시 각 타일에서 자신을 할일로 등록한다.
 	// 인터페이스 함수
+	HRESULT Add_ReTask(TASKBASE* task);
 	HRESULT Add_Task_Tile(_uint index);
 	HRESULT Add_Task_Gold(_uint index);
 	HRESULT Add_Task_WorldMove(_float3 WorldPos);

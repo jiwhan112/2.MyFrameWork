@@ -61,7 +61,7 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	mStartPostition = SpawnPos;
 	Set_LookDir(_float3(-1, 0, -1));
 
-	_float size = 5.0f;
+	_float size = 1.0f;
 	mComTransform->Scaled(_float3(size, size, size));
 
 
@@ -79,6 +79,8 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	// 충돌 정보
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
+
+	size = 3.0f;
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Init_Collider();

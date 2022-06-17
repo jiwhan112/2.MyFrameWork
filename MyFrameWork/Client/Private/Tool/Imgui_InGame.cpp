@@ -93,6 +93,7 @@ HRESULT CImgui_InGame::Edit_InGame()
 
 	//_float3 Rand_UnitSpawnPos = _float3(CHelperClass::RandomInt(TileIndex));
 	_float3 SpawnPos = mSpawnPostitionDAUNGEON;
+	SpawnPos.y += 10;
 
 	if (ImGui::Button("Create_Dungeon_MINE"))
 	{
