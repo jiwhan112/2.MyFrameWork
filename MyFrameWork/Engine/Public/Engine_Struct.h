@@ -30,6 +30,7 @@ namespace Engine
 		XMFLOAT4	vSpecular;
 		XMFLOAT4	vDirection;
 		XMFLOAT4	vPosition;
+		float		fRange;
 	}LIGHTDESC;
 
 	// 정점 타입별로 셰이더를 만들 것이다.

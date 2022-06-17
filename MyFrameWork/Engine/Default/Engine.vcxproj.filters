@@ -163,6 +163,9 @@
     <Filter Include="01.Utility\06.ComponentMgr\08.BehaviorTree">
       <UniqueIdentifier>{e7a1c5cb-f1d1-430c-ba07-40498af2bb73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Shader">
+      <UniqueIdentifier>{40428f61-7e64-422b-b402-06daf7dbd5bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -488,5 +491,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl">
+      <Filter>98.Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>98.Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

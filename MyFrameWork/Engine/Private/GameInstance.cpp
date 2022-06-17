@@ -16,6 +16,7 @@ CGameInstance::CGameInstance()
 	, m_pFrstumMgr(CFrustum::GetInstance())
 	, m_pFontMgr(CFontMgr::GetInstance())
 	, m_pEasingMgr(CEasingMgr::GetInstance())
+	, m_pRenderTargetMgr(CRenderTargetMgr::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -30,10 +31,11 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pFrstumMgr);
 	Safe_AddRef(m_pFontMgr);
 	Safe_AddRef(m_pEasingMgr);
+	Safe_AddRef(m_pRenderTargetMgr);
 
 	mIsRender_Collider = true;
 	mIsRender_Collider_Navi = true;
-	
+
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, const CGraphic_Device::GRAPHICDESC & GraphicDesc, ID3D11Device ** ppDeviceOut, ID3D11DeviceContext ** ppDeviceContextOut)
@@ -49,6 +51,9 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
 	FAILED_CHECK(m_pFrstumMgr->Initialize());
+	FAILED_CHECK(m_pRenderTargetMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
+	FAILED_CHECK(m_pLightMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
+
 	return S_OK;
 }
 
@@ -416,6 +421,13 @@ _float3 CGameInstance::Easing3(EasingTypeID eEasingType, _float3 fStartPoint, _f
 	return m_pEasingMgr->Easing3(eEasingType, fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
 }
 
+ID3D11ShaderResourceView * CGameInstance::Get_RenderTargetSRV(const _tchar * pTargetTag)
+{
+	if (nullptr == m_pRenderTargetMgr)
+		return nullptr;
+	return m_pRenderTargetMgr->Get_SRV(pTargetTag);
+}
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -456,6 +468,9 @@ void CGameInstance::Release_Engine()
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
 
+	if (0 != CRenderTargetMgr::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CRenderTargetMgr");
+
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");
 
@@ -476,5 +491,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pFrstumMgr);
 	Safe_Release(m_pFontMgr);
 	Safe_Release(m_pEasingMgr);
+	Safe_Release(m_pRenderTargetMgr);
 
 }

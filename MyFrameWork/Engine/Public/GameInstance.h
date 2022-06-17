@@ -13,6 +13,7 @@
 #include "Frstum.h"
 #include "FontMgr.h"
 #include "EasingMgr.h"
+#include "RenderTargetMgr.h"
 
 
 BEGIN(Engine)
@@ -100,6 +101,12 @@ public: // FOR.EASING
 	_float	Easing(EasingTypeID eEasingType, _float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);
 	_float3	Easing3(EasingTypeID eEasingType, _float3 fStartPoint, _float3 fTargetPoint, _float fPassedTime, _float fTotalTime);
 
+public: // For. RenderTarget
+	// ·£´õ Å¸°Ù 
+	ID3D11ShaderResourceView* Get_RenderTargetSRV(const _tchar* pTargetTag);
+
+
+
 public: // FOR.DEBUG
 	bool Get_IsColliderRender() const { return mIsRender_Collider; }
 	bool Get_IsColliderRender_Navi() const { return mIsRender_Collider_Navi; }
@@ -125,6 +132,7 @@ private:
 	CFrustum*					m_pFrstumMgr = nullptr;
 	CFontMgr*					m_pFontMgr = nullptr;
 	CEasingMgr*					m_pEasingMgr = nullptr;
+	CRenderTargetMgr*			m_pRenderTargetMgr = nullptr;
 
 public:
 	static void Release_Engine();

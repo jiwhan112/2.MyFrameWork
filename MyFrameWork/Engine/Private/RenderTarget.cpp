@@ -1,4 +1,6 @@
 #include "RenderTarget.h"
+#include "Shader.h"
+#include "VIBuffer_Rect.h"
 
 CRenderTarget::CRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: mDevice(pDevice)
@@ -12,6 +14,9 @@ HRESULT CRenderTarget::NativeConstruct(_uint iSizeX, _uint iSizeY, DXGI_FORMAT e
 {
 	if (nullptr == mDevice)
 		return E_FAIL;
+
+	// 초기화 색
+	mClearColor = vClearColor;
 
 	// 랜더 타깃용 텍스처 선언
 	D3D11_TEXTURE2D_DESC texDesc;
@@ -34,6 +39,53 @@ HRESULT CRenderTarget::NativeConstruct(_uint iSizeX, _uint iSizeY, DXGI_FORMAT e
 	FAILED_CHECK(mDevice->CreateRenderTargetView(mTexture2D, nullptr, &mRTV));
 	FAILED_CHECK(mDevice->CreateShaderResourceView(mTexture2D, nullptr, &mSRV));
 
+	return S_OK;
+}
+
+HRESULT CRenderTarget::Clear()
+{
+	// 랜터 타겟 초기화
+	if (nullptr == mDeviceContext)
+		return E_FAIL;
+
+	mDeviceContext->ClearRenderTargetView(mRTV, (_float*)&mClearColor);
+	return S_OK;
+}
+
+HRESULT CRenderTarget::Ready_DebugDesc(_float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	// 셰이더에 넘길 매트릭스 생성
+	_uint		iNumViewports = 1;
+
+	D3D11_VIEWPORT		Viewport;
+
+	mDeviceContext->RSGetViewports(&iNumViewports, &Viewport);
+
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
+
+	// 월드 세팅
+	m_WorldMatrix._11 = fSizeX;
+	m_WorldMatrix._22 = fSizeY;
+	m_WorldMatrix._33 = 1.f;
+	memcpy(&m_WorldMatrix.m[3][0], &_float4(fX - (Viewport.Width * 0.5f), -fY + (Viewport.Height * 0.5f), 0.f, 1.f), sizeof(_float4));
+
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_WorldMatrix)));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f)));
+	return S_OK;
+}
+
+HRESULT CRenderTarget::Render_DebugBuffer(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
+{
+	// 세팅된 정보를 셰이더에 넘겨서 그려줌
+	pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4));
+	pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4));
+	pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4));
+
+	// 셰이더 타겟 정보를 넘김
+	pShader->Set_Texture("g_TargetTexture", mSRV );
+
+	pVIBuffer->Render(pShader, 0);
 	return S_OK;
 }
 

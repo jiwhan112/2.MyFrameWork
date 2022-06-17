@@ -16,6 +16,7 @@ public:
 
 public:
 	HRESULT NativeConstruct(const LIGHTDESC& LightDesc);
+	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
 private:
 	ID3D11Device*				mpDevice = nullptr;
