@@ -299,6 +299,7 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
+	movepath->Set_TimeMax(0.6f);
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
 
 	funcion->Set_Funcion(CAction_Function::FUNCION_LOOKTILE);

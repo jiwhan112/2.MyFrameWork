@@ -231,12 +231,14 @@ void CGameObject_Mine::Set_Dig_Tile(CGameObject_3D_Tile * tile)
 
 
 	// 뚫을 타일 위치 찾기
-	_float3 GoalPos =  tile->Get_AbleTilePos(0.3f);
+	_float3 GoalPos =  tile->Get_AbleTilePos(0.5f);
 	
 	// GoalPos;
 
-	/*_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
-	_uint GoalIndex = StartIndex;*/
+	/*
+	_uint StartIndex = mCurrentNavi->Get_CurrentCellIndex();
+	_uint GoalIndex = StartIndex;
+	*/
 
 	// 해당 위치의 네비메시 셀 인덱스 반환
 	//if (mCurrentNavi->Get_PickPosForIndex(GoalPos, &GoalIndex))

@@ -137,7 +137,8 @@ class CSequnce_TILE:
 public:
 	typedef struct tag_SeqTILE
 	{
-		_int	DigAniIndex=-1;
+		_int	DigAniIndex = -1;
+		_float	SpeedMax = 0.6f;
 		_float3 GoalPos=_float3();
 
 
