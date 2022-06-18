@@ -51,7 +51,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
 	FAILED_CHECK(m_pFrstumMgr->Initialize());
-	FAILED_CHECK(m_pRenderTargetMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
+//	FAILED_CHECK(m_pRenderTargetMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
 	FAILED_CHECK(m_pLightMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
 
 	return S_OK;

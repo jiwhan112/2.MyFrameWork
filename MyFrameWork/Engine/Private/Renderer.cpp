@@ -57,8 +57,8 @@ HRESULT CRenderer::Render()
 #ifdef _DEBUG
 
 //	FAILED_CHECK(Render_Debug());
-	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_DEFERRED)));
-//	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TEXT("MRT_LightAcc")));
+	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_DEFERRED), mComVIRECT, mComShader));
+//	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_LIGHTACC), mComVIRECT, mComShader));
 
 #endif
 
@@ -175,6 +175,15 @@ HRESULT CRenderer::Render_UI()
 
 HRESULT CRenderer::RenderTargetSetting()
 {
+	// 셰이더와 버퍼 초기화
+	mComVIRECT = CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext);
+	if (nullptr == mComVIRECT)
+		return E_FAIL;
+
+	mComShader = CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+	if (nullptr == mComShader)
+		return E_FAIL;
+
 
 	// 랜더 타겟들 세팅
 	if (nullptr == mRenderTargetManager)
@@ -218,16 +227,6 @@ HRESULT CRenderer::RenderTargetSetting()
 	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_LIGHTACC), TAGTARGET(RENDERTARGET_SHADE)));
 	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_LIGHTACC), TAGTARGET(RENDERTARGET_SPECULAR)));
 
-
-	// Render
-	// Rect 텍스처 생성
-	mComVIRECT = CVIBuffer_Rect::Create(m_pDevice, m_pDeviceContext);
-	if (nullptr == mComVIRECT)
-		return E_FAIL;
-
-	mComShader = CShader::Create(m_pDevice, m_pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
-	if (nullptr == mComShader)
-		return E_FAIL;
 
 
 

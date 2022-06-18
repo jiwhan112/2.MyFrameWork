@@ -14,7 +14,7 @@ private:
 	virtual ~CRenderTargetMgr() = default;
 
 public:
-	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+//	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 
 	HRESULT Add_RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, const _tchar* pRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, _float4 vClearColor);
 	HRESULT Add_MRT(const _tchar* pMRTTag, const _tchar* pRenderTargetTag);
@@ -26,7 +26,7 @@ public:
 public:
 	// 텍스처를 회면에 그려준다. / 화면 좌표와 사이즈
 	HRESULT Ready_DebugDesc(const _tchar* pTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
-	HRESULT Render_DebugBuffer(const _tchar* pMRTTag);
+	HRESULT Render_DebugBuffer(const _tchar* pMRTTag,class CVIBuffer_Rect* vibuffer, class CShader* shader);
 #endif // _DEBUG
 
 public: 
@@ -47,8 +47,8 @@ private:
 #ifdef _DEBUG
 private:
 	// 텍스처 랜더용 사각형 버퍼
-	class CVIBuffer_Rect*					mComVIbuffer_Rect = nullptr;
-	class CShader*							mComShader= nullptr;
+//	class CVIBuffer_Rect*					mComVIbuffer_Rect = nullptr;
+//	class CShader*							mComShader= nullptr;
 #endif // _DEBUG
 
 public:

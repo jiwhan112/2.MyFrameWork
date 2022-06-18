@@ -10,21 +10,20 @@ CRenderTargetMgr::CRenderTargetMgr()
 {
 }
 
-HRESULT CRenderTargetMgr::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-{
-	// 텍스처와 셰이더 출력
-	mComVIbuffer_Rect = CVIBuffer_Rect::Create(pDevice, pDeviceContext);
-	if (nullptr == mComVIbuffer_Rect)
-		return E_FAIL;
-
-	mComShader = CShader::Create(pDevice, pDeviceContext, 
-		TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
-	if (nullptr == mComShader)
-		return E_FAIL;
-
-
-	return S_OK;
-}
+//HRESULT CRenderTargetMgr::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
+//{
+//	//// 텍스처와 셰이더 출력
+//	//mComVIbuffer_Rect = CVIBuffer_Rect::Create(pDevice, pDeviceContext);
+//	//if (nullptr == mComVIbuffer_Rect)
+//	//	return E_FAIL;
+//
+//	//mComShader = CShader::Create(pDevice, pDeviceContext, 
+//	//	TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+//	//if (nullptr == mComShader)
+//	//	return E_FAIL;
+//
+//	return S_OK;
+//}
 
 HRESULT CRenderTargetMgr::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * pRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, _float4 vClearColor)
 {
@@ -118,7 +117,7 @@ HRESULT CRenderTargetMgr::Ready_DebugDesc(const _tchar * pTargetTag, _float fX, 
 	return pRenderTarget->Ready_DebugDesc(fX, fY, fSizeX, fSizeY);
 }
 
-HRESULT CRenderTargetMgr::Render_DebugBuffer(const _tchar * pMRTTag)
+HRESULT CRenderTargetMgr::Render_DebugBuffer(const _tchar * pMRTTag, class CVIBuffer_Rect* vibuffer, class CShader* shader)
 {
 	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
 	if (nullptr == pMRTList)
@@ -126,7 +125,7 @@ HRESULT CRenderTargetMgr::Render_DebugBuffer(const _tchar * pMRTTag)
 
 	for (auto& pRenderTarget : *pMRTList)
 	{
-		pRenderTarget->Render_DebugBuffer(mComShader, mComVIbuffer_Rect);
+		pRenderTarget->Render_DebugBuffer(shader, vibuffer);
 	}
 
 	return S_OK;
@@ -164,8 +163,8 @@ list<CRenderTarget*>* CRenderTargetMgr::Find_MRT(const _tchar * pMRTTag)
 
 void CRenderTargetMgr::Free()
 {
-	Safe_Release(mComVIbuffer_Rect);
-	Safe_Release(mComShader);
+//	Safe_Release(mComVIbuffer_Rect);
+//	Safe_Release(mComShader);
 
 	// 멀티 랜더타깃을 먼저 지움
 	for (auto& Pair : mMapMRT)
