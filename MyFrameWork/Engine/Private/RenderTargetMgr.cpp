@@ -17,7 +17,8 @@ HRESULT CRenderTargetMgr::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext
 	if (nullptr == mComVIbuffer_Rect)
 		return E_FAIL;
 
-	mComShader = CShader::Create(pDevice, pDeviceContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+	mComShader = CShader::Create(pDevice, pDeviceContext, 
+		TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
 	if (nullptr == mComShader)
 		return E_FAIL;
 

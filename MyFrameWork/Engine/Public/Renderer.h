@@ -10,7 +10,8 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND_FIRST,RENDER_NONBLEND_SECOND, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND_FIRST,RENDER_NONBLEND_SECOND,RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
+
 private:
 	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~CRenderer() = default;
@@ -23,6 +24,19 @@ public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 	HRESULT Render();
 
+	// 랜더 타겟과 조명 
+private:
+	class CRenderTargetMgr*					mRenderTargetManager	= nullptr;
+	class CLightMgr*						mLightManager			= nullptr;
+
+private:
+	class CVIBuffer_Rect*					mComVIRECT	= nullptr;
+	class CShader*							mComShader		= nullptr;
+
+	_float4x4								mWorldMat;
+	_float4x4								mViewdMat;
+	_float4x4								mProjMat;
+
 private:
 	list<class CGameObject*>				mRenderObjects[RENDER_END];
 	typedef	list <class CGameObject* >		RENDEROBJECTS;
@@ -33,6 +47,10 @@ private:
 	HRESULT Render_NonAlpha_Second();
 	HRESULT Render_Alpha();
 	HRESULT Render_UI();
+
+private:
+	HRESULT RenderTargetSetting();
+
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
