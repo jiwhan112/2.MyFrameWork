@@ -116,28 +116,26 @@ HRESULT CDungeon_Objects::Ready_IMGUI()
 HRESULT CDungeon_Objects::Ready_Light()
 {
 	// 라이트 세팅
-	// 빛 세팅
+
 	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+	
+	// 전역 빛 세팅
+	LIGHTDESC		DirLightDesc;
+	ZeroMemory(&DirLightDesc, sizeof(LIGHTDESC));
 
-	LIGHTDESC		LightDesc;
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	DirLightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
+	DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	DirLightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	DirLightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	DirLightDesc.vDirection = _float4(-1.f, -1.f, -1.f, 0.f);
 
-	//LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
-	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	////LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
-	//LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	//LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
-
-	//LightDesc.vDirection = _float4(1, -1.f, 1, 0.f);
-
-	LightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-
-	if (FAILED(pGameInstance->Add_Light(mDevice, mDeviceContext, LightDesc)))
+	if (FAILED(pGameInstance->Add_Light(mDevice, mDeviceContext, DirLightDesc)))
 		return E_FAIL;
+
+
+	// 포인트 라이트 세팅
+
+
 
 	return S_OK;
 }

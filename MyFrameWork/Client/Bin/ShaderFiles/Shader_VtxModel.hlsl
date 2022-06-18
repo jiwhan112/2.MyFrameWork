@@ -182,7 +182,7 @@ PS_OUT PS_MAIN_RED(PS_IN In)
 	Diffuse.a = 1;
 
 
-	Out.vDiffuse = Diffuse;
+	Out.vDiffuse = saturate(Diffuse * 1.3f);
 	Out.vNormal = float4(1, 1, 1, 1);
 	Out.vDepth = float4(1, 1, 1, 1);
 	return Out;

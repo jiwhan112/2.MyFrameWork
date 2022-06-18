@@ -212,6 +212,7 @@ HRESULT CGameObject_3D_Static::Set_Component()
 	{
 		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_COLLIDER_SPHERE), TEXT("Com_Collider"), (CComponent**)&mComCollider));
 	}
+
 	//if (mComTexture == nullptr)
 	//{
 	//	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TAGCOM(COMPONENT_TEXTURE_MAP_FBX), TEXT("Com_Texture"), (CComponent**)&mComTexture));

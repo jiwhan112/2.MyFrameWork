@@ -83,6 +83,7 @@ HRESULT CRenderTarget::Render_DebugBuffer(CShader * pShader, CVIBuffer_Rect * pV
 	pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4));
 
 	// 셰이더 타겟 정보를 넘김
+	// 디버깅용 텍스처 정보 Deferred 에서 사용한다.
 	pShader->Set_Texture("g_TargetTexture", mSRV );
 
 	pVIBuffer->Render(pShader, 0);

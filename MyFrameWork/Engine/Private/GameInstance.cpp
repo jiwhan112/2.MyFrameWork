@@ -52,7 +52,7 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
 	FAILED_CHECK(m_pFrstumMgr->Initialize());
 //	FAILED_CHECK(m_pRenderTargetMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
-	FAILED_CHECK(m_pLightMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
+//	FAILED_CHECK(m_pLightMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
 
 	return S_OK;
 }
@@ -448,6 +448,9 @@ void CGameInstance::Release_Engine()
 	if (0 != CLightMgr::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CLightMgr");
 
+	if (0 != CRenderTargetMgr::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CRenderTargetMgr");
+
 	if (0 != CPipeLine::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CPipeLine");
 
@@ -467,9 +470,6 @@ void CGameInstance::Release_Engine()
 
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
-
-	if (0 != CRenderTargetMgr::GetInstance()->DestroyInstance())
-		MSGBOX("Failed to Delete CRenderTargetMgr");
 
 	if (0 != CGraphic_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CGraphic_Device");

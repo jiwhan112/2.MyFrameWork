@@ -90,6 +90,7 @@ namespace Engine
 		default:
 			break;
 		}
+		return L"";
 	}
 
 	static const wchar_t* STR_TAYMRT(E_MRT e)
@@ -107,6 +108,7 @@ namespace Engine
 		default:
 			break;
 		}
+		return L"";
 	}
 
 
