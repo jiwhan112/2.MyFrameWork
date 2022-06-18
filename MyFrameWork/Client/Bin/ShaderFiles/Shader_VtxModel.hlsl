@@ -2,8 +2,8 @@
 
 // 정적 모델 셰이더
 
-texture2D g_DiffuseTexture;
-
+texture2D			g_DiffuseTexture;
+texture2D			g_NormalTexture;
 
 // 소켓
 cbuffer SocketMatrix
@@ -33,6 +33,11 @@ struct VS_OUT
 	float4		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
+	float4		vProjPos : TEXCOORD2;
+	float4		vTangent : TANGENT;
+	float4		vBinormal : BINORMAL;
+
+
 };
 
 VS_OUT VS_MAIN_DEFAULT(VS_IN In)
@@ -45,10 +50,13 @@ VS_OUT VS_MAIN_DEFAULT(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vNormal = normalize(mul(vector(In.vNormal, 0.0f), g_WorldMatrix));
-	//	Out.vTangent = normalize(mul(vector(In.vTangent, 0.0f), g_WorldMatrix));
 	Out.vTexUV = In.vTexUV;
+	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+	Out.vProjPos = Out.vPosition;
+	Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), g_WorldMatrix));
+	Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
+
 	return Out;
 }
 
@@ -66,8 +74,9 @@ VS_OUT VS_MAIN_SOCKET(VS_IN In)
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
 	Out.vWorldPos = mul(vector(In.vPosition, 1.f), WorldMatrix);
 	Out.vNormal = normalize(mul(vector(In.vNormal, 0.0f), WorldMatrix));
-	//	Out.vTangent = normalize(mul(vector(In.vTangent, 0.0f), WorldMatrix));
 	Out.vTexUV = In.vTexUV;
+	Out.vProjPos = Out.vPosition;
+
 	return Out;
 }
 
@@ -78,11 +87,19 @@ struct PS_IN
 	float4		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
+	float4		vProjPos : TEXCOORD2;
+	float4		vTangent : TANGENT;
+	float4		vBinormal : BINORMAL;
+
 };
 
 struct PS_OUT
 {
-	vector		vColor : SV_TARGET0;
+	// vector		vColor : SV_TARGET0;
+
+	vector		vDiffuse : SV_TARGET0;
+	vector		vNormal : SV_TARGET1;
+	vector		vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN_DEFAULT(PS_IN In)
@@ -91,6 +108,8 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 	// 텍스처 색상
 	float4	DiffuseMap = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+
+
 
 	// 노말
 	// float3	NormalMap = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
@@ -105,65 +124,81 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 
 	// 노말2
 
-	float	Noraml = saturate(dot(normalize(In.vNormal), normalize(g_vLightDir) * -1));
+	// float	Noraml = saturate(dot(normalize(In.vNormal), normalize(g_vLightDir) * -1));
 
 	// 스펙큘러
-	float4		vReflect = reflect(normalize(g_vLightDir), In.vNormal);
-	float4		vLook = normalize(g_CameraPosition - In.vWorldPos);
-	float		fSpecular = pow(saturate(dot(normalize(vReflect), vLook)), 30.f);
+	//float4		vReflect = reflect(normalize(g_vLightDir), In.vNormal);
+	//float4		vLook = normalize(g_CameraPosition - In.vWorldPos);
+	//float		fSpecular = pow(saturate(dot(normalize(vReflect), vLook)), 30.f);
 
 	float4  Diffuse = g_vLightDiffuse * DiffuseMap;
-	float4  Shade = saturate(Noraml + (g_vLightAmbient * g_vMtrlAmbient));
-	float4  Specular = 0;//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+	//float4  Shade = saturate(Noraml + (g_vLightAmbient * g_vMtrlAmbient));
+	//float4  Specular = 0;//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
 
-	float4 color = Diffuse * Shade + Specular;
-	color.a = DiffuseMap.a;
-	if (color.a < 0.5f)
+	Diffuse.a = DiffuseMap.a;
+	if (Diffuse.a < 0.5f)
 		discard;
 
-	Out.vColor = color;
+
+	Out.vDiffuse = Diffuse;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.w / 300.0f, In.vProjPos.z / In.vProjPos.w, 0.f, 0.f);
+
 	return Out;
 }
 
-PS_OUT PS_MAIN_TOON(PS_IN In)
+PS_OUT PS_MAIN_NOMAL(PS_IN In)
 {
+	//Albedo = ceil(Albedo * 5) / 5.0f; // Ceil
+
 	PS_OUT			Out = (PS_OUT)0;
 
-	// 텍스처 색상
-	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
-	// Diffuse
+	// 노말 맵으로 노말 연산
+	vector		vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	vector		vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
+	float3		vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
-	// TOON
-	Albedo = ceil(Albedo * 5) / 5.0f;
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
 
-	Out.vColor = Albedo;
+	vNormal = mul(vNormal, WorldMatrix);
+
+	Out.vDiffuse = vDiffuse;
+	Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.w / 300.0f, In.vProjPos.z / In.vProjPos.w, 0.f, 0.f);
+
+	if (Out.vDiffuse.a < 0.1f)
+		discard;
+
 	return Out;
 }
 
 PS_OUT PS_MAIN_RED(PS_IN In)
 {
+
 	PS_OUT			Out = (PS_OUT)0;
-	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	// 텍스처 색상
+	float4	DiffuseMap = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	float4 Diffuse = DiffuseMap;
+	Diffuse.a = 1;
 
-	Albedo.a = 1.f;
 
-	// Out.vColor.rgba = 0.0f;
-	// Out.vColor.r = 1.0f;
-	// Out.vColor.a = 1.0f;
-	Out.vColor = Albedo;
+	Out.vDiffuse = Diffuse;
+	Out.vNormal = float4(1, 1, 1, 1);
+	Out.vDepth = float4(1, 1, 1, 1);
 	return Out;
 }
 PS_OUT PS_MAIN_GREEN(PS_IN In)
 {
-
 	PS_OUT			Out = (PS_OUT)0;
-	float4	Albedo = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	// 텍스처 색상
+	float4	DiffuseMap = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	float4 Diffuse = DiffuseMap;
+	Diffuse.a = 1;
 
-	Albedo.a = 1.f;
-	Albedo *= 1.3f;
 
-	Out.vColor = Albedo;
-
+	Out.vDiffuse = saturate(Diffuse * 1.5f);
+	Out.vNormal = float4(1, 1, 1, 1);
+	Out.vDepth = float4(1, 1, 1, 1);
 	return Out;
 }
 
@@ -171,30 +206,16 @@ PS_OUT PS_MAIN_GREEN(PS_IN In)
 PS_OUT PS_MAIN_EMSIVE_HEART(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
-
 	// 텍스처 색상
 	float4	DiffuseMap = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
-	float4  Diffuse = g_vLightDiffuse * DiffuseMap;
+	float4 Diffuse = DiffuseMap;
+	Diffuse.a = 1;
 
-	//if (DiffuseMap.r > 0.2f)
-	//{
-	//	Diffuse = DiffuseMap * cos(g_Timer);;
-	//}
-	//else
-	//{
-	//	Diffuse = g_vLightDiffuse * DiffuseMap;
-	//	
-	//}
 
-	Diffuse = g_vLightDiffuse * DiffuseMap;
+	Out.vDiffuse = Diffuse;
+	Out.vNormal = float4(1, 1, 1, 1);
+	Out.vDepth = float4(1, 1, 1, 1);
 
-	float4 color = Diffuse;
-
-	color.a = DiffuseMap.a;
-	if (color.a < 0.5f)
-		discard;
-
-	Out.vColor = color;
 	return Out;
 }
 
