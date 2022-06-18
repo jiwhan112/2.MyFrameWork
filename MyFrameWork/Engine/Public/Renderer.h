@@ -46,6 +46,8 @@ private:
 	HRESULT Render_NonAlpha();
 	HRESULT Render_Lights();
 	HRESULT Render_Blend();
+	HRESULT Render_Post();
+	
 	HRESULT Render_NoLights();
 	HRESULT Render_Alpha();
 	HRESULT Render_UI();

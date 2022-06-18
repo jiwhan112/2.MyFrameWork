@@ -50,7 +50,7 @@ texture2D			g_SpecularTexture;
 // 그림자
 
 // 포스트 프로세싱
-//texture2D			g_RenderTexture;
+texture2D			g_RenderTexture;
 
 sampler DefaultSampler = sampler_state
 {
@@ -245,16 +245,10 @@ PS_OUT PS_MAIN_POST(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	//vector		vDiffuseDesc = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
-	//vector		vShadeDesc = g_ShadeTexture.Sample(DefaultSampler, In.vTexUV);
-	//vector		vSpecularDesc = g_SpecularTexture.Sample(DefaultSampler, In.vTexUV);
+	float4		vRenderTarget = g_RenderTexture.Sample(DefaultSampler, In.vTexUV);
 
-	//// Diffuse 텍스처와 Shader / Specular를 연산공식에 맞게 그려준다.
-	//Out.vColor = vDiffuseDesc * vShadeDesc + vSpecularDesc;
-
-	//if (Out.vColor.a == 0.0f)
-	//	discard;
-
+	// Diffuse 텍스처와 Shader / Specular를 연산공식에 맞게 그려준다.
+	Out.vColor = 1 - vRenderTarget;
 	return Out;
 }
 

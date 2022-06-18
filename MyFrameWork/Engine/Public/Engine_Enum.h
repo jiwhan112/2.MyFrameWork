@@ -54,6 +54,7 @@ namespace Engine
 		RENDERTARGET_DEPTH,
 		RENDERTARGET_SPECULAR,
 		RENDERTARGET_SHADE,
+		RENDERTARGET_RENDERER,
 		RENDERTARGET_END
 
 	};
@@ -61,6 +62,7 @@ namespace Engine
 	{
 		MRT_DEFERRED,
 		MRT_LIGHTACC,
+		MRT_POST,
 		MRT_END,
 	};
 
@@ -85,6 +87,10 @@ namespace Engine
 		case RENDERTARGET_SHADE:
 			return L"RENDERTARGET_SHADE";
 			break;
+		case RENDERTARGET_RENDERER:
+			return L"RENDERTARGET_RENDERER";
+			break;
+			
 		case RENDERTARGET_END:
 			break;
 		default:
@@ -103,6 +109,8 @@ namespace Engine
 		case MRT_LIGHTACC:
 			return L"MRT_LIGHTACC";
 			break;
+		case MRT_POST:
+			return L"MRT_POST";
 		case MRT_END:
 			break;
 		default:

@@ -51,6 +51,7 @@ HRESULT CRenderer::Render()
 	FAILED_CHECK(Render_NonAlpha());
 	FAILED_CHECK(Render_Lights());
 	FAILED_CHECK(Render_Blend());
+	FAILED_CHECK(Render_Post());
 	FAILED_CHECK(Render_NoLights());
 	FAILED_CHECK(Render_Alpha());
 	FAILED_CHECK(Render_UI());
@@ -61,6 +62,7 @@ HRESULT CRenderer::Render()
 //	FAILED_CHECK(Render_Debug());
 	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_DEFERRED), mComVIRECT, mComShader));
 	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_LIGHTACC), mComVIRECT, mComShader));
+	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_POST), mComVIRECT, mComShader));
 
 #endif
 
@@ -146,6 +148,8 @@ HRESULT CRenderer::Render_Blend()
 	
 	// 랜더 타겟에 그린 텍스처를 화면에 그린다
 	// 셰이더 리소스 뷰로 넘겨서 그려준다.
+	FAILED_CHECK(mRenderTargetManager->Begin(m_pDeviceContext, TAGMRT(MRT_POST)));
+
 	FAILED_CHECK(mComShader->Set_Texture(STR_TEX_DIFFUSE, mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_DIFFUSE))));
 	FAILED_CHECK(mComShader->Set_Texture("g_ShadeTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_SHADE))));
 	FAILED_CHECK(mComShader->Set_Texture("g_SpecularTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_SPECULAR))));
@@ -153,10 +157,30 @@ HRESULT CRenderer::Render_Blend()
 	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_WORLD, &mWorldMat, sizeof(_float4x4)));
 	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_VIEW, &mViewdMat, sizeof(_float4x4)));
 	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_PROJ, &mProjMat, sizeof(_float4x4)));
-
-
+	
 	// Blend 셰이더 실행
-	mComVIRECT->Render(mComShader, 3);
+	FAILED_CHECK(mComVIRECT->Render(mComShader, 3));
+	FAILED_CHECK(mRenderTargetManager->End(m_pDeviceContext, TAGMRT(MRT_POST)));
+
+	return S_OK;
+
+}
+
+HRESULT CRenderer::Render_Post()
+{
+	if (nullptr == mComVIRECT ||
+		nullptr == mComShader)
+		return E_FAIL;
+
+	// 랜더 타겟에 그린 텍스처를 화면에 그린다
+	// 셰이더 리소스 뷰로 넘겨서 그려준다.
+	FAILED_CHECK(mComShader->Set_Texture("g_RenderTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_RENDERER))));
+
+	//FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_WORLD, &mWorldMat, sizeof(_float4x4)));
+	//FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_VIEW, &mViewdMat, sizeof(_float4x4)));
+	//FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_PROJ, &mProjMat, sizeof(_float4x4)));
+
+	mComVIRECT->Render(mComShader, 4);
 	return S_OK;
 
 }
@@ -277,6 +301,10 @@ HRESULT CRenderer::RenderTargetSetting()
 	FAILED_CHECK(mRenderTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, TAGTARGET(RENDERTARGET_SPECULAR),
 		(_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
+	// Renderer
+	FAILED_CHECK(mRenderTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, TAGTARGET(RENDERTARGET_RENDERER),
+		(_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	
 
 	
 	/* For.MRT_Deferred : 객체들을 그릴때 바인드. */
@@ -287,6 +315,10 @@ HRESULT CRenderer::RenderTargetSetting()
 	/* For.MRT_LightAcc : 빛을 그릴때 바인드 */
 	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_LIGHTACC), TAGTARGET(RENDERTARGET_SHADE)));
 	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_LIGHTACC), TAGTARGET(RENDERTARGET_SPECULAR)));
+
+	// Post
+	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_POST), TAGTARGET(RENDERTARGET_RENDERER)));
+
 
 
 
@@ -302,12 +334,22 @@ HRESULT CRenderer::RenderTargetSetting()
 	XMStoreFloat4x4(&mViewdMat, XMMatrixIdentity());
 	XMStoreFloat4x4(&mProjMat, XMMatrixTranspose(XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f)));
 
+	const int Size = 100;
+	const int HalfSize = 50;
+
 #ifdef _DEBUG
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_DIFFUSE), 100, 100, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_NOMAL), 100, 300, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_DEPTH), 100, 500, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SHADE), 300, 100, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SPECULAR), 300, 300, 200, 200));
+	int _0 = 0;
+	int _1 = 1;
+	int _2 = 2;
+	int _3 = 3;
+
+	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_DIFFUSE), HalfSize+ Size* _0, HalfSize+Size*0, Size, Size));
+	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_NOMAL), HalfSize+Size* _0, HalfSize + Size*1, Size, Size));
+	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_DEPTH), HalfSize+Size* _0, HalfSize + Size*2, Size, Size));
+
+	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SHADE), HalfSize + Size* _1, HalfSize + Size*0, Size, Size));
+	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SPECULAR), HalfSize + Size * _1, HalfSize + Size * 1, Size, Size));
+	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_RENDERER), HalfSize + Size * _1, HalfSize + Size * 2, Size, Size));
 #endif
 
 	return S_OK;
