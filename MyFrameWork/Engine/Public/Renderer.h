@@ -43,11 +43,13 @@ private:
 
 private:
 	HRESULT Render_Priority();
-	HRESULT Render_NonAlpha_First();
-	HRESULT Render_NonAlpha_Second();
+	HRESULT Render_NonAlpha();
+	HRESULT Render_Lights();
+	HRESULT Render_Blend();
+	HRESULT Render_NoLights();
 	HRESULT Render_Alpha();
 	HRESULT Render_UI();
-
+	
 private:
 	HRESULT RenderTargetSetting();
 

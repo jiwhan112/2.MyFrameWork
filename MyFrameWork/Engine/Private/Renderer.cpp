@@ -48,8 +48,10 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pRend
 HRESULT CRenderer::Render()
 {
 	FAILED_CHECK(Render_Priority());
-	FAILED_CHECK(Render_NonAlpha_First());
-	FAILED_CHECK(Render_NonAlpha_Second());
+	FAILED_CHECK(Render_NonAlpha());
+	FAILED_CHECK(Render_Lights());
+	FAILED_CHECK(Render_Blend());
+	FAILED_CHECK(Render_NoLights());
 	FAILED_CHECK(Render_Alpha());
 	FAILED_CHECK(Render_UI());
 
@@ -85,8 +87,10 @@ HRESULT CRenderer::Render_Priority()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_NonAlpha_First()
+HRESULT CRenderer::Render_NonAlpha()
 {
+	FAILED_CHECK(mRenderTargetManager->Begin(m_pDeviceContext, TAGMRT(MRT_DEFERRED)));
+
 	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND_FIRST])
 	{
 		if (nullptr != pRenderObject)
@@ -101,10 +105,6 @@ HRESULT CRenderer::Render_NonAlpha_First()
 	}
 	mRenderObjects[RENDER_NONBLEND_FIRST].clear();
 
-	return S_OK;
-}
-HRESULT CRenderer::Render_NonAlpha_Second()
-{
 	for (auto& pRenderObject : mRenderObjects[RENDER_NONBLEND_SECOND])
 	{
 		if (nullptr != pRenderObject)
@@ -119,10 +119,68 @@ HRESULT CRenderer::Render_NonAlpha_Second()
 	}
 	mRenderObjects[RENDER_NONBLEND_SECOND].clear();
 
+	FAILED_CHECK(mRenderTargetManager->End(m_pDeviceContext, TAGMRT(MRT_DEFERRED)));
+
 	return S_OK;
 }
+
+HRESULT CRenderer::Render_Lights()
+{
+	if (nullptr == mRenderTargetManager)
+		return E_FAIL;
+
+	FAILED_CHECK(mRenderTargetManager->Begin(m_pDeviceContext, TAGMRT(MRT_LIGHTACC)));
+	mLightManager->Render();
+	FAILED_CHECK(mRenderTargetManager->End(m_pDeviceContext, TAGMRT(MRT_LIGHTACC)));
+
+	return S_OK;
+
+}
+
+HRESULT CRenderer::Render_Blend()
+{
+	if (nullptr == mComVIRECT ||
+		nullptr == mComShader)
+		return E_FAIL;
+	
+	// 텍스처 
+	FAILED_CHECK(mComShader->Set_Texture(STR_TEX_DIFFUSE, mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_DIFFUSE))));
+	FAILED_CHECK(mComShader->Set_Texture("g_ShadeTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_SHADE))));
+	FAILED_CHECK(mComShader->Set_Texture("g_SpecularTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_SPECULAR))));
+
+	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_WORLD, &mWorldMat, sizeof(_float4x4)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_VIEW, &mViewdMat, sizeof(_float4x4)));
+	FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_PROJ, &mProjMat, sizeof(_float4x4)));
+
+
+	// Blend 셰이더 실행
+	mComVIRECT->Render(mComShader, 3);
+
+}
+
+HRESULT CRenderer::Render_NoLights()
+{
+	for (auto& pRenderObject : mRenderObjects[RENDER_NONLIGHT])
+	{
+		if (nullptr != pRenderObject)
+		{
+
+			if (pRenderObject->Get_IsRenderer())
+			{
+				if (FAILED(pRenderObject->Render()))
+					return E_FAIL;
+			}
+		}
+		Safe_Release(pRenderObject);
+	}
+	mRenderObjects[RENDER_NONLIGHT].clear();
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Alpha()
 {
+	// 카메라 정렬 해야됨
 	//mRenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 	//{
 	//	return pSour->Get_CamDistance() > pDest->Get_CamDistance();
@@ -244,10 +302,10 @@ HRESULT CRenderer::RenderTargetSetting()
 	
 #ifdef _DEBUG
 	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_DIFFUSE), 100, 100, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_NOMAL), 100, 300, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_DEPTH), 100, 500, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SHADE), 300, 100, 200, 200));
-	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SPECULAR), 300, 300, 200, 200));
+	//FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_NOMAL), 100, 300, 200, 200));
+	//FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_DEPTH), 100, 500, 200, 200));
+	//FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SHADE), 300, 100, 200, 200));
+	//FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SPECULAR), 300, 300, 200, 200));
 
 #endif
 

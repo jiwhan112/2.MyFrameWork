@@ -1,5 +1,6 @@
 
-// 디퍼드 셰이더용 랜더
+
+
 cbuffer LightDesc
 {
 	vector			g_vLightDir;
@@ -119,13 +120,13 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	/* 로컬위치 * 월드행렬 * 뷰행렬 * 투영행렬 * w나누기. */
 	vWorldPos.x = (In.vTexUV.x * 2.f - 1.f);
 	vWorldPos.y = (In.vTexUV.y * -2.f + 1.f);
-	vWorldPos.z = vDepthDesc.y; /* 0 ~ 1 */ 
+	vWorldPos.z = vDepthDesc.y; /* 0 ~ 1 */
 	vWorldPos.w = 1.f;
 
 	/* 로컬위치 * 월드행렬 * 뷰행렬 * 투영행렬 */
 	vWorldPos.x = (In.vTexUV.x * 2.f - 1.f) * fViewZ;
 	vWorldPos.y = (In.vTexUV.y * -2.f + 1.f) * fViewZ;
-	vWorldPos.z = vDepthDesc.y * fViewZ; /* 0 ~ f */  
+	vWorldPos.z = vDepthDesc.y * fViewZ; /* 0 ~ f */
 	vWorldPos.w = 1.f * fViewZ;
 
 	/* 로컬위치 * 월드행렬 * 뷰행렬 */
@@ -140,7 +141,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	Out.vSpecular.a = 0.f;
 
 
-	return Out;	
+	return Out;
 }
 
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
@@ -242,7 +243,6 @@ RasterizerState CullMode_ccw
 
 technique11		DefaultTechnique
 {
-	// 기본 랜더타겟 렌더링
 	pass DebugBuffer
 	{
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
@@ -252,7 +252,7 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_RECT();
-	}	
+	}
 
 	//pass Light_Directional
 	//{
