@@ -23,6 +23,8 @@ HRESULT CDungeon_Objects::NativeConstruct_Prototype(ID3D11Device* device, ID3D11
 		FAILED_CHECK(Ready_IMGUI());
 //#endif
 
+
+
 		FAILED_CHECK(Ready_Light());
 		FAILED_CHECK(Ready_Camera());
 		FAILED_CHECK(Ready_BackGround());

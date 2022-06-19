@@ -13,7 +13,7 @@
 #include <io.h>
 #include "fmod/fmod.h"
 //#include "fmod.hpp"
-#pragma comment(lib, "fmod_vc.lib")
+// #pragma comment(lib, "fmod_vc.lib")
 
 
 // 셰이더 관련 Include

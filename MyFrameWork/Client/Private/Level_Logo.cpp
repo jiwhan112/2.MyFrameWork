@@ -12,6 +12,9 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCont
 HRESULT CLevel_Logo::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
+
+//	FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM((L"JY_Stage2_BGM.mp3")));
+
 	FAILED_CHECK(Ready_Prototype_GameObject());
 
 	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));

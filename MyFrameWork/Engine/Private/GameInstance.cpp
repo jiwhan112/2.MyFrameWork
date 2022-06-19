@@ -17,6 +17,7 @@ CGameInstance::CGameInstance()
 	, m_pFontMgr(CFontMgr::GetInstance())
 	, m_pEasingMgr(CEasingMgr::GetInstance())
 	, m_pRenderTargetMgr(CRenderTargetMgr::GetInstance())
+	, m_pSoundMgr(CSoundMgr::GetInstance())
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -32,6 +33,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pFontMgr);
 	Safe_AddRef(m_pEasingMgr);
 	Safe_AddRef(m_pRenderTargetMgr);
+	Safe_AddRef(m_pSoundMgr);
 
 	mIsRender_Collider = true;
 	mIsRender_Collider_Navi = true;
@@ -51,6 +53,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInstance, _uint iNumLevels, 
 	FAILED_CHECK(m_pComponent_Manager->Reserve_Container(iNumLevels));
 	FAILED_CHECK(m_pPickMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut, GraphicDesc.hWnd));
 	FAILED_CHECK(m_pFrstumMgr->Initialize());
+	FAILED_CHECK(m_pSoundMgr->Initialize_FMOD());
+
 //	FAILED_CHECK(m_pRenderTargetMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
 //	FAILED_CHECK(m_pLightMgr->Initialize(*ppDeviceOut, *ppDeviceContextOut));
 
@@ -428,6 +432,68 @@ ID3D11ShaderResourceView * CGameInstance::Get_RenderTargetSRV(const _tchar * pTa
 	return m_pRenderTargetMgr->Get_SRV(pTargetTag);
 }
 
+_int CGameInstance::Channel_VolumeUp(CHANNELID eID, _float _vol)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+	return m_pSoundMgr->Channel_VolumeUp(eID, _vol);
+}
+
+_int CGameInstance::Channel_VolumeDown(CHANNELID eID, _float _vol)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+
+	return m_pSoundMgr->Channel_VolumeDown(eID, _vol);
+}
+
+_int CGameInstance::Channel_Pause(CHANNELID eID)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+
+	return m_pSoundMgr->Channel_Pause(eID);
+}
+
+HRESULT CGameInstance::PlaySound(TCHAR * pSoundKey, CHANNELID eID, _float fLouderMultiple)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+
+	return m_pSoundMgr->PlaySound(pSoundKey, eID, fLouderMultiple);
+}
+
+HRESULT CGameInstance::PlayBGM(TCHAR * pSoundKey, _float fLouderMultiple)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+
+	return m_pSoundMgr->PlayBGM(pSoundKey, fLouderMultiple);
+}
+
+void CGameInstance::Stop_ChannelSound(CHANNELID eID)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+
+	m_pSoundMgr->Stop_ChannelSound(eID);
+
+	return;
+}
+
+void CGameInstance::Stop_AllChannel()
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+	m_pSoundMgr->Stop_AllChannel();
+	return;
+}
+
+_float CGameInstance::Get_Channel_Volume(CHANNELID eID)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+	return 	m_pSoundMgr->Get_Channel_Volume(eID);
+}
+
+_bool CGameInstance::Get_Channel_IsPaused(CHANNELID eID)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+	return 	m_pSoundMgr->Get_Channel_IsPaused(eID);
+}
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -465,8 +531,12 @@ void CGameInstance::Release_Engine()
 
 	if (0 != CFontMgr::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CFontMgr");
+
 	if (0 != CEasingMgr::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CEasingMgr");
+
+	if (0 != CSoundMgr::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CSoundMgr");
 
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
@@ -492,5 +562,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pFontMgr);
 	Safe_Release(m_pEasingMgr);
 	Safe_Release(m_pRenderTargetMgr);
+	Safe_Release(m_pSoundMgr);
+	
 
 }

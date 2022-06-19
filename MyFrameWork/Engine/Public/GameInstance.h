@@ -14,6 +14,7 @@
 #include "FontMgr.h"
 #include "EasingMgr.h"
 #include "RenderTargetMgr.h"
+#include "SoundMgr.h"
 
 
 BEGIN(Engine)
@@ -105,6 +106,20 @@ public: // For. RenderTarget
 	// ·£´õ Å¸°Ù 
 	ID3D11ShaderResourceView* Get_RenderTargetSRV(const _tchar* pTargetTag);
 
+	//SoundMgr
+public:
+	_int  Channel_VolumeUp(CHANNELID eID, _float _vol);
+	_int  Channel_VolumeDown(CHANNELID eID, _float _vol);
+	_int  Channel_Pause(CHANNELID eID);
+
+	HRESULT PlaySound(TCHAR* pSoundKey, CHANNELID eID, _float fLouderMultiple = 1.f);
+	HRESULT PlayBGM(TCHAR* pSoundKey, _float fLouderMultiple = 1.f);
+	void Stop_ChannelSound(CHANNELID eID);
+	void Stop_AllChannel();
+
+	_float  Get_Channel_Volume(CHANNELID eID);
+	_bool  Get_Channel_IsPaused(CHANNELID eID);
+
 
 
 public: // FOR.DEBUG
@@ -133,6 +148,7 @@ private:
 	CFontMgr*					m_pFontMgr = nullptr;
 	CEasingMgr*					m_pEasingMgr = nullptr;
 	CRenderTargetMgr*			m_pRenderTargetMgr = nullptr;
+	CSoundMgr*					m_pSoundMgr = nullptr;
 
 public:
 	static void Release_Engine();

@@ -1,5 +1,5 @@
 
-#include "..\Public\SoundMgr.h"
+#include "SoundMgr.h"
 
 
 #define SOUND_MAX 1.0f
@@ -120,8 +120,6 @@ int CSoundMgr::Channel_Pause(CHANNELID eID)
 	}
 	return 0;
 }
-
-
 
 
 HRESULT CSoundMgr::PlaySound(TCHAR * pSoundKey, CHANNELID eID, _float fLouderMultiple)
