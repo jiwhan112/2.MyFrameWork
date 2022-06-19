@@ -28,6 +28,14 @@ HRESULT CLevel::Render()
 	return S_OK;
 }
 
+_float2 CLevel::Get_ViewSize() const
+{
+	_uint		iNumViewports = 1;
+	D3D11_VIEWPORT		Viewport;
+	m_pDeviceContext->RSGetViewports(&iNumViewports, &Viewport);
+	return _float2(Viewport.Width, Viewport.Height);
+}
+
 void CLevel::Free()
 {
 	Safe_Release(m_pDeviceContext);

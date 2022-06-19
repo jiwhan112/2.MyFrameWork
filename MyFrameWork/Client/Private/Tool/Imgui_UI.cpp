@@ -155,21 +155,17 @@ HRESULT CImgui_UI::Edit_UIObject()
 
 	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Position"))
 	{
-		ImGui::DragInt("PosX", &myDesc.mPosX, 1.0f, 0, g_iWinCX, "PosX = %d");
-		ImGui::DragInt("PosY", &myDesc.mPosY, 1.0f, 0, g_iWinCY, "PosY= %d");
+		ImGui::DragInt("PosX", (int*)&myDesc.mUIRECT.x, 1.0f, 0, g_iWinCX, "PosX = %d");
+		ImGui::DragInt("PosY", (int*)&myDesc.mUIRECT.y, 1.0f, 0, g_iWinCY, "PosY= %d");
+		mCurrentUIObject->Setup_UIPosition();
 		IMGUI_TREE_END
 	}
 
 	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Size"))
 	{
-		ImGui::DragInt("sizeX", &myDesc.mSizeX, 1, 1, g_iWinCX, "sizex = %d");
-		ImGui::DragInt("sizeY", &myDesc.mSizeY, 1, 1, g_iWinCY, "sizey = %d");
-		IMGUI_TREE_END
-	}
-
-	IMGUI_TREE_BEGIN(STR_IMGUI_IDSTR(CImgui_Base::IMGUI_TITLE_UI, "Pivot"))
-	{
-		ImGui::DragFloat2("PivotXY", (float*)&myDesc.mPivot, 0.01f, 0.0f, 1.0f);
+		ImGui::DragInt("sizeX", (int*)&myDesc.mUIRECT.width, 1, 1, g_iWinCX, "sizex = %d");
+		ImGui::DragInt("sizeY", (int*)&myDesc.mUIRECT.height, 1, 1, g_iWinCY, "sizey = %d");
+		mCurrentUIObject->Setup_UIPosition();
 		IMGUI_TREE_END
 	}
 

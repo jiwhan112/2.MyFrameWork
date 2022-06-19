@@ -35,11 +35,15 @@ HRESULT	CPicking::Transform_ToWorldSpace()
 	UINT ViewIndex = 1;
 	m_pDeviceContext->RSGetViewports(&ViewIndex, &ViewPortDesc);
 
+	mWindowPos = _float2(ptMouse.x, ptMouse.y);
+
+
 	_float4 vMousePos;
 	vMousePos.x = ptMouse.x / (ViewPortDesc.Width*0.5f) - 1.f;
 	vMousePos.y = ptMouse.y / -(ViewPortDesc.Height*0.5f) + 1.f;
 	vMousePos.z = 0.f;
 	vMousePos.w = 1.f;
+
 
 	_float4x4 ProjMatrixInverse;
 

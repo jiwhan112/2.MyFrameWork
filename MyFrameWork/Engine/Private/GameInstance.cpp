@@ -371,6 +371,12 @@ _ray CGameInstance::Get_Ray_World() const
 	return m_pPickMgr->Get_Ray_World();
 }
 
+_float2 CGameInstance::Get_WindowPos() const
+{
+	NULL_CHECK_BREAK(m_pPickMgr);
+	return m_pPickMgr->Get_WindowPos();
+}
+
 
 
 _bool CGameInstance::IsIn_WorldSpace(_fvector vPoint, _float fRange)

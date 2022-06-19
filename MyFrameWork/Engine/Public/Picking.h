@@ -20,7 +20,7 @@ public:
 	_bool		Get_isPick() const { return misPick; }
 	_ray		Get_Ray_World() const { return mRayWorld; }
 
-
+	_float2		Get_WindowPos()const { return mWindowPos; }
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;
@@ -31,6 +31,7 @@ private:
 	_ray					mRayWorld;
 	_ray					mRayLocal;
 	_float3					mPickPos;
+	_float2					mWindowPos;
 	bool					misPick = false;
 
 public:

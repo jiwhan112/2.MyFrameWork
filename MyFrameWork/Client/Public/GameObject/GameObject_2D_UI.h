@@ -9,12 +9,10 @@ END
 
 BEGIN(Client)
 
-// Rect 버퍼 사용  
-
+// 안쓸듯
 class GameObject_2D_UI:
 	public CGameObject_Base
 {
-public:
 
 protected:
 	explicit GameObject_2D_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
@@ -40,7 +38,6 @@ protected:
 
 	CVIBuffer_Rect*					mComVIBuffer = nullptr;
 	CTexture_map*					mComTexture = nullptr;
-
 	string							mStr_UITex;
 
 

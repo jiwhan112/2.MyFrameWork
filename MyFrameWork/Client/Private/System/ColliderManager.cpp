@@ -17,13 +17,21 @@ HRESULT CColliderManager::NativeConstruct_Prototype()
 
 HRESULT CColliderManager::Tick_ColliderCheck(_double Timer)
 {
-	// 1. 마우스 충돌체크
-	ColCheck_MOUSE_Object();
-	ColCheck_MOUSE_Terrain();
+	// 0. UI 충돌체크
+	if (ColCheck_MOUSE_Object_UI())
+	{
 
-	// 2. 객체들의 충돌 체크
-	ColCheck_OBJECTS(Timer);
+	}
+	else
+	{
+		// 1. 마우스 충돌체크
+		ColCheck_MOUSE_Object();
+		ColCheck_MOUSE_Terrain();
 
+		// 2. 객체들의 충돌 체크
+		ColCheck_OBJECTS(Timer);
+
+	}
 
 
 	// 오브젝트 지우기
@@ -87,6 +95,35 @@ HRESULT CColliderManager::ColCheck_OBJECTS(_double timer)
 		}
 	}
 	return S_OK;
+}
+
+bool CColliderManager::ColCheck_MOUSE_Object_UI()
+{
+
+	mWindowPos = GetSingle(CGameInstance)->Get_WindowPos();
+
+	for (auto& obj : mListColliders[COLLIDEROBJ_UI])
+	{
+		CGameObject_2D* oobj1 = static_cast<CGameObject_2D*>(obj);
+		if (oobj1 == nullptr)
+			continue;
+		if (oobj1->Get_UIType() == CGameObject_2D::UITYPE_BUTTON1 ||
+			oobj1->Get_UIType() == CGameObject_2D::UITYPE_BUTTON2)
+		{
+			_rect newrect = oobj1->Get_UIDesc().mUIRECT;
+			newrect.x -= newrect.width*0.5;
+			newrect.y -= newrect.height*0.5;
+
+			if (newrect.Contains(mWindowPos))
+			{
+				oobj1->CollisionFunc(nullptr);
+				return true;
+			}
+		}
+
+	}
+
+	return false;
 }
 
 bool CColliderManager::Check_Navi(_float4x4 WorldMatrixInverse, CNavigation * navi)

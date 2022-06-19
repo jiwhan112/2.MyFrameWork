@@ -65,37 +65,14 @@ typedef struct tag_UIDESC
 {
 	 tag_UIDESC()
 	{
-		mPosX = (int)(g_iWinCX * 0.5f);
-		mPosY = (int)(g_iWinCY * 0.5f);
-		mSizeX = (int)g_iWinCX;
-		mSizeY = (int)g_iWinCY;
+		mUIRECT = _rect(0, 0, 100, 100);
 		mDepth = 0;
-		mPivot = { 0.5f,0.5f };
+		//mPivot = { 0.5f,0.5f };
 	};
 
-	//virtual tag_UIDESC* Clone()override
-	//{
-	//	tag_UIDESC* desc = NEW tag_UIDESC;
-
-	//	desc->mPosX = mPosX;
-	//	desc->mPosY = mPosY;
-
-	//	desc->mSizeX = mSizeX;
-	//	desc->mSizeY = mSizeY;
-
-	//	desc->mDepth = mDepth;
-	//	desc->mPivot = mPivot;
-	//	return desc;
-
-	//}
-
-
-	 _int	mPosX = (int)(g_iWinCX * 0.5f);
-	 _int	mPosY = (int)(g_iWinCY * 0.5f);
-	 _int	mSizeX = (int)g_iWinCX;
-	 _int	mSizeY = (int)g_iWinCY;
+	 _rect	mUIRECT;
 	 _int	mDepth = 0;
-	 _float2 mPivot = { 0.5f,0.5f };
+
 }UI_DESC;
 
 // 텍스처 이름 8개 저장
@@ -119,10 +96,6 @@ typedef struct tag_MODEL_STATIC_DESC
 	char mModelName[MAX_STR] = "";
 	 tag_MODEL_STATIC_DESC() = default;
 
-	 /* tag_MODEL_STATIC_DESC(const tag_MODEL_STATIC_DESC& rhs)
-	 {
-		 strcpy_s(mModelName, rhs.mModelName);
-	 }*/
 
 }MODEL_STATIC_DESC;
 

@@ -17,7 +17,7 @@ class CColliderManager final :
 public:
 	enum E_COLLIDEROBJ_TYPE
 	{
-		COLLIDEROBJ_STATIC, COLLIDEROBJ_DYNAMIC, COLLIDEROBJ_TERRAIN, COLLIDEROBJ_END
+		COLLIDEROBJ_STATIC, COLLIDEROBJ_DYNAMIC, COLLIDEROBJ_TERRAIN, COLLIDEROBJ_UI,COLLIDEROBJ_END
 	};
 
 private:
@@ -40,6 +40,8 @@ public:
 	
 private:	
 	HRESULT ColCheck_OBJECTS(_double timer);
+	bool	ColCheck_MOUSE_Object_UI();
+
 	bool	ColCheck_MOUSE_Object();
 	bool	ColCheck_MOUSE_Terrain();
 
@@ -55,6 +57,8 @@ private:
 
 	_float3		mWorldPickPos;
 	_ray		mWorldRay;
+	_float2		mWindowPos;
+
 	_bool		mIsMousePick_Terrain = false;
 	_bool		mIsMousePick_Object = false;
 

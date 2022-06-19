@@ -13,12 +13,11 @@ HRESULT CLevel_Logo::NativeConstruct()
 {
 	FAILED_CHECK(__super::NativeConstruct());
 
+	// 사운드 체크
 //	FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM((L"JY_Stage2_BGM.mp3")));
 
-	FAILED_CHECK(Ready_Prototype_GameObject());
-
-	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
-	FAILED_CHECK(Ready_Layer_BackGround(TAGLAY(LAY_BACKGROUND)));
+//	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
+	FAILED_CHECK(Ready_Layer_UI(TAGLAY(LAY_UI)));
 	return S_OK;
 }
 
@@ -38,13 +37,6 @@ _int CLevel_Logo::LateTick(_double TimeDelta)
 HRESULT CLevel_Logo::Render()
 {
 	FAILED_CHECK(__super::Render());
-
-#ifdef  _DEBUG
-//	GetSingle(CGameInstance)->Render_Font(TAGFONT(FONT_ARIAL),L"LOGO",_float2(0,0),_float4(0,0,0,0));
-
-	// SetWindowText(g_hWnd, TEXT("LOGO Level"));
-
-#endif //  _DEBUG
 	return S_OK;
 }
 
@@ -74,9 +66,40 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
+HRESULT CLevel_Logo::Ready_Layer_UI(const _tchar * pLayerTag)
 {
-	CGameObject* obj = GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	_float2 viewsize = Get_ViewSize();
+
+	CGameObject_2D* backImage = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	backImage->Setup_UIType(CGameObject_2D::UITYPE_LOGO);
+
+
+	CGameObject_2D* BackImage2 = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	BackImage2->Setup_UIType(CGameObject_2D::UITYPE_IMAGE);
+	BackImage2->Set_LoadTexDiffuse("GUI_Menu_Main_Logo.png");
+	UI_DESC imageDesc;
+	_rect rect = _rect(viewsize.x*0.5f, viewsize.y*0.8f, 500, 200);
+	imageDesc.mUIRECT = rect;
+	imageDesc.mDepth = 1;
+	BackImage2->Setup_UIPosition(imageDesc);
+
+
+	CGameObject_2D* GameStart = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	GameStart->Setup_UIType(CGameObject_2D::UITYPE_BUTTON1);
+	GameStart->Set_LoadTexButton("GUI_Menu_Generic_Button_Center_01.png", "GUI_Menu_Generic_Button_CenterLight.png");
+	UI_DESC GameStartDesc;
+	rect = _rect(viewsize.x*0.5f, viewsize.y*0.3f, 600, 100);
+	GameStartDesc.mUIRECT = rect;
+	GameStartDesc.mDepth = 1;
+	GameStart->Setup_UIPosition(GameStartDesc);
+
+
+	//CGameObject_2D* EXIT = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	//EXIT->Setup_UIType(CGameObject_2D::UITYPE_BUTTON1);
+	//EXIT->Set_LoadTexButton("GUI_Menu_Generic_Button_Center_01.png", "GUI_Menu_Generic_Button_CenterLight.png");
+
+
+
 	return S_OK;
 }
 

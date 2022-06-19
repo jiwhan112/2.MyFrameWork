@@ -4,10 +4,21 @@
 
 BEGIN(Client)
 
-// 2D 오브젝트용 부모클래스
+// 모든 UI 처리
 class CGameObject_2D :
 	public CGameObject_Base
 {
+public:
+	enum E_UI_TYPE
+	{
+		UITYPE_LOGO,	// 화면
+		UITYPE_IMAGE,	// 단순 이미지
+		UITYPE_BUTTON1, // 상호작용1
+		UITYPE_BUTTON2, // 상호작용2
+		UITYPE_TEXT,	// 텍스트
+		UITYPE_END,
+	};
+
 protected:
 	explicit CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_2D(const CGameObject_2D& rhs);
@@ -20,6 +31,9 @@ public:
 	virtual _int Tick(_double TimeDelta);
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
+
+	virtual HRESULT CollisionFunc(CGameObject_Base* object);
+
 
 public:
 	CTexture_map* Get_TextureMap() const { return mComTexture; }
@@ -37,6 +51,17 @@ public:
 	// 오름차순으로 정렬 큰값을 나중에 그린다.
 	virtual const _int& Get_Depth() override { return mUiDesc.mDepth; }
 
+	HRESULT Setup_UIType(E_UI_TYPE e);
+	HRESULT Get_UIType()const { return meUIType; }
+
+	HRESULT Setup_UIPosition(_float fX, _float fY, _float fSizeX, _float fSizeY, _float depth);
+	HRESULT Setup_UIPosition(UI_DESC desc);
+	HRESULT Setup_UIPosition();
+	void Set_LoadTexDiffuse(const char* str);
+	void Set_LoadTexButton(const char* str1, const char* str2);
+
+
+
 protected:
 	virtual HRESULT Set_Component()override;
 
@@ -44,13 +69,25 @@ protected:
 	virtual HRESULT Set_ConstantTable_UI(); // UI Cam
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처 설정
 
+	void Set_ViewportSize(); // 화면 사이즈 초기화
+
 protected: // UI에서 Com / DESC 추가
 
 	CVIBuffer*		mComVIBuffer = nullptr;
 	CTexture_map*	mComTexture = nullptr;
 
-	UI_DESC				mUiDesc;
+	// UI 위치와 텍스처 정보
+	UI_DESC					mUiDesc;
 	TEXTURE_NAMES_DESC		mTexStrDESC;
+
+	E_UI_TYPE				meUIType = UITYPE_LOGO;
+
+private: // setupMat
+	_float4x4 mWorldmat, mViewmat, mProjmat;
+
+	_bool mIsOverrMouse = false;
+//	_bool mIsClick = false;
+
 
 public:
 

@@ -16,6 +16,8 @@ GameObject_2D_UI::GameObject_2D_UI(const GameObject_2D_UI& rhs)
 HRESULT GameObject_2D_UI::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
+
+
 	return S_OK;
 }
 
@@ -91,6 +93,9 @@ HRESULT GameObject_2D_UI::Set_Component()
 
 	return S_OK;
 }
+
+
+
 
 HRESULT GameObject_2D_UI::Set_ConstantTable_Texture()
 {

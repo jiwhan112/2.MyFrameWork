@@ -16,6 +16,7 @@ public:
 	virtual _int Tick(_double TimeDelta);
 	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
+	_float2 Get_ViewSize()const;
 
 protected:
 	ID3D11Device*			m_pDevice = nullptr;

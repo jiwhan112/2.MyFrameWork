@@ -10,21 +10,6 @@ CRenderTargetMgr::CRenderTargetMgr()
 {
 }
 
-//HRESULT CRenderTargetMgr::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
-//{
-//	//// 텍스처와 셰이더 출력
-//	//mComVIbuffer_Rect = CVIBuffer_Rect::Create(pDevice, pDeviceContext);
-//	//if (nullptr == mComVIbuffer_Rect)
-//	//	return E_FAIL;
-//
-//	//mComShader = CShader::Create(pDevice, pDeviceContext, 
-//	//	TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
-//	//if (nullptr == mComShader)
-//	//	return E_FAIL;
-//
-//	return S_OK;
-//}
-
 HRESULT CRenderTargetMgr::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, const _tchar * pRenderTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, _float4 vClearColor)
 {
 	if (nullptr != Find_RenderTarget(pRenderTargetTag))

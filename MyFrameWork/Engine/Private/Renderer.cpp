@@ -250,7 +250,7 @@ HRESULT CRenderer::Render_UI()
 
 	mRenderObjects[RENDER_UI].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 	{
-		return pSour->Get_Depth() > pDest->Get_Depth();
+		return pSour->Get_Depth() < pDest->Get_Depth();
 	});
 
 	for (auto& pRenderObject : mRenderObjects[RENDER_UI])
