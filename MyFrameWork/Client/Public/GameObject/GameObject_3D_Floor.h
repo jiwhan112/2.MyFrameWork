@@ -8,7 +8,8 @@ END
 
 BEGIN(Client)
 
-// 타일 오브젝트
+// 바닥 / 건물 오브젝트 같이 사용
+
 class CGameObject_3D_Floor final:
 	public CGameObject_3D_Static
 {
@@ -26,7 +27,8 @@ public:
 	enum E_FLOORTYPE
 	{
 		FLOOR_FLOOR, // 바탁 타일
-		FLOOR_BUILD, // 건물 
+		FLOOR_BUILD_ORC,
+		FLOOR_BUILD_GOBLIN,
 		FLOOR_END,
 
 	};
@@ -68,7 +70,9 @@ public:
 	//HRESULT Update_Tile_CrossCheck();
 	
 	const char* FloorFbxName = "tileset_GreyRock_FLOOR.fbx";
-	const char* BuildFbxName = "tileset_GreyRock_FLOOR.fbx";
+	const char* BuildFbxName_Hideout_Goblin = "room_Hideout_Interact_Goblin.fbx";
+	const char* BuildFbxName_Hideout_Orc	= "room_Hideout_Interact_Orc.fbx";
+
 	const char* TexName1 = "WATER.dds";
 	const char* TexName2 = "WATER.dds";
 

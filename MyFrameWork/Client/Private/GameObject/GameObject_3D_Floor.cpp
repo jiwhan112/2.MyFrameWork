@@ -123,8 +123,13 @@ HRESULT CGameObject_3D_Floor::Set_LoadNewFBX(E_FLOORTYPE type)
 		Set_LoadModelDESC(desc);
 		break;
 
-	case CGameObject_3D_Floor::FLOOR_BUILD:
-		strcpy_s(desc.mModelName, BuildFbxName);
+	case CGameObject_3D_Floor::FLOOR_BUILD_GOBLIN:
+		strcpy_s(desc.mModelName, BuildFbxName_Hideout_Goblin);
+		Set_LoadModelDESC(desc);
+		break;
+
+	case CGameObject_3D_Floor::FLOOR_BUILD_ORC:
+		strcpy_s(desc.mModelName, BuildFbxName_Hideout_Orc);
 		Set_LoadModelDESC(desc);
 		break;
 
