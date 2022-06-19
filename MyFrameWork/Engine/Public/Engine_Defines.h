@@ -9,6 +9,13 @@
 #include <DirectXMath.h>
 #include <typeinfo>
 
+////////사운드 포함 헤더/////////////
+#include <io.h>
+#include "fmod/fmod.h"
+//#include "fmod.hpp"
+#pragma comment(lib, "fmod_vc.lib")
+
+
 // 셰이더 관련 Include
 #include <d3dcompiler.h>
 #include <d3dx11effect.h>

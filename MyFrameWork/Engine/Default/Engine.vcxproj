@@ -224,6 +224,7 @@
     <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\RenderTargetMgr.h" />
     <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\Public\SoundMgr.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Texture_map.h" />
     <ClInclude Include="..\Public\Font.h" />
@@ -275,6 +276,7 @@
     <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\RenderTargetMgr.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
+    <ClCompile Include="..\Private\SoundMgr.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Texture_map.cpp" />
     <ClCompile Include="..\Private\Font.cpp" />

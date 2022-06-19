@@ -163,6 +163,9 @@
     <Filter Include="01.Utility\06.ComponentMgr\08.BehaviorTree">
       <UniqueIdentifier>{e7a1c5cb-f1d1-430c-ba07-40498af2bb73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\14.SoundMgr">
+      <UniqueIdentifier>{6087e7f0-c5eb-41ab-b18e-a73dbe8cf877}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -311,6 +314,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BehaviorTree.cpp">
       <Filter>01.Utility\06.ComponentMgr\08.BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SoundMgr.cpp">
+      <Filter>01.Utility\14.SoundMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -484,6 +490,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\BehaviorTree.h">
       <Filter>01.Utility\06.ComponentMgr\08.BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SoundMgr.h">
+      <Filter>01.Utility\14.SoundMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

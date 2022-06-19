@@ -311,8 +311,6 @@ PS_OUT PS_MAIN_POST_EDGE_BLEND(PS_IN In)
 	float		Edge = vEdge.x;
 
 
-
-
 	//if (Edge > 0.3f)
 	//	Edge = 1.f;
 	//else
