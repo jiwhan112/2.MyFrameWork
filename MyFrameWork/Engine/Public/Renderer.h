@@ -11,7 +11,16 @@ class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND_FIRST,RENDER_NONBLEND_SECOND,RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum E_POST
+	{
+		POST_REVERSE = 4,
+		POST_EDGE,
+		POST_EDGE_BLEND,
+		POST_SHADOW,
+		POST_END,
 
+	};
+	
 private:
 	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~CRenderer() = default;
@@ -54,7 +63,7 @@ private:
 	
 private:
 	HRESULT RenderTargetSetting();
-
+//	E_POST	mePostOption = POST_OUTLINE;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

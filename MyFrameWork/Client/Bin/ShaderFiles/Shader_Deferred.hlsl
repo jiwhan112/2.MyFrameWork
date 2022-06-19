@@ -52,6 +52,26 @@ texture2D			g_SpecularTexture;
 // 포스트 프로세싱
 texture2D			g_RenderTexture;
 
+const float TexX = float(1 / 1280);
+const float TexY = float(1 / 720);
+
+cbuffer FiterDesc
+{
+	float3x3 Kx = {
+	-1.f,0.f,1.f,
+	-2.f,0.f,2.f,
+	-1.f,0.f,1.f
+	};
+
+	float3x3 Ky = {
+		1.f,2.f,1.f,
+		0.f,0.f,0.f,
+		-1.f,-2.f,-1.f
+	};
+
+}
+
+
 sampler DefaultSampler = sampler_state
 {
 	// D3D11_SAMPLER_DESC
@@ -204,6 +224,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 
 	vector		vLightDir = vWorldPos - g_vLightPos;
 	float		fDistance = length(vLightDir);
+	
+	if (fDistance > g_fLightRange)
+		discard;
 
 	// 감색
 	float		fAtt = max(g_fLightRange - fDistance, 0.f) / g_fLightRange;
@@ -233,7 +256,8 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	vector		vSpecularDesc = g_SpecularTexture.Sample(DefaultSampler, In.vTexUV);
 
 	// Diffuse 텍스처와 Shader / Specular를 연산공식에 맞게 그려준다.
-	Out.vColor = vDiffuseDesc * vShadeDesc + vSpecularDesc;
+	//Out.vColor = vDiffuseDesc * vShadeDesc + vSpecularDesc;
+	Out.vColor = vDiffuseDesc * vShadeDesc;
 
 	if (Out.vColor.a == 0.0f)
 		discard;
@@ -241,16 +265,75 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_MAIN_POST(PS_IN In)
+PS_OUT PS_MAIN_POST_REVERSE(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
 	float4		vRenderTarget = g_RenderTexture.Sample(DefaultSampler, In.vTexUV);
 
-	// Diffuse 텍스처와 Shader / Specular를 연산공식에 맞게 그려준다.
+	Out.vColor = 1 - vRenderTarget;
+
+	return Out;
+}
+PS_OUT PS_MAIN_POST_EDGE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+
+	float Lx = 0;
+	float Ly = 0;
+
+	for (int y = -1; y <=1 ; ++y)
+	{
+		for (int x = -1; x <= 1; ++x)
+		{
+			float2		offset = float2(x, y) * 0.001f;
+			float3		vRenderTarget = g_RenderTexture.Sample(DefaultSampler, In.vTexUV + offset).rgb;
+			float		Gray = dot(vRenderTarget, float3(0.3f, 0.59f, 0.11f));
+
+
+			Lx += Gray * Kx[y+1][x+1];
+			Ly += Gray * Ky[y+1][x+1];
+		}
+	}
+
+	float Outline = sqrt((Lx*Lx) + (Ly*Ly));
+	Out.vColor = float4(Outline.xxx, 1.f);
+	return Out;
+}
+
+PS_OUT PS_MAIN_POST_EDGE_BLEND(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	vector		vDiffuseDesc = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	vector		vEdge = g_RenderTexture.Sample(DefaultSampler, In.vTexUV);
+	float		Edge = vEdge.x;
+
+	//if (Edge > 0.3f)
+	//	Edge = 1.f;
+	//else
+	//	Edge = 0.0f;
+
+	Out.vColor = vDiffuseDesc * (1-Edge);
+
+	Out.vColor.a = 1;
+	return Out;
+}
+
+
+
+PS_OUT PS_MAIN_POST_SHADOW(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	float4		vRenderTarget = g_RenderTexture.Sample(DefaultSampler, In.vTexUV);
+
 	Out.vColor = 1 - vRenderTarget;
 	return Out;
 }
+
+
 
 BlendState	NonBlending
 {
@@ -333,7 +416,8 @@ technique11		DefaultTechnique
 	}
 
 	// 포스트 프로세싱
-	pass PS_MAIN_POST
+	// 반전 4
+	pass REVERSE
 	{
 		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(NonZTestAndWriteState, 0);
@@ -341,7 +425,42 @@ technique11		DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_POST();
+		PixelShader = compile ps_5_0 PS_MAIN_POST_REVERSE();
+	}
+
+	// 외곽선
+	pass EDGE
+	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(NonZTestAndWriteState, 0);
+		SetRasterizerState(CullMode_ccw);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_POST_EDGE();
+	}
+
+	// 외곽선 블랜드
+	pass EDGE_BLEND
+	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(NonZTestAndWriteState, 0);
+		SetRasterizerState(CullMode_ccw);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_POST_EDGE_BLEND();
+	}
+	// 그림자
+	pass SHADOW
+	{
+		SetBlendState(NonBlending, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(NonZTestAndWriteState, 0);
+		SetRasterizerState(CullMode_ccw);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_POST_SHADOW();
 	}
 
 	

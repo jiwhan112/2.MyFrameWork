@@ -55,6 +55,7 @@ namespace Engine
 		RENDERTARGET_SPECULAR,
 		RENDERTARGET_SHADE,
 		RENDERTARGET_RENDERER,
+		RENDERTARGET_EDGE,
 		RENDERTARGET_END
 
 	};
@@ -62,7 +63,8 @@ namespace Engine
 	{
 		MRT_DEFERRED,
 		MRT_LIGHTACC,
-		MRT_POST,
+		MRT_RENDERER,
+		MRT_EDGE,
 		MRT_END,
 	};
 
@@ -109,8 +111,10 @@ namespace Engine
 		case MRT_LIGHTACC:
 			return L"MRT_LIGHTACC";
 			break;
-		case MRT_POST:
-			return L"MRT_POST";
+		case MRT_RENDERER:
+			return L"MRT_RENDERER";
+		case MRT_EDGE:
+			return L"MRT_EDGE";
 		case MRT_END:
 			break;
 		default:

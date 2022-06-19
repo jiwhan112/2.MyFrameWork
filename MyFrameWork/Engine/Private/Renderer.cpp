@@ -62,7 +62,8 @@ HRESULT CRenderer::Render()
 //	FAILED_CHECK(Render_Debug());
 	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_DEFERRED), mComVIRECT, mComShader));
 	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_LIGHTACC), mComVIRECT, mComShader));
-	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_POST), mComVIRECT, mComShader));
+	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_RENDERER), mComVIRECT, mComShader));
+	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_EDGE), mComVIRECT, mComShader));
 
 #endif
 
@@ -148,7 +149,7 @@ HRESULT CRenderer::Render_Blend()
 	
 	// 랜더 타겟에 그린 텍스처를 화면에 그린다
 	// 셰이더 리소스 뷰로 넘겨서 그려준다.
-	FAILED_CHECK(mRenderTargetManager->Begin(m_pDeviceContext, TAGMRT(MRT_POST)));
+	FAILED_CHECK(mRenderTargetManager->Begin(m_pDeviceContext, TAGMRT(MRT_RENDERER)));
 
 	FAILED_CHECK(mComShader->Set_Texture(STR_TEX_DIFFUSE, mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_DIFFUSE))));
 	FAILED_CHECK(mComShader->Set_Texture("g_ShadeTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_SHADE))));
@@ -160,7 +161,7 @@ HRESULT CRenderer::Render_Blend()
 	
 	// Blend 셰이더 실행
 	FAILED_CHECK(mComVIRECT->Render(mComShader, 3));
-	FAILED_CHECK(mRenderTargetManager->End(m_pDeviceContext, TAGMRT(MRT_POST)));
+	FAILED_CHECK(mRenderTargetManager->End(m_pDeviceContext, TAGMRT(MRT_RENDERER)));
 
 	return S_OK;
 
@@ -172,15 +173,29 @@ HRESULT CRenderer::Render_Post()
 		nullptr == mComShader)
 		return E_FAIL;
 
+
+	// 외곽선 텍스처 만들기
+	FAILED_CHECK(mRenderTargetManager->Begin(m_pDeviceContext, TAGMRT(MRT_EDGE)));
+
+	FAILED_CHECK(mComShader->Set_Texture("g_RenderTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_RENDERER))));
+	mComVIRECT->Render(mComShader, CRenderer::POST_EDGE);
+
+	FAILED_CHECK(mRenderTargetManager->End(m_pDeviceContext, TAGMRT(MRT_EDGE)));
+
+
+	FAILED_CHECK(mComShader->Set_Texture(STR_TEX_DIFFUSE, mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_RENDERER))));
+	FAILED_CHECK(mComShader->Set_Texture("g_RenderTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_EDGE))));
+	mComVIRECT->Render(mComShader, CRenderer::POST_EDGE_BLEND);
+
+
 	// 랜더 타겟에 그린 텍스처를 화면에 그린다
 	// 셰이더 리소스 뷰로 넘겨서 그려준다.
-	FAILED_CHECK(mComShader->Set_Texture("g_RenderTexture", mRenderTargetManager->Get_SRV(TAGTARGET(RENDERTARGET_RENDERER))));
 
-	//FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_WORLD, &mWorldMat, sizeof(_float4x4)));
-	//FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_VIEW, &mViewdMat, sizeof(_float4x4)));
-	//FAILED_CHECK(mComShader->Set_RawValue(STR_MAT_PROJ, &mProjMat, sizeof(_float4x4)));
 
-	mComVIRECT->Render(mComShader, 4);
+//	mComVIRECT->Render(mComShader, CRenderer::POST_OUTLINE_BLEND);
+
+
+
 	return S_OK;
 
 }
@@ -305,6 +320,8 @@ HRESULT CRenderer::RenderTargetSetting()
 	FAILED_CHECK(mRenderTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, TAGTARGET(RENDERTARGET_RENDERER),
 		(_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	
+	FAILED_CHECK(mRenderTargetManager->Add_RenderTarget(m_pDevice, m_pDeviceContext, TAGTARGET(RENDERTARGET_EDGE),
+		(_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 1.f)));
 
 	
 	/* For.MRT_Deferred : 객체들을 그릴때 바인드. */
@@ -317,7 +334,9 @@ HRESULT CRenderer::RenderTargetSetting()
 	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_LIGHTACC), TAGTARGET(RENDERTARGET_SPECULAR)));
 
 	// Post
-	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_POST), TAGTARGET(RENDERTARGET_RENDERER)));
+	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_RENDERER), TAGTARGET(RENDERTARGET_RENDERER)));
+	FAILED_CHECK(mRenderTargetManager->Add_MRT(TAGMRT(MRT_EDGE), TAGTARGET(RENDERTARGET_EDGE)));
+	
 
 
 
@@ -350,6 +369,7 @@ HRESULT CRenderer::RenderTargetSetting()
 	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SHADE), HalfSize + Size* _1, HalfSize + Size*0, Size, Size));
 	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_SPECULAR), HalfSize + Size * _1, HalfSize + Size * 1, Size, Size));
 	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_RENDERER), HalfSize + Size * _1, HalfSize + Size * 2, Size, Size));
+	FAILED_CHECK(mRenderTargetManager->Ready_DebugDesc(TAGTARGET(RENDERTARGET_EDGE), HalfSize + Size * _1, HalfSize + Size * 3, Size, Size));
 #endif
 
 	return S_OK;
