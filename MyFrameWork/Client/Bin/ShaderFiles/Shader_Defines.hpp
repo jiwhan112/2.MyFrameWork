@@ -34,6 +34,7 @@ cbuffer LightDesc
 	float4		g_vLightDiffuse;
 	float4		g_vLightAmbient = (float4)1.f;
 	float4		g_vLightSpecular = (float4)1.f;
+	float		g_fLightRange = 1.f;
 };
 
 // Matrial

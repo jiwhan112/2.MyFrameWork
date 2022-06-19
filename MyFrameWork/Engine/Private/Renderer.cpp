@@ -192,9 +192,6 @@ HRESULT CRenderer::Render_Post()
 	// 셰이더 리소스 뷰로 넘겨서 그려준다.
 
 
-//	mComVIRECT->Render(mComShader, CRenderer::POST_OUTLINE_BLEND);
-
-
 
 	return S_OK;
 

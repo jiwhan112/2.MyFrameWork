@@ -28,6 +28,12 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	if (LIGHTDESC::TYPE_DIRECTIONAL == mLightDesc.eLightType)
 	{
 		pShader->Set_RawValue("g_vLightDir", &mLightDesc.vDirection, sizeof(_float4));
+		
+		// 임의의 위치
+		mLightDesc.vPosition = -_float4(mLightDesc.vDirection) * 500;
+		mLightDesc.vPosition.w = 1.0f;
+		pShader->Set_RawValue("g_vLightPos", &mLightDesc.vPosition, sizeof(_float4));
+
 		iPassIndex = 1;
 	}
 

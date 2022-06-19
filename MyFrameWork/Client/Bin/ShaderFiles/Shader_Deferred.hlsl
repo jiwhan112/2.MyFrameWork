@@ -298,7 +298,7 @@ PS_OUT PS_MAIN_POST_EDGE(PS_IN In)
 	}
 
 	float Outline = sqrt((Lx*Lx) + (Ly*Ly));
-	Out.vColor = float4(Outline.xxx, 1.f);
+	Out.vColor = float4(Outline.xxx, Outline);
 	return Out;
 }
 
@@ -310,14 +310,19 @@ PS_OUT PS_MAIN_POST_EDGE_BLEND(PS_IN In)
 	vector		vEdge = g_RenderTexture.Sample(DefaultSampler, In.vTexUV);
 	float		Edge = vEdge.x;
 
+
+
+
 	//if (Edge > 0.3f)
 	//	Edge = 1.f;
 	//else
 	//	Edge = 0.0f;
 
+	if (vDiffuseDesc.a == 0)
+		discard;
+
 	Out.vColor = vDiffuseDesc * (1-Edge);
 
-	Out.vColor.a = 1;
 	return Out;
 }
 
