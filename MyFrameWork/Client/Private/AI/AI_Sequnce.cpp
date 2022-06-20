@@ -212,10 +212,8 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	// Create Fall
 	dealyTime->Set_TimeMax(0.2f);
 	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
-	dealyAnimation->Set_SoundName(L"ui_room_fill.wav", 0.1f);
+	dealyAnimation->Set_SoundName(L"ui_tab.wav", 0.1f);
 	dealyAnimation2->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
-	
-	
 
 	PushBack_LeafNode(dealyTime->Clone());
 	PushBack_LeafNode(moveTarget->Clone());

@@ -41,17 +41,14 @@ HRESULT CGameObject_BOSS::LateTick_World(_double TimeDelta)
 {
 	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
 		return UPDATEERROR;
-
-	Check_WorldPattern();
+	Check_WorldPattern(TimeDelta);
 
 	return UPDATENONE;
 }
 
 HRESULT CGameObject_BOSS::Init_Unit()
 {
-	mHP = 200;
-	mIsWake = false;
-	mIsAttack = false;
+	mHP = 100;
 
 	// 모델 결정
 	string str("npc_Ent.fbx");
@@ -83,7 +80,7 @@ HRESULT CGameObject_BOSS::Init_Unit()
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 
-	size = 1.5f;
+	size = 1.3f;
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Init_Collider();
@@ -128,11 +125,18 @@ HRESULT CGameObject_BOSS::Init_AI_Boss()
 	// 보스 패턴
 
 	// 생성
-	CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
+	//CSequnce_WorldIdle* Seq_WorldIdle = CSequnce_WorldIdle::Create(this);
+	//CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
+	//worldIdle.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SLEEPING;
+	//Seq_WorldIdle->Restart(&worldIdle);
+	//mComBehavior->Add_Seqeunce("WORLD_IDLE", Seq_WorldIdle);
+	//mComBehavior->Select_Sequnce("WORLD_IDLE");
+
+	CSequnce_WorldIdle* Seq_WorldIdle2 = CSequnce_WorldIdle::Create(this);
 	CSequnce_WorldIdle::SEQWORLDIDLE worldIdle;
-	worldIdle.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SLEEPING;
-	Seq_WorldIdle->Restart(&worldIdle);
-	mComBehavior->Add_Seqeunce("WORLD_IDLE", Seq_WorldIdle);
+	worldIdle.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE;
+	Seq_WorldIdle2->Restart(&worldIdle);
+	mComBehavior->Add_Seqeunce("WORLD_IDLE", Seq_WorldIdle2);
 	mComBehavior->Select_Sequnce("WORLD_IDLE");
 
 	// 대기하면서 범위이동
@@ -142,15 +146,12 @@ HRESULT CGameObject_BOSS::Init_AI_Boss()
 	Seq_WorldMove->Restart(&worldMove);
 	mComBehavior->Add_Seqeunce("WORLD_MOVE", Seq_WorldMove);
 
-
-
 	// 적발견 후 포효
 	CSequnce_BossDealy* Seq_WorldDealy= CSequnce_BossDealy::Create(this);
 	CSequnce_BossDealy::SEQBOSSDEALY dealyDesc;
 	dealyDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SKILL;
 	Seq_WorldDealy->Restart(&dealyDesc);
 	mComBehavior->Add_Seqeunce("WORLD_WARRIOR", Seq_WorldDealy);
-
 
 	// 패턴 123 
 
@@ -160,12 +161,47 @@ HRESULT CGameObject_BOSS::Init_AI_Boss()
 	return S_OK;
 }
 
-HRESULT CGameObject_BOSS::Check_WorldPattern()
+HRESULT CGameObject_BOSS::Check_WorldPattern(_double timer)
 {
-	bool mIsWake = false;
-	bool mIsAttack = false;
+	mPatternTimer += timer;
+	static int PatternIndex = 0;
 
-	if(mTimeForSpeed_World)
+	if (mPatternTimer > mPatternTimerMax)
+	{
+		if (PatternIndex % 2)
+		{
+			Select_Move();
+			mPatternTimer = 0;
+			mPatternTimerMax = 5.f;
+		}
+		else
+		{
+			Select_Warrior_();
+			mIsWarriorSound = true;
+
+			mPatternTimer = 0;
+			mPatternTimerMax = 2.f;
+
+		}
+
+		PatternIndex++;
+	}
+
+	if (mIsWarriorSound)
+	{
+		mWarriorSoundTime += timer;
+		if (mWarriorSoundTime > 0.3f)
+		{
+			PLAYGAMESOUND(L"animal_bear_drop_layer1.wav", CHANNEL_OBJECT, 1.f);
+			mIsWarriorSound = false;
+			mWarriorSoundTime = 0;
+		}
+
+	}
+
+	//bool mIsWake = false;
+	//bool mIsAttack = false;
+
 	return S_OK;
 }
 
@@ -184,7 +220,6 @@ void CGameObject_BOSS::Select_Move()
 	worldMove.GoalPostition = newRandPostition;
 
 	mComBehavior->Select_Sequnce("WORLD_MOVE",&worldMove);
-
 
 }
 

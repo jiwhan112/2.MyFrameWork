@@ -1077,6 +1077,13 @@ HRESULT CGameObject_3D_Dynamic::DieFunc()
 	if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_ENEMY)
 		PLAYGAMESOUND(L"evillaughter_voice1_1.wav", CHANNEL_OBJECT, SOUNDVOL_EFFECT);
 
+	if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_BOSS)
+	{
+		PLAYGAMESOUND(L"die_ent.wav", CHANNEL_OBJECT, SOUNDVOL_EFFECT);
+	}
+
+	
+
 	Set_Dead();
 	return S_OK;
 }
