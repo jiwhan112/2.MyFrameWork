@@ -16,6 +16,7 @@ IMPLEMENT_SINGLETON(CGameManager);
 
 CGameManager::CGameManager()
 {
+
 }
 
 HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
@@ -52,6 +53,8 @@ HRESULT CGameManager::Initialize(ID3D11Device * d, ID3D11DeviceContext * c)
 	Initialize_PathData();
 
 	mCurrentLevel = LEVEL_LOGO;
+	ShowCursor(false);
+
 	return S_OK;
 }
 

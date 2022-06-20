@@ -103,6 +103,7 @@ HRESULT CGameObject_3D_Tile::CollisionFunc(_float3 PickPosition, _float dist)
 	//	return S_OK;
 	//}
 
+	
 	if (GetSingle(CGameManager)->Get_DaungonManager()->Get_CurrentGameMode() == CDungeon_Manager::GAMEMODE_DUNGEON)
 	{
 

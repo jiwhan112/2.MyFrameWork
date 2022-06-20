@@ -25,7 +25,6 @@ HRESULT CImgui_InGame::Update(_double time)
 	mSelectObject =
 		(CGameObject_Base*)GetSingle(CGameManager)->Get_ImGuiManager()->Get_SelectObject();
 
-
 	if (mTerrainDungeon == nullptr)
 	{
 		mTerrainDungeon = GetSingle(CGameManager)->Get_LevelObject_DUNGEONMAP();
@@ -237,7 +236,6 @@ HRESULT CImgui_InGame::Edit_InGame()
 	if (ImGui::Button("Camera_Shake"))
 	{
 		mCameraClient->CameraEffect(CCamera_Client::CAMERA_SHAKE,0.03f, 1.0f);
-
 	}
 
 	return S_OK;

@@ -147,69 +147,7 @@ HRESULT CGameObject_Mine::Init_AI_MINE()
 	Seq_Pick->Restart(&DefaultPickDesc);
 	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 
-//
-//
-//	// IDLE ½ÃÄö½º 3°³
-//	CNode_Seqeunce* Seq_IDLE1 = CNode_Seqeunce::Create();
-//	CNode_Seqeunce* Seq_IDLE2 = CNode_Seqeunce::Create();
-//	CNode_Seqeunce* Seq_IDLE3 = CNode_Seqeunce::Create();
-//
-//	// CloneAction
-//	CAction_DEALY* dealyTime = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-//	dealyTime->SetUp_Target(this);
-//	CAction_DEALY* dealyAniIdle = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-//	dealyAniIdle->SetUp_Target(this);
-//	CAction_DEALY* dealyAniDance = (CAction_DEALY*)mComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
-//	dealyAniDance->SetUp_Target(this);
-//
-//	CAction_MOVE* moveWalk = (CAction_MOVE*)mComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
-//	moveWalk->SetUp_Target(this);
-//	CAction_MOVE* moveRun= (CAction_MOVE*)mComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
-//	moveRun->SetUp_Target(this);
-//
-//	// Set Action
-//	_float WalkTimeMax = mTimeForSpeed;
-//	_float RunTimeMax = mTimeForSpeed*0.5f;
-//
-//	dealyTime->Set_TimeMax(3.0f);
-//	dealyAniIdle->Set_Animation(CAnimatior::E_COMMON_ANINAME_IDLE);
-//	dealyAniDance->Set_Animation(CAnimatior::E_COMMON_ANINAME_DANCE);
-//
-//	moveWalk->Set_AniType(CAction_MOVE::MOVE_ANI_WALK);
-//	moveWalk->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-//	moveWalk->Set_TimeMax(WalkTimeMax);
-//
-//	moveRun->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-//	moveRun->Set_Postition(CAction_MOVE::MOVE_POS_NEAR);
-//	moveRun->Set_TimeMax(RunTimeMax);
-//
-//	// SetSeq
-//	// IDLE1: µ¹¾Æ´Ù´Ô
-////	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-////	Seq_IDLE1->PushBack_LeafNode(dealyAniDance->Clone());
-////	Seq_IDLE1->PushBack_LeafNode(dealyAniIdle->Clone());
-//	Seq_IDLE1->PushBack_LeafNode(moveWalk->Clone());
-//
-//	// IDLE2: ¶Ù¾î´Ù´Ô
-////	Seq_IDLE2->PushBack_LeafNode(dealyAniIdle->Clone());
-////	Seq_IDLE2->PushBack_LeafNode(dealyAniDance->Clone());
-//	Seq_IDLE2->PushBack_LeafNode(moveRun->Clone());
-//
-//	// IDLE3: ÃãÃß±â
-//	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-////	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-////	Seq_IDLE3->PushBack_LeafNode(dealyAniDance->Clone());
-//	Seq_IDLE3->PushBack_LeafNode(moveWalk->Clone());
-//
-//	mComBehavior->Add_Seqeunce("IDLE1", Seq_IDLE1);
-//	mComBehavior->Add_Seqeunce("IDLE2", Seq_IDLE2);
-//	mComBehavior->Add_Seqeunce("IDLE3", Seq_IDLE3);
-//
-//	Safe_Release(dealyTime);
-//	Safe_Release(dealyAniIdle);
-//	Safe_Release(dealyAniDance);
-//	Safe_Release(moveWalk);
-//	Safe_Release(moveRun);
+
 
 	return S_OK;
 }

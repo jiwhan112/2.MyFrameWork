@@ -80,7 +80,6 @@ HRESULT CLevel_Logo::Ready_Layer_UI_LOGO(const _tchar * pLayerTag)
 
 	_float size = 0.7f;
 
-
 	CGameObject_2D* BackGroundImage = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
 	BackGroundImage->Setup_UIType(CGameObject_2D::UITYPE_LOGO);
 
@@ -115,6 +114,11 @@ HRESULT CLevel_Logo::Ready_Layer_UI_LOGO(const _tchar * pLayerTag)
 	GameStartDesc.mDepth = 10;
 	GameStart->Setup_UIPosition(GameStartDesc);
 	GameStart->AddCollisionFunction(&Change_GameLevel);
+
+
+	// 플레이어 == 마우스
+	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_MOUSE), TAGOBJ(GAMEOBJECT_MOUSE)));
+
 
 
 	return S_OK;

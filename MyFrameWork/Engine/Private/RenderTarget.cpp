@@ -52,6 +52,7 @@ HRESULT CRenderTarget::Clear()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CRenderTarget::Ready_DebugDesc(_float fX, _float fY, _float fSizeX, _float fSizeY)
 {
 	// 셰이더에 넘길 매트릭스 생성
@@ -89,6 +90,7 @@ HRESULT CRenderTarget::Render_DebugBuffer(CShader * pShader, CVIBuffer_Rect * pV
 	pVIBuffer->Render(pShader, 0);
 	return S_OK;
 }
+#endif _DEBUG
 
 CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, _float4 vClearColor)
 {
