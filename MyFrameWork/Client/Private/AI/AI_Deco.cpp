@@ -177,9 +177,11 @@ E_DECOTYPE CDeco_Distance::IsCorect(_double timer)
 	a.y = b.y = 0;
 
 	float distance = _float3::Distance(a, b);
-
+	float disMax = 2.5f;
+	if (target->Get_UnitType() == UNIT_BOSS)
+		disMax = 3.5f;
 	// 거리 체크
-	if (distance <= 1.5f)
+	if (distance <= disMax)
 	{
 		return E_DECOTYPE::DECOTYPE_NEXT;
 	}

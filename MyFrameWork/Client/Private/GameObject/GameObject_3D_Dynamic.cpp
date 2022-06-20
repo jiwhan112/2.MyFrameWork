@@ -971,7 +971,7 @@ HRESULT CGameObject_3D_Dynamic::Select_WorldPostition(_float3 pos)
 	FAILED_CHECK(FindPathForCurrentNavi(pos));
 	CSequnce_WorldMove_Player::SEQWORLDMOVE_PlAYER seq;
 	seq.GoalPosition = pos;
-	mTarget_Attack = nullptr;
+	Set_AttackTarget(nullptr);
 
 	FAILED_CHECK(mComBehavior->Select_Sequnce("WORLD_MOVE"));
 	return S_OK;
@@ -1012,6 +1012,7 @@ HRESULT CGameObject_3D_Dynamic::AttackFunc()
 	{
 		if (mTarget_Attack->Get_Hp() <= 0)
 		{
+			Set_AttackTarget(nullptr);
 
 		}
 		else
@@ -1030,6 +1031,7 @@ HRESULT CGameObject_3D_Dynamic::RotTargetFunc()
 	{
 		if (mTarget_Attack->Get_Hp() <= 0)
 		{
+			Set_AttackTarget(nullptr);
 
 		}
 		else
