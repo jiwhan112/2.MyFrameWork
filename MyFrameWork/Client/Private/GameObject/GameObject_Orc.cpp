@@ -173,12 +173,13 @@ HRESULT CGameObject_Orc::Select_WorldAttack(CGameObject_3D_Dynamic* target )
 			if (targetlife)
 				return S_OK;
 			else
-				mTarget_Attack = nullptr;
+				Set_AttackTarget(nullptr);
 		}
 
 	}
 
-	mTarget_Attack = target;
+	Set_AttackTarget(target);
+
 	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY desc;
 	desc.Target = mTarget_Attack;
 	mComBehavior->Select_Sequnce("WORLD_ATTACK", &desc);

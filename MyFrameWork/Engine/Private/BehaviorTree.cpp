@@ -296,8 +296,8 @@ HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 			mCurrentLeafTree = NextNode();
 			break;
 		case DECOTYPE_PREV:
-			mCurrentLeafTree = mPreLeafTree;
-			mCurrentLeafTree->ReStart();
+		//	mCurrentLeafTree = mPreLeafTree;
+		//	mCurrentLeafTree->ReStart();
 			break;
 		case DECOTYPE_BREAK:
 			End_Sequnce();

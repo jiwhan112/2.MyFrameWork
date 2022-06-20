@@ -756,7 +756,6 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	rotFunc->Set_Funcion(CAction_Function::FUNCION_ROTFLAG);
 
 	MinusDeco->Set_Value(nullptr);
-	DistanceDeco->Set_Value(nullptr);
 
 	PushBack_LeafNode(movepath->Clone());
 	PushBack_LeafNode(DistanceDeco->Clone());
@@ -794,11 +793,6 @@ void CSequnce_WorldAutoAttack::Restart(void * SeqData)
 			auto hpDeco = Find_Deco(CDeco_DynamicBase::E_DECO_MINUS);
 			NULL_CHECK_BREAK(hpDeco);
 			((CDeco_Minus*)hpDeco)->Set_Value(&(mSeqData.Target->Get_Hp()));
-
-			auto disDeco = Find_Deco(CDeco_DynamicBase::E_DECO_DISTANCE);
-			NULL_CHECK_BREAK(disDeco);
-			// 타겟 / 자기자신
-			((CDeco_Distance*)disDeco)->Set_Value(mSeqData.Target);
 
 		}
 

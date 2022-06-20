@@ -168,11 +168,13 @@ HRESULT CDeco_Distance::ReStart(void * pArg)
 E_DECOTYPE CDeco_Distance::IsCorect(_double timer)
 {
 
-	if (mTarget == nullptr)
+	CGameObject_3D_Dynamic* target = mDynamicObject->Get_AttackTarget();
+	if (target == nullptr)
 		return DECOTYPE_NEXT;
 
 	_float3 a = mDynamicObject->Get_WorldPostition();
-	_float3 b = mTarget->Get_WorldPostition();
+	_float3 b = target->Get_WorldPostition();
+	a.y = b.y = 0;
 
 	float distance = _float3::Distance(a, b);
 
@@ -181,7 +183,7 @@ E_DECOTYPE CDeco_Distance::IsCorect(_double timer)
 	{
 		return E_DECOTYPE::DECOTYPE_NEXT;
 	}
-	return E_DECOTYPE::DECOTYPE_PREV;
+	return E_DECOTYPE::DECOTYPE_BACKFIRST;
 }
 
 CDeco_Distance * CDeco_Distance::Create(const char * str, CGameObject_3D_Dynamic * obj)
@@ -213,5 +215,6 @@ CDeco_Distance * CDeco_Distance::Clone()
 void CDeco_Distance::Free()
 {
 	__super::Free();
+
 
 }

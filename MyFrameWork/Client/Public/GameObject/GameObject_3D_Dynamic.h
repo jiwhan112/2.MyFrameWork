@@ -98,8 +98,17 @@ public: // GetSet
 	void Set_RotateXZ(_float4x4 mat);
 	void Set_AttackTarget(CGameObject_3D_Dynamic* target)
 	{
+		Safe_Release(mTarget_Attack);
 		mTarget_Attack = target;
+		Safe_AddRef(mTarget_Attack);
+
 	}
+	CGameObject_3D_Dynamic* Get_AttackTarget() const
+	{
+		return mTarget_Attack;
+	}
+
+	
 	
 	// HP MP Damage
 	_int& Get_Hp() { return mHP; };

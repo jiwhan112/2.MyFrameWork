@@ -535,6 +535,8 @@ void CGameInstance::Release_Engine()
 	if (0 != CRenderTargetMgr::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CRenderTargetMgr");
 
+
+
 	if (0 != CPipeLine::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CPipeLine");
 

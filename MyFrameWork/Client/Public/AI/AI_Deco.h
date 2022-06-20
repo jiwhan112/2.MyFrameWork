@@ -131,12 +131,7 @@ protected:
 public:
 	virtual HRESULT ReStart(void* pArg = nullptr)override;
 	virtual E_DECOTYPE IsCorect(_double timer) override;
-
-	void Set_Value(CGameObject_Base* targetObj) {
-		mTarget = targetObj;
-	}
 protected:
-	CGameObject_Base* mTarget = nullptr;
 
 
 

@@ -1012,7 +1012,7 @@ HRESULT CGameObject_3D_Dynamic::AttackFunc()
 	{
 		if (mTarget_Attack->Get_Hp() <= 0)
 		{
-			mTarget_Attack = nullptr;
+
 		}
 		else
 		{
@@ -1030,7 +1030,7 @@ HRESULT CGameObject_3D_Dynamic::RotTargetFunc()
 	{
 		if (mTarget_Attack->Get_Hp() <= 0)
 		{
-			mTarget_Attack = nullptr;
+
 		}
 		else
 		{
@@ -1051,8 +1051,6 @@ HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
 HRESULT CGameObject_3D_Dynamic::DieFunc()
 {
 	Set_Dead();
-
-
 	return S_OK;
 }
 
@@ -1222,7 +1220,8 @@ void CGameObject_3D_Dynamic::Free()
 
 	Safe_Release(mComModel);
 	Safe_Release(mComBehavior);
-	
+	Safe_Release(mTarget_Attack);
+
 	if (mComListCollider != nullptr)
 	{
 		for (auto& col : *mComListCollider)

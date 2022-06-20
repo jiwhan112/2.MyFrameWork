@@ -253,11 +253,10 @@ HRESULT CGameObject_Enemy::Select_WorldAttack(CGameObject_3D_Dynamic* target)
 			if (targetlife)
 				return S_OK;
 			else
-				mTarget_Attack = nullptr;
+				Set_AttackTarget(nullptr);
 		}
 	}
-
-	mTarget_Attack = target;
+	Set_AttackTarget(target);
 	CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK desc;
 	desc.Target = mTarget_Attack;
 	mComBehavior->Select_Sequnce("WORLD_ATTACK", &desc);
