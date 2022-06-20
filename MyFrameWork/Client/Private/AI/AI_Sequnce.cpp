@@ -121,6 +121,7 @@ HRESULT CSequnce_IDLE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	// IDLE에서 사용할 상태 정의
 	// 딜레이 -> 애니메이션 -> PathMove
+
 	CAction_DEALY*	dealyAni = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_MOVE*	pathMove = (CAction_MOVE*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVE));
 
@@ -155,6 +156,8 @@ void CSequnce_IDLE::Restart(void * SeqData)
 	//NULL_CHECK_BREAK(delay);
 	//int randTime = CHelperClass::RandomInt(mSeqData.MinTime, mSeqData.MaxTime);
 	//((CAction_DEALY*)delay)->Set_TimeMax(randTime);
+
+
 
 	auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
 	NULL_CHECK_BREAK(ani);
@@ -299,7 +302,7 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
-	movepath->Set_TimeMax(0.6f);
+	movepath->Set_TimeMax(0.5f);
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
 
 	funcion->Set_Funcion(CAction_Function::FUNCION_LOOKTILE);

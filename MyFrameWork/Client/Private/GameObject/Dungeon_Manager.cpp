@@ -296,7 +296,7 @@ _bool CDungeon_Manager::Task_Mine_Tile(TASKBASE* task)
 		if(Mine->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
 			continue;
 
-		if (Mine->Get_ComBehavior()->Get_CurrentSequnce()->Get_SeqMoveType() == CNode_Seqeunce::SEQMOTAIONTYPE_IDLE)
+		//if (Mine->Get_ComBehavior()->Get_CurrentSequnce()->Get_SeqMoveType() == CNode_Seqeunce::SEQMOTAIONTYPE_IDLE)
 		{
 			// 타일과 가까운 유닛 찾기
 			_float distance = _float3::Distance(unit->Get_WorldPostition(), tile->Get_WorldPostition());

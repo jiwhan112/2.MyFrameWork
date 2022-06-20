@@ -21,6 +21,11 @@ HRESULT CLevel_Logo::NativeConstruct()
 	// 로고 테스트
 	FAILED_CHECK(Ready_Layer_UI_LOGO(TAGLAY(LAY_UI)));
 
+	// 플레이어 == 마우스
+	FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_MOUSE), TAGOBJ(GAMEOBJECT_MOUSE)));
+
+
+
 	// 게임 화면 테스트
 //	FAILED_CHECK(Ready_Layer_UI_GAMEPLAY(TAGLAY(LAY_UI)));
 	
@@ -115,9 +120,6 @@ HRESULT CLevel_Logo::Ready_Layer_UI_LOGO(const _tchar * pLayerTag)
 	GameStart->Setup_UIPosition(GameStartDesc);
 	GameStart->AddCollisionFunction(&Change_GameLevel);
 
-
-	// 플레이어 == 마우스
-	FAILED_CHECK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_MOUSE), TAGOBJ(GAMEOBJECT_MOUSE)));
 
 
 

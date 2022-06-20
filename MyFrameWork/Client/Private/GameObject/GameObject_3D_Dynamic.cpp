@@ -550,7 +550,10 @@ HRESULT CGameObject_3D_Dynamic::FindPathForCurrentNavi(_float3 GoalPosition)
 				WorldPathLerp();
 			mGoalPosition = mCurrentPathList.back()->Get_CenterPoint();
 		}
-
+		else
+		{
+			int debugCheck = 0;
+		}
 		return S_OK;
 	}
 

@@ -184,7 +184,7 @@ HRESULT CAction_MOVE::ReStart(void* pArg)
 	default:
 		break;
 	}
-	bool isNear = (2 > _float3::Distance(mGoalPosition, mStartPosition)) ? true : false;
+	bool isNear = (0.5f > _float3::Distance(mGoalPosition, mStartPosition)) ? true : false;
 	if (isNear)
 		End_Succed();
 	else
