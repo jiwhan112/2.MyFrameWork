@@ -349,9 +349,6 @@ HRESULT CGameObject_3D_Dynamic::Init_AI_CommonDynamic()
 		Seq_WorldMove->Restart(&WorldDesc);
 		mComBehavior->Add_Seqeunce("WORLD_MOVE", Seq_WorldMove);
 
-
-
-
 	}
 
 	else if (meUnitType == UNIT_ENEMY)
@@ -845,37 +842,42 @@ HRESULT CGameObject_3D_Dynamic::Check_AutoAttackForWorld()
 		if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)
 		{
 			auto EnemyList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_ENEMY);
-		//	auto BossList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_BOSS);
-
-			for (auto& ememy : EnemyList)
+			auto BossList = GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Get_ListUnitID(UNIT_BOSS);
+			
+			if (BossList.empty())
 			{
-				if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+				for (auto& ememy : EnemyList)
 				{
-					_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
-					if (dis < Range)
+					if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
 					{
-						Select_WorldAttack(ememy);
-						break;
+						_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
+						if (dis < Range)
+						{
+							Select_WorldAttack(ememy);
+							break;
+						}
 					}
 				}
 			}
-
-			//for (auto& ememy : BossList)
-			//{
-			//	if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
-			//	{
-			//		_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
-			//		if (dis < Range)
-			//		{
-			//			Select_WorldAttack(ememy);
-			//			break;
-			//		}
-			//	}
-			//}
+			else
+			{
+				for (auto& ememy : BossList)
+				{
+					if (ememy->Get_CurrentMap() == CGameObject_3D_Dynamic::MAPTYPE_WORLD)
+					{
+						_float dis = _float3::Distance(ememy->Get_WorldPostition(), Get_WorldPostition());
+						if (dis < Range)
+						{
+							Select_WorldAttack(ememy);
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 
-	else if (meUnitType == UNIT_ENEMY)
+	else if (meUnitType == UNIT_ENEMY )
 	{
 		// 공격중이 아니면 자동 전투 수행
 		if (mComBehavior->Get_CurrentSequnce()->Get_SeqMoveType() != CNode_Seqeunce::SEQMOTAIONTYPE_ATTACK)

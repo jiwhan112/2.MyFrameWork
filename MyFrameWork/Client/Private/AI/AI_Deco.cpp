@@ -81,7 +81,7 @@ CDeco_Minus::CDeco_Minus(const char * str, CGameObject_3D_Dynamic * obj)
 	:CDeco_DynamicBase(str, obj)
 
 {
-	meDecoID = CDeco_DynamicBase::E_DECI_MINUS;
+	meDecoID = CDeco_DynamicBase::E_DECO_MINUS;
 }
 
 CDeco_Minus::CDeco_Minus(const CDeco_Minus & rhs)
@@ -142,4 +142,76 @@ void CDeco_Minus::Free()
 {
 	__super::Free();
 	
+}
+
+CDeco_Distance::CDeco_Distance(const char * str, CGameObject_3D_Dynamic * obj)
+	:CDeco_DynamicBase(str, obj)
+
+{
+	meDecoID = CDeco_DynamicBase::E_DECO_DISTANCE;
+
+}
+
+CDeco_Distance::CDeco_Distance(const CDeco_Distance & rhs)
+	: CDeco_DynamicBase(rhs)
+
+{
+}
+
+HRESULT CDeco_Distance::ReStart(void * pArg)
+{
+
+	__super::ReStart(pArg);
+	return S_OK;
+}
+
+E_DECOTYPE CDeco_Distance::IsCorect(_double timer)
+{
+
+	if (mTarget == nullptr)
+		return DECOTYPE_NEXT;
+
+	_float3 a = mDynamicObject->Get_WorldPostition();
+	_float3 b = mTarget->Get_WorldPostition();
+
+	float distance = _float3::Distance(a, b);
+
+	// 거리 체크
+	if (distance <= 1.5f)
+	{
+		return E_DECOTYPE::DECOTYPE_NEXT;
+	}
+	return E_DECOTYPE::DECOTYPE_PREV;
+}
+
+CDeco_Distance * CDeco_Distance::Create(const char * str, CGameObject_3D_Dynamic * obj)
+{
+	CDeco_Distance* pInstance = NEW CDeco_Distance(str, obj);
+
+	if (FAILED(pInstance->ReStart()))
+	{
+		MSGBOX("Failed to Created CDeco_Distance");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CDeco_Distance * CDeco_Distance::Clone()
+{
+	CDeco_Distance* pInstance = NEW CDeco_Distance(*this);
+
+	if (FAILED(pInstance->ReStart()))
+	{
+		MSGBOX("Failed to Created CDeco_Distance");
+		DEBUGBREAK;
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CDeco_Distance::Free()
+{
+	__super::Free();
+
 }

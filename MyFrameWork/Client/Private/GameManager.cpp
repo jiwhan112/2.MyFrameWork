@@ -62,8 +62,10 @@ HRESULT CGameManager::Tick(_double timer)
 {
 	mColliderManager->Tick_ColliderCheck(timer);
 	mDaungonManager->Tick(timer);
+
+#ifdef _DEBUG
 	mIMGUIManager->Update(timer);
-	
+#endif
 	FAILED_CHECK(LevelChanger());
 	return S_OK;
 }
@@ -76,7 +78,9 @@ HRESULT CGameManager::LateTick(_double timer)
 
 HRESULT CGameManager::Render()
 {
+#ifdef _DEBUG
 	mIMGUIManager->Render();
+#endif
 	return S_OK;
 }
 

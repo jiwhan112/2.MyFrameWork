@@ -5,6 +5,7 @@
 
 
 const static _float3 mSpawnPostitionDAUNGEON = _float3(20.f, 0.f, 14.5f);
+const static _float3 mSpawnPostitionFix = _float3(0.1f, 100.f, 0.1f);
 const static _float3 mSpawnPostitionENEMY = _float3(8.f, 8.f, 48.f);
 const static _float3 mSpawnPostitionBOSS = _float3(52.f, 8.f, 51.f);
 
@@ -895,25 +896,25 @@ HRESULT CDungeon_Objects::Setup_TileState(_int tileIndex)
 void CDungeon_Objects::Create_Mine()
 {
 	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
-		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_MINE, mSpawnPostitionDAUNGEON);
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_MINE, mSpawnPostitionFix);
 }
 
 void CDungeon_Objects::Create_Orc()
 {
 	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
-		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ORC, mSpawnPostitionDAUNGEON);
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ORC, mSpawnPostitionFix);
 }
 
 void CDungeon_Objects::Create_Goblin()
 {
 	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
-		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_GOBLIN, mSpawnPostitionDAUNGEON);
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_GOBLIN, mSpawnPostitionFix);
 }
 
 void CDungeon_Objects::Create_Enemy()
 {
 	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
-		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ENEMY, mSpawnPostitionDAUNGEON);
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ENEMY, mSpawnPostitionFix);
 }
 
 void CDungeon_Objects::Create_Boss()

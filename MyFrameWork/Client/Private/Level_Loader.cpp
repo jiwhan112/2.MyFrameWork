@@ -5,12 +5,15 @@
 #include "Level_GamePlay.h"
 #include "Level_Tool.h"
 #include "Level/Level_MyGamePlay.h"
+#include "GameObject//GameObject_2D.h"
 
 #include "Loader.h"
 
 CLevel_Loader::CLevel_Loader(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CLevel(pDevice, pDeviceContext)
 {
+	mLevelIndex = LEVEL_LOADING;
+
 }
 
 HRESULT CLevel_Loader::NativeConstruct(E_LEVEL eNextLevel)
@@ -19,6 +22,13 @@ HRESULT CLevel_Loader::NativeConstruct(E_LEVEL eNextLevel)
 
 	mNextLevel = eNextLevel;
 	mpLoader = CLoader::Create(m_pDevice, m_pDeviceContext, eNextLevel);
+
+	// 로딩 씬 이미지
+	_float2 viewsize = Get_ViewSize();
+	_rect rect;
+	CGameObject_2D* BackGroundImage = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_UI), TAGOBJ(GAMEOBJECT_2D));
+	NULL_CHECK_BREAK(BackGroundImage);
+	BackGroundImage->Setup_UIType(CGameObject_2D::UITYPE_LOGO);
 
 	return S_OK;
 }

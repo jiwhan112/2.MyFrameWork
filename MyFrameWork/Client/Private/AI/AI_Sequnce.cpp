@@ -693,7 +693,7 @@ void CSequnce_WorldAttack_Player::Restart(void * SeqData)
 		NULL_CHECK_BREAK(movepath);
 		((CAction_MOVE*)movepath)->Set_MoveTarget(mSeqData.Target);
 
-		auto hpDeco = Find_Deco(CDeco_DynamicBase::E_DECI_MINUS);
+		auto hpDeco = Find_Deco(CDeco_DynamicBase::E_DECO_MINUS);
 		NULL_CHECK_BREAK(hpDeco);
 		((CDeco_Minus*)hpDeco)->Set_Value(&(mSeqData.Target->Get_Hp()));
 
@@ -739,19 +739,27 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	CAction_Function* rotFunc = (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 	// 조건 판단
 	CDeco_Minus* MinusDeco = (CDeco_Minus*)ComBehavior->Clone_Leaf(TAGDECO(DECO_MINUS));
+	CDeco_Distance* DistanceDeco = (CDeco_Distance*)ComBehavior->Clone_Leaf(TAGDECO(DECO_DISTANCE));
 
 
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
 	movepath->Set_TimeMax(obj->Get_TimeForSpeed_World());
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_TARGET);
+	
+	if (obj->Get_UnitType() == UNIT_ENEMY)
+		ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE0);
 
-	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE0);
+	else if (obj->Get_UnitType() == UNIT_PLAYER)
+		ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_MELEE);
+
 	attackFunc->Set_Funcion(CAction_Function::FUNCION_ATTACK);
 	rotFunc->Set_Funcion(CAction_Function::FUNCION_ROTFLAG);
 
 	MinusDeco->Set_Value(nullptr);
+	DistanceDeco->Set_Value(nullptr);
 
 	PushBack_LeafNode(movepath->Clone());
+	PushBack_LeafNode(DistanceDeco->Clone());
 	PushBack_LeafNode(rotFunc->Clone());
 	PushBack_LeafNode(ani->Clone());
 	PushBack_LeafNode(attackFunc->Clone());
@@ -763,7 +771,8 @@ HRESULT CSequnce_WorldAutoAttack::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	Safe_Release(attackFunc);
 	Safe_Release(rotFunc);
 	Safe_Release(MinusDeco);
-
+	Safe_Release(DistanceDeco);
+	
 	// 객체 연결
 	Setup_TargetNode(obj);
 	return S_OK;
@@ -780,10 +789,19 @@ void CSequnce_WorldAutoAttack::Restart(void * SeqData)
 		auto movepath = Find_Action(CAction_DynamicBase::E_ACION_MOVEPATH);
 		NULL_CHECK_BREAK(movepath);
 		((CAction_MOVE*)movepath)->Set_MoveTarget(mSeqData.Target);
+		if (mSeqData.Target != nullptr)
+		{
+			auto hpDeco = Find_Deco(CDeco_DynamicBase::E_DECO_MINUS);
+			NULL_CHECK_BREAK(hpDeco);
+			((CDeco_Minus*)hpDeco)->Set_Value(&(mSeqData.Target->Get_Hp()));
 
-		auto hpDeco = Find_Deco(CDeco_DynamicBase::E_DECI_MINUS);
-		NULL_CHECK_BREAK(hpDeco);
-		((CDeco_Minus*)hpDeco)->Set_Value(&(mSeqData.Target->Get_Hp()));
+			auto disDeco = Find_Deco(CDeco_DynamicBase::E_DECO_DISTANCE);
+			NULL_CHECK_BREAK(disDeco);
+			// 타겟 / 자기자신
+			((CDeco_Distance*)disDeco)->Set_Value(mSeqData.Target);
+
+		}
+
 	}
 }
 

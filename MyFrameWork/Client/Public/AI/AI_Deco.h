@@ -14,8 +14,9 @@ class CDeco_DynamicBase
 public:
 	enum E_DecoID
 	{
-		E_DECI_MINUS,
-		E_DECI_END
+		E_DECO_MINUS,
+		E_DECO_DISTANCE,
+		E_DECO_END
 	};
 
 
@@ -39,7 +40,7 @@ public:
 
 
 protected:
-	E_DecoID meDecoID = E_DECI_END;
+	E_DecoID meDecoID = E_DECO_END;
 	CGameObject_3D_Dynamic* mDynamicObject = nullptr;
 
 public:
@@ -115,6 +116,33 @@ protected:
 public:
 	static	CDeco_Minus*				Create(const char* str, CGameObject_3D_Dynamic* obj);
 	virtual CDeco_Minus*				Clone()override;
+	virtual void Free()override;
+};
+
+// Distance ºñ±³
+class CDeco_Distance
+	:public CDeco_DynamicBase
+{
+protected:
+	explicit CDeco_Distance(const char* str, CGameObject_3D_Dynamic* obj);
+	explicit CDeco_Distance(const CDeco_Distance& rhs);
+	virtual ~CDeco_Distance() = default;
+
+public:
+	virtual HRESULT ReStart(void* pArg = nullptr)override;
+	virtual E_DECOTYPE IsCorect(_double timer) override;
+
+	void Set_Value(CGameObject_Base* targetObj) {
+		mTarget = targetObj;
+	}
+protected:
+	CGameObject_Base* mTarget = nullptr;
+
+
+
+public:
+	static	CDeco_Distance*				Create(const char* str, CGameObject_3D_Dynamic* obj);
+	virtual CDeco_Distance*				Clone()override;
 	virtual void Free()override;
 };
 

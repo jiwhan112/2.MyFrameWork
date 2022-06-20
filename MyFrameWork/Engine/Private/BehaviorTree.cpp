@@ -297,6 +297,7 @@ HRESULT CNode_Seqeunce::Tick_Sequnce(_double timer)
 			break;
 		case DECOTYPE_PREV:
 			mCurrentLeafTree = mPreLeafTree;
+			mCurrentLeafTree->ReStart();
 			break;
 		case DECOTYPE_BREAK:
 			End_Sequnce();
@@ -370,6 +371,8 @@ CNode_LeafTree* CNode_Seqeunce::NextNode()
 
 		return returnNode;
 	}
+	else
+		mPreLeafTree = mCurrentLeafTree;
 
 	// 현재 노드의 다음 노드를 넘긴다.
 	auto iter = Find_LeafTree_Iter(mCurrentLeafTree);

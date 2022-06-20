@@ -495,6 +495,7 @@ enum E_DECO_TYPE
 {
 	DECO_NONE = 0,
 	DECO_MINUS,
+	DECO_DISTANCE,
 	DECO_END,
 };
 static const char* STR_TAYDECO(E_DECO_TYPE str)
@@ -507,6 +508,9 @@ static const char* STR_TAYDECO(E_DECO_TYPE str)
 	case DECO_MINUS:
 		return "DECO_MINUS";
 		break;
+	case DECO_DISTANCE:
+		return "DECO_DISTANCE";
+
 	case DECO_END:
 		break;
 	default:

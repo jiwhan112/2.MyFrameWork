@@ -88,7 +88,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	string str("hero_Warrior_T1.fbx");
 	strcpy_s(mModelDesc.mModelName, str.c_str());
 	Set_LoadModelDynamicDESC(mModelDesc);
-	mHP = 1000;
+	mHP = 50;
 
 	// Transform
 	_float3 SpawnPos = mSpawnPostitionENEMY;
@@ -222,14 +222,14 @@ HRESULT CGameObject_Enemy::CollisionFunc(_float3 PickPosition, _float dist, _uin
 	FAILED_CHECK(__super::CollisionFunc(PickPosition, dist, ColliderIndex));
 	
 	
-	if (KEYDOWN(DIK_E))
+	/*if (KEYDOWN(DIK_E))
 	{
 		if (GetSingle(CGameManager)->Get_DaungonManager()->Get_CurrentGameMode() == CDungeon_Manager::GAMEMODE_WORLD)
 		{
 			GetSingle(CGameManager)->Get_DaungonManager()->Add_Task_Player_WorldAttack(this);
 			return S_OK;
 		}
-	}
+	}*/
 
 	return S_OK;
 }

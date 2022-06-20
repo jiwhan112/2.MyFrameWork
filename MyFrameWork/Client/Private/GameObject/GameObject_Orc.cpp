@@ -138,12 +138,19 @@ HRESULT CGameObject_Orc::Init_AI_Default()
 	Seq_Pick->Restart(&DefaultPickDesc);
 	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
 
+	// 월드 이동 자동 공격
+	CSequnce_WorldAutoAttack* Seq_WorldAttack = CSequnce_WorldAutoAttack::Create(this);
+	CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK attackDesc;
+	attackDesc.Target = nullptr;
+	Seq_WorldAttack->Restart(&attackDesc);
+	mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
 
-	CSequnce_WorldAttack_Player* Seq_Attack = CSequnce_WorldAttack_Player::Create(this);
-	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY DefaulAttackDesc;
-	DefaulAttackDesc.Target = nullptr;
-	Seq_Attack->Restart(&DefaulAttackDesc);
-	mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_Attack);
+
+	//CSequnce_WorldAttack_Player* Seq_Attack = CSequnce_WorldAttack_Player::Create(this);
+	//CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY DefaulAttackDesc;
+	//DefaulAttackDesc.Target = nullptr;
+	//Seq_Attack->Restart(&DefaulAttackDesc);
+	//mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_Attack);
 
 	
 	return S_OK;

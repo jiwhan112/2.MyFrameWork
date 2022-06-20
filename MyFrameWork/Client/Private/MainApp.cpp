@@ -329,7 +329,9 @@ HRESULT CMainApp::Ready_Prototype_Components_AI()
 
 	// DECO
 	CDeco_Minus*			minus = CDeco_Minus::Create("Minus", nullptr);
+	CDeco_Distance*			distance = CDeco_Distance::Create("Distance", nullptr);
 	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGDECO(DECO_MINUS), minus));
+	FAILED_CHECK(baseTree->Add_Leaf_Proto(TAGDECO(DECO_DISTANCE), distance));
 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(E_LEVEL::LEVEL_STATIC, TAGCOM(COMPONENT_BEHAVIORTREE),

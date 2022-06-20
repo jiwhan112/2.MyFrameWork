@@ -31,6 +31,8 @@ public:
 	virtual HRESULT Init_AI()override;
 	virtual HRESULT Init_AI_Boss();
 
+	HRESULT	Check_WorldPattern();
+
 
 //	void Select_Idle();
 	void Select_Move();
@@ -43,9 +45,12 @@ public:
 
 	void Select_Pattern();
 
-
 protected:
 	_float3 mStartPostition = _float3();
+
+private:
+	bool mIsWake = false;
+	bool mIsAttack = false;
 
 public:
 	static CGameObject_BOSS* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

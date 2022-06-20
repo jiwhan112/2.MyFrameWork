@@ -42,13 +42,16 @@ HRESULT CGameObject_BOSS::LateTick_World(_double TimeDelta)
 	if (UPDATEERROR == __super::LateTick_World(TimeDelta))
 		return UPDATEERROR;
 
+	Check_WorldPattern();
+
 	return UPDATENONE;
 }
 
 HRESULT CGameObject_BOSS::Init_Unit()
 {
 	mHP = 200;
-
+	mIsWake = false;
+	mIsAttack = false;
 
 	// 모델 결정
 	string str("npc_Ent.fbx");
@@ -148,14 +151,21 @@ HRESULT CGameObject_BOSS::Init_AI_Boss()
 	Seq_WorldDealy->Restart(&dealyDesc);
 	mComBehavior->Add_Seqeunce("WORLD_WARRIOR", Seq_WorldDealy);
 
-	
-
 
 	// 패턴 123 
 
 
 
 
+	return S_OK;
+}
+
+HRESULT CGameObject_BOSS::Check_WorldPattern()
+{
+	bool mIsWake = false;
+	bool mIsAttack = false;
+
+	if(mTimeForSpeed_World)
 	return S_OK;
 }
 
@@ -200,6 +210,19 @@ void CGameObject_BOSS::Select_Warrior_()
 	mComBehavior->Select_Sequnce("WORLD_WARRIOR", &desc);
 
 }
+
+//void CGameObject_BOSS::Select_Attack()
+//{
+//	// 포효 명령
+//	CSequnce_BossDealy::SEQBOSSDEALY desc;
+//	desc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_SKILL;
+//	desc.index = 2;
+//
+//	mComBehavior->Select_Sequnce("WORLD_WARRIOR", &desc);
+//
+//}
+
+
 
 
 CGameObject_BOSS * CGameObject_BOSS::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)

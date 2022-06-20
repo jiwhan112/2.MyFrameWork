@@ -22,7 +22,7 @@ HRESULT CLevel_Logo::NativeConstruct()
 	FAILED_CHECK(Ready_Layer_UI_LOGO(TAGLAY(LAY_UI)));
 
 	// 플레이어 == 마우스
-	FAILED_CHECK_NONERETURN(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_MOUSE), TAGOBJ(GAMEOBJECT_MOUSE)));
+	NULL_CHECK_BREAK(GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, TAGLAY(LAY_MOUSE), TAGOBJ(GAMEOBJECT_MOUSE)));
 
 
 
