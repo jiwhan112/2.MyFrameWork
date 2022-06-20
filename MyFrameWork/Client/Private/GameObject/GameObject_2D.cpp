@@ -36,6 +36,7 @@ HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 	mCurrentShaderPass = 1;
 	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 
+	mIsActive = true;
 	return S_OK;
 }
 
@@ -55,19 +56,20 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	
+
+
+
 	if (meUIType == CGameObject_2D::UITYPE_BUTTON1)
 	{
-		if (mIsOverrMouse)
-		{
-			mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_01);
-		}
-		else
-		{
-			mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
+		LateTick_Button1();
 
-		}
 	}
+	else if (meUIType == CGameObject_2D::UITYPE_BUTTON2_UNIT)
+	{
+		LateTick_Button2_Unit();
+
+	}
+
 	
 
 	return UPDATENONE;
@@ -92,6 +94,20 @@ HRESULT CGameObject_2D::CollisionFunc(CGameObject_Base * object)
 		mIsOverrMouse = true;
 	}
 
+	else if (meUIType == CGameObject_2D::UITYPE_BUTTON2_UNIT)
+	{
+		if (mIsActive == false)
+		{
+
+		}
+		else
+		{
+			mIsOverrMouse = true;
+
+		}
+	}
+
+
 
 	return S_OK;
 }
@@ -113,6 +129,16 @@ void CGameObject_2D::Set_LoadTexButton(const char* str1, const char* str2)
 	strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str1);
 	strcpy_s(mTexStrDESC.mTextureKey_01, str2);
 	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
+}
+
+void CGameObject_2D::Set_LoadTexButton2(const char * str1, const char * str2, const char * str3)
+{
+	strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str1);
+	strcpy_s(mTexStrDESC.mTextureKey_01, str2);
+	strcpy_s(mTexStrDESC.mTextureKey_02, str3);
+
+	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
+
 }
 
 
@@ -207,7 +233,8 @@ HRESULT CGameObject_2D::Setup_UIType(E_UI_TYPE e)
 	case Client::CGameObject_2D::UITYPE_BUTTON1:
 		Setup_UIPosition();
 		break;
-	case Client::CGameObject_2D::UITYPE_BUTTON2:
+	case Client::CGameObject_2D::UITYPE_BUTTON2_UNIT:
+		Setup_UIPosition();
 		break;
 	case Client::CGameObject_2D::UITYPE_TEXT:
 		break;
@@ -232,8 +259,8 @@ HRESULT CGameObject_2D::Set_ConstantTable_Tex()
 	case Client::CGameObject_2D::UITYPE_BUTTON1:
 		FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
 		break;
-	case Client::CGameObject_2D::UITYPE_BUTTON2:
-		return E_FAIL;
+	case Client::CGameObject_2D::UITYPE_BUTTON2_UNIT:
+		FAILED_CHECK(mComTexture->SetUp_OnShader(mComShader, STR_TEX_DIFFUSE));
 		break;
 	case Client::CGameObject_2D::UITYPE_TEXT:
 		return E_FAIL;
@@ -255,6 +282,37 @@ void CGameObject_2D::Set_ViewportSize()
 	m_pDeviceContext->RSGetViewports(&iNumViewports, &Viewport);
 	mUiDesc.mUIRECT = _rect(Viewport.Width*0.5f, Viewport.Height*0.5f,Viewport.Width, Viewport.Height);
 	Setup_UIPosition();
+
+}
+
+void CGameObject_2D::LateTick_Button1()
+{
+	if (mIsOverrMouse)
+	{
+		mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_01);
+	}
+	else
+	{
+		mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
+	}
+}
+
+void CGameObject_2D::LateTick_Button2_Unit()
+{
+	if (mIsActive)
+	{
+		if (mIsOverrMouse)
+		{
+			mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_01);
+		}
+		else
+		{
+			mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
+		}
+	}
+	else
+		mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_02);
+	
 
 }
 

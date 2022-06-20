@@ -19,7 +19,8 @@ public:
 private:
 	HRESULT Ready_Prototype_GameObject();
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_UI_LOGO(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_UI_GAMEPLAY(const _tchar* pLayerTag);
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);

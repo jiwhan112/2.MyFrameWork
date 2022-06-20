@@ -48,6 +48,7 @@ private:
 
 	// ¼¼ÆÃ
 	HRESULT Ready_Light();
+	HRESULT Ready_UI();
 	HRESULT Ready_Camera();
 	HRESULT Ready_BackGround();
 	HRESULT Ready_GameObjects();

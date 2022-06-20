@@ -108,7 +108,7 @@ bool CColliderManager::ColCheck_MOUSE_Object_UI()
 		if (oobj1 == nullptr)
 			continue;
 		if (oobj1->Get_UIType() == CGameObject_2D::UITYPE_BUTTON1 ||
-			oobj1->Get_UIType() == CGameObject_2D::UITYPE_BUTTON2)
+			oobj1->Get_UIType() == CGameObject_2D::UITYPE_BUTTON2_UNIT)
 		{
 			_rect newrect = oobj1->Get_UIDesc().mUIRECT;
 			newrect.x -= newrect.width*0.5;

@@ -1,4 +1,5 @@
 #include "..\Public\Renderer.h"
+#include "..\Public\GameInstance.h"
 
 #include "GameObject.h"
 
@@ -56,14 +57,17 @@ HRESULT CRenderer::Render()
 	FAILED_CHECK(Render_Alpha());
 	FAILED_CHECK(Render_UI());
 
-
 #ifdef _DEBUG
 
-//	FAILED_CHECK(Render_Debug());
-	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_DEFERRED), mComVIRECT, mComShader));
-	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_LIGHTACC), mComVIRECT, mComShader));
-	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_RENDERER), mComVIRECT, mComShader));
-	FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_EDGE), mComVIRECT, mComShader));
+	if (GetSingle(CGameInstance)->Get_IsColliderRender())
+	{
+		//	FAILED_CHECK(Render_Debug());
+		FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_DEFERRED), mComVIRECT, mComShader));
+		FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_LIGHTACC), mComVIRECT, mComShader));
+		FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_RENDERER), mComVIRECT, mComShader));
+		FAILED_CHECK(mRenderTargetManager->Render_DebugBuffer(TAGMRT(MRT_EDGE), mComVIRECT, mComShader));
+
+	}
 
 #endif
 

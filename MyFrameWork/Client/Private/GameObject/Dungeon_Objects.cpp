@@ -26,6 +26,7 @@ HRESULT CDungeon_Objects::NativeConstruct_Prototype(ID3D11Device* device, ID3D11
 
 
 		FAILED_CHECK(Ready_Light());
+		FAILED_CHECK(Ready_UI());
 		FAILED_CHECK(Ready_Camera());
 		FAILED_CHECK(Ready_BackGround());
 		FAILED_CHECK(Ready_GameObjects());
@@ -136,6 +137,88 @@ HRESULT CDungeon_Objects::Ready_Light()
 
 
 	// 포인트 라이트 세팅
+
+
+
+	return S_OK;
+}
+
+HRESULT CDungeon_Objects::Ready_UI()
+{
+	const wchar_t* pLayerTag = TAGLAY(LAY_UI);
+
+	_uint		iNumViewports = 1;
+	D3D11_VIEWPORT		Viewport;
+	mDeviceContext->RSGetViewports(&iNumViewports, &Viewport);
+	_float2 viewsize = _float2(Viewport.Width, Viewport.Height);
+
+	_rect rect;
+
+	_float scale = 0.7f;
+	_float Size_ori = 222;
+	_float Size = Size_ori * scale;
+	_float Size_half = Size * 0.5f;
+
+
+
+	// 배경
+
+	// 고블린 / 마인 / 오크 생성 UI
+	// 적 생성 UI
+
+	CGameObject_2D* Dungeon_OrcImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	Dungeon_OrcImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON2_UNIT);
+	Dungeon_OrcImg->Set_LoadTexButton2("Orc_icon.png", "Orc_icon1.png", "Orc_icon2.png");
+	rect = _rect(viewsize.x*0.9f, viewsize.y*0.1f, Size, Size);
+	UI_DESC Dungeon_OrcImgDesc;
+	Dungeon_OrcImgDesc.mUIRECT = rect;
+	Dungeon_OrcImgDesc.mDepth = 1;
+	Dungeon_OrcImg->Setup_UIPosition(Dungeon_OrcImgDesc);
+
+
+	CGameObject_2D* Dungeon_GoblinImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	Dungeon_GoblinImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON2_UNIT);
+	Dungeon_GoblinImg->Set_LoadTexButton2("Goblin_icon.png", "Goblin_icon1.png", "Goblin_icon2.png");
+	rect = _rect(viewsize.x*0.9f + Size_half, viewsize.y*0.1f + Size_half, Size, Size);
+	UI_DESC Dungeon_GoblinImgDesc;
+	Dungeon_GoblinImgDesc.mUIRECT = rect;
+	Dungeon_GoblinImgDesc.mDepth = 1;
+	Dungeon_GoblinImg->Setup_UIPosition(Dungeon_GoblinImgDesc);
+
+	CGameObject_2D* Dungeon_MineImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	Dungeon_MineImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON2_UNIT);
+	Dungeon_MineImg->Set_LoadTexButton2("Mine_icon.png", "Mine_icon1.png", "Mine_icon2.png");
+	rect = _rect(viewsize.x*0.9f, viewsize.y*0.1f + Size_half * 2, Size, Size);
+	UI_DESC Dungeon_MineImgDesc;
+	Dungeon_MineImgDesc.mUIRECT = rect;
+	Dungeon_MineImgDesc.mDepth = 1;
+	Dungeon_MineImg->Setup_UIPosition(Dungeon_MineImgDesc);
+
+
+	scale = 0.5f;
+	Size_ori = 222;
+	Size = Size_ori * scale;
+	Size_half = Size * 0.5f;
+
+	CGameObject_2D* Dungeon_EnemyImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	Dungeon_EnemyImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON1);
+	Dungeon_EnemyImg->Set_LoadTexButton("Warrior_icon.png", "Warrior_icon1.png");
+	rect = _rect(viewsize.x*0.8f + Size_half, viewsize.y*0.85f, Size, Size);
+	UI_DESC Dungeon_EnemyImgDesc;
+	Dungeon_EnemyImgDesc.mUIRECT = rect;
+	Dungeon_EnemyImgDesc.mDepth = 1;
+	Dungeon_EnemyImg->Setup_UIPosition(Dungeon_EnemyImgDesc);
+
+	CGameObject_2D* Dungeon_WorldImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
+	Dungeon_WorldImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON1);
+	Dungeon_WorldImg->Set_LoadTexButton("Dungeon_icon1.png", "Dungeon_icon2.png");
+	rect = _rect(viewsize.x*0.8f + Size * 1.6f, viewsize.y*0.85f, Size, Size);
+	UI_DESC Dungeon_WorldImgDesc;
+	Dungeon_WorldImgDesc.mUIRECT = rect;
+	Dungeon_WorldImgDesc.mDepth = 1;
+	Dungeon_WorldImg->Setup_UIPosition(Dungeon_WorldImgDesc);
+
+
 
 
 

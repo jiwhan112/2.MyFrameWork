@@ -13,8 +13,8 @@ public:
 	{
 		UITYPE_LOGO,	// 화면
 		UITYPE_IMAGE,	// 단순 이미지
-		UITYPE_BUTTON1, // 상호작용1
-		UITYPE_BUTTON2, // 상호작용2
+		UITYPE_BUTTON1, // 클릭이벤트
+		UITYPE_BUTTON2_UNIT, // 조건 클릭이벤트2
 		UITYPE_TEXT,	// 텍스트
 		UITYPE_END,
 	};
@@ -59,6 +59,7 @@ public:
 	HRESULT Setup_UIPosition();
 	void Set_LoadTexDiffuse(const char* str);
 	void Set_LoadTexButton(const char* str1, const char* str2);
+	void Set_LoadTexButton2(const char* str1, const char* str2, const char* str3);
 
 
 
@@ -70,6 +71,9 @@ protected:
 	virtual HRESULT Set_ConstantTable_Tex(); // 텍스처 설정
 
 	void Set_ViewportSize(); // 화면 사이즈 초기화
+
+	void LateTick_Button1();
+	void LateTick_Button2_Unit();
 
 protected: // UI에서 Com / DESC 추가
 
@@ -85,8 +89,8 @@ protected: // UI에서 Com / DESC 추가
 private: // setupMat
 	_float4x4 mWorldmat, mViewmat, mProjmat;
 
-	_bool mIsOverrMouse = false;
-//	_bool mIsClick = false;
+	_bool mIsOverrMouse = false;			// 마우스 충돌
+	_bool mIsActive = false;				// 조건 
 
 
 public:
