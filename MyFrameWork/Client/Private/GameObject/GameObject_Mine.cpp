@@ -225,6 +225,21 @@ HRESULT CGameObject_Mine::RemoveTile()
 {
 	if (mSearchTile)
 	{
+		
+
+		static int stcSoundCount = 0;
+		if (stcSoundCount % 2)
+		{
+			PLAYGAMESOUND(L"attack_trollrockthrower_dig_01.wav", CHANNEL_PLAYER, SOUNDVOL_EFFECT);
+
+		}
+		else
+		{
+			PLAYGAMESOUND(L"attack_trollrockthrower_dig_02.wav", CHANNEL_PLAYER, SOUNDVOL_EFFECT);
+
+		}
+		stcSoundCount++;
+
 		mSearchTile->RemoveThisTile();
 		mSearchTile = nullptr;
 

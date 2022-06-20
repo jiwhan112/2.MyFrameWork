@@ -462,7 +462,7 @@ _int CGameInstance::Channel_Pause(CHANNELID eID)
 	return m_pSoundMgr->Channel_Pause(eID);
 }
 
-HRESULT CGameInstance::PlaySound(TCHAR * pSoundKey, CHANNELID eID, _float fLouderMultiple)
+HRESULT CGameInstance::PlaySound_(TCHAR * pSoundKey, CHANNELID eID, _float fLouderMultiple)
 {
 	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
 

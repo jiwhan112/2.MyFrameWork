@@ -206,20 +206,26 @@ HRESULT CSequnce_MOVETARGET::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	CAction_DEALY*			dealyTime = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_MOVE_TARGET*	moveTarget = (CAction_MOVE_TARGET*)ComBehavior->Clone_Leaf(TAGAI(AI_MOVETARGET));
 	CAction_DEALY*			dealyAnimation = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
+	CAction_DEALY*			dealyAnimation2 = (CAction_DEALY*)ComBehavior->Clone_Leaf(TAGAI(AI_DEALY));
 	CAction_Function*		func	= (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
 	// Create Fall
 	dealyTime->Set_TimeMax(0.2f);
 	dealyAnimation->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
+	dealyAnimation->Set_SoundName(L"ui_room_fill.wav", 0.1f);
+	dealyAnimation2->Set_Animation(CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_UP);
+	
+	
 
 	PushBack_LeafNode(dealyTime->Clone());
 	PushBack_LeafNode(moveTarget->Clone());
 	PushBack_LeafNode(dealyAnimation->Clone());
-	PushBack_LeafNode(dealyAnimation->Clone());
+	PushBack_LeafNode(dealyAnimation2->Clone());
 	PushBack_LeafNode(func->Clone());
 
 	Safe_Release(dealyTime);
 	Safe_Release(dealyAnimation);
+	Safe_Release(dealyAnimation2);
 	Safe_Release(moveTarget);
 	Safe_Release(func);
 
@@ -301,6 +307,8 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	CAction_Function* funcion= (CAction_Function*)ComBehavior->Clone_Leaf(TAGAI(AI_FUNCTION));
 
 	ani->Set_Animation(CAnimatior::E_COMMON_ANINAME_DIG);
+	ani->Set_SoundName(L"dlc_story_king_boss_sword_02.wav",0.6f);
+
 	movepath->Set_AniType(CAction_MOVE::MOVE_ANI_RUN);
 	movepath->Set_TimeMax(0.5f);
 	movepath->Set_Postition(CAction_MOVE::MOVE_POS_GOALPOS);
@@ -312,6 +320,9 @@ HRESULT CSequnce_TILE::NativeConstruct(CGameObject_3D_Dynamic * obj)
 	PushBack_LeafNode(movepath->Clone());
 	PushBack_LeafNode(funcion->Clone());
 	PushBack_LeafNode(ani->Clone());
+
+
+
 	funcion->Set_Funcion(CAction_Function::FUNCION_REMOVE_TILE);
 	PushBack_LeafNode(funcion->Clone());
 
@@ -334,7 +345,6 @@ void CSequnce_TILE::Restart(void * SeqData)
 	if (SeqData)
 	{
 		memcpy(&mSeqData, SeqData, sizeof(SEQTILE));
-
 
 		auto ani = Find_Action(CAction_DynamicBase::E_ACION_DEALY);
 		NULL_CHECK_BREAK(ani);

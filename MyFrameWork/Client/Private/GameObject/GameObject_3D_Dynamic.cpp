@@ -1005,8 +1005,11 @@ HRESULT CGameObject_3D_Dynamic::Set_BehaviorMode(int index)
 	return S_OK;
 }
 
+
+
 HRESULT CGameObject_3D_Dynamic::AttackFunc()
 {
+
 	if (mTarget_Attack)
 	{
 		if (mTarget_Attack->Get_Hp() <= 0)
@@ -1016,6 +1019,18 @@ HRESULT CGameObject_3D_Dynamic::AttackFunc()
 		}
 		else
 		{
+
+			if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_ORC)
+				PLAYGAMESOUND(L"attack_orc_01.wav", CHANNEL_PLAYER, SOUNDVOL_EFFECT);
+
+			if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_GOBLIN)
+				PLAYGAMESOUND(L"unit_golem_attack_01.wav", CHANNEL_PLAYER, SOUNDVOL_EFFECT);
+
+			if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_ENEMY)
+				PLAYGAMESOUND(L"dlc_story_king_boss_sword_01.wav", CHANNEL_PLAYER, SOUNDVOL_EFFECT);
+
+
+
 			mTarget_Attack->HitFunc(mDamage);
 			mMP++;
 		}
@@ -1044,6 +1059,8 @@ HRESULT CGameObject_3D_Dynamic::RotTargetFunc()
 HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
 {
 	 mHP -= Damage; 
+	 
+
 	 if (mHP <= 0)
 		 DieFunc();
 	 return S_OK;
@@ -1051,6 +1068,15 @@ HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
 
 HRESULT CGameObject_3D_Dynamic::DieFunc()
 {
+	if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_ORC)
+		PLAYGAMESOUND(L"evillaughter_voice3_1.wav", CHANNEL_PLAYER, SOUNDVOL_EFFECT);
+	
+	if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_GOBLIN)
+		PLAYGAMESOUND(L"evillaughter_voice2_1.wav", CHANNEL_PLAYER, SOUNDVOL_EFFECT);
+	
+	if (Get_ObjectTypeID_Client() == OBJECT_TYPE_3D_DYNAMIC_ENEMY)
+		PLAYGAMESOUND(L"evillaughter_voice1_1.wav", CHANNEL_OBJECT, SOUNDVOL_EFFECT);
+
 	Set_Dead();
 	return S_OK;
 }

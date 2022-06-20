@@ -20,6 +20,10 @@ namespace Client {}
 using namespace Client;
 
 
+#define PLAYGAMESOUND GetSingle(CGameInstance)->PlaySound_
+#define SOUNDVOL_EFFECT		0.8f
+#define SOUNDVOL_EFFECT2	0.6f
+#define SOUNDVOL_EFFECT3	1.f
 
 #define  KEYDOWN(x)				GetSingle(CGameInstance)->Get_DIKeyState(x)&DIS_Down
 #define  KEYUP(x)				GetSingle(CGameInstance)->Get_DIKeyState(x)&DIS_Up
@@ -28,6 +32,8 @@ using namespace Client;
 #define  MOUSEDOWN(x)			GetSingle(CGameInstance)->Get_DIMouseButtonState(x)&DIS_Down
 #define  MOUSEUP(x)				GetSingle(CGameInstance)->Get_DIMouseButtonState(x)&DIS_Up
 #define  MOUSEPRESS(x)			GetSingle(CGameInstance)->Get_DIMouseButtonState(x)&DIS_Press
+
+
 
 #define  STR_FILEPATH_RESOURCE_SPRITE_L				L"..\\Bin\\Resources\\Sprite"
 #define  STR_FILEPATH_RESOURCE_DAT_L				L"..\\Bin\\Resources\\data"

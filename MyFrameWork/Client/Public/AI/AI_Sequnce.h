@@ -141,7 +141,6 @@ public:
 		_float	SpeedMax = 0.6f;
 		_float3 GoalPos=_float3();
 
-
 	}SEQTILE;
 
 protected:

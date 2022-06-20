@@ -38,6 +38,7 @@ CAction_DEALY::CAction_DEALY(const CAction_DEALY & rhs)
 	meDealyType = rhs.meDealyType;
 	meAnimation = rhs.meAnimation;
 	mTimeMax = rhs.mTimeMax;
+	lstrcpy(mStr, rhs.mStr);
 	meAcionID = CAction_DynamicBase::E_ACION_DEALY;
 }
 
@@ -48,6 +49,7 @@ HRESULT CAction_DEALY::ReStart(void* pArg)
 
 	__super::ReStart(pArg);
 	mCurrentTimer = 0;
+	mOneTime = false;
 
 	if (meDealyType == CAction_DEALY::DEALY_ANI)
 	{
@@ -70,6 +72,12 @@ HRESULT CAction_DEALY::Action(_double timer)
 	}
 	else if (meDealyType == CAction_DEALY::DEALY_ANI)
 	{
+		if (mCurrentTimer > mTimeMax && mOneTime == false)
+		{
+			mOneTime = true;
+			PLAYGAMESOUND(mStr, CHANNEL_EFFECT, SOUNDVOL_EFFECT);
+		}
+
 		_bool aniend = mDynamicObject->Get_ComModel()->Get_Animaitor()->Get_CurrentAniEnd();
 		if (aniend)
 		{

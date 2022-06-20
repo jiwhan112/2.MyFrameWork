@@ -72,6 +72,11 @@ public:
 	virtual HRESULT Action(_double timer/*,void* pArg = nullptr*/);
 	void Set_Animation(CAnimatior::E_COMMON_ANINAME e,int index = -1,_bool foward = true);
 	void Set_TimeMax(_double timeMax);
+	void Set_SoundName(const wchar_t* soundname, _double time)
+	{
+		lstrcpy(mStr,soundname);
+		mTimeMax = time;
+	}
 
 private:
 	_double	mTimeMax=1;
@@ -81,6 +86,8 @@ private:
 
 	E_DEALY_FALG					meDealyType = DEALY_NONE;
 	CAnimatior::E_COMMON_ANINAME	meAnimation = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_IDLE;
+	wchar_t							mStr[256] = L"";
+	_bool							mOneTime = false;
 
 public:
 	static	CAction_DEALY*				Create(const char* str, CGameObject_3D_Dynamic* obj);

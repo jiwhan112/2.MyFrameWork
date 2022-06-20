@@ -470,8 +470,10 @@ _bool CDungeon_Manager::Task_Player_Attack_World(TASKBASE * task)
 	return true;
 }
 
+
 HRESULT CDungeon_Manager::PlaySound(E_GAMESOUNDSTATE e)
 {
+
 	switch (e)
 	{
 	case Client::CDungeon_Manager::E_GAMESOUNDSTATE_DUNGEON:
@@ -491,6 +493,7 @@ HRESULT CDungeon_Manager::PlaySound(E_GAMESOUNDSTATE e)
 		break;
 
 	}
+	return S_OK;
 
 
 
