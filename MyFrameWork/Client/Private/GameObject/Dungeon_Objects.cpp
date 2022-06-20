@@ -21,6 +21,8 @@ HRESULT CDungeon_Objects::NativeConstruct_Prototype(ID3D11Device* device, ID3D11
 	Safe_AddRef(mDeviceContext);
 
 	mCurrentLevel = level;
+	mEnemyDieCount = 0;
+	mIsCreateBoss = false;
 
 	
 	if (mCurrentLevel == LEVEL_MYGAMEPLAY)
@@ -919,7 +921,6 @@ void CDungeon_Objects::Create_Enemy()
 
 void CDungeon_Objects::Create_Boss()
 {
-
 	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
 		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_BOSS, mSpawnPostitionBOSS);
 

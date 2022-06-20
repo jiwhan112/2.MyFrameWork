@@ -85,6 +85,17 @@ public: // РЏДж
 	list<CGameObject_3D_Dynamic*>*			Get_UnitList_Dungeon();
 	list<CGameObject_3D_Dynamic*>*			Get_UnitList_World();
 
+	void Add_EnemyDieCount() { 
+		if (mIsCreateBoss)
+			return;
+		mEnemyDieCount++;
+		if (mEnemyDieCount >= 3)
+		{
+			Create_Boss();
+			mIsCreateBoss = true;
+		}
+	
+	}
 
 private: // СіЧќ
 	HRESULT Create_Tiles(E_LEVEL level);
@@ -137,7 +148,8 @@ private:
 	ID3D11Device*						mDevice = nullptr;
 	ID3D11DeviceContext*				mDeviceContext = nullptr;
 
-
+	_int								mEnemyDieCount = 0;
+	bool								mIsCreateBoss = false;
 
 
 

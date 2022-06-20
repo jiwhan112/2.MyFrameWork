@@ -1044,12 +1044,15 @@ HRESULT CGameObject_3D_Dynamic::HitFunc(_int Damage)
 {
 	 mHP -= Damage; 
 	 if (mHP <= 0)
-		 Set_Dead();
+		 DieFunc();
 	 return S_OK;
 }
 
 HRESULT CGameObject_3D_Dynamic::DieFunc()
 {
+	Set_Dead();
+
+
 	return S_OK;
 }
 

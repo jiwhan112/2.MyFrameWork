@@ -56,6 +56,7 @@ public:
 	virtual HRESULT Init_AI()override;
 	virtual HRESULT Init_AI_Enemy();
 
+	virtual HRESULT DieFunc();
 
 
 	// 월드에서 경로 바꾸기

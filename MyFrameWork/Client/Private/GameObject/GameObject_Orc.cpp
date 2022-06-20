@@ -65,6 +65,7 @@ HRESULT CGameObject_Orc::LateTick_World(_double TimeDelta)
 
 HRESULT CGameObject_Orc::Init_Unit()
 {
+	mHP = 100;
 	// ¸ðµ¨ °áÁ¤
 	string str("crea_Orc.fbx");
 	strcpy_s(mModelDesc.mModelName, str.c_str());

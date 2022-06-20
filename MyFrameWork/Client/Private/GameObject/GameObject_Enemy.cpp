@@ -65,9 +65,6 @@ HRESULT CGameObject_Enemy::Tick_World(_double TimeDelta)
 		}
 	}
 
-	
-	
-
 	return UPDATENONE;
 }
 
@@ -88,7 +85,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	string str("hero_Warrior_T1.fbx");
 	strcpy_s(mModelDesc.mModelName, str.c_str());
 	Set_LoadModelDynamicDESC(mModelDesc);
-	mHP = 50;
+	mHP = 30;
 
 	// Transform
 	_float3 SpawnPos = mSpawnPostitionENEMY;
@@ -177,6 +174,14 @@ HRESULT CGameObject_Enemy::Init_AI_Enemy()
 	// 던전에 들어왔을떄
 	// 던전 Heart에 공격한다.
 	
+	return S_OK;
+}
+
+HRESULT CGameObject_Enemy::DieFunc()
+{
+	__super::DieFunc();
+	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->Add_EnemyDieCount();
+
 	return S_OK;
 }
 
