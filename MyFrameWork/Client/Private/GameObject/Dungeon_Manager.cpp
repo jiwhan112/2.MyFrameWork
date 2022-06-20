@@ -235,10 +235,13 @@ void CDungeon_Manager::Switch_Map()
 		if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_WORLD)
 		{
 			Set_CameraMove(CDungeon_Manager::CAMERAMODE_DUNGEON);
+			PlaySound(CDungeon_Manager::E_GAMESOUNDSTATE_DUNGEON);
+
 		}
 		else
 		{
 			Set_CameraMove(CDungeon_Manager::CAMERAMODE_WORLD);
+			PlaySound(CDungeon_Manager::E_GAMESOUNDSTATE_WORLD);
 		}
 
 }
@@ -465,6 +468,32 @@ _bool CDungeon_Manager::Task_Player_Attack_World(TASKBASE * task)
 
 	Safe_Delete(task);
 	return true;
+}
+
+HRESULT CDungeon_Manager::PlaySound(E_GAMESOUNDSTATE e)
+{
+	switch (e)
+	{
+	case Client::CDungeon_Manager::E_GAMESOUNDSTATE_DUNGEON:
+		FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM((L"music_dungeon_2.wav")));
+		FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM2((L"atmo_cave_loop.wav")));
+		break;
+	case Client::CDungeon_Manager::E_GAMESOUNDSTATE_WORLD:
+		FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM((L"music_outsidegood_1.wav")));
+		FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM2((L"atmo_hotspot_demonicon_loop.wav")));
+		break;
+	case Client::CDungeon_Manager::E_GAMESOUNDSTATE_ATTACK:
+		FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM((L"music_dungeon_combat_3.wav")));
+		break;
+	case Client::CDungeon_Manager::E_GAMESOUNDSTATE_END:
+		break;
+	default:
+		break;
+
+	}
+
+
+
 }
 
 

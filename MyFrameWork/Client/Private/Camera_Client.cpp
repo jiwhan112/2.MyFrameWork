@@ -45,6 +45,9 @@ _uint CALLBACK CameraEffectThread(void* _Prameter)
 	return 0;
 }
 
+const _float3 GameCameraDir = _float3(-0.7, -1.5f, 1);
+
+
 CCamera_Client::CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CCamera(pDevice, pDeviceContext)
 {
@@ -78,6 +81,7 @@ HRESULT CCamera_Client::NativeConstruct(void* pArg)
 
 _int CCamera_Client::Tick(_double TimeDelta)
 {
+
 	switch (meCameraMode)
 	{
 	case CCamera_Client::CAMERA_MODE_DEFAULT:
@@ -99,6 +103,7 @@ _int CCamera_Client::Tick(_double TimeDelta)
 		}
 		break;
 	case CCamera_Client::CAMERA_MODE_MOVE:
+		mComTransform->LookAtDir(GameCameraDir);
 		CameraMoving_Bezior(TimeDelta);
 		//CameraMoving(TYPE_Linear, TimeDelta);
 		break;
@@ -277,7 +282,6 @@ HRESULT CCamera_Client::Update_Target_Unit(_double TimeDelta)
 	return S_OK;
 }
 
-const _float3 GameCameraDir = _float3(-0.7, -1.5f, 1);
 HRESULT CCamera_Client::Update_Target_Terrain(_double TimeDelta)
 {
 	if (mTargetObject == nullptr)

@@ -476,6 +476,14 @@ HRESULT CGameInstance::PlayBGM(TCHAR * pSoundKey, _float fLouderMultiple)
 	return m_pSoundMgr->PlayBGM(pSoundKey, fLouderMultiple);
 }
 
+HRESULT CGameInstance::PlayBGM2(TCHAR * pSoundKey, _float fLouderMultiple)
+{
+	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");
+
+	return m_pSoundMgr->PlayBGM2(pSoundKey, fLouderMultiple);
+}
+
+
 void CGameInstance::Stop_ChannelSound(CHANNELID eID)
 {
 	NULL_CHECK_MSG(m_pSoundMgr, L"Not Have m_pSoundMgr");

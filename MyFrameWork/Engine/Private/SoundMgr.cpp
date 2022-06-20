@@ -203,6 +203,29 @@ HRESULT CSoundMgr::PlayBGM(TCHAR * pSoundKey, _float fLouderMultiple)
 	return S_OK;
 }
 
+HRESULT CSoundMgr::PlayBGM2(TCHAR * pSoundKey, _float fLouderMultiple)
+{
+	map<TCHAR*, FMOD_SOUND*>::iterator iter;
+	FMOD_Channel_Stop(m_pChannelArr[30]);
+
+	iter = find_if(m_mapSound.begin(), m_mapSound.end(), [&](auto& iter)
+	{
+		return !lstrcmp(pSoundKey, iter.first);
+	});
+
+	if (iter == m_mapSound.end())
+		return E_FAIL;
+
+	FMOD_System_PlaySound(m_pSystem, iter->second, nullptr, FALSE, &m_pChannelArr[30]);
+
+
+	FMOD_Channel_SetVolume(m_pChannelArr[30], m_VolumeArr[CHANNEL_BGM] * fLouderMultiple);
+
+	FMOD_Channel_SetMode(m_pChannelArr[30], FMOD_LOOP_NORMAL);
+	FMOD_System_Update(m_pSystem);
+	return S_OK;
+}
+
 void CSoundMgr::Stop_ChannelSound(CHANNELID eID)
 {
 	if (eID == CHANNEL_BGM)

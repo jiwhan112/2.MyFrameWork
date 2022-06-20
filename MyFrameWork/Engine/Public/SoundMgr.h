@@ -22,6 +22,7 @@ public:
 
 	HRESULT PlaySound(TCHAR* pSoundKey, CHANNELID eID, _float fLouderMultiple = 1.f);
 	HRESULT PlayBGM(TCHAR* pSoundKey, _float fLouderMultiple = 1.f);
+	HRESULT PlayBGM2(TCHAR* pSoundKey, _float fLouderMultiple = 1.f);
 
 	void Stop_ChannelSound(CHANNELID eID);
 	void Stop_AllChannel();

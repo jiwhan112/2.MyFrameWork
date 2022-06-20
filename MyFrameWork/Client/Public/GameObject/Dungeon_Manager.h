@@ -18,6 +18,15 @@ class CDungeon_Manager final :
 	public CBase
 {
 public:
+	enum E_GAMESOUNDSTATE
+	{
+		E_GAMESOUNDSTATE_DUNGEON,
+		E_GAMESOUNDSTATE_WORLD,
+		E_GAMESOUNDSTATE_ATTACK,
+		E_GAMESOUNDSTATE_END
+
+	};
+
 	enum E_GAMEMODE
 	{
 		GAMEMODE_DUNGEON,
@@ -85,6 +94,8 @@ public:	// For. Task
 	HRESULT Check_Task();
 	HRESULT Check_World();
 	void Switch_Map();
+	HRESULT PlaySound(E_GAMESOUNDSTATE e);
+
 
 private:
 	// 테스크에 따른 유닛 할당

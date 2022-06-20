@@ -25,13 +25,14 @@ HRESULT CDungeon_Objects::NativeConstruct_Prototype(ID3D11Device* device, ID3D11
 	mIsCreateBoss = false;
 
 	
+
 	if (mCurrentLevel == LEVEL_MYGAMEPLAY)
 	{
-//#ifdef _DEBUG
+#ifdef _DEBUG
 		FAILED_CHECK(Ready_IMGUI());
-//#endif
+#endif
 
-
+		GetSingle(CGameManager)->Get_DaungonManager()->PlaySound(CDungeon_Manager::E_GAMESOUNDSTATE_DUNGEON);
 
 		FAILED_CHECK(Ready_Light());
 		FAILED_CHECK(Ready_UI());

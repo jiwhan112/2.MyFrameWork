@@ -14,7 +14,7 @@ HRESULT CLevel_Logo::NativeConstruct()
 	FAILED_CHECK(__super::NativeConstruct());
 
 	// 사운드 체크
-//	FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM((L"JY_Stage2_BGM.mp3")));
+	FAILED_CHECK(GetSingle(CGameInstance)->PlayBGM((L"music_dungeon_2.wav")));
 
 //	FAILED_CHECK(Ready_Layer_Camera(TAGLAY(LAY_CAMERA)));
 
