@@ -18,11 +18,9 @@ HRESULT CColliderManager::NativeConstruct_Prototype()
 HRESULT CColliderManager::Tick_ColliderCheck(_double Timer)
 {
 	// 0. UI 충돌체크
-	if (ColCheck_MOUSE_Object_UI())
-	{
+	bool bUiCheck = ColCheck_MOUSE_Object_UI();
 
-	}
-	else
+	if (bUiCheck == false)
 	{
 		// 1. 마우스 충돌체크
 		ColCheck_MOUSE_Object();
@@ -30,9 +28,7 @@ HRESULT CColliderManager::Tick_ColliderCheck(_double Timer)
 
 		// 2. 객체들의 충돌 체크
 		ColCheck_OBJECTS(Timer);
-
 	}
-
 
 	// 오브젝트 지우기
 	ReleaseObjects();
