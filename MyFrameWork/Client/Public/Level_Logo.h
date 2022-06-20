@@ -22,6 +22,7 @@ private:
 	HRESULT Ready_Layer_UI_LOGO(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_UI_GAMEPLAY(const _tchar* pLayerTag);
 
+	static void Change_GameLevel();
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	// CBase을(를) 통해 상속됨

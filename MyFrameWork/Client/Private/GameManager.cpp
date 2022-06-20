@@ -336,6 +336,14 @@ HRESULT CGameManager::LevelChanger()
 	return S_OK;
 }
 
+void CGameManager::Change_GameLevel()
+{
+	LevelLoading(LEVEL_MYGAMEPLAY);
+	mCurrentLevel = LEVEL_MYGAMEPLAY;
+}
+
+
+
 HRESULT CGameManager::Set_PathData(list<MYFILEPATH*>* outPathList, wstring str, const char * filetype , bool bFlag)
 {
 	if (outPathList->empty())

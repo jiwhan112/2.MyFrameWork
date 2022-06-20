@@ -46,6 +46,7 @@ HRESULT CLevel_Logo::Render()
 	return S_OK;
 }
 
+
 HRESULT CLevel_Logo::Ready_Prototype_GameObject()
 {
 	return S_OK;
@@ -103,8 +104,6 @@ HRESULT CLevel_Logo::Ready_Layer_UI_LOGO(const _tchar * pLayerTag)
 	DarkBarImgDesc.mDepth = 1;
 	DarkBarImg->Setup_UIPosition(DarkBarImgDesc);
 
-
-
 	size = 0.9f;
 
 	CGameObject_2D* GameStart = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mLevelIndex, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
@@ -115,7 +114,7 @@ HRESULT CLevel_Logo::Ready_Layer_UI_LOGO(const _tchar * pLayerTag)
 	GameStartDesc.mUIRECT = rect;
 	GameStartDesc.mDepth = 10;
 	GameStart->Setup_UIPosition(GameStartDesc);
-
+	GameStart->AddCollisionFunction(&Change_GameLevel);
 
 
 	return S_OK;
@@ -190,6 +189,11 @@ HRESULT CLevel_Logo::Ready_Layer_UI_GAMEPLAY(const _tchar * pLayerTag)
 	Dungeon_WorldImg->Setup_UIPosition(Dungeon_WorldImgDesc);
 
 	return S_OK;
+}
+
+void CLevel_Logo::Change_GameLevel()
+{
+	GetSingle(CGameManager)->Change_GameLevel();
 }
 
 

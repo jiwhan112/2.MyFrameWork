@@ -93,6 +93,8 @@ private:
 	HRESULT LevelLoading(E_LEVEL nextLevel);
 	HRESULT ClearLevel();
 	HRESULT LevelChanger();
+public:
+	void	Change_GameLevel();
 
 
 private:

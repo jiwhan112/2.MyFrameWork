@@ -35,18 +35,7 @@ _int CDungeon_Manager::Tick(_double TimeDelta)
 
 _int CDungeon_Manager::LateTick(_double TimeDelta)
 {
-	if (GetSingle(CGameInstance)->Get_DIKeyState(DIK_K)& DIS_Down)
-	{
-		// 모드 변경 연출
-		if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_WORLD)
-		{
-			Set_CameraMove(CDungeon_Manager::CAMERAMODE_DUNGEON);
-		}
-		else
-		{
-			Set_CameraMove(CDungeon_Manager::CAMERAMODE_WORLD);
-		}
-	}
+	
 
 	
 	return UPDATENONE;
@@ -240,6 +229,20 @@ HRESULT CDungeon_Manager::Check_World()
 	return S_OK;
 }
 
+void CDungeon_Manager::Switch_Map()
+{
+		// 모드 변경 연출
+		if (meCurrentGameMode == CDungeon_Manager::GAMEMODE_WORLD)
+		{
+			Set_CameraMove(CDungeon_Manager::CAMERAMODE_DUNGEON);
+		}
+		else
+		{
+			Set_CameraMove(CDungeon_Manager::CAMERAMODE_WORLD);
+		}
+
+}
+
 _bool CDungeon_Manager::Task_Trigger(TASKBASE* task)
 {
 	// 테스크를 유닛에게 전달한다.
@@ -336,7 +339,7 @@ _bool CDungeon_Manager::Task_Mine_Pos(TASKBASE * task)
 
 	_float maxdis = INT8_MAX;
 	CGameObject_Mine *SearchMine = nullptr;
-
+	
 	// 2. 조건 찾기
 	for (auto& unit : unitlist)
 	{

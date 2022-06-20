@@ -19,6 +19,30 @@ public:
 		UITYPE_END,
 	};
 
+
+	function<void()>			mClickFunc;
+
+	void AddCollisionFunction(void(*func)())
+	{
+		mClickFunc = bind(func);
+
+	}
+	//template<class T>
+	//void AddCollisionFunction(T* obj,
+	//	void(T::*func)())
+	//{
+	//	function<void()> Func;
+	//	// 인자 순서에 따라 function 객체를 만든다.
+	//	Func = bind(func, obj);
+	//	mFuncList.push_back(Func);
+	//}
+
+	void CallFuntion()
+	{
+		mClickFunc();
+	}
+
+
 protected:
 	explicit CGameObject_2D(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_2D(const CGameObject_2D& rhs);
@@ -60,6 +84,8 @@ public:
 	void Set_LoadTexDiffuse(const char* str);
 	void Set_LoadTexButton(const char* str1, const char* str2);
 	void Set_LoadTexButton2(const char* str1, const char* str2, const char* str3);
+
+
 
 
 

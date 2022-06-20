@@ -37,6 +37,8 @@ HRESULT CGameObject_2D::NativeConstruct(void* pArg)
 	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 
 	mIsActive = true;
+
+
 	return S_OK;
 }
 
@@ -92,6 +94,10 @@ HRESULT CGameObject_2D::CollisionFunc(CGameObject_Base * object)
 	if (meUIType == CGameObject_2D::UITYPE_BUTTON1)
 	{
 		mIsOverrMouse = true;
+		if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)&DIS_Down)
+		{
+			CallFuntion();
+		}
 	}
 
 	else if (meUIType == CGameObject_2D::UITYPE_BUTTON2_UNIT)
@@ -104,6 +110,10 @@ HRESULT CGameObject_2D::CollisionFunc(CGameObject_Base * object)
 		{
 			mIsOverrMouse = true;
 
+			if (GetSingle(CGameInstance)->Get_DIMouseButtonState(CInput_Device::MBS_LBUTTON)&DIS_Down)
+			{
+				CallFuntion();
+			}
 		}
 	}
 

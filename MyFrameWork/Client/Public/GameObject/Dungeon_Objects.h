@@ -123,10 +123,21 @@ private: // 상호작용 트리거 볼륨
 
 
 private:
+	static void Create_Mine();
+	static void Create_Orc();
+	static void Create_Goblin();
+	static void Create_Enemy();
+	static void Create_Boss();
+	static void Move_Dungeon();
+
+
+private:
 	// 오브젝트
 	E_LEVEL								mCurrentLevel = LEVEL_END;
 	ID3D11Device*						mDevice = nullptr;
 	ID3D11DeviceContext*				mDeviceContext = nullptr;
+
+
 
 
 

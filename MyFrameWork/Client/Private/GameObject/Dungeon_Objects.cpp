@@ -3,6 +3,11 @@
 #include "GameObject/Client_Object.h"
 #include "Tool/Imgui_InGame.h"
 
+
+const static _float3 mSpawnPostitionDAUNGEON = _float3(20.f, 0.f, 14.5f);
+const static _float3 mSpawnPostitionENEMY = _float3(8.f, 8.f, 48.f);
+const static _float3 mSpawnPostitionBOSS = _float3(52.f, 8.f, 51.f);
+
 CDungeon_Objects::CDungeon_Objects()
 {
 }
@@ -126,9 +131,11 @@ HRESULT CDungeon_Objects::Ready_Light()
 	LIGHTDESC		DirLightDesc;
 	ZeroMemory(&DirLightDesc, sizeof(LIGHTDESC));
 
+	_float Ambient = 0.6f;
+
 	DirLightDesc.eLightType = LIGHTDESC::TYPE_DIRECTIONAL;
 	DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	DirLightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	DirLightDesc.vAmbient = _float4(Ambient, Ambient, Ambient, 1.f);
 	DirLightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 	DirLightDesc.vDirection = _float4(-1.f, -1.f, -1.f, 0.f);
 
@@ -174,8 +181,8 @@ HRESULT CDungeon_Objects::Ready_UI()
 	Dungeon_OrcImgDesc.mUIRECT = rect;
 	Dungeon_OrcImgDesc.mDepth = 1;
 	Dungeon_OrcImg->Setup_UIPosition(Dungeon_OrcImgDesc);
-
-
+	Dungeon_OrcImg->AddCollisionFunction(&Create_Orc);
+	 
 	CGameObject_2D* Dungeon_GoblinImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
 	Dungeon_GoblinImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON2_UNIT);
 	Dungeon_GoblinImg->Set_LoadTexButton2("Goblin_icon.png", "Goblin_icon1.png", "Goblin_icon2.png");
@@ -184,6 +191,8 @@ HRESULT CDungeon_Objects::Ready_UI()
 	Dungeon_GoblinImgDesc.mUIRECT = rect;
 	Dungeon_GoblinImgDesc.mDepth = 1;
 	Dungeon_GoblinImg->Setup_UIPosition(Dungeon_GoblinImgDesc);
+	Dungeon_GoblinImg->AddCollisionFunction(&Create_Goblin);
+
 
 	CGameObject_2D* Dungeon_MineImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
 	Dungeon_MineImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON2_UNIT);
@@ -193,6 +202,7 @@ HRESULT CDungeon_Objects::Ready_UI()
 	Dungeon_MineImgDesc.mUIRECT = rect;
 	Dungeon_MineImgDesc.mDepth = 1;
 	Dungeon_MineImg->Setup_UIPosition(Dungeon_MineImgDesc);
+	Dungeon_MineImg->AddCollisionFunction(&Create_Mine);
 
 
 	scale = 0.5f;
@@ -208,6 +218,7 @@ HRESULT CDungeon_Objects::Ready_UI()
 	Dungeon_EnemyImgDesc.mUIRECT = rect;
 	Dungeon_EnemyImgDesc.mDepth = 1;
 	Dungeon_EnemyImg->Setup_UIPosition(Dungeon_EnemyImgDesc);
+	Dungeon_EnemyImg->AddCollisionFunction(&Create_Enemy);
 
 	CGameObject_2D* Dungeon_WorldImg = (CGameObject_2D*)GetSingle(CGameInstance)->Add_GameObject(mCurrentLevel, pLayerTag, TAGOBJ(GAMEOBJECT_2D));
 	Dungeon_WorldImg->Setup_UIType(CGameObject_2D::UITYPE_BUTTON1);
@@ -217,6 +228,7 @@ HRESULT CDungeon_Objects::Ready_UI()
 	Dungeon_WorldImgDesc.mUIRECT = rect;
 	Dungeon_WorldImgDesc.mDepth = 1;
 	Dungeon_WorldImg->Setup_UIPosition(Dungeon_WorldImgDesc);
+	Dungeon_WorldImg->AddCollisionFunction(&Move_Dungeon);
 
 
 
@@ -878,6 +890,43 @@ HRESULT CDungeon_Objects::Setup_TileState(_int tileIndex)
 		}
 	}
 	return E_FAIL;
+}
+
+void CDungeon_Objects::Create_Mine()
+{
+	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_MINE, mSpawnPostitionDAUNGEON);
+}
+
+void CDungeon_Objects::Create_Orc()
+{
+	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ORC, mSpawnPostitionDAUNGEON);
+}
+
+void CDungeon_Objects::Create_Goblin()
+{
+	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_GOBLIN, mSpawnPostitionDAUNGEON);
+}
+
+void CDungeon_Objects::Create_Enemy()
+{
+	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_ENEMY, mSpawnPostitionDAUNGEON);
+}
+
+void CDungeon_Objects::Create_Boss()
+{
+
+	GetSingle(CGameManager)->Get_DaungonManager()->Get_DungeonObjects()->
+		Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_3D_DYNAMIC_BOSS, mSpawnPostitionBOSS);
+
+}
+
+void CDungeon_Objects::Move_Dungeon()
+{
+	GetSingle(CGameManager)->Get_DaungonManager()->Switch_Map();
 }
 
 CDungeon_Objects * CDungeon_Objects::Create(ID3D11Device* device, ID3D11DeviceContext* context, E_LEVEL level )

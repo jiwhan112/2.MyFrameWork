@@ -84,6 +84,7 @@ public:	// For. Task
 
 	HRESULT Check_Task();
 	HRESULT Check_World();
+	void Switch_Map();
 
 private:
 	// 테스크에 따른 유닛 할당
@@ -110,6 +111,7 @@ private:
 public: // DEBUG
 	_float						mDebugValue = 5;
 	_float						mWorldCheckTimer = 0;
+
 
 
 public: // SETTING
