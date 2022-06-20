@@ -14,6 +14,7 @@ class CGameObject_Orc final :
 {
 public:
 
+
 protected:
 	explicit CGameObject_Orc(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject_Orc(const CGameObject_Orc& rhs);
@@ -45,8 +46,6 @@ public:
 public:
 	virtual HRESULT Select_WorldAttack(CGameObject_3D_Dynamic* target)override;
 	
-
-protected:
 
 public:
 	static CGameObject_Orc* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

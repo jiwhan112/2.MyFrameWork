@@ -25,7 +25,6 @@ CGameObject_3D_Dynamic::CGameObject_3D_Dynamic(const CGameObject_3D_Dynamic& rhs
 {
 	// Dynamic TOOLTEST
 	// meTickType = CGameObject_3D_Dynamic::TICK_TOOL;
-
 }
 
 HRESULT CGameObject_3D_Dynamic::NativeConstruct_Prototype()

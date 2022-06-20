@@ -17,6 +17,8 @@ class CGameObject_3D_Dynamic  :
 	public CGameObject_Base
 {
 public:
+	const _float3 SPAWN_DIR = _float3(0.7, 0, -1);
+
 	enum E_MAPTYPE
 	{
 		MAPTYPE_DUNGEON,
@@ -245,6 +247,7 @@ protected: // 3D모델 Com / DESC 추가
 	_int							mHP=30;
 	_int							mMP=0; // 스킬
 	_int							mDamage = 10;
+
 
 public:
 	// 생성 위치

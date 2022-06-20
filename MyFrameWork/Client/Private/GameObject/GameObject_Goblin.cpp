@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "GameObject/GameObject_Goblin.h"
+#include "GameObject/Dungeon_Manager.h"
+#include "GameObject/Dungeon_Objects.h"
 #include "AI/AI_Sequnce.h"
 
 CGameObject_Goblin::CGameObject_Goblin(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -17,42 +19,53 @@ CGameObject_Goblin::CGameObject_Goblin(const CGameObject_Goblin& rhs)
 HRESULT CGameObject_Goblin::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
-
 	mCurrentShaderPass = 0;
-
 	return S_OK;
 }
 
 HRESULT CGameObject_Goblin::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
+	//	Set_MapSetting(CGameObject_3D_Dynamic::MAPTYPE_WORLD);
+
+
 
 	return S_OK;
 }
 
 HRESULT CGameObject_Goblin::Tick_Dungeon(_double TimeDelta)
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(__super::Tick_Dungeon(TimeDelta));
+
+	return S_OK;
 }
 
 HRESULT CGameObject_Goblin::LateTick_Dungeon(_double TimeDelta)
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(__super::LateTick_Dungeon(TimeDelta));
+
+	return S_OK;
 }
 
 HRESULT CGameObject_Goblin::Tick_World(_double TimeDelta)
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(__super::Tick_World(TimeDelta));
+
+
+	return S_OK;
 }
 
 HRESULT CGameObject_Goblin::LateTick_World(_double TimeDelta)
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(__super::LateTick_World(TimeDelta));
+
+	return S_OK;
 }
 
 
 HRESULT CGameObject_Goblin::Init_Unit()
 {
+	mHP = 100;
 	// 모델 결정
 	string str("crea_Goblin.fbx");
 	strcpy_s(mModelDesc.mModelName, str.c_str());
@@ -63,7 +76,7 @@ HRESULT CGameObject_Goblin::Init_Unit()
 	SpawnPos.y += 10;
 	Set_Position(SpawnPos);
 
-	Set_LookDir(_float3(-1, 0, -1));
+	Set_LookDir(SPAWN_DIR);
 
 
 	_float size = 0.6f;
@@ -75,13 +88,15 @@ HRESULT CGameObject_Goblin::Init_Unit()
 
 	meUnitType = UNIT_PLAYER;
 	meTickType = CGameObject_3D_Dynamic::TICK_TYPE_NONE;
-	mTimeForSpeed = 0.5f;
-	mTimeForSpeed_World = 1.0f;
+	mTimeForSpeed = 1.0f;// Test
+	mTimeForSpeed_World = 0.5f;
 
 	// 충돌 정보
+
 	COLLIDER_DESC desc;
 	desc.meColliderType = CCollider::E_COLLIDER_TYPE::COL_SPHERE;
 	desc.mOffset = _float3(0, size, 0);
+	size = size * 0.8f;
 	desc.mSize = _float3(size, size, size);
 	Add_ColliderDesc(&desc, 1);
 	Init_Collider();
@@ -93,26 +108,28 @@ HRESULT CGameObject_Goblin::Init_Unit()
 	Add_Socket_Model(STR_TAYSOCKET(SOCKET_WEAPON_1), "wep_OgreClub.fbx", "RArmDigit22");
 
 	mIsPickTurn = false;
-	return S_OK;
 
+	return S_OK;
 }
 
 HRESULT CGameObject_Goblin::Init_AI()
 {
 	FAILED_CHECK(__super::Init_AI());
-	
 	Init_AI_Default();
 
 	return S_OK;
 }
 
+
 HRESULT CGameObject_Goblin::Init_AI_Default()
-{
-	// AI 세부 구현
+{	// AI 세부 구현
+
 	CSequnce_IDLE* Seq_IDLE = CSequnce_IDLE::Create(this);
 	CSequnce_IDLE::SEQIDLE DefaultIdleDesc;
+
 	DefaultIdleDesc.mMoveEasingId = TYPE_Linear;
 	DefaultIdleDesc.AniType = CAnimatior::E_COMMON_ANINAME_IDLE;
+
 	Seq_IDLE->Restart(&DefaultIdleDesc);
 	mComBehavior->Add_Seqeunce("IDLE", Seq_IDLE);
 
@@ -121,6 +138,15 @@ HRESULT CGameObject_Goblin::Init_AI_Default()
 	DefaultPickDesc.AniType = CAnimatior::E_COMMON_ANINAME::E_COMMON_ANINAME_CARRIED;
 	Seq_Pick->Restart(&DefaultPickDesc);
 	mComBehavior->Add_Seqeunce("PICK", Seq_Pick);
+
+	// 월드 이동 자동 공격
+	CSequnce_WorldAutoAttack* Seq_WorldAttack = CSequnce_WorldAutoAttack::Create(this);
+	CSequnce_WorldAutoAttack::SEQWORLDAUTOATTACK attackDesc;
+	attackDesc.Target = nullptr;
+	Seq_WorldAttack->Restart(&attackDesc);
+	mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
+
+
 
 	return S_OK;
 }
@@ -135,19 +161,27 @@ HRESULT CGameObject_Goblin::Select_WorldAttack(CGameObject_3D_Dynamic* target)
 
 	if (mTarget_Attack)
 	{
-		bool targetlife = mTarget_Attack->Get_IsLife();
-		if (targetlife)
-			return S_OK;
-		else
-			targetlife = nullptr;
+		if (mTarget_Attack == target)
+		{
+			bool targetlife = mTarget_Attack->Get_IsLife();
+			if (targetlife)
+				return S_OK;
+			else
+				Set_AttackTarget(nullptr);
+		}
+
 	}
-	mTarget_Attack = target;
+
+	Set_AttackTarget(target);
 
 	CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY desc;
 	desc.Target = mTarget_Attack;
-	mComBehavior->Select_Sequnce("ATTACK_WORLD", &desc);
+	mComBehavior->Select_Sequnce("WORLD_ATTACK", &desc);
+
 	return S_OK;
 }
+
+
 
 CGameObject_Goblin * CGameObject_Goblin::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
@@ -178,4 +212,6 @@ void CGameObject_Goblin::Free()
 {
 	__super::Free();
 
+
+	//	Safe_Release(mComNaviMesh);
 }

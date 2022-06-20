@@ -92,7 +92,7 @@ HRESULT CGameObject_Enemy::Init_Unit()
 	SpawnPos.y += 10;
 	Set_Position(SpawnPos);
 
-	Set_LookDir(_float3(-1, 0, -1));
+	Set_LookDir(SPAWN_DIR);
 	_float size = 0.8f;
 	mComTransform->Scaled(_float3(size, size, size));
 

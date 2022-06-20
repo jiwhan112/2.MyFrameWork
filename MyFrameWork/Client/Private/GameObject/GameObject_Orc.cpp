@@ -76,7 +76,7 @@ HRESULT CGameObject_Orc::Init_Unit()
 	SpawnPos.y += 10;
 	Set_Position(SpawnPos);
 
-	Set_LookDir(_float3(-1, 0, -1));
+	Set_LookDir(SPAWN_DIR);
 
 
 	_float size = 0.8f;
@@ -147,13 +147,7 @@ HRESULT CGameObject_Orc::Init_AI_Default()
 	mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_WorldAttack);
 
 
-	//CSequnce_WorldAttack_Player* Seq_Attack = CSequnce_WorldAttack_Player::Create(this);
-	//CSequnce_WorldAttack_Player::SEQWORLDATTACK_PLY DefaulAttackDesc;
-	//DefaulAttackDesc.Target = nullptr;
-	//Seq_Attack->Restart(&DefaulAttackDesc);
-	//mComBehavior->Add_Seqeunce("WORLD_ATTACK", Seq_Attack);
 
-	
 	return S_OK;
 }
 
