@@ -232,6 +232,14 @@ HRESULT CImgui_InGame::Edit_InGame()
 			Create_Unit(E_TAYGAMEOBJECT::GAMEOBJECT_2D_PARTICLE_POINT, SpawnPos);
 
 	}
+
+	// cameraEffect
+	if (ImGui::Button("Camera_Shake"))
+	{
+		mCameraClient->CameraEffect(CCamera_Client::CAMERA_SHAKE,0.03f, 1.0f);
+
+	}
+
 	return S_OK;
 }
 

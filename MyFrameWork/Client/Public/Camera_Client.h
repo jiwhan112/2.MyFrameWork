@@ -31,6 +31,18 @@ public:
 	};
 
 
+	enum E_CameraEffectID
+	{
+		CAMERA_NONE,
+		CAMERA_SHAKE,
+		CAMERA_FADEIN,
+		CAMERA_FADEOUT,
+		CAMERA_END,
+
+	};
+
+
+
 protected:
 	explicit CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CCamera_Client(const CCamera_Client& rhs);
@@ -53,8 +65,6 @@ public:
 		mComTransform->LookAtDir(Dir);
 	}
 
-
-
 	HRESULT Set_GameCameraMode();
 	HRESULT EnterCamera(E_CAMERA_MOVEPOS_STATE mode, _double TimeMax);
 
@@ -73,6 +83,22 @@ private:
 	
 	void Set_ListPosition(list<_float3> VecLoadPos);
 	void Set_NextMove(_double timeMax);
+
+
+
+	// 카메라 이펙트 정의
+public:
+	E_CameraEffectID Get_CamerEffectID() const { return meCameraEffectID; }
+	// 이펙트 호출
+	void CameraEffect(E_CameraEffectID eEffect, _float fTimeDelta, _float fTotalFrame);
+	// 이외 카메라 이펙트
+	void FadeIn(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec);
+	void FadeOut(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec);
+	void CamShake(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec);
+	//void HitEft(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec);
+	//void CamAction(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec);
+	//void CamViectoryEft(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec);
+
 
 
 private:
@@ -100,9 +126,9 @@ public:
 	list<_float3>				mListMove_World;
 
 	// 각 던전의 중심위치
-
 	const _float3				mDungeon_CenterPos = _float3(19.64f,8.74f,11.57f);
 	const _float3				mWorld_CenterPos = _float3(60.35f,23.6f,5.9f);
+	E_CameraEffectID			meCameraEffectID = CAMERA_NONE;
 
 
 public:

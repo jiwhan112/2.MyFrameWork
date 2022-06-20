@@ -2,6 +2,49 @@
 #include "Camera_Client.h"
 #include "GameObject/GameObject_MyTerrain.h"
 
+
+_uint CALLBACK CameraEffectThread(void* _Prameter)
+{
+	THREADARG tThreadArg{};
+	memcpy(&tThreadArg, _Prameter, sizeof(THREADARG));
+	delete _Prameter;
+
+	CCamera_Client* pCamemra = (CCamera_Client*)(tThreadArg.pArg);
+
+	switch (pCamemra->Get_CamerEffectID())
+	{
+	case CCamera_Client::E_CameraEffectID::CAMERA_SHAKE:
+		pCamemra->CamShake(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+		break;
+
+	//case CCamera_Main::CAM_EFT_FADE_IN:
+	//	pCamemra->FadeIn(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+	//	break;
+	//case CCamera_Main::CAM_EFT_FADE_OUT:
+	//	pCamemra->FadeOut(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+	//	break;
+	//case CCamera_Main::CAM_EFT_SHAKE:
+	//	pCamemra->CamShake(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+	//	break;
+	//case CCamera_Main::CAM_EFT_HIT:
+	//	pCamemra->HitEft(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+	//	break;
+	//case CCamera_Main::CAM_EFT_ACTION:
+	//	pCamemra->CamAction(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+	//	break;
+
+	//case CCamera_Main::CAM_EFT_VICTORY:
+	//	pCamemra->CamViectoryEft(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+	//	break;
+
+	default:
+		MSGBOX("worng Cam Eft");
+		break;
+	}
+
+	return 0;
+}
+
 CCamera_Client::CCamera_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 	: CCamera(pDevice, pDeviceContext)
 {
@@ -422,6 +465,44 @@ void CCamera_Client::Set_NextMove(_double timeMax)
 	mCurrentTimer = 0;
 
 }
+
+
+
+void CCamera_Client::FadeIn(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec)
+{
+}
+
+void CCamera_Client::FadeOut(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec)
+{
+}
+
+void CCamera_Client::CamShake(_bool * _IsClientQuit, CRITICAL_SECTION * _CriSec)
+{
+	Camera_Shaking(0.03f, 1.f);
+	EnterCriticalSection(_CriSec);
+	meCameraEffectID = CCamera_Client::CAMERA_NONE;
+	LeaveCriticalSection(_CriSec);
+	return;
+
+
+}
+
+
+void CCamera_Client::CameraEffect(E_CameraEffectID eEffect, _float fTimeDelta, _float fTotalFrame)
+{
+	if (meCameraEffectID == CAMERA_SHAKE)
+	{
+		return;
+	}
+
+
+	meCameraEffectID = eEffect;
+	mCurrentTime = fTimeDelta;
+	mTotalTime = fTotalFrame;
+	GetSingle(CGameInstance)->PlayThread(CameraEffectThread, this);
+
+}
+
 
 CCamera_Client * CCamera_Client::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 {
