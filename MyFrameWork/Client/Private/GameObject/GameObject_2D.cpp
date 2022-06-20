@@ -58,9 +58,6 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-
-
-
 	if (meUIType == CGameObject_2D::UITYPE_BUTTON1)
 	{
 		LateTick_Button1();
@@ -80,6 +77,7 @@ _int CGameObject_2D::LateTick(_double TimeDelta)
 HRESULT CGameObject_2D::Render()
 {
 	FAILED_CHECK(__super::Render());
+
 
 	FAILED_CHECK(Set_ConstantTable_UI());
 	FAILED_CHECK(Set_ConstantTable_Tex());

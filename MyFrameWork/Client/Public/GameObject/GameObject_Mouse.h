@@ -24,21 +24,10 @@ public:
 
 
 
-//#ifdef _DEBUG
-//private:
-//	BasicEffect*									mBaseEffect = nullptr;
-//	ID3D11InputLayout*								mInputLayout = nullptr;
-//	PrimitiveBatch<DirectX::VertexPositionColor>*	mBatch = nullptr;
-//#endif // _DEBUG
-
-
 
 protected: 
 	_float2			mMousePos;
-	_viewport		mViewPort;
-
 	bool			mIsRender = false;
-	_ray			mRay;
 
 public:
 	static CGameObject_Mouse* Create(ID3D11Device* d, ID3D11DeviceContext* cont);

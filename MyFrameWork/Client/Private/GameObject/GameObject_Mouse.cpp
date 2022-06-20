@@ -11,39 +11,13 @@ CGameObject_Mouse::CGameObject_Mouse(ID3D11Device* pDevice, ID3D11DeviceContext*
 CGameObject_Mouse::CGameObject_Mouse(const CGameObject_Mouse& rhs)
 	: CGameObject_2D(rhs)
 {
-//#ifdef _DEBUG
-//	, mBaseEffect(rhs.mBaseEffect)
-//	, mBatch(rhs.mBatch)
-//	, mInputLayout(rhs.mInputLayout)
-//#endif // _DEBUG
-//{
 
-
-//#ifdef _DEBUG
-//	Safe_AddRef(mInputLayout);
-//#endif // _DEBUG
 }
 
 HRESULT CGameObject_Mouse::NativeConstruct_Prototype()
 {
 	FAILED_CHECK(__super::NativeConstruct_Prototype());
 
-//#ifdef _DEBUG
-//	mBaseEffect = NEW BasicEffect(m_pDevice);
-//	mBaseEffect->SetVertexColorEnabled(true);
-//
-//	const void* pShaderByteCode = nullptr;
-//	size_t		iShaderByteCodeLength = 0;
-//
-//	mBaseEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeLength);
-//
-//	FAILED_CHECK(m_pDevice->CreateInputLayout(DirectX::VertexPositionColor::InputElements, DirectX::VertexPositionColor::InputElementCount,
-//		pShaderByteCode, iShaderByteCodeLength, &mInputLayout));
-//
-//	mBatch = NEW PrimitiveBatch<DirectX::VertexPositionColor>(m_pDeviceContext);
-//
-//
-//#endif // _DEBUG
 
 
 	return S_OK;
@@ -53,14 +27,16 @@ HRESULT CGameObject_Mouse::NativeConstruct(void* pArg)
 {
 	FAILED_CHECK(__super::NativeConstruct(pArg));
 
-	string str("GUI_Attribute_Damage.png");
-	strcpy_s(mTexStrDESC.mTextureKey_Diffuse, str.c_str());
-	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 
+
+	_rect rect = _rect(500, 500, 50, 50);
+	mUiDesc.mUIRECT = rect;
 	mUiDesc.mDepth = 99;
-	mViewPort = _viewport(0, 0, g_iWinCX, g_iWinCY);
+	Setup_UIPosition(mUiDesc);
 
-	mComTransform->Scaled(_float3(50, 50, 1));
+	Setup_UIType(CGameObject_2D::UITYPE_IMAGE);
+	strcpy_s(mTexStrDESC.mTextureKey_Diffuse, "GUI_Attribute_Damage.png");
+	mComTexture->Set_TextureMap(mTexStrDESC.mTextureKey_Diffuse);
 
 
 	return S_OK;
@@ -70,16 +46,12 @@ _int CGameObject_Mouse::Tick(_double TimeDelta)
 {
 	//	FAILED_UPDATE(__super::Tick(TimeDelta));
 
-	POINT ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+	mMousePos = GetSingle(CGameInstance)->Get_WindowPos();
 
-	mMousePos.x = (float)ptMouse.x - (g_iWinCX * 0.5f);
-	mMousePos.y = (g_iWinCY * 0.5f) - (float)ptMouse.y;
+	mUiDesc.mUIRECT.x = mMousePos.x;
+	mUiDesc.mUIRECT.y = mMousePos.y;
 
-	mComTransform->Set_State(CTransform::STATE_POSITION,
-		XMVectorSet(mMousePos.x, mMousePos.y, 0.0f, 1.f));
-
+	Setup_UIPosition();
 	return UPDATENONE;
 }
 
@@ -89,40 +61,17 @@ _int CGameObject_Mouse::LateTick(_double TimeDelta)
 	
 	mComRenderer->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	return UPDATENONE;
+	return UPDATENONE; 
 }
 
 HRESULT CGameObject_Mouse::Render()
 {
-	//	FAILED_CHECK(__super::Render());
+	FAILED_CHECK(__super::Render());
 
-	FAILED_CHECK(Set_ConstantTable_UI());
-	FAILED_CHECK(Set_ConstantTable_Tex());
-
-	mComVIBuffer->Render(mComShader, mCurrentShaderPass);
-
-//#ifdef _DEBUG
-//	if (mIsRender)
-//	{
-//		// 랜더링시 처리
-//		m_pDeviceContext->IASetInputLayout(mInputLayout);
-//		//	mBaseEffect->SetWorld(trans->GetWorldFloat4x4());
-//
-//		
-//		mBaseEffect->SetWorld(_float4x4::Identity);
-//		mBaseEffect->SetView(XMLoadFloat4x4(&GetSingle(CGameInstance)->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW)));
-//		mBaseEffect->SetProjection(XMLoadFloat4x4(&GetSingle(CGameInstance)->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ)));
-//
-//		mBaseEffect->Apply(m_pDeviceContext);
-//
-//		// 배치 클래스의 Begin ~ End 까지 물체를 그린다.
-//		mBatch->Begin();
-//		DX::DrawRay(mBatch, mRay.position, mRay.direction, false, DirectX::Colors::Blue);
-//
-//
-//		mBatch->End();
-//	}
-//#endif // _DEBUG
+	//FAILED_CHECK(Set_ConstantTable_UI());
+	//FAILED_CHECK(Set_ConstantTable_Tex());
+	//
+	//mComVIBuffer->Render(mComShader, mCurrentShaderPass);
 
 	return S_OK;
 }
@@ -176,13 +125,4 @@ CGameObject_Mouse* CGameObject_Mouse::Clone(void* pArg)
 void CGameObject_Mouse::Free()
 {
 	__super::Free();
-
-//#ifdef _DEBUG
-//	Safe_Release(mInputLayout);
-//	if (mIsClone == false)
-//	{
-//		Safe_Delete(mBaseEffect);
-//		Safe_Delete(mBatch);
-//	}
-//#endif // _DEBUG
 }
