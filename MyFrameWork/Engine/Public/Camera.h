@@ -32,10 +32,18 @@ public:
 	virtual HRESULT Render();
 
 	void Set_NewCameraPos(_float3 CameraPos, _float3 LookPos);
+
+public:
+	void ShakeFunction(_bool * IsClientQuit, CRITICAL_SECTION * _CriSec);
+	HRESULT Camera_Shaking(_float deltatime, _float totaltime);
+
 protected:
 	CAMERADESC					mCameraDesc;
 	class CPipeLine*			mpPipeLine = nullptr;
 
+	bool						mIsShaking = false;
+	_float						mCurrentTime=0.0f;
+	_float						mTotalTime=1.0f;
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

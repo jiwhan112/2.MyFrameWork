@@ -1,5 +1,19 @@
 #include "..\Public\Camera.h"
 #include "PipeLine.h"
+#include "GameInstance.h"
+
+_uint CALLBACK ShakeThread(void* _Prameter)
+{
+
+	THREADARG tThreadArg{};
+	memcpy(&tThreadArg, _Prameter, sizeof(THREADARG));
+	delete _Prameter;
+
+	CCamera* pCamera = (CCamera*)tThreadArg.pArg;
+	pCamera->ShakeFunction(tThreadArg.IsClientQuit, tThreadArg.CriSec);
+	return 0;
+}
+
 
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	:CGameObject(pDevice, pDeviceContext)
@@ -98,6 +112,69 @@ void CCamera::Set_NewCameraPos(_float3 CameraPos , _float3 LookPos)
 	// float3 형을 4의 vecotr로 바꿔서 넣어준다. &는 주소를 넘겨야하기 때문에
 	mComTransform->Set_State(CTransform::STATE_POSITION, CameraPos.ToVec4(1));
 }
+
+
+HRESULT CCamera::Camera_Shaking(_float fDeltaTime, _float fTotalEftFrame)
+{
+	if (!mIsShaking)
+	{
+
+		mIsShaking = true;
+
+		mTotalTime = fTotalEftFrame;
+		mCurrentTime = fDeltaTime;
+		FAILED_CHECK((GetSingle(CGameInstance)->PlayThread(ShakeThread, this)));
+	}
+	return S_OK;
+}
+
+void CCamera::ShakeFunction(_bool * IsClientQuit, CRITICAL_SECTION * _CriSec)
+{
+
+	_float3 vShakeDir;
+	DWORD dwSleepTime = DWORD(mCurrentTime * 1000);
+	_uint TotalCnt = (_uint)((mTotalTime / mCurrentTime) * 0.25f);
+
+	_float3 TotalMovement = _float3(0, 0, 0);
+	TotalCnt *= 2;
+
+	for (_uint i = 0; i < TotalCnt; i++)
+	{
+		EnterCriticalSection(_CriSec);
+		switch (i % 2)
+		{
+		case 0:
+			vShakeDir = _float3(0, 0, 0);
+			vShakeDir += mComTransform->GetState(CTransform::STATE_RIGHT)* ((rand() % 100) - 50.f);
+			vShakeDir += mComTransform->GetState(CTransform::STATE_UP)* ((rand() % 100) - 50.f);
+			mComTransform->MovetoDir(vShakeDir, mCurrentTime);
+			TotalMovement += vShakeDir;
+			break;
+
+		case 1:
+			mComTransform->MovetoDir(vShakeDir*-1.f, mCurrentTime);
+			TotalMovement += vShakeDir * -1.f;
+			break;
+
+		default:
+			break;
+		}
+
+		LeaveCriticalSection(_CriSec);
+
+		Sleep(dwSleepTime);
+	}
+
+
+
+	EnterCriticalSection(_CriSec);
+	if (TotalMovement != _float3(0, 0, 0))
+		mComTransform->MovetoDir(TotalMovement, mCurrentTime);
+
+	mIsShaking = false;
+	LeaveCriticalSection(_CriSec);
+}
+
 
 void CCamera::Free()
 {

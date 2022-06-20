@@ -15,6 +15,7 @@
 #include "EasingMgr.h"
 #include "RenderTargetMgr.h"
 #include "SoundMgr.h"
+#include "ThreadMgr.h"
 
 
 BEGIN(Engine)
@@ -121,7 +122,8 @@ public:
 	_float  Get_Channel_Volume(CHANNELID eID);
 	_bool  Get_Channel_IsPaused(CHANNELID eID);
 
-
+public: /*For TreadMgr*/
+	HRESULT		PlayThread(void* _ThreadFunc, void* _pArg);
 
 public: // FOR.DEBUG
 	bool Get_IsColliderRender() const { return mIsRender_Collider; }
@@ -150,6 +152,7 @@ private:
 	CEasingMgr*					m_pEasingMgr = nullptr;
 	CRenderTargetMgr*			m_pRenderTargetMgr = nullptr;
 	CSoundMgr*					m_pSoundMgr = nullptr;
+	CThreadMgr*					m_pThreadMgr = nullptr;
 
 public:
 	static void Release_Engine();

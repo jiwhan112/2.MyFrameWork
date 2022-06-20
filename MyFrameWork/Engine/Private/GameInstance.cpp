@@ -18,6 +18,8 @@ CGameInstance::CGameInstance()
 	, m_pEasingMgr(CEasingMgr::GetInstance())
 	, m_pRenderTargetMgr(CRenderTargetMgr::GetInstance())
 	, m_pSoundMgr(CSoundMgr::GetInstance())
+	, m_pThreadMgr(CThreadMgr::GetInstance())
+	
 {
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
@@ -34,6 +36,8 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pEasingMgr);
 	Safe_AddRef(m_pRenderTargetMgr);
 	Safe_AddRef(m_pSoundMgr);
+	Safe_AddRef(m_pThreadMgr);
+	
 
 	mIsRender_Collider = true;
 	mIsRender_Collider_Navi = true;
@@ -500,6 +504,14 @@ _bool CGameInstance::Get_Channel_IsPaused(CHANNELID eID)
 	return 	m_pSoundMgr->Get_Channel_IsPaused(eID);
 }
 
+HRESULT CGameInstance::PlayThread(void * _ThreadFunc, void * _pArg)
+{
+	if (m_pThreadMgr == nullptr)
+		return E_FAIL;
+
+	return m_pThreadMgr->PlayThread(_ThreadFunc, _pArg);
+}
+
 void CGameInstance::Release_Engine()
 {
 	if (0 != CGameInstance::GetInstance()->DestroyInstance())
@@ -544,6 +556,9 @@ void CGameInstance::Release_Engine()
 	if (0 != CSoundMgr::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CSoundMgr");
 
+	if (0 != CThreadMgr::GetInstance()->DestroyInstance())
+		MSGBOX("Failed to Delete CThreadMgr");
+
 	if (0 != CInput_Device::GetInstance()->DestroyInstance())
 		MSGBOX("Failed to Delete CInput_Device");
 
@@ -569,6 +584,8 @@ void CGameInstance::Free()
 	Safe_Release(m_pEasingMgr);
 	Safe_Release(m_pRenderTargetMgr);
 	Safe_Release(m_pSoundMgr);
+	Safe_Release(m_pThreadMgr);
+	
 	
 
 }

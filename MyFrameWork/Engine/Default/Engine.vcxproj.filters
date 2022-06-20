@@ -166,6 +166,9 @@
     <Filter Include="01.Utility\14.SoundMgr">
       <UniqueIdentifier>{6087e7f0-c5eb-41ab-b18e-a73dbe8cf877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\15.ThreadMgr">
+      <UniqueIdentifier>{4abcf806-5acd-4224-b62e-2a0ab40ece05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
@@ -317,6 +320,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\SoundMgr.cpp">
       <Filter>01.Utility\14.SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThreadMgr.cpp">
+      <Filter>01.Utility\15.ThreadMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -493,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\SoundMgr.h">
       <Filter>01.Utility\14.SoundMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ThreadMgr.h">
+      <Filter>01.Utility\15.ThreadMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

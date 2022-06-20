@@ -228,6 +228,7 @@
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Texture_map.h" />
     <ClInclude Include="..\Public\Font.h" />
+    <ClInclude Include="..\Public\ThreadMgr.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\FontMgr.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Texture_map.cpp" />
     <ClCompile Include="..\Private\Font.cpp" />
+    <ClCompile Include="..\Private\ThreadMgr.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\FontMgr.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
