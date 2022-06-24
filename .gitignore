@@ -9,11 +9,14 @@
 ## MyFrameWork/Client/bin/**/*.* 
 MyFrameWork/Client/Default/x64/**/*.*
 MyFrameWork/Client/Default/x86/**/*.*
+MyFrameWork/Client/Bin/Resources/**/*.*
 
 ## MyFrameWork/Engine/bin/**/*.* 
 MyFrameWork/Engine/Default/x64/**/*.*
 MyFrameWork/Engine/Default/x86/**/*.*
 MyFrameWork/Reference/**/*.*
+MyFrameWork/Backupcodes/**/*.*
+
 
 
 ## Dear ImGui artifacts
@@ -23,6 +26,10 @@ imgui.ini
 *.o
 *.obj
 *.exe
+*.cso
+*.exp
+*.iobj
+*.ipdb
 
 ## Visual Studio artifacts
 .vs

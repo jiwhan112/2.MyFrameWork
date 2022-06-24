@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CComponent abstract : public CBase
 {
 protected:
-	explicit CComponent(LPDIRECT3DDEVICE9 pGraphic_Device);
+	explicit CComponent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CComponent(const CComponent& rhs);
 	virtual ~CComponent() = default;
 
@@ -16,7 +16,8 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);
 
 protected:
-	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
+	ID3D11Device*			m_pDevice = nullptr;
+	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
 protected:
 	_bool				m_isCloned = false;

@@ -5,12 +5,6 @@
 #include "Client.h"
 #include "MainApp.h"
 
-#include "GameInstance.h"
-
-#include "../Public/Imgui/imgui.h"
-#include "../Public/Imgui/imgui_impl_win32.h"
-#include "../Public/Imgui/imgui_impl_dx11.h"
-
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -26,36 +20,56 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    // TODO: 여기에 코드를 입력합니다.
+#endif // _DEBUG
+	srand(_uint(time(NULL)));
+
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
+
+	// 전역 문자열을 초기화합니다.
+	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
+	MyRegisterClass(hInstance);
+
+	// 응용 프로그램 초기화를 수행합니다.
+	if (!InitInstance(hInstance, nCmdShow))
+	{
+		return FALSE;
+	}
+
+	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
+
+	MSG msg;
+
+	// TODO: 여기에 코드를 입력합니다.
 	CMainApp*			pMainApp = nullptr;
-
-    // 전역 문자열을 초기화합니다.
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
-
-    // 응용 프로그램 초기화를 수행합니다.
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
-
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
-
-    MSG msg;
-
 	pMainApp = CMainApp::Create();
 	if (nullptr == pMainApp)
 		return FALSE;
 
-    // 기본 메시지 루프입니다.
+	CGameInstance*	pGameInstance = GetSingle(CGameInstance);
+	if (nullptr == pGameInstance)
+		return FALSE;
+
+	/* For.Timer_Default */
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Default"))))
+		return FALSE;
+
+	/* For.Timer_60 */
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_60"))))
+		return FALSE;
+
+	_double dTimeAcc = 0.f;
+
+	const double dFrameTime = 1 / 60;
+	// 기본 메시지 루프입니다.
 	while (true)
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -68,20 +82,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				DispatchMessage(&msg);
 			}
 		}
-		else
+
+		dTimeAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
+
+		if (dTimeAcc > dFrameTime)
 		{
-			pMainApp->Tick(0.0);
-			pMainApp->Render();			
+			dTimeAcc = 0.f;
+
+			pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+			pMainApp->Render();
 		}
 	}
-	
-	Safe_Release(pMainApp);
- 
 
-    return (int) msg.wParam;
+	if (0 != Safe_Release(pMainApp))
+		MSGBOX("Failed to Release CMainApp");
+
+	return (int)msg.wParam;
 }
-
-
 
 //
 //  함수: MyRegisterClass()
@@ -90,23 +107,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+	WNDCLASSEXW wcex;
 
-    wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_CLASSDC;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+	wcex.style = CS_CLASSDC;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CLIENT);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+	return RegisterClassExW(&wcex);
 }
 
 //
@@ -121,26 +138,25 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   g_hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+	g_hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   RECT rcWindow{ 0,0,g_iWinCX,g_iWinCY };
+	RECT rcWindow{ 0,0,g_iWinCX,g_iWinCY };
 
-   AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, TRUE);
+	AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, TRUE);
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-	   CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, nullptr, nullptr, hInstance, nullptr);
+	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd)
-   {
-	   return FALSE;
-   }
+	if (!hWnd)
+	{
+		return FALSE;
+	}
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
 
-
-   g_hWnd = hWnd;
-   return TRUE;
+	g_hWnd = hWnd;
+	return TRUE;
 }
 
 //
@@ -161,18 +177,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
 		return true;
 
-    switch (message)
-    {
-
+	switch (message)
+	{
 	case WM_SIZE:
-
 		break;
 
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
 }

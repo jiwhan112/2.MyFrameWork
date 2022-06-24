@@ -10,8 +10,7 @@ private:
 	CTimer();
 	virtual ~CTimer() = default;
 public:
-	_float Get_TimeDelta(void);
-
+	_double Get_TimeDelta(void);
 
 private:
 	LARGE_INTEGER		m_CurrentTime;
@@ -19,7 +18,7 @@ private:
 	LARGE_INTEGER		m_OriginTime;
 	LARGE_INTEGER		m_CpuTick;
 
-	float				m_fTimeDelta;
+	_double				m_dTimeDelta;
 
 public:
 	static CTimer* Create();

@@ -8,43 +8,70 @@ class CComponent;
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 protected:
-	explicit CGameObject(LPDIRECT3DDEVICE9 pGraphic_Device);
+	explicit CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	explicit CGameObject(const CGameObject& rhs);
 	virtual ~CGameObject() = default;
 public:
 	class CComponent* Get_Component(const _tchar* pComponentTag);
-	_float Get_CamDistance() const {
-		return m_fCamDistance;
-	}
 
 public:
 	virtual HRESULT NativeConstruct_Prototype();
 	virtual HRESULT NativeConstruct(void* pArg);
-	virtual _int Tick(_float fTimeDelta);
-	virtual _int LateTick(_float fTimeDelta);
+	virtual _int Tick(_double TimeDelta);
+	virtual _int LateTick(_double TimeDelta);
 	virtual HRESULT Render();
 
 public:
-	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	class CTransform*	Get_ComTransform() const { return mComTransform; }
 
+	bool Get_IsLife() const { return mIsLife; }
+	bool Get_IsRenderer() const { return mIsRenderer; }
+	void Set_Dead() { mIsLife = false; }
+
+	void Set_isVisible(bool b) { mIsRenderer = b; }
+
+	const _uint& Get_ObjectTypeID() const
+	{
+		return mObjectTypeid;
+	}
+
+	virtual const _int& Get_Depth() { return 0; };
 
 protected:
-	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
-	_float						m_fCamDistance;
-
-protected:
-	CComponent*	Find_Component(const _tchar* pComponentTag);
-	HRESULT Compute_CamDistance(class CTransform* pTransform);
-
-protected:
-	map<const _tchar*, CComponent*>			m_Components;
-	typedef map<const _tchar*, CComponent*>	COMPONENTS;
-
+	virtual HRESULT Set_Component()PURE;
 
 public:
-	virtual CGameObject* Clone(void* pArg) = 0;
-	virtual void Free() override;
+	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	CComponent* Create_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg = nullptr);
+	HRESULT Release_Component(const _tchar* pComponentTag);
 
+private:
+	//	HRESULT Add_Component_This(const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+
+	protected:
+		ID3D11Device*			m_pDevice = nullptr;
+		ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+
+	protected:
+		class CTransform*		mComTransform = nullptr;
+		static const _tchar*	mComTag_Transform;
+
+		// Á×À½ Ã¼Å©¿Í ·»´õ¸µ ¿©ºÎ
+		bool				mIsLife = true;
+		bool				mIsRenderer = true;
+		bool				mIsClone = false;
+		_uint				mObjectTypeid = 99;
+
+	protected:
+		CComponent*	Find_Component(const _tchar* pComponentTag);
+
+	protected:
+		map<const _tchar*, CComponent*>			m_Components;
+		typedef map<const _tchar*, CComponent*>	COMPONENTS;
+
+	public:
+		virtual CGameObject* Clone(void* pArg) = 0;
+		virtual void Free() override;
 };
 
 END

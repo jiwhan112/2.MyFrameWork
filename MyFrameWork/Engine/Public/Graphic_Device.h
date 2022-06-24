@@ -28,16 +28,15 @@ public:
 	HRESULT Clear_DepthStencil_View();
 	HRESULT Present();
 
-private:	
+private:
 	/* 메모리 할당. (정점버퍼, 인덱스버퍼, 텍스쳐로드) */
 	ID3D11Device*			m_pDevice = nullptr;
 
 	/* 바인딩작업. 기능실행 (정점버퍼를 SetStreamSource(), SetIndices(), SetTransform(), SetTexture() */
 	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
 
-	IDXGISwapChain*			m_pSwapChain = nullptr;	
-
-	// ID3D11ShaderResourceView*
+	// 랜더링용 객체
+	IDXGISwapChain*				m_pSwapChain = nullptr;
 	ID3D11RenderTargetView*		m_pBackBufferRTV = nullptr;
 	ID3D11DepthStencilView*		m_pDepthStencilView = nullptr;
 

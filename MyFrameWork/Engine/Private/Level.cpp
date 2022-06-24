@@ -13,12 +13,12 @@ HRESULT CLevel::NativeConstruct()
 	return S_OK;
 }
 
-_int CLevel::Tick(_float fTimeDelta)
+_int CLevel::Tick(_double TimeDelta)
 {
 	return _int();
 }
 
-_int CLevel::LateTick(_float fTimeDelta)
+_int CLevel::LateTick(_double TimeDelta)
 {
 	return _int();
 }
@@ -26,6 +26,14 @@ _int CLevel::LateTick(_float fTimeDelta)
 HRESULT CLevel::Render()
 {
 	return S_OK;
+}
+
+_float2 CLevel::Get_ViewSize() const
+{
+	_uint		iNumViewports = 1;
+	D3D11_VIEWPORT		Viewport;
+	m_pDeviceContext->RSGetViewports(&iNumViewports, &Viewport);
+	return _float2(Viewport.Width, Viewport.Height);
 }
 
 void CLevel::Free()

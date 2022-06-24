@@ -8,11 +8,21 @@
 BEGIN(Engine)
 
 class ENGINE_DLL CRenderer final : public CComponent
-{	
+{
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONALPHA, RENDER_ALPHA, RENDER_UI, RENDER_END };
-public:
-	explicit CRenderer(LPDIRECT3DDEVICE9 pGraphic_Device);
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND_FIRST,RENDER_NONBLEND_SECOND,RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum E_POST
+	{
+		POST_REVERSE = 4,
+		POST_EDGE,
+		POST_EDGE_BLEND,
+		POST_SHADOW,
+		POST_END,
+
+	};
+	
+private:
+	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~CRenderer() = default;
 
 public:
@@ -23,18 +33,40 @@ public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 	HRESULT Render();
 
+	// 랜더 타겟과 조명 
 private:
-	list<class CGameObject*>				m_RenderObjects[RENDER_END];
+	class CRenderTargetMgr*					mRenderTargetManager	= nullptr;
+	class CLightMgr*						mLightManager			= nullptr;
+
+private:
+	class CVIBuffer_Rect*					mComVIRECT	= nullptr;
+	class CShader*							mComShader		= nullptr;
+
+	_float4x4								mWorldMat;
+	_float4x4								mViewdMat;
+	_float4x4								mProjMat;
+
+private:
+	list<class CGameObject*>				mRenderObjects[RENDER_END];
 	typedef	list <class CGameObject* >		RENDEROBJECTS;
 
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonAlpha();
+	HRESULT Render_Lights();
+	HRESULT Render_Blend();
+	HRESULT Render_Post();
+	
+	HRESULT Render_NoLights();
 	HRESULT Render_Alpha();
 	HRESULT Render_UI();
+	
+private:
+	HRESULT RenderTargetSetting();
+//	E_POST	mePostOption = POST_OUTLINE;
 
 public:
-	static CRenderer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free();
 };

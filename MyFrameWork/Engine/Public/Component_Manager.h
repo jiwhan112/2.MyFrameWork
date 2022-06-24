@@ -1,10 +1,20 @@
 #pragma once
 
-#include "Shader.h"
-#include "Texture.h"
+// #Components 컴포넌트 선언
 #include "Renderer.h"
 #include "Transform.h"
+#include "Texture.h"
+#include "Texture_map.h"
+#include "Shader.h"
+#include "Model.h"
+#include "Collider.h"
+#include "Navigation.h"
+#include "BehaviorTree.h"
+
+#include "VIBuffer.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Rect_Instance.h"
+#include "VIBuffer_Point_Instance.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
 
@@ -24,9 +34,10 @@ public:
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
 	CComponent* Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg);
 	HRESULT Clear_LevelObject(_uint iLevelIndex);
+
 private:
-	map<const _tchar*, class CComponent*>*				m_pPrototypes = nullptr;
-	typedef map<const _tchar*, class CComponent*>		PROTOTYPES;	
+	map<const _tchar*, class CComponent*>*				mMapProtos = nullptr;
+	typedef map<const _tchar*, class CComponent*>		PROTOTYPES;
 
 private:
 	_uint			m_iNumLevels;

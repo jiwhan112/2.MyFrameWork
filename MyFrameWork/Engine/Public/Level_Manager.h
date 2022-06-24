@@ -15,9 +15,11 @@ public:
 	virtual ~CLevel_Manager() = default;
 public:
 	HRESULT OpenLevel(_uint iLevelIndex, class CLevel* pNextLevel);
-	_int Tick(_float fTimeDelta);
-	_int LateTick(_float fTimeDelta);
+	_int Tick(_double TimeDelta);
+	_int LateTick(_double TimeDelta);
 	HRESULT Render();
+
+	_uint Get_CurrentLevelIndex() const { return m_iCurrentLevelIndex; }
 
 private:
 	_uint					m_iCurrentLevelIndex = 0;

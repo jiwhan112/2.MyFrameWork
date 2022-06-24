@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CInput_Device final : public CBase
+class ENGINE_DLL CInput_Device final : public CBase
 {
 	DECLARE_SINGLETON(CInput_Device)
 
@@ -19,22 +19,19 @@ private:
 public:
 	_byte Get_DIKeyState(_ubyte eKeyID);
 
-	_long Get_DIMouseMoveState(MOUSEMOVESTATE eMouseMoveState) {	return *((_long*)&m_MouseState + eMouseMoveState);  }
+	_long Get_DIMouseMoveState(MOUSEMOVESTATE eMouseMoveState) { return *((_long*)&m_MouseState + eMouseMoveState); }
 
 	_byte Get_DIMouseButtonState(MOUSEBUTTONSTATE eMouseButtonState);
-	
 
 public:
 	HRESULT Ready_Input_Device(HINSTANCE hInst, HWND hWnd, _float fDoubleTimeInterver);
-	HRESULT SetUp_InputDeviceState(_float fDeltaTime);
+	HRESULT SetUp_InputDeviceState(_double fDeltaTime);
 
 private:
 	LPDIRECTINPUT8				m_pInput = nullptr;
 	LPDIRECTINPUTDEVICE8		m_pKeyboard = nullptr;
-	LPDIRECTINPUTDEVICE8		m_pMouse = nullptr;	
+	LPDIRECTINPUTDEVICE8		m_pMouse = nullptr;
 
-
-	
 private:
 	_byte					m_byKeyState[256];
 	_byte					m_byOldKeyState[256];			//이전 프레임상태를 저장 (다운 체크과 업을 체그하기 위해)

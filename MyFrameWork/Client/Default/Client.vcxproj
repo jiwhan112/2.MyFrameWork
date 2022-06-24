@@ -97,22 +97,34 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../public/;../../Reference/Inc/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../public/;../../Reference/Inc/;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/bin/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -130,17 +142,23 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../public/;../../Reference/Inc/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../public/;../../Reference/Inc/;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,13 +166,76 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/bin/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\AI\AI_Deco.h" />
+    <ClInclude Include="..\Public\AI\AI_Select.h" />
+    <ClInclude Include="..\Public\AI\AI_Sequnce.h" />
+    <ClInclude Include="..\Public\AI\AI_Action.h" />
+    <ClInclude Include="..\Public\Camera_Client.h" />
+    <ClInclude Include="..\Public\Client_DESC.h" />
+    <ClInclude Include="..\Public\Client_Enum.h" />
+    <ClInclude Include="..\Public\FIleIO\GameObject_Creater.h" />
+    <ClInclude Include="..\Public\FIleIO\ObjectIO.h" />
+    <ClInclude Include="..\Public\GameManager.h" />
+    <ClInclude Include="..\Public\GameObject\Camera_Game.h" />
+    <ClInclude Include="..\Public\GameObject\Client_Object.h" />
+    <ClInclude Include="..\Public\GameObject\Dungeon_Objects.h" />
+    <ClInclude Include="..\Public\GameObject\Dungeon_Task.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_UI.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Buffer.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_2D_Particle_Point.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Floor.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Particle.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Boss.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Enemy.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Environment.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Goblin.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Naga.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Orc.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Socket.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Mine.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Dynamic.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Static2.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_3D_Tile.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Base.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_Mouse.h" />
+    <ClInclude Include="..\Public\GameObject\Dungeon_Manager.h" />
+    <ClInclude Include="..\Public\GameObject\GameObject_MyTerrain.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject\ParticleManager.h" />
+    <ClInclude Include="..\Public\GameObject_BackGround.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject_FBX.h" />
+    <ClInclude Include="..\Public\GameObject_FBX_Ani.h" />
+    <ClInclude Include="..\Public\GameObject_Skybox.h" />
+    <ClInclude Include="..\Public\GameObject_Terrain.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level\Level_MyGamePlay.h" />
+    <ClInclude Include="..\Public\Level_GamePlay.h" />
+    <ClInclude Include="..\Public\Level_Loader.h" />
+    <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Includes.h" />
-    <ClInclude Include="..\Public\ImguiMgr.h" />
     <ClInclude Include="..\Public\Imgui\imconfig.h" />
     <ClInclude Include="..\Public\Imgui\imgui.h" />
     <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h" />
@@ -163,15 +244,107 @@
     <ClInclude Include="..\Public\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Public\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\Public\Imgui\imstb_truetype.h" />
+    <ClInclude Include="..\Public\Level_Tool.h" />
+    <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\Public\stdafx.h" />
+    <ClInclude Include="..\Public\System\ColliderManager.h" />
+    <ClInclude Include="..\Public\System\LevelMaster.h" />
+    <ClInclude Include="..\Public\System\Astar.h" />
+    <ClInclude Include="..\Public\Tool\ImguiMgr.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_Base.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_CommonUI.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_InGame.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_DESC.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_Model.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_MyDemo.h" />
+    <ClInclude Include="..\Public\Tool\Imgui_Terrain.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool\Imgui_UI.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\ImguiMgr.cpp" />
+    <ClCompile Include="..\Private\AI\AI_Select.cpp" />
+    <ClCompile Include="..\Private\AI\AI_Deco.cpp" />
+    <ClCompile Include="..\Private\AI\AI_Sequnce.cpp" />
+    <ClCompile Include="..\Private\AI\AI_Action.cpp" />
+    <ClCompile Include="..\Private\Camera_Client.cpp" />
+    <ClCompile Include="..\Private\FileIO\GameObject_Creater.cpp" />
+    <ClCompile Include="..\Private\FileIO\ObjectIO.cpp" />
+    <ClCompile Include="..\Private\GameManager.cpp" />
+    <ClCompile Include="..\Private\GameObject\Camera_Game.cpp" />
+    <ClCompile Include="..\Private\GameObject\Dungeon_Task.cpp" />
+    <ClCompile Include="..\Private\GameObject\Dungeon_Objects.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_UI.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Buffer.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Particle.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_2D_Particle_Point.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Floor.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Environment.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Boss.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Enemy.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Naga.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Orc.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Goblin.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Socket.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Mine.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Dynamic.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Tile.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_3D_Static2.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Base.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_Mouse.cpp" />
+    <ClCompile Include="..\Private\GameObject\Dungeon_Manager.cpp" />
+    <ClCompile Include="..\Private\GameObject\GameObject_MyTerrain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject\ParticleManager.cpp" />
+    <ClCompile Include="..\Private\GameObject_BackGround.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject_FBX_Ani.cpp" />
+    <ClCompile Include="..\Private\GameObject_FBX.cpp" />
+    <ClCompile Include="..\Private\GameObject_Skybox.cpp" />
+    <ClCompile Include="..\Private\GameObject_Terrain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level\Level_MyGamePlay.cpp" />
+    <ClCompile Include="..\Private\Level_GamePlay.cpp" />
+    <ClCompile Include="..\Private\Level_Loader.cpp" />
+    <ClCompile Include="..\private\Level_Logo.cpp" />
+    <ClCompile Include="..\Private\Level_Tool.cpp" />
+    <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\Private\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Private\System\ColliderManager.cpp" />
+    <ClCompile Include="..\Private\System\LevelMaster.cpp" />
+    <ClCompile Include="..\Private\System\Astar.cpp" />
+    <ClCompile Include="..\Private\Tool\ImguiMgr.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_Base.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_CommonUI.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_DESC.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_Model.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_MyDemo.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_InGame.cpp" />
+    <ClCompile Include="..\Private\Tool\Imgui_Terrain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool\Imgui_UI.cpp" />
+    <ClCompile Include="..\Public\Client_DESC.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_demo.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_draw.cpp" />
@@ -180,12 +353,6 @@
     <ClCompile Include="..\Public\Imgui\imgui_tables.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />
@@ -193,6 +360,19 @@
   <ItemGroup>
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAni.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex_Terrain.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxParticle.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexCube.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex_UI.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

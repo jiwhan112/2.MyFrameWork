@@ -1,17 +1,21 @@
 #include "..\Public\Component.h"
 
-CComponent::CComponent(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: m_pGraphic_Device(pGraphic_Device)
+CComponent::CComponent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+	: m_pDevice(pDevice)
+	, m_pDeviceContext(pDeviceContext)
 	, m_isCloned(false)
 {
-	Safe_AddRef(m_pGraphic_Device);
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pDeviceContext);
 }
 
 CComponent::CComponent(const CComponent & rhs)
-	: m_pGraphic_Device(rhs.m_pGraphic_Device)
+	: m_pDevice(rhs.m_pDevice)
+	, m_pDeviceContext(rhs.m_pDeviceContext)
 	, m_isCloned(true)
 {
-	Safe_AddRef(m_pGraphic_Device);
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pDeviceContext);
 }
 
 HRESULT CComponent::NativeConstruct_Prototype()
@@ -26,5 +30,6 @@ HRESULT CComponent::NativeConstruct(void * pArg)
 
 void CComponent::Free()
 {
-	Safe_Release(m_pGraphic_Device);
+	Safe_Release(m_pDeviceContext);
+	Safe_Release(m_pDevice);
 }
